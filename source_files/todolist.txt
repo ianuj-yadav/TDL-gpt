@@ -1,0 +1,147 @@
+[#Menu: Gateway of Tally]
+    ;Add		: ToolBar Button	: Before	: Import Button		: BinaryToDo
+	Add		: Button	: BinaryToDo
+
+[Button: BinaryToDo]
+    Title		: $$LocaleString:"ToDo"
+    Key			: Ctrl + T
+    Action		: Alter			: BinaryTodoList
+
+[Report: BinaryTodolist]
+    Form		: BinaryTodo
+    Object		: Company
+
+[Form: BinaryTodo]
+    Part			: BinarytodoHeading, BinarytodoTitle, BinarytodoDetails
+    Background		: Light Lily Yellow
+    Width			: 100% Page
+    Height			: 100% Page
+    Vertical Align	: Center
+    Horizontal Align: Center
+
+[Part: BinarytodoHeading]
+    Line		: BinarytodoHeading
+
+	[Line: BinarytodoHeading]
+		Field: Name Field
+		Local: Field: Name Field: Set as	: "Binary ToDo List"
+		Local: Field: Name Field: Style		: Large Bold
+		Local: Field: Name Field: Align		: Center
+		Local: Field: Name Field: Full Width: Yes
+		Local: Field: Name Field: Color		: Blue
+		Local: Field: Name Field: Inactive	: InExportMode
+		Local: Field: Name Field: Skip		: Yes
+		Space Bottom: 0.25 cm
+
+[Part: BinarytodoTitle]
+	Line		: BinarytodoTitle
+    Border		: Column Titles
+
+	[Line: BinarytodoTitle]
+		Use		: BinarytodoDetails
+		Local	: Field		: Default			: Style		: Normal Bold
+		Local	: Field		: Default			: Skip		: Yes
+		Local	: Field		: Default			: Type		: String
+		Local	: Field		: Default			: Delete	: Storage
+		Local	: Field		: Default			: Lines		: 2
+		Local	: Field		: TodoSrNo			: Set as	: "Sr No."
+		Local	: Field		: Binarytodowork	: Set as	: "ToDo/Works"
+		Local	: Field		: Binarystrdt		: Set as	: "Start Date"
+		Local	: Field		: Binarystrdt2		: Set as	: "End Date"
+		Local	: Field		: Binarytodoremark	: Set as	: "Remark"
+		Local	: Field		: TodoStatus		: Set as	: "Status"
+		Local	: Field		: Default			: Delete	: Inactive
+
+[Part: BinarytodoDetails]
+    Line			: BinarytodoDetails
+    Repeat			: BinarytodoDetails		: DoneBinarytodoDetails;BinarytodoDetails
+    Scroll			: Vertical
+    Common Border	: Yes
+    BreakOn			: $$IsEmpty:$Binarywork
+	Num Of Display Lines In Scroll: 2
+	Scroll Indicator Style        : Tiny
+
+	[Line: BinarytodoDetails]
+		Field			: TodoSrNo, Binarytodowork
+		Right Field		: Binarystrdt, Binarystrdt2, Binarytodoremark, TodoStatus
+		Local			: Field		: Default	: Style		: Small Bold
+	
+		[Field: TodoSrNo]
+			Use			: Number Field
+			Set as		: $$Line
+			Border		: Thin Left
+			Width		: 5
+			Skip		: Yes
+		
+		[Field: Binarytodowork]
+			Use			: Name Field
+			Storage		: Binarywork
+			Border		: Thin Left
+			;Width		: 8
+			Full Width	: Yes
+			Line		: 0
+		
+		[Field: Binarystrdt]
+			Use			: Short Date Field
+			Storage		: startdate
+			Border		: Thin Left
+			Inactive	: $VCurrentlyInService or $$IsEmpty:#Binarytodowork
+			Skip		: $$IsEmpty:#Binarytodowork
+			Set Always	: Yes
+			Line		: 0
+		
+		[Field: Binarystrdt2]
+			Use			: Short Date Field
+			Storage		: enddate
+			Border		: Thin Left
+			Inactive	: $VCurrentlyInService or $$IsEmpty:#Binarytodowork
+			Skip		: $$IsEmpty:#Binarytodowork
+			Set Always	: Yes
+			Line		: 0
+		
+		[Field: Binarytodoremark]
+			Use			: Name Field
+			Storage		: remarks
+			Border		: Thin Left
+			Inactive	: $VCurrentlyInService or $$IsEmpty:#Binarytodowork
+			Skip		: $$IsEmpty:#Binarytodowork
+			Set Always	: Yes
+			Line		: 0
+			
+		[Field: TodoStatus]
+			Use			: Logical Field
+			Storage		: Status
+			Border		: Thin Left
+			Table		: YesNoTable
+			Inactive	: $VCurrentlyInService or $$IsEmpty:#Binarytodowork
+			Skip		: $$IsEmpty:#Binarytodowork
+			Set Always	: Yes
+			Line		: 0
+	
+[System: UDF]
+    BinarytodoDetails	: Aggregate		: 12001
+    Binarywork			: String		: 12002
+    startdate			: Date			: 12003
+    enddate				: Date			: 12004
+    remarks				: String		: 12005
+	Status				: Logical		: 12006
+
+[Collection: BinarytodoDetails]
+    Type		: BinarytodoDetails		: Company
+    Childof		: ##SVCurrentCompany
+    Format		: $Binarywork, 50
+    Title		: "Binary ToDo"
+	Sort 		: Default 		: -$startdate;, $Binarywork
+	;LIST KEY SORT : Test Func Var : YES : String
+	
+[Collection: DoneBinarytodoDetails]
+    Type		: BinarytodoDetails			: Company
+    Childof		: ##SVCurrentCompany
+    Format		: $Binarywork, 50
+    Title		: "Filtered ToDo List"
+	Filter		: StatusDone
+	
+    
+
+[System:Formula]
+	StatusDone		: $status=Yes

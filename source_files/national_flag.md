@@ -1,0 +1,272 @@
+---
+title: national_flag
+type: sample_code
+objects: Report, Form, Part, Line, Field, Collection
+source: national_flag.txt
+---
+
+# national_flag
+
+## Source Code
+
+```tdl
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s)  
+-	This program displays an image similar to Indian National Flag using Dimensions
+
+Last modification  
+-	Altered on 07/11/2009
+*/
+[#Menu:Gateway of Tally]
+	Add		: Item		: National Flag				: Display	: National Flag
+	Add		: Item		: Sample Border and Color	: Alter	: Sample Border and Color
+	Add		: Item		: Line Object Association	: Alter	: Line Object Association
+[Report: National Flag]
+
+	Form 		: National Flag
+	Title 		: "National Flag"
+
+[Form: National Flag]
+
+	Parts		: National Flag
+
+[Part: National Flag]
+
+	Parts 		: NF Part1, NF Part2, NF Part3, NF Part4
+	;Height 		: 90% Screen
+	Width 		: 40% Screen
+	Vertical	: Yes
+
+	[Part: NF Part1]
+
+		Lines 		: NF Line
+		Height 		: 12% Screen
+		Border 		: NFBorder
+		Background 	: White, Saffron
+
+		[Line: NF Line]
+			
+			Field : Simple Field 
+			Local : Field : Simple Field : Set as : ""
+
+	[Part: NF Part2]
+	
+		Lines		: NF Line
+		Height 		: 12% Screen
+		Border 		: NFBorder
+		Background 	: White
+		Local: Field: Simple Field	: Info		: "O"
+		Local: Field: Simple Field	: Style		: NF Style
+		Local: Field: Simple Field	: Align		: Center
+		Local: Field: Simple Field	: FullWidth	: Yes
+
+	[Part: NF Part3]
+
+		Use 		: NF Part1
+		Background 	: White, Green
+
+	[Part: NF Part4]
+
+		Lines 		: NF Line
+		Height 		: 54% Screen
+		Border 		: NF Border 
+
+;; Border Definition
+
+[Border: NFBorder]
+
+	Left 	: Thick, Double Lined
+
+;; Colour Definition
+
+[Color: Saffron]
+
+	RGB 	: 252, 196, 112  
+
+;; Style Definition
+
+[Style: NF Style]
+
+	Height 	: 50
+	Font 	: "Arial"
+
+;; End-of-File
+
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s)  
+- 	This program illustrates the Border Definition, Default Functions and Field Attributes 
+	'Color', 'Inactive' and 'Background'
+
+Last modification  
+-	Altered on 07/11/2009
+*/
+
+[Report: Sample Border and Color]
+
+	Form	: Sample Border and Color
+
+[Form: Sample Border and Color]
+
+	Parts	: Sample Border and Color
+
+[Part: Sample Border and Color]
+
+	Lines	: SBC Input String, SBC Calculate String Length, SBC String Length Odd Or Even
+
+	[Line: SBC Input String]
+
+		Fields	: Long Prompt, SBC Input String
+
+		Local	: Field	: Long Prompt	: Info		: "Please enter your string	:"
+
+		[Field: SBC Input String]
+
+			Use		: Name Field
+
+	[Line: SBC Calculate String Length]
+
+		Fields	: Long Prompt, SBC Calculate String Length
+
+		Local	: Field	: Long Prompt	: Set as	: "Number of characters in the string are - "
+		Local	: Field	: Long Prompt	: Inactive	: $$StringLength:#SBCInputString < 1
+		Local	: Field	: Long Prompt	: Color		: Blue
+		Local	: Field	: Long Prompt	: Style		: Normal Bold
+		Border	: White Thick Box
+
+		[Field: SBC Calculate String Length]
+
+			Set as		: $$StringLength:#SBCInputString
+			Inactive	: $$StringLength:#SBCInputString < 1
+			Set Always	: Yes
+			Skip		: Yes
+			Color		: Blue
+			Width		: 5
+
+	[Line: SBC String Length Odd Or Even]
+
+		Fields	: SBC String Length Odd Or Even
+
+		[Field: SBC String Length Odd Or Even]
+
+			Set as		: If $$IsOdd:#SBCCalculateStringLength Then "There are odd number of characters in the string" +
+						  Else "There are even number of characters in the string"
+			Inactive	: $$IsEmpty:#SBCInputString
+			Set Always	: Yes
+			Skip		: Yes
+			Color		: If $$IsOdd:#SBCCalculateStringLength Then "Red" Else "Green"
+			Style		: Normal Bold
+			Background	: Aquamarine
+			Width		: 50% Page
+			Align		: Centre
+
+[Border: White Thick Box]
+
+	Use		: Thick Box		;; Default Border used here
+	Color	: Red
+
+;; End-of-File
+
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s)  
+- 	This code demonstrates the Object association at Line Level
+- 	Object Association at Line can be done through Part Attribute 'Repeat' which repeats over 
+	a Collection
+-	Line Attribute 'AccessName' is used to specify a name by which this Line can be accessed later.
+-	This code is written to display vouchers and corresponding Batches used in these vouchers is 
+	displayed on the right hand side when the cursor is on a Voucher
+
+Last modification  
+-	Altered on 07/11/2009
+*/
+
+[Report: Line Object Association]
+
+	Use		: DSP Template
+	Form	: Line Object Association
+	Variable: VariableCurLineNumber		: Number	: 1
+	Set		: SV From Date				: $$MonthStart:##SVCurrentDate
+	Set		: SV To Date				: $$MonthEnd:##SVCurrentDate
+
+[Form: Line Object Association]
+
+	Use		: DSP Template
+	Parts	: Line Object Association
+
+[Part: Line Object Association]
+
+	Parts  	: LOA Left Part, LOA Right Part
+	Width 	: 80% Screen
+
+	[Part: LOA Left Part]
+
+		Lines	 	: LOA Left Line Title, LOA Left Line Info
+		Repeat	 	: LOA Left Line Info 	: VoucherColl
+		Scroll	 	: Vertical
+		Retain Focus: Yes
+
+		[Line: LOA Left Line Title]
+
+			Use			: LOA Left Line Info
+			Local: Field: LOA Left Field1	: Set as	: "Voucher Number"
+			Local: Field: LOA Left Field2	: Set as	: "Voucher Type Name"
+			Delete		: AccessName
+			Delete		: On
+
+		[Line: LOA Left Line Info]
+ 
+			Fields		: LOA Left Field1, LOA Left Field2
+			Access Name	: "Line" + $$String:$$Line
+			On	: Focus	: Yes	: SET	: VariableCurLineNumber	: $$Line
+
+			[Field: LOA Left Field1]
+
+				Use			: Name Field
+				Set As 		: $VoucherNumber
+				Set Always  : Yes
+
+			[Field: LOA Left Field2]
+
+				Use			: Name Field
+				Set As 		: $VoucherTypeName
+				Set Always  : Yes
+
+	[Part: LOA Right Part]
+
+		Lines	: LOA Right Line Title, LOA Right Line Info
+		Repeat	: LOA Right Line Info 	: (Line,("Line"+$$String:##VariableCurLineNumber)).InventoryEntries[1].BatchAllocations
+    	Scroll 	: Vertical
+	
+		[Line: LOA Right Line Title]
+		
+			Use		: LOA Right Line Info
+			Local	: Field	: LOA Right Line2 Field1: Set as	: "Batch Names"
+
+		[Line: LOA Right Line Info]
+
+	    	Fields : LOA Right Line2 Field1
+	
+			[Field: LOA Right Line2 Field1]
+	
+				Use		: Name Field
+		       	Set as	: $BatchName
+
+[Collection: VoucherColl]			;; Collection Definition
+
+	Type 	: Voucher
+	Fetch	: VoucherNumber, VoucherTypeName, InventoryEntries.*
+	Filter	: TSPL Smp IsPurcOrSales
+
+[System: Formula]
+	
+	TSPL Smp IsPurcOrSales	: $IsPurchase OR $IsSales
+
+;; End-of-File
+
+
+```

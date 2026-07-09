@@ -1,0 +1,24 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This program demonstrates the concept of Submenu. 
+- 	When an action Menu is instanced from any Menu (in this case, Menu TDL Language 
+	Components), another Menu is called.
+-	Definition Menu is defined with Attributes Key Item
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Menu: Quarterly Menu]
+
+	Key Item: Quarterly Report 1
+	Key Item: Quarterly Report 2
+
+/*
+Menu Quarterly Menu is defined to display 2 Items without any Action associated with it.
+If no action is associated with a Menu Item, default action assumed for the same is Quit.
+*/
+
+;; End-of-File

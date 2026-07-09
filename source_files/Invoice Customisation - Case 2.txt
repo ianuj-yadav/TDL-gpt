@@ -1,0 +1,331 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the addition of Invoice Printing format
+-	Default Invoice Format is retained along with a New Format subsequently
+
+Last modification -
+-	Altered on 09-11-2009
+*/
+
+[#Form: Sales Color]
+
+	Option	: Global Sales Color	: ##InvVarC2 AND @@IsSales
+	
+	[!Form: Global Sales Color]
+
+		Add			: Print		: Global Invoice
+
+[Report: Global Invoice]
+
+	Use			: Printed Invoice
+	Delete		: Form
+	Add			: Form		: Global Invoice1
+
+[Form: Global Invoice1]
+
+	Use			: STD Invoice Dimensions
+    Space Left  : @@InvSpaceLeft inch
+	Space Right	: 0
+	Space Bottom: 0
+	Parts		: STD Invoice Top, GI OpPgBrk, Global Invoice Body
+	Bottom Parts: Global Invoice Bottom
+
+	Page Break	: GI ClPgBrk, GI OpPgBrk
+
+[Part: GI ClPgBrk]
+
+	Lines		: GI ClPgBrk
+
+	[Line: GI ClPgBrk]
+
+		Fields		: Simple Field
+		Local: Field: Simple Field	: Set As	: "Continued..."
+		Local: Field: Simple Field	: FullWidth	: Yes
+		Local: Field: Simple Field	: Align		: Right
+		Border		: Full Thin Top
+
+[Part: GI OpPgBrk]
+
+	Parts		: Global Invoice Top, Global Invoice Add, GI Inventory Title
+	Vertical	: Yes
+
+[Part: Global Invoice Top]
+
+	Lines			: GI Cmp Name, GI Title
+	Space Bottom	: 1
+	Border			: Thin Cover
+
+	[Line: GI Cmp Name]
+
+		Fields		: Simple Field
+		Local: Field: Simple Field	: Set As	: @@CmpMailName
+		Local: Field: Simple Field	: Align		: Center
+		Local: Field: Simple Field	: FullWidth	: Yes
+		Local: Field: Simple Field	: WideSpaced: Yes
+		Local: Field: Simple Field	: Style		: Cmp Style
+
+	[Line: GI Title]
+
+		Use			: GI Cmp Name
+		Space Top	: 1
+		Local: Field: Simple Field	: Set As	: "INVOICE"
+		Local: Field: Simple Field	: Style		: Normal Bold
+
+[Part: Global Invoice Add]
+
+	Parts		: Global Invoice BillAdd, Global Invoice ShipAdd
+	Right Parts	: Global Invoice InvDet
+	Space Top	: 1
+	Border		: Thin Left Right Bottom
+	Height		: 12% Page
+
+	[Part: Global Invoice BillAdd]
+
+		Lines		: Global Invoice BillAddTitle, Global Invoice BillName, Global Invoice BillAdd
+		Repeat		: Global Invoice BillAdd		: Address
+		Width		: 28% Page
+		
+		[Line: Global Invoice BillAddTitle]
+
+			Fields		: Name Field
+			Local: Field: Name Field	: Set as	: "Billing Name & Address"
+			Local: Field: Name Field	: Align		: Center
+
+		[Line: Global Invoice BillName]
+
+			Fields		: Name Field
+			Local: Field: Name Field	: Set as	: $PartyLedgerName
+
+		[Line: Global Invoice BillAdd]
+
+			Fields		: Name Field
+			Local: Field: Name Field	: Set as	: $Address
+			Local: Field: Name Field	: Style		: Normal
+
+	[Part: Global Invoice ShipAdd]
+
+		Use			: Global Invoice BillAdd
+		Repeat		: Global Invoice BillAdd		: BasicBuyerAddress
+		Delete		: Line	: Global Invoice BillName
+		Local 		: Line	: Global Invoice BillAddTitle 	:Local	: Field	: NameField : Set As	: "Shipping Address"
+		Local 		: Line	: Global Invoice BillAdd		: Local	: Field	: Name Field: Set As	: $BasicBuyerAddress
+
+	[Part: Global Invoice InvDet]
+
+		Lines	: Global Invoice InvNo, Global Invoice InvDt, Global Invoice InvTerms, Global Invoice DueDt, +
+					Global Invoice ShipDt, Global Invoice ShipVia
+
+		[Line: Global Invoice InvNo]
+
+			Fields	: Medium Prompt, Name Field
+			Local	: Field		: Medium Prompt	: Set as	: "Inv No"
+			Local	: Field		: Name Field	: Set as	: $VoucherNumber
+
+		[Line: Global Invoice InvDt]
+
+			Use		: Global Invoice InvNo
+			Local	: Field		: Medium Prompt	: Set as	: "Inv Dt"
+			Local	: Field		: Name Field	: Set as	: $Date
+
+		[Line: Global Invoice InvTerms]
+
+			Use		: Global Invoice InvNo
+			Local	: Field		: Medium Prompt	: Set as	: "Terms of Delivery"
+			Local	: Field		: Name Field	: Set as	: $BasicOrderTerms
+
+		[Line: Global Invoice DueDt]
+
+			Use		: Global Invoice InvNo
+			Local	: Field		: Medium Prompt	: Set as	: "Due Dt"
+			Local	: Field		: Name Field	: Set as	: $$String:@@DueDtCalc
+
+		[Line: Global Invoice ShipDt]
+
+			Use		: Global Invoice InvNo
+			Local	: Field		: Medium Prompt	: Set as	: "Shipped Dt"
+			Local	: Field		: Name Field	: Set as	: $BasicShippingDate
+
+		[Line: Global Invoice ShipVia]
+
+			Use		: Global Invoice InvNo
+			Local	: Field		: Medium Prompt	: Set as	: "Ship Via"
+			Local	: Field		: Name Field	: Set as	: $BasicShippedBy
+
+[Part: GI Inventory Title]
+
+	Lines	: GI Inventory Title
+	Border	: Thin Left Right
+
+	[Line: GI Inventory Title]
+
+		Use		: GI Inventory Details
+
+		Local	: Field	: Default		: Type	: String
+		Local	: Field	: Default		: Style	: Normal Bold
+
+		Local	: Field	: GI SI No		: Set as: "SI. No."
+		Local	: Field	: GI Item Name	: Set as: "Item Name"
+		Local	: Field	: GI Qty		: Set as: "Quantity"
+		Local	: Field	: GI Rate		: Set as: "Rate"
+		Local	: Field	: GI Amount		: Set as: "Amount"
+
+		Border	: Thick Bottom
+		SpaceTop: 0
+
+[Part: Global Invoice Body]
+
+	Lines			: GI Inventory Details
+	Repeat			: GI Inventory Details	: Inventory Entries
+	Scroll			: Vertical
+	Border			: Thin Left Right Bottom
+	Common Borders	: Yes
+
+	[Line: GI Inventory Details]
+
+		Fields		: GI SI No, GI Item Name
+		Right Fields: GI Qty, GI Rate, GI Amount
+
+		Space Top	: if $$Line = 1 then 1 else 0
+
+		[Field: GI SI No]
+
+			Use			: Number Field	
+			Set as		: $$Line
+			Border		: Thin Right
+
+		[Field: GI Item Name]
+
+			Use			: Name Field
+			Set as		: if NOT $$IsSysName:$StockItemName then @@InvItemName else ""
+			FullWidth	: Yes
+
+		[Field: GI Qty]
+
+			Use			: Qty Primary Field
+			Set as		: $BilledQty
+			Border		: Thin Left
+
+		[Field: GI Rate]
+
+			Use			: Rate Field
+			Border		: Thin Left
+			Set as		: $Rate
+
+		[Field: GI Amount]
+
+			Use			: Amount Forex Field
+			Border		: Thin Left
+			Set as		: $Amount
+
+[Part: Global Invoice Bottom]
+
+	Parts	: GI Acc Det, GI Net Amt, GI Invoice Bottom
+	Vertical: Yes
+	Border	: Thin Left Right Bottom
+
+	[Part: GI Acc Det]
+
+		Lines			: GI Inventory Total, GI Acc Det
+		Repeat			: GI Acc Det	: Ledger Entries
+		Height			: 10% Page
+		Common Borders	: Yes
+
+		[Line: GI Inventory Total]
+
+			Right Fields: GI Rate, GI Amount
+			Local		: Field	: GI Rate		: Type	: String
+			Local		: Field	: GI Rate		: Delete: Border
+			Local		: Field	: GI Rate		: Width	: 20
+			Local		: Field	: GI Rate		: Set as: "Sub Total"
+			Local		: Field	: GI Amount		: Set as: $$CollAmtTotal:InventoryEntries:$Amount
+			Local		: Field	: GI Amount		: Style	: Normal Bold
+			Local		: Field	: GI Amount		: Border: Thin Left
+
+		[Line: GI Acc Det]
+
+			Use			: GI Inventory Total
+			Right Fields: GI Rate, GI Amount
+			Local		: Field	: GI Rate		: Set as: $LedgerName
+			Local		: Field	: GI Amount		: Set as: $Amount
+			Local		: Field	: GI Amount		: Style	: Normal
+			Local		: Field	: GI Amount		: Border: Thin Left
+
+	[Part: GI Net Amt]
+
+		Lines	: GI Inventory Total
+		Local	: Line	: GI Inventory Total	: Local	: Field	: GI Rate	: Set as: "Net Amount"
+		Local	: Line	: GI Inventory Total	: Local	: Field	: GI Amount	: Set as: $Amount
+		Border	: Thin Bottom
+
+
+	[Part: GI Invoice Bottom]
+
+		Parts	: GI Address, GI Other Details, GI Signatory
+	
+
+	[Part: GI Address]
+
+		Lines	: GI Address Title, GI Address
+		Repeat	: GI Address	: Company Address
+
+		[Line: GI Address Title]
+			Use		: GI Address
+			Local	: Field	: Name Field	: Style		: Normal Bold
+			Local	: Field	: Name Field	: Set as	: "Address"
+			Indent	: 1
+
+		[Line: GI Address]
+
+			Fields	: Name Field
+			Local	: Field	: Name Field	: Style		: Normal
+			Local	: Field	: Name Field	: Set as	: $Address
+
+	[Part: GI Other Details]
+
+		Lines	: GI Phone, GI Fax, GI Email
+
+
+		[Line: GI Phone]
+
+			Fields	: Medium Prompt, Simple Field
+			Local	: Field	: Medium Prompt	: Set as	: "Phone"
+			Local	: Field	: Simple Field	: Set as	: $PhoneNumber:Company:##SVCurrentCompany
+
+		[Line: GI Fax]
+
+			Fields	: Medium Prompt, Simple Field
+			Local	: Field	: Medium Prompt	: Set as	: "Fax"
+			Local	: Field	: Simple Field	: Set as	: $Fax:Company:##SVCurrentCompany
+
+		[Line: GI Email]
+
+			Fields	: Medium Prompt, Simple Field
+			Local	: Field	: Medium Prompt	: Set as	: "Email"
+			Local	: Field	: Simple Field	: Set as	: $Email:Company:##SVCurrentCompany
+
+	[Part: GI Signatory]
+
+		Bottom Line	: GI Signatory
+		Border		: Thin Left
+			
+		[Line: GI Signatory]
+
+			Field	: Name Field
+			Local	: Field	: Name Field	: Set as	: "for " + @@CmpMailName
+			Local	: Field	: Name Field	: Full width: Yes
+
+
+;; Style Definition
+
+[Style: Cmp Style]
+
+	Font Name	: "Arial"
+	Height		: 15
+
+[System: Formula]
+
+	DueDtCalc	: $Date + $$Number:$BasicDueDateofPymt
+
+;; End-of-File

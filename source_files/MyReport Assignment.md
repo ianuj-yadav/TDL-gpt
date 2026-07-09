@@ -1,0 +1,51 @@
+---
+title: MyReport Assignment
+type: sample_code
+objects: Report, Form, Part, Line, Field
+source: MyReport Assignment.txt
+---
+
+# MyReport Assignment
+
+## Source Code
+
+```tdl
+[#Menu:Gateway of Tally]
+	Item: MyReport: Display:MyReport
+[Report:MyReport]
+	Form:Form1
+	[Form:Form1]
+		Part:Top Part,Body Part, Bottam Part
+		[Part:Top Part]
+			Line: TopLine1
+			[Line:TopLine1]
+				Field:Name,Aasan Solution
+				[Field:Name]
+					Set as:"Name"
+				[Field:Aasan Solution]
+					Set as:"Aasan Solution"
+					
+		[Part:Body Part]
+			Line:BodyLine1, BodyLine2
+			[Line:BodyLine1]
+				Field:Email, Contact.Aasansolution.in
+				[Field:Email]
+					Set as:"Email"
+				[Field:Contact.Aasansolution.in]
+					Set as: "Contact.Aasansolution.in"
+			[Line:BodyLine2]
+				Field:Contact,C123456
+				[Field:Contact]
+					Set as: "Contact"
+				[Field:C123456]
+					Set as: "C123456"
+		[Part:Bottam Part]
+			Line:BottamLine1
+			[Line:BottamLine1]
+				Field:Certification, MCA
+				[Field:Certification]
+					Set as: "Certification"
+				[Field:MCA]
+					Set as: "MCA"
+					
+```

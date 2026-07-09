@@ -1,0 +1,8 @@
+<DefType: System: Formulae>
+
+
+[System:Formula]
+	DOJLessThanBookBeginning 	: "Date Of Joining Less Than Book Of Beginning" 
+	HighCommission				: "The commission is higher than 15%"
+	LowCommission				: "The commission is higher than 0%"
+	

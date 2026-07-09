@@ -1,0 +1,30 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the process of displaying monthly registers in a remote 
+	environment.
+-	This requires Debit, Credit and Closing Methods to be computed within the 
+	Period Collection in remote environment which other was managed within Field
+	by associating respective Object at Field.
+-	Additional methods ie., Name, UseFamilyFlag and ActualVoucherType are used to
+	control Debits/Credits display in Monthly graph
+
+Last modification -
+-	Altered on 09-11-2009
+
+Dependencies -
+-	Supporting File 'Monthly Sales Register.txt'
+*/
+
+[Report: Mth Reg]
+
+	Use			: Mth SR
+	Title		: $$LocaleString:"Monthly Register"
+	Local		: Form: Mth SR	: Add		: Buttons	: DYBK ChgVchType
+
+[#Report: DYBK ChgVchType]
+
+	Local 		: Collection	: Default	: Fetch		: Name, UseFamilyFlag, ActualVoucherType
+
+;; End-of-File

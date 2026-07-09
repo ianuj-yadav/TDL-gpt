@@ -1,0 +1,45 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	The objective of this program is to demonstrate the process of extracting value from 
+	Functions using Symbol '$$'
+-	Functions accept zero or more parameters, processes and returns some value
+-	This code accepts an input (Number) from the user and returns whether the number entered
+	is odd or even using a Platform Function 'IsEven'.
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Function Example 2]
+
+	Form	: Function Example 2
+	
+[Form: Function Example 2]
+
+	Parts	: Function Example 2
+				
+[Part: Function Example 2]
+
+	Lines	: Function Example 2
+	
+	[Line: Function Example 2]
+		
+		Fields	: Medium Prompt, FE 2 Check EvenOdd Input, FE 2 Check EvenOdd Result
+		Local	: Field	: Medium Prompt	: Info		: "Please enter a number:"
+
+		[Field: FE 2 Check EvenOdd Input]
+
+			Use			: Number Field
+
+		[Field: FE 2 Check EvenOdd Result]
+
+			Set As 		: If $$IsEven:#FE2CheckEvenOddInput then "Even Number" else "Odd Number"
+			Set Always 	: Yes
+
+;; Function 'IsEven' is a logical function that accepts a parameter of Type Number 
+;; and checks whether the parameter is even.  It returns True if the parameter is 
+;; Even else returns False.
+
+;; End-Of-File

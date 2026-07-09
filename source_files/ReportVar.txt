@@ -1,0 +1,62 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This code demonstrates the usage of Variable in Report Scope. 
+- 	The Color is being altered based on the variable value. The variable value altered 
+	within the Report is undone once the Report is quit. This behavior can be observed 
+	by setting the Field to Green color and exitting the Report and reentering the 
+	Report. The initial color i.e., Red Background will get restored which shows that 
+	the Variable value switches back to default.
+
+Specific TDL feature(s) used –
+-	Variables and Buttons
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Report Scope]
+
+	Form	: Report Scope
+	Variable: Report Var
+	Title	: "Report Scope - Simple Variables"
+
+[Form: Report Scope]
+
+	Part	: Report Scope
+	Button	: Report Scope Button
+
+[Part: Report Scope]
+
+	Lines	: Report Scope
+
+	[Line: Report Scope]
+		
+		Fields	: Report Scope
+	
+		[Field: Report Scope]
+
+			Set AS		: $$CurrentDate
+			Option		: Report Scope Red BG	: Not ##ReportVar
+			Option		: Report Scope Green BG	: ##ReportVar
+
+			[!Field: Report Scope Red BG]
+
+				Background	: Red
+				
+			[!Field: Report Scope Green BG]
+
+				Background	: Green
+
+[Variable: Report Var]
+
+	Type	: Logical
+		
+[Button: Report Scope Button]
+
+	Key		: Alt + R
+	Action	: Set	: ReportVar	: Not ##ReportVar
+	Title	: if ##ReportVar then "Red" else "Green"
+
+;; End-of-File

@@ -1,0 +1,98 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This code demonstrates the usage of External Objects
+-	Multiple students are defined as external objects and the same is being collected 
+	& displayed in a Report
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Stud List]
+
+	Form		: Stud Form
+	Title       : "List of Students"
+
+[Form: Stud Form]
+
+	Parts		: Stud Part
+
+[Part: Stud Part]
+
+	Lines		: Stud Titles, Stud Line
+	Repeat		: Stud Line 		: Student Masters
+	Scroll		: Vertical
+	CommonBorder: Yes
+
+    [Line: Stud Titles]
+
+		Use 	: Stud Line
+        Local   : Field: Default       : Type      : String
+        Local   : Field: Default       : Align     : Centre
+        Local   : Field: Default       : Style     : Normal Bold        
+		Local   : Field: Stud Name     : Set as    : "Student Name"
+        Local   : Field: Stud JoinDate : Set as    : "Joining Date"
+        Local   : Field: Stud FeePaid  : Set as    : "Fees Paid"
+        Border  : Thin Top Bottom
+        
+    [Line: Stud Line]
+
+        Fields      : Stud JoinDate, Stud Name
+        Right Fields: Stud FeePaid
+
+        [Field: Stud JoinDate]
+        
+            Use         : Uni Date Field
+            Set as      : $$Date:$JoiningDate
+            Width       : 10
+            Border      : Thin Right
+            
+        [Field: Stud Name]
+
+            Use         : Name Field
+            Set as      : $Name
+            FullWidth   : Yes
+                                              
+        [Field: Stud FeePaid]
+        
+            Use         : Amount Field
+            Border      : Thin Left Right
+            Set as      : $$AsAmount:$FeePaid
+                        
+[Collection: Student Masters]
+
+    Objects         : Student1, Student2, Student3, Student4, Student5
+
+	[Object: Student1]
+	
+		Name 			: "Hari"
+		Fee Paid		: 500
+		Joining Date	: "10/01/2007"
+	
+	[Object: Student2]
+	
+		Name 			: "Keshav"
+		Fee Paid		: 150
+		Joining Date	: "12/02/2007"
+		
+	[Object: Student3]
+	
+		Name 			: "Madhav"
+		Fee Paid		: 150
+		Joining Date	: "10/01/2007"
+		
+	[Object: Student4]
+	
+		Name 			: "Krishna"
+		Fee Paid		: 150
+		Joining Date	: "12/03/2007"
+		
+	[Object: Student5]
+	
+		Name 			: "Gopal"
+		Fee Paid		: 150
+		Joining Date	: "12/02/2007"
+		
+;; End-of-File

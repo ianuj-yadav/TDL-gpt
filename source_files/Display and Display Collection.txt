@@ -1,0 +1,180 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the usage of Actions Displa and Display Collection
+-	This code displays the debtors and creditors details
+
+Last modification -
+-	Altered on 09-11-2009
+*/
+
+[Menu: Display and Display Collection]
+
+	Key Item : Sundry Debtors Details 		: D : Display 				: SD Address Book
+	Key Item : Sundry Creditors Details 	: C : Display 				: SC Address Book
+	Key Item : Select Debtors for Display	: S : Display Collection 	: SD Groups
+	Key Item : Select Creditors for Print	: P	: Print Collection 		: SC Groups
+
+;; Report - SD Address Book
+
+[Report: SD Address Book]
+
+	Use 	: DSP Template
+	Form 	: SD Address Book
+	Variable: GroupName
+	Set 	: GroupName 	: If $$IsEmpty:##GroupName then $$GroupSundryDebtors else ##GroupName
+  
+[Form: SD Address Book]
+
+	Use 	: DSP Template
+	Parts	: SD Address Book Title, SD Address Book
+
+[Part: SD Address Book Title]
+
+	Lines 	: SD Address Book Title
+
+	[Line: SD Address Book Title]
+
+		Use 	: SD Address Book
+		Local 	: Field : SD Sr No		: Set as : "Sr"
+		Local 	: Field : SD Name		: Set as : "Name"
+		Local 	: Field : SD ContactNo	: Set as : "Contact Person"
+		Local 	: Field : SD Phone		: Set as : "Phone"
+		Local 	: Field : SD Address	: Set as : "Address"
+		Border 	: Column Titles
+
+[Part: SD Address Book]
+
+	Lines		: SD Address Book
+	Repeat  	: SD Address Book : My Sundry Debtors
+	Scroll 		: Vertical
+	CommonBorder: Yes
+
+	[Line: SD Address Book]
+
+		Fields		: SD Sr No, SD Name
+		Right Fields: SD ContactNo, SD Phone, SD Address
+
+		[Field: SD Sr No]
+
+			Use 		: Short Name Field
+			Set as 		: $$Line
+			Style 		: Normal
+			Width 		: 4
+			Align 		: Centre
+
+		[Field: SD Name]
+
+			Use 		: Name Field
+			Set as 		: $Name
+			FullWidth 	: Yes
+			Style 		: Normal
+			Border 		: Thin Left
+			Alter 		: Ledger	
+			Variable 	: Ledger Name
+			Display 	: Ledger Vouchers
+
+		[Field: SD ContactNo]
+
+			Use 		: Short Name Field
+			Set as 		: $LedgerContact
+			Style 		: Normal
+			Border 		: Thin Left
+
+		[Field: SD Phone]
+
+			Use 		: Short Name Field
+			Set as 		: $LedgerPhone
+			Style 		: Normal
+			Border 		: Thin Left
+
+		[Field: SD Address]
+
+			Use 		: Short Name Field
+			Set as 		: $$FullList:Address:$Address
+			Style 		: Normal
+			Border 		: Thin Left
+			Lines 		: 0
+
+[Collection: My Sundry Debtors]
+
+	Type 		: Ledger
+	Childof 	: ##GroupName
+	BelongsTo 	: Yes
+	Fetch		: Name, Parent, LedgerPhone,LedgerContact
+	Fetch		: Address.*
+
+;; Report - SC Address Book
+
+[Report: SC Address Book]
+
+	Use 	: SD Address Book
+	Set 	: GroupName 	: If $$IsEmpty:##GroupName then $$GroupSundryCreditors else ##GroupName
+
+;; Collection - SD Groups
+
+[Collection: SD Groups]
+
+	Type 		: Group
+	Child of 	: $$GroupSundryDebtors
+	Belongs To 	: Yes
+	Variable 	: GroupName
+	Report 		: SD Address Book 
+	Trigger 	: SD Groups Trigger
+	Align 		: Centre
+	Fetch		: Name
+
+[Report: SD Groups Trigger]
+
+	Form 		: SD Groups Trigger
+	Variable 	: GroupName
+
+[Form: SD Groups Trigger]
+
+	Parts		: SD Groups Trigger
+	Height 		: 100% Page
+	Width 		: 20% Page
+
+[Part: SD Groups Trigger]
+
+	Lines	: SD Groups Trigger Title, SD Groups Trigger
+
+	[Line: SD Groups Trigger Title]
+
+		Fields: Form SubTitle
+		Local : Field: Form SubTitle : Set as 	: "Select Group"
+		Space Bottom : 1
+
+	[Line: SD Groups Trigger]
+
+		Fields: SD Groups Trigger
+
+		[Field: SD Groups Trigger]
+
+			Use 		: Name Field
+			Table 		: SD Groups
+			Variable	: Group Name
+			Modifies	: Group Name
+			Show Table 	: Always
+
+;; Collection - SC Groups
+
+[Collection: SC Groups]
+
+	Type 		: Group
+	Childof 	: $$GroupSundryCreditors
+	Belongs To 	: Yes
+	Variable 	: GroupName
+	Report 		: SC Address Book 
+	Trigger 	: SC Groups Trigger
+	Align 		: Centre
+	Fetch		: Name
+
+[Report: SC Groups Trigger]
+
+	Use 		: SD Groups Trigger
+	Local: Field: SD Groups Trigger : Delete: Table 
+	Local: Field: SD Groups Trigger : Add 	: Table : SC Groups
+
+;; End-of-File

@@ -1,0 +1,44 @@
+---
+title: check encryption
+type: sample_code
+objects: Report, Form, Part, Line, Field
+source: check encryption.txt
+---
+
+# check encryption
+
+## Source Code
+
+```tdl
+[#Menu:Gateway of Tally]
+	Add		: Item	: Encrypt		: Display	: Encrypt
+	
+[Report:Encrypt]
+	Form		: Encrypt
+	
+[Form:Encrypt]
+	Part		: Encrypt
+	
+[Part:Encrypt]
+	Lines		: Encrypt1,Encrypt2,Encrypt3
+	Width		: 100% Page
+	[Line:Encrypt1]
+		Field		: Encrypt1
+		[Field:Encrypt1]
+			Use			: Name Field
+			Set as		: "Hello"
+
+	[Line:Encrypt2]
+		Field		: Encrypt2
+		[Field:Encrypt2]
+			Use			: Name Field
+			Set as		: $$LocaleString:($$EncryptStr:"Hel":12534)
+
+	[Line:Encrypt3]
+		Field		: Encrypt3
+		[Field:Encrypt3]
+			Use			: Name Field
+			Set as		: $$DecryptStr:"xs65CKH9mA/68TxePUBwYQrY+vAqid3FH6k0qVNXXilv4Y+++YOmdLEA0Zad2edCZIHGdPLqRSfS0lfORyC93YCsPQn79vmp65t8fwVlttQ=":123456
+			
+Width		: 100% Page
+```

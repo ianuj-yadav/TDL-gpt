@@ -1,0 +1,24 @@
+[Report:Display All Items]
+	Title:"Display All Items"
+	Form:Display All Items
+	
+[Form:Display All Items]
+	Part:Display All Items
+	
+[Part:Display All Items]
+	Line	:Display All Items
+	;; Repeat is to used for repeating for a collection
+	;; For repeating you must make a collection
+	Repeat	:Display All Items	: Ledgers Tirlok
+	
+	;; Scroll vertical can show the data ffrom top otherwise it show in the middle
+	Scroll	:Vertical
+	[Line:Display All Items]
+		Field:StkItemName, StkItemGroup, StkItemClosingBalance
+
+
+[Collection:Stock Items Tirlok]
+	Type:Stock Item
+	
+[Collection:Ledgers Tirlok]
+	Type:Ledger

@@ -1,0 +1,67 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This Code demonstrates the usage of TypeCasting Functions "DateRange" 
+-	This is useful to auto set values of the fields while ledger/voucher creation 
+	like 'Due Date' field
+
+Last Modification -
+-	Altered on 09-11-2009
+*/
+
+[Report: UDF DateRange Report]
+
+	Form		: UDF DateRange Report
+
+[Form: UDF DateRange Report]
+
+	Parts		: UDF DateRange Report
+	Background	: Lily White
+
+[Part: UDF DateRange Report]
+
+	Lines		: UDF DateRange Report
+
+	[Line: UDF DateRange Report]
+
+		Fields	: UDF DateRange1, UDF DateRange2, UDF DateRange3, UDF DateRange4, UDF DateRange 5
+
+		[Field: UDF DateRange 1]
+
+			Use		: Due Date Field
+;; This Field will include the current date and add 9 days from 01-10-2009
+			Set As	: $$DateRange:"10 days":"01-10-2009":True
+			Color	: Red
+
+		[Field: UDF DateRange 2]
+
+			Use		: Due Date Field
+;; This Field will exclude the current date and add 15 days from 02-10-2009
+			Set As	: $$DateRange:"15":($$Date:"01-10-2009"):False
+			Color	: Green
+
+		[Field: UDF DateRange 3]
+
+			Use		: Due Date Field
+;; This Field will include the date evaluated from $$SystemPeriodFrom and 
+;; add 20 Weeks from Starting Period
+			Set As	: $$DateRange:"20 W":$$SystemPeriodFrom:True
+			Color	: Grey
+
+		[Field: UDF DateRange 4]
+
+			Use		: Due Date Field
+;; This Field will include the Date SVCurrentDate and add 2 Months from Current Date
+			Set As	: $$DateRange:"2 M":##SVCurrentDate:True
+			Color	: Soft Violet
+
+		[Field: UDF DateRange 5]
+
+			Use		: Due Date Field
+;; If we supply a date, we must ensure that the third parameter '02-06-2009' must be 
+;; lesser than the second parameter i.e., ##SVCurrentDate in this case
+			Set As	: $$DateRange:##SVCurrentDate:"02-06-2009":True
+			Color	: Yellow
+
+;; End-of-File

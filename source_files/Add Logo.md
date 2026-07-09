@@ -1,0 +1,32 @@
+---
+title: Add Logo
+type: sample_code
+objects: Part
+source: Add Logo.txt
+---
+
+# Add Logo
+
+## Source Code
+
+```tdl
+/*
+[Part:BinarySoft Logo]
+	Line:Empty
+	Graph Type:$Logopath:Company:#SVCurrentCompany
+	Width:100% Page
+	Height:10% Page
+	
+[]
+*/
+[#Form: STDInvoiceDimensions]
+	Add:Part:At Beginning:EXPINV Logo Tirlok
+[Part: EXPINV Logo Tirlok]
+		
+	Use		: EXPINV Logo
+	;Graph Type	: ##SALogoPath;$LogoPath:Company:##SVCurrentCompany
+	;Height		: 10% Page
+	;Width		: 100% Page
+	;Invisible	: If $$InPrintMode OR $$InMailAction OR ($$InExportMode And $$IsSysNameEqual:HTML:##SVExportFormat) then No Else Yes
+		
+```

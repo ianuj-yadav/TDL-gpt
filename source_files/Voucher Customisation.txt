@@ -1,0 +1,170 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Demo TDLs for Voucher Customisation
+*/
+
+[Menu: Voucher Customisation]
+
+	Indent		: "Voucher Customisation"
+	Key Item	: Blank
+	Key Item	: Receipt Voucher 				: R : Display	: Customised Receipt Voucher
+	Key Item	: Adding Inv Columns			: A : Alter		: Customised Sales Voucher
+	Key Item	: Adding a Subform				: S : Alter		: Customised Subform
+	Key Item	: Altering the Discount column	: D : Display	: Customised Discount field
+
+	Indent		: "Invoice Customisation"
+	Key Item	: Blank
+	Key Item	: Invoice - Simple				: I : Display	: Customised Invoice
+	Key Item	: Invoice - Comprehensive		: C : Display	: Customised Invoice Comp
+	Key Item	: Invoice - T & C				: T : Display	: Customised Invoice Case1
+	Key Item	: Blank
+
+;; Voucher Customisation - Case 1
+
+[Report: Customised Receipt Voucher]
+	
+	Use 	: Daybook
+	Set     : VoucherTypeName  	: $$VchTypeReceipt
+	Set		: FamilyVoucherFlag	: $$VchTypeReceipt
+	Local	: Form	: Day Book	: Delete	: Options
+
+;; Voucher Customisation - Case 2
+
+[Report: Customised Sales Voucher]
+
+	Use		: Voucher
+	Form	: Customised Sales Voucher
+	Set 	: SVVoucherType		: $$VchTypeSales
+
+	Set             : InvoicingModeFlag  : Yes
+
+	Set		: VrVarC1			: Yes
+	Set		: VrVarC2			: No
+
+	Set		: InvVarC1			: No
+	Set		: InvVarC2			: No
+	Set		: InvVarC3			: No
+	Set		: InvVarC4			: No
+
+[Form: Customised Sales Voucher]
+
+	Use		: Voucher  ;;Export Invoice
+	
+;; Voucher Customisation - Case 3
+
+[Report: Customised Subform]
+
+	Use		: Voucher
+	Form	: Customised Subform 
+	Set 	: SVVoucherType		: $$VchTypeSales
+	Set     : InvoicingModeFlag : Yes
+
+
+	Set		: VrVarC1			: No
+	Set		: VrVarC2			: Yes
+
+[Form: Customised Subform]
+
+	Use		: Accounting Voucher  
+
+;; Voucher Customisation - Case 4
+
+[Report: Customised Discount Field]
+
+	Use 	: Daybook
+	Set		: VrVarC1			: No
+	Set		: VrVarC2			: No
+
+	Set		: InvVarC1			: Yes
+	Set		: InvVarC2			: No
+	Set		: InvVarC3			: No
+	Set		: InvVarC4			: No
+	Set     : VoucherTypeName  	: $$VchTypeSales
+	Set		: FamilyVoucherFlag	: $$VchTypeSales
+	Local	: Form	: Day Book	: Delete	: Options
+		
+;; Invoice Customisation - Case 1
+
+[Report: Customised Invoice]
+			
+	Use 	: Daybook
+
+	Set		: VrVarC1			: No
+	Set		: VrVarC2			: No
+
+	Set		: InvVarC1			: Yes
+	Set		: InvVarC2			: No
+	Set		: InvVarC3			: No
+	Set		: InvVarC4			: No
+	Set     : VoucherTypeName  	: $$VchTypeSales
+	Set		: FamilyVoucherFlag	: $$VchTypeSales
+	Local	: Form	: Day Book	: Delete	: Options
+
+;; Invoice Customisation - Case 2
+
+[Report: Customised Invoice Comp]
+			
+	Use 	: Customised Invoice
+	Set		: InvVarC1			: No
+	Set		: InvVarC2			: Yes
+
+;; Invoice customisation - Case 3
+
+[Report: Customised Invoice Case1]
+			
+	Use 	: Customised Invoice Comp
+	Set		: InvVarC2			: No
+	Set		: InvVarC3			: Yes
+
+
+;; Variable Declaration and Globalisation
+
+[Variable: InvVarC1]
+
+	Type		: Logical
+
+[Variable: InvVarC2]
+
+	Type		: Logical
+
+[Variable: InvVarC3]
+
+	Type		: Logical
+
+[Variable: InvVarC4]
+
+	Type		: Logical
+
+
+[Variable: VrVarC1]
+
+	Type		: Logical
+
+[Variable: VrVarC2]
+
+	Type		: Logical
+
+[System: Variable]
+
+	VrVarC1		: No
+	VrVarC2		: No
+
+	InvVarC1	: No
+	InvVarC2	: No
+	InvVarC3	: No
+	InvVarC4	: No
+
+;; Include Section
+
+[Include: Voucher Customisation - Case 1.txt]
+[Include: Voucher Customisation - Case 2.txt]
+[Include: Voucher Customisation - Case 3.txt]
+[Include: Voucher Customisation - Case 4.txt]
+
+[Include: Invoice Customisation - Case 1.txt]
+[Include: Invoice Customisation - Case 2.txt]
+[Include: Invoice Customisation - Case 3.txt]
+
+
+;; End-of-File

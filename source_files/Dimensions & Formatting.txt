@@ -1,0 +1,75 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Demo TDLs for Dimensions
+*/
+
+[Menu: Dimensions and Formatting]
+
+	Indent		: "Sizing Attributes"
+	Item		: Blank
+
+	Key Item	: Default Dimensions			: N : Display	: Default Dimensions
+	Key Item	: Form Height & Width			: E : Display	: Form Height Width
+	Key Item	: Part Height & Field Width		: G : Display	: Part Height Field Width
+	Item		: Blank
+
+	Indent		: "Alignment Attributes"
+	Item		: Blank
+
+	Key Item	: Bottom Parts within Form		: B : Display	: Bottom Parts within Form
+	Key Item	: Left & Right Parts			: T : Display	: Left and Right Part within Part
+	Key Item	: Top & Bottom Lines			: M : Display	: Top and Bottom Lines within Part
+	Key Item 	: Parts within Part				: W : Display	: Parts within Part
+	Item		: Blank
+
+	Indent		: "Spacing Attributes"
+	Item		: Blank
+
+	Key Item	: Spacing Attributes			: S : Display	: Spacing Attributes
+	Key Item 	: Indent Attribute				: I : Display	: Indent Attribute
+	Item		: Blank
+
+	Indent		: "Formatting Definitions and Attributes"
+	Item		: Blank
+
+	Key Item	: Border and Style				: D : Display	: Sample Border and Style
+	Key Item 	: String Length using Formatting: F : Alter		: Sample Border and Color
+	Item		: Blank
+
+	Indent		: "Some Specific Attributes"
+	Item		: Blank
+	Key Item 	: Invisible & Inactive 1		: 1 : Display	: Invisible and Inactive 1
+	Key Item 	: Invisible & Inactive 2		: 2 : Display	: Invisible and Inactive 2
+	Item		: Blank
+
+	Indent		: "General Attributes"
+	Item		: Blank
+	Key Item 	: National Flag					: F : Display	: National Flag
+	Key Item 	: Boxes							: X : Display	: Boxes
+	Key Item 	: Calculator Layout				: U : Display	: Calculator
+	Item		: Blank
+
+[Include: Default Dimensions.txt]
+[Include: Form Height Width.txt]
+[Include: Part Height Field Width.txt]
+
+[Include: Bottom Part within Form.txt]
+[Include: Left and Right Part with Part.txt]
+[Include: Top and Bottom Lines within Part.txt]
+[Include: Parts within Part.txt]
+
+[Include: Spacing Attributes.txt]
+[Include: Indent Attribute.txt]
+
+[Include: Sample Border and Style.txt]
+[Include: Sample Border and Color.txt]
+
+[Include: Invisible and Inactive 1.txt]
+[Include: Invisible and Inactive 2.txt]
+
+[Include: National Flag.txt]
+[Include: Boxes.txt]
+[Include: Calculator.txt]
+
+;; End-of-File

@@ -1,0 +1,88 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	The objective of this program is to demonstrate the process of extracting value from 
+	Functions using Symbol '$$'
+-	Functions accept zero or more parameters, processes and returns some value
+-	This code also introduces some date related functions.
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Function Example 3]
+
+	Form	: Function Example 3
+	
+[Form: Function Example 3]
+
+	Parts	: Function Example 3
+	Button	: Change Date
+	Width	: 30% Page
+
+[Part: Function Example 3]
+
+	Lines	: FE 3 Info Line, FE 3 Current Date, FE 3 Current Day, +		;; Symbol '+' in this context is a line continuation character
+			  FE 3 Current Month Name, FE 3 Current Month Name in Short
+	
+	[Line: FE 3 Info Line]
+
+		Fields	: Info Field
+		Local	: Field	: Info Field	: Info		: "Date Functions"
+		Local	: Field	: Info Field	: FullWidth	: Yes
+		Local	: Field	: Info Field	: Align		: Center
+		Local	: Field	: Info Field	: Border	: Thin Bottom
+		Local	: Field	: Info Field	: Style		: Normal Italic
+		Space Bottom	: 1
+
+	[Line: FE 3 Current Date]
+
+	 	Fields	: Long Prompt, FE 3 Current Date
+		Local	: Field	: Long Prompt	: Info	: "Current date set by user using F2:"
+
+		[Field: FE 3 Current Date]
+
+			Use		: Uni Date Field
+			Set as	: $$CurrentDate
+;; Function 'CurrentDate' displays the current date as selected by the user 
+;; using 'F2:Date' Button. For e.g., 3-Feb-2009
+
+	[Line: FE 3 Current Day]
+
+		Fields	: Long Prompt, FE 3 Current Day
+		Local	: Field	: Long Prompt	: Info	: "Current day in the above date:"
+
+		[Field: FE 3 Current Day]
+
+			Use		: Short Name Field
+			Set as	: $$DayOfWeek:$$CurrentDate
+;; Function 'DayOfWeek' extracts the day of the week from the parameter of Type 'Date' 
+;; specified.  In this case, another function 'CurrentDate' itself is given as a 
+;; parameter which returns the date selected by the user. For e.g., Tuesday
+
+	[Line: FE 3 Current Month Name]
+
+		Fields	: Long Prompt, FE 3 Current Month Name
+		Local	: Field	: Long Prompt	: Info	: "Current month name in the above date:"
+
+		[Field: FE 3 Current Month Name]
+			
+			Use		: Short Name Field
+			Set as	: $$FullMonthName:$$CurrentDate
+;; Function 'FullMonthName' extracts the month name from the parameter of Type 'Date'
+;; specified and displays it in full.  For e.g., February
+
+	[Line: FE 3 Current Month Name in Short]
+
+		Fields	: Long Prompt, FE 3 Current Month Name in Short
+		Local	: Field	: Long Prompt	: Info	: "Short month name in the above date:"
+	
+		[Field: FE 3 Current Month Name in Short]
+
+			Use		: Short Name Field
+			Set as	: $$ShortMonthName:$$CurrentDate
+;; Function 'ShortMonthName' extracts the month name from the parameter of Type 'Date' 
+;; specified and displays it in short. For e.g., Feb
+
+;; End-Of-File

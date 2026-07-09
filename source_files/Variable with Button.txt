@@ -1,0 +1,72 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This code demonstrates the usage of Variables along with Buttons
+- 	The following report changes the form color based on the variable value
+
+Last modification – 
+-	Altered on 17/02/2010
+*/
+
+[Report: Variable with Button]
+
+	Form 		: Variable with Button
+
+[Form: Variable with Button]
+
+	Parts		: Variable with Button
+	Button 		: Change Color
+	Height		: 100% Page
+	Width		: 100% Page
+
+	Switch		: Color	: Yellow HelloWorld : ##ChangeColor = Yellow
+	Switch		: Color	: Green HelloWorld 	: ##ChangeColor = Green
+;; One of the following optional forms are executed based on satisfying 
+;; the given condition
+
+	[!Form: Yellow HelloWorld]
+	
+		Background		: Light Lily Yellow
+
+	[!Form: Green HelloWorld]
+
+		Background		: Pale Sea Green
+
+	[Part: Variable with Button]
+
+		Lines	: Variable with Button
+
+		[Line: Variable with Button]
+
+			Fields			: VwB Field 1
+			Right Fields	: VwB Field 2
+
+			[Field: VwB Field 1]
+
+				Set as	: "Hello TDL"
+
+			[Field: VwB Field 2]
+
+				Set as	: "Welcome to the World of TDL"
+
+[Button: Change Color]
+;;The button Alt+E has been used in default code of TallyPrime
+
+	Key 	: Alt + R
+	Action 	: Set	: Change Color	: if ##ChangeColor = "Green" then "Yellow" else "Green"
+	Title	: if ##ChangeColor = "Green" then "Yellow" else "Green"
+
+;; Variable 'Change Color' is used to control the behavior of a Form
+;; The Button 'Change Color' changes the value of the variable
+
+[Variable: Change Color]
+
+	Type 		: String
+	Persistent	: Yes
+
+[System: Variable]
+
+	Change Color: Green
+	
+;; End-of-File

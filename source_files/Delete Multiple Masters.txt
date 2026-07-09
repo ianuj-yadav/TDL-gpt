@@ -1,0 +1,169 @@
+[#Menu:Gateway Of Tally]
+	Add		: Item		: Delete Multiple Masters	: Menu	: Delete Multiple Master
+	
+[Menu:Delete Multiple Master]
+	Title		: "Delete Masters"
+	Indent		: "Account Master"
+	Item		: Blank
+	Item		: Ledgers 		: Display	: MDLedgers
+	Item		: Blank
+	Item		: Groups 		: Display	: MDGroups
+	Item		: Blank
+	Item		: CostCentre 	: Display	: MDCostCentre
+	Item		: Blank
+	Indent		: "Inventory Master"
+	Item		: StockItem 		: Display	: MDStockItem
+	Item		: Blank
+	Item		: Stock Group 		: Display	: MDStockGroup
+	Item		: Blank
+	Item		: Stock Category	: Display	: MDStockCategory
+	Item		: Blank
+
+[Report:MDLedgers]
+	Title	: "Ledger Master"
+	Use		: MDReport
+	
+[Report:MDGroups]
+	Title	: "Group Master"
+	Use		: MDReport
+	Local	: Collection	: MyMasterColl	: Delete	: Type
+	Local	: Collection	: MyMasterColl	: Add		: Type		: Group
+	
+[Report:MDCostCentre]
+	Title	: "CostCentre Master"
+	Use		: MDReport
+	Local	: Collection	: MyMasterColl	: Delete	: Type
+	Local	: Collection	: MyMasterColl	: Add		: Type		: CostCentre
+	
+[Report:MDStockItem]
+	Title	: "Stock Item Master"
+	Use		: MDReport
+	Local	: Collection	: MyMasterColl	: Delete	: Type
+	Local	: Collection	: MyMasterColl	: Add		: Type		: StockItem
+	
+[Report:MDStockGroup]
+	Title	: "Stock Group Master"
+	Use		: MDReport
+	Local	: Collection	: MyMasterColl	: Delete	: Type
+	Local	: Collection	: MyMasterColl	: Add		: Type		: StockGroup
+	
+[Report:MDStockCategory]
+	Title	: "Stock Category Master"
+	Use		: MDReport
+	Local	: Collection	: MyMasterColl	: Delete	: Type
+	Local	: Collection	: MyMasterColl	: Add		: Type		: StockCategory
+	
+
+[Report:MDReport]
+	Form	: MDReport
+	
+[Form:MDReport]
+	Height		: 100% Page
+	Width		: 100% Page
+	Part		: MDReport
+	Buttons		: GrDeleteSelected, GrDeleteAll, GrSelectAll, GrUnselectAll
+	
+[Button:GrDeleteSelected]
+	Title		: "Delete Selected"
+	Key			: Alt+D
+	Action		: Delete Object
+	Scope		: Selected Lines
+	Mode		: Display
+	
+[Button:GrDeleteAll]
+	Title		: "Delete All"
+	Key			: Ctrl+D
+	Action		: Delete Object
+	Scope		: All Lines
+	Mode		: Display
+	
+[Button:GrSelectAll]
+	Title		: "Select All"
+	Key			: Ctrl+A
+	Action		: Select All
+	Mode		: Display
+	
+[Button:GrUnselectAll]
+	Title		: "UnSelect All"
+	Key			: Ctrl+8
+	Action		: Unselect All
+	Mode		: Display
+	
+
+[Part:MDReport]
+	Lines		: MDReportTitle, MDReportDetails
+	Repeat		: MDReportDetails		: MyMasterColl
+	Scroll		: Vertical
+	Common Borders	: Yes
+	
+	[Line:MDReportTitle]
+		Use		: MDReportDetails
+		Local	: Field		: Default		: Type	: String
+		Local	: Field		: Default		: Style	: Normal Bold
+		Local	: Field		: Default		: Align	: Centre
+		
+		Local	: Field		: MDReportSlNo		: Info	: "Sl No"
+		Local	: Field		: MDReportName		: Info	: "Name"
+		Local	: Field		: MDReportParent	: Info	: "Parent/Under"
+		
+		
+	[Line:MDReportDetails]
+		Fields		: MDReportSlNo, MDReportName, MDReportParent, NewLedg
+		Option		: Alter On Enter
+		[Field:MDReportSlNo]
+			Use			: Number Field
+			Set as		: $$Line
+			Skip		: Yes
+			Width		: 5
+
+		[Field:MDReportName]
+			Use			: Name Field
+			Set as		: $Name
+			Skip		: Yes
+			Width		: 30
+			Border		: Thin Left Right
+			Alter		: StockItem
+
+		[Field:MDReportParent]
+			Use			: Name Field
+			Set as		: $Parent
+			Skip		: Yes
+			Width		: 30
+			
+		[Field:NewLedg]
+			Use			: Name Field
+			Set as		: Object
+			Skip		: Yes
+			Width		: 30
+			
+		
+
+[Collection:MyMasterColl]
+	Type		: Ledger
+	Compute		: IsEmptyObject		: $$IsEmptyObject
+	;Filter		: OnlyEmpty
+	
+[System: Formula]
+	OnlyEmpty		: $$IsEmptyObject
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

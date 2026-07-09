@@ -1,0 +1,60 @@
+[#Part: EI Consignee]
+	Add:Line:After:EI Consignee:AAdhar Number,Address BAR
+	;Add:Line:After:EI Consignee:GSTIN BAR
+[Line:AAdhar Number]
+	Space Top		: 0.25
+	Space Bottom	: 0.25
+	Fields:simple Prompt,AAdhar Number
+	Local: Field : simple Prompt	: Info: $$LocaleString:"Aadhar Number:"
+	[Field:AAdhar Number]
+		Use:long prompt
+		Set as:$Aadharnum:ledger:$partyledgername
+		
+[Line:Address BAR]
+	Space Top		: 0.25
+	Space Bottom	: 0.25
+	Fields:simple Prompt,Address BAR
+	Local: Field : simple Prompt	: Info: $$LocaleString:"State:"
+	
+	[Field:Address BAR]
+		;Set as: #LEDGSTIN
+		USe:long prompt   
+		Set as:$priorStateName:ledger:$partyledgername
+		
+;;;;;;;;;;Print aadhar in print invoice in buyer section ;;;;;;;;;;
+
+[#Part:ExpInv Buyer]
+	Add:Line:After:ExpInv Buyer:New AAdhar PrintBuyer
+	
+[Line:New AAdhar PrintBuyer]
+	Fields:long Prompt,AAdhar PrintBuyer
+	Local:Field:LOng Prompt:Set as: "Aadhar Number"
+	[Field:AAdhar PrintBuyer]
+		Use:Name Field
+		Set as:$Aadharnum:ledger:$partyledgername
+		
+;;;;;;;;;;Print aadhar in print invoice in Consignee section ;;;;;;;;;;
+
+[#Part:ExpInv Consignee]
+	Add:Line:After:ExpInv Consignee:New AAdhar PrintConsignee
+	
+[Line:New AAdhar PrintConsignee]
+	Fields:long Prompt,AAdhar PrintConsignee
+	Local:Field:LOng Prompt:Set as: "Aadhar Number"
+	[Field:AAdhar PrintConsignee]
+		Use:Name Field
+		Set as:$Aadharnum:ledger:$partyledgername
+		
+;;;;;;;;;;Print aadhar in print invoice in Supplier section ;;;;;;;;;;
+
+[#Part:ExpInv SupplierRef]
+	Add:Line:After:ExpInv Supplier:New AAdhar Print Supplier
+	
+[Line:New AAdhar Print Supplier]
+	Fields:long Prompt,AAdhar Print Supplier
+	Local:Field:LOng Prompt:Set as: "Aadhar Number"
+	[Field:AAdhar Print Supplier]
+		Use:Name Field
+		Set as:$Aadharnum:ledger:$partyledgername
+	
+

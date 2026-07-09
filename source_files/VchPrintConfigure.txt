@@ -1,0 +1,32 @@
+[#Form:VchPrintConfigure]
+	;Background	: Grey
+	;Add			: Button	: ConfigureSales
+	
+[Button:ConfigureSales]
+	Inactive	: Not @@IsSales
+	Title		: "Cogigure Sales Invoice"
+	
+
+[#Part: STDInvoiceTop]
+	Invisible		: No
+    [#Line: STDInvoiceTop]
+
+        Invisible   : No
+	
+[#Field: EXPINVPartyLedName]
+
+	Invisible   : No
+
+[#Field: EXPMailName]
+
+	Invisible	: No
+
+[#Field: EXPINVInvTotal]
+
+	Invisible   : No
+
+[#Line : MultiMasterDefParent]
+	Border		: Thick Box
+	
+[#Field:Multi Master Name]
+	Background		: red

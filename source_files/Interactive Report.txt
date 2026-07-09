@@ -1,0 +1,104 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+
+
+/*
+
+	Interactive Report
+
+*/
+
+[Report:  Batch List Report]
+
+	Form 	: Batch List Form
+	
+[Form: Batch List Form]
+	
+	Part	: Batch List Part
+	Height	: 50% Screen
+	Width	: 50% Screen
+	Add 	: Button	: Stock Button
+
+[Part: Batch List Part]
+
+	Line	: Batch List Title, Batch List Details   
+	Repeat	: Batch List Details : Batch List Coll
+	Scroll	: Vertical 
+	Border	: Thin Box
+	Common Border : Yes
+
+	[Line: Batch List Title]
+		
+		Use		: Batch List Details
+		Local	: Field	: Batch Slno				: Set as : "Sl.No."
+		Local	: Field : Batch Name Custom Field 	: Set as : "Batch Name"
+		Local	: Field : BatchclosingQty			: Set as : "Closing Balance"   
+		Local	: Field : Default					: Type 	 : String
+		Border	: Thin Bottom
+
+	[Line: Batch List Details]
+		
+		Field		: Batch Slno, Batch Name Custom Field
+		Right Field : BatchclosingQty
+
+		[Field: Batch Slno]
+			Use		: Number Field
+			Set as	: $$Line
+			Border	: Thin Right
+
+		[Field: Batch Name Custom Field]
+			
+			Use		: Name Field
+			Set as	: $$Name
+
+		[Field: BatchclosingQty]
+		
+			Use		: Qty Field
+		  	Set as	: $ClosingBalance
+			Border	: Thin Left  
+
+[Collection: Batch List Coll]
+	
+		Type 	 : Batch
+		Child of : ##Stkvariable
+	 
+[Button: Stock Button]
+	
+	Key	  	: Alt + F9
+	Title 	: "Batch List"
+	Action 	: Execute : Stk Item Selection Report 
+
+[Report: Stk Item Selection Report ]
+
+	Form	: Stk Item Selection Form
+
+[Form: Stk Item Selection Form]
+	
+	Part	: Stk Item Selection Part
+
+[Part: Stk Item Selection Part]
+	
+	Line	: Stk Item Selection Line
+
+	[Line: Stk Item Selection Line]
+	
+		Field 	: Medium Prompt, Stk Item Selection Field 
+		Local	: Field	: Medium Prompt : Set as : "Enter the Stock Item Name"
+
+		[Field: Stk Item Selection Field ]
+
+			Use		 : Name Field
+			Table	 : Stock Item
+			Variable : Stkvariable
+			Modifies : Stkvariable
+
+[Variable : Stkvariable]
+
+	Type 	: String
+
+[System : Variable]
+	Stkvariable :""	
+
+
+
+;; End-of-File

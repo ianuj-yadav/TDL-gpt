@@ -1,0 +1,132 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This Sample TDL demonstrates the Multi Line Selection Capability with enhanced Actions 
+	and Scopes
+
+Last Modification -
+-	Altered on 09-11-2009
+*/
+
+[Report: MultiSample]
+
+	Use 	: Day book
+	Delete 	: Form
+	Add  	: Form 	: MultiSample
+
+[Form: MultiSample]
+
+	Use 	: Day Book
+	Button 	: RemoveSelected, RemoveUnselected, RemoveAll
+	Button 	: DeleteSelected, DeleteUnselected, DeleteAll
+	Button 	: Select All, Btn Select None, Btn Invert Selection
+	Key    	: Shift Down Select	;; Demonstrates multi-action 
+
+[Button: RemoveSelected]
+
+	Key		: Ctrl + 1
+	Action	: Remove Line
+	Mode	: Display
+
+	;; Scope - Newly introduced which means that the Action Remove Line should be carried on for
+	;; Selected lines
+	Scope	: Selected Lines
+
+[Button: RemoveUnselected]
+
+	Key		: Ctrl + 2
+	Action	: Remove Line
+	Mode	: Display
+
+	;; Scope - Newly introduced which means that the Action Remove Line should be carried on for
+	;; Unselected lines
+	Scope	: Unselected Lines
+
+[Button: RemoveAll]
+
+	Key		: Ctrl + 3
+	Action	: Remove Line
+	Mode	: Display
+
+	;; Scope - Newly introduced which means that the Action Remove Line should be carried on for
+	;; All lines
+	Scope	: All Lines
+
+[Button: DeleteSelected]
+
+	Key		: Alt + 4
+	Action	: Delete Object
+	Mode	: Display
+
+	;; Scope - Newly introduced which means that the Action Delete Object should be carried on for
+	;; Selected lines
+	Scope	: Selected Lines
+
+[Button: DeleteUnselected]
+
+	Key		: Ctrl + 5
+	Action	: Delete Object
+	Mode	: Display
+
+	;; Scope - Newly introduced which means that the Action Delete Object should be carried on for
+	;; Unselected lines
+	Scope	: Unselected Lines
+
+[Button: DeleteAll]
+
+	Key		: Ctrl + 6
+	Action	: Delete Object
+	Mode	: Display
+
+	;; Scope - Newly introduced which means that the Action Delete Object should be carried on for
+	;; all the lines
+	Scope	: All Lines
+
+[Button: Select All]
+
+	Key		: Ctrl + 7
+
+	;; Newly introduced action wherein all the lines (Selected/Unselected) will be selected
+	Action	: Select All
+	Mode	: Display
+
+[Button: Btn Select None]
+
+	Key		: Ctrl + 8
+
+	;; Newly introduced action wherein all the lines (Selected/Unselected) will be unselected
+	Action	: Unselect All
+	Mode	: Display
+
+[Button: Btn Invert Selection]
+
+	Key		: Ctrl + 9
+
+	;; Newly introduced action wherein all the selected lines will become unselected and vice versa
+	Action	: Invert Selection
+	Mode	: Display
+
+[Key: Shift Down Select]
+
+	Key     : Shift + Down
+
+	;; Newly introduced action to toggle the selection, i.e., Shift + Down pressed once will select
+	;; the current line and pressed again will deselect the line
+	Action  : Toggle Select
+	Mode    : Display
+
+[#System: Formula]
+
+	;; These are the Formulae introduced for altering the Background and Foreground colors of the 
+	;; Selected/ Unselected ones and the cursor colors
+
+	SV_SEL_CURSOR_BG  : Red
+	SV_SEL_CURSOR_FG  : Released Orange
+
+	SV_SELECTED_BG    : Black
+	SV_SELECTED_FG	  : Red
+
+;;  SV_BUTTON_BG      : Red
+
+;; End-of-File

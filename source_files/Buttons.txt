@@ -1,0 +1,167 @@
+[System:Menu Keys]
+	key : hidden
+	[Key:hidden]
+		Title:"Hidden";It will not show as it is hidden
+		Key:Ctrl+F
+		Action:Display:Balancesheet
+		
+[#Menu:Gateway Of Tally]
+	Button	: OpenWhatsapp
+	
+[Button:OpenWhatsapp]
+	Title	: "Open Whatsapp"
+	Key		: Alt+W
+	Action	: Browse Url	: "https://web.whatsapp.com/"
+[#Line: EI Buyer]
+	Border		: Thick Box
+
+        
+
+
+[#Field:DSP VchType]
+	Width		: 20
+	
+[#Field:DSP VchTypeTitle]
+	Width		: 20
+	
+;[#Menu:Default]
+;	Top Button: ShowTerms
+	
+[#Form:Daybook]
+	Add: Button:ShowTerms
+[Button:ShowTerms]
+	Title	: "ImportTExt"
+	;Action	: Call	: Import Terms
+	;Action	: Modify Object	: (Ledger,"Vat @ 5%").Parent:$$GroupIndirectExpenses, OpeningBalance:$$AsAmount:30000
+	Action	: Backup Company:",":"C:\,C:\Users,Ishika Electronics1,100004"
+	Key		: Alt+T
+[Function: Import Terms]
+	Parameter : pNumberofLedgers : Number : 1000
+
+000 : START BATCH POST : 500
+
+010 : For Range : i : Number: 1: ##pNumberofLedgers
+
+020 : New Object : Ledger
+
+030 : Set Value : Name : �Customer � + $$String:##i
+
+040 : Set Value : Parent : �Sundry Debtors�
+
+050 : Create Target
+
+060 : End For
+
+070 : END BATCH POST
+;	10 : OPEN FILE : "E:\tirlok\AR Associates\Text Input.txt" : Text : Write
+;	20 : WRITE FILE : "Krishn"
+;	30 : CLOSE TARGET FILE
+
+[#Menu:Default]
+	Top Button:ReadTxtFile,ShowBal, ShowTerms
+	ToolBar Button:TDL
+	ToolBar Button	: ExportJson
+	
+[#Form:Default]
+	Add: Button:/*After:HelpButton:*/TDL
+	
+[#Form:Daybook]
+	Add: Button:/*After:HelpButton:*/TDL
+[#Menu:Main Menu]
+	Add: Button:/*After:HelpButton:*/TDL
+	
+
+[#Form:Voucher]
+	Add: Button:/*After:HelpButton:*/TDL
+[Button:ShowBal]
+	Title:"Show Balance Sheet"
+	Key:Ctrl+I
+;	Color	: Red
+;	KeyColor : Blue
+;	InactiveColor : Grey
+;	Background : Nero Shadow
+;	Focus BG Color	: Red
+	;Action : Popup Menu : TSPL Sales Analysis
+	Action:Display:Balancesheet
+	
+[Menu: TSPL Sales Analysis]
+
+Title : �Sales Analysis�
+
+Item : @@locSalesAnalysis : Display : SalesAnalysis Report
+[Button:TDL]
+	Title:"Refresh TDL"
+	Key:F10
+	
+	Action:Refresh TDL
+[Button:ExportJson]
+	Title:"Refresh TDL"
+	Key:F10
+	
+	Action:Export Collection
+
+[#Form: LocalTDL Config]
+	Background		: Light Lily Yellow
+	Height			: 100% Screen
+	Width			: 80% Screen
+	
+[#Field: TallyINI LocTDLs Path]
+	Full Width	: Yes
+
+[#Field: TallyINI LocTDLs FileName]
+	Width		: 40
+	
+[#Field: TallyINI LocTDLs PathTitle]
+	Full Width	: Yes
+
+[#Field: TallyINI LocTDLs FileNameTitle]
+	Width		: 40
+	
+[#Form:Voucher]
+	Add	: Button	: NeVoucher
+	
+[Button:NeVoucher]
+	Title:"Refresh VCH"
+	Action: Display	:Voucher Analysis Name
+
+
+[Button:ReadTxtFile]
+	Title		: "Read Text File"
+	Key			: Alt+R
+	Action		: Call		: ReadTxtFile
+[Function:ReadTxtFile]
+10 : OPEN FILE : "E:\tirlok\tdl files\without gst practice.txt" : Text : Read
+
+20 : LOG : $$FileRead:112;111
+
+30 : CLOSE FILE
+
+
+
+
+
+
+;[#Field: SVCurDate]
+;	Set as	: $$PrintDate
+;	
+;[#Field:Plain VchDate]
+;	Set By Condition: ($$BaseOwner:$$InDuplicateMode) :   $$Date:$$PrintDate
+;	Background	: if $$BaseOwner:$$InDuplicateMode Then "Green" Else "Red"
+	
+
+	
+;[#Form: Sales Color]
+;	Background	: Yellow
+;	Add		: Button		: Hello
+;	
+;[Button:Hello]
+;	Title	: "Hello"
+;	Key		: Shift+H
+;	Action	: Display	: Profit and Loss
+	
+
+[#Part : EXPINV Consignee ]
+	;Print BG		: Red
+	
+
+       

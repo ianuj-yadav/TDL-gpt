@@ -1,0 +1,70 @@
+[Collection:Ledgers List Collection]
+	Title		: "List of Ledgers"
+	Type		: Ledger
+	Trigger		: Ledgers Listing ;; Report name for listing collection
+	Variable	: SVLedgers Listing
+	Report		: LedgerDataDetails ;; We don' do an acton here because we already mention display 
+	Align		: Center
+	Format		: $Name,25
+	Format		: $Parent,25
+	Sub Title	: "Name", "Group"
+	
+;; This is the trigger report for selection of our ledger
+[Report:Ledgers Listing]
+	Form	: Ledgers Listing
+	
+[Form:Ledgers Listing]
+	Part				: Ledgers Listing
+	Horizontal Align	: Center
+	Vertical Align		: Top
+	
+[Part:Ledgers Listing]
+	Line	: Ledgers Listing Title, Ledgers Listing
+	
+	[Line:Ledgers Listing Title]
+		Field			: Ledgers Listing Title
+		;Border			: Thin Bottom
+		Space Bottom	: 1
+		[Field:Ledgers Listing Title]
+			Info	: "Ledgers list name"
+			Align	: Center
+			Border	: Thin Bottom
+			Style	: Normal Bold
+			Width	: 50
+
+	[Line:Ledgers Listing]
+		Field	: Ledgers Listing
+		
+		[Field:Ledgers Listing]
+			Table		: Ledgers List Collection
+			Show Table	: Always
+			Modifies	: SVLedgers Listing
+			Width		: 50
+			Max			: 25
+
+
+
+;; Final report
+[Report:LedgerDataDetails]
+	Title	: "Details of : " + ##SVLedgersListing
+	Form	: LedgerDataDetails
+	Object	: Ledger	: ##SVLedgersListing
+	
+[Form:LedgerDataDetails]
+	Part:LedgerDataDetails
+	
+[Part:LedgerDataDetails]
+	Line:LedgerDataDetails
+	[Line:LedgerDataDetails]
+		Field:LedgerDataDetails
+		[Field:LedgerDataDetails]
+			Set as:$Name
+
+
+
+;; this is Variable definition for passing value from triggered report to final report
+[Variable:SVLedgers Listing]
+	Type	: String
+	
+[System:Variable]
+	SVLedgers Listing	: ""

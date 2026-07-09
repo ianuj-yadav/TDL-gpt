@@ -1,0 +1,127 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This code demonstrates the usage of Collection related functions
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+    
+[Report: CollReport]
+
+	Form    : CollForm
+	Variable: GroupName
+	Variable: LedgerName
+	Set     : LedgerName: "Supp"
+	Set     : GroupName : "Sundry Creditors"
+	
+[Form: CollForm]
+
+	Part    : CollPart
+	Button  : SelectGroup
+
+[Part: CollPart]
+
+    Parts   : Form SubTitle,CollPartDetails
+    Local   : Field : Form SubTitle : Set as  : "Usage of Collection Functions with Ledger Collection"
+    Vertical: Yes
+    
+    [Part: CollPartDetails]
+    
+        Lines   : CollAmtTotalLine
+        Lines   : NumItemsLine
+        Lines   : FilterAmtTotalLine
+        Lines   : FilterCountLine
+        Lines   : FilterValueLine
+        Lines   : CollectionFieldLine
+        Border  : Thin Box
+      
+        [Line: CollAmtTotalLine]
+        
+            Fields  : Long Prompt,CollAmtTotal
+            Local   : Field : Long Prompt 	: Set as 	: "Closing Balances of All Ledgers :"
+            
+            [Field: CollAmtTotal]
+            
+                Use     : Name Field
+                Type    : Amount
+                Set as  : $$CollAmtTotal:Ledger:$ClosingBalance
+                Width   : 25
+            
+        [Line: NumItemsLine]
+        
+            Use     : CollAmtTotalLine
+            Local   : Field : Long Prompt   : Set as    : "Total Number of Ledgers in" + #GroupName + " :"
+            Local   : Field : CollAmtTotal  : Type      : Number
+            Local   : Field : CollAmtTotal  : Set as    : $$NumItems:SelectGroup
+                
+        [Line: FilterAmtTotalLine]
+        
+            Use     : CollAmtTotalLine
+            Local   : Field : Long Prompt   : Set as  	: "Closing Balance of Ledgers of " + #GroupName + " :"
+            Local   : Field : CollAmtTotal  : Set as  	: $$FilterAmtTotal:SelectGroup:TSPLSmplNameFilter:$ClosingBalance
+           
+        [Line: FilterCountLine]
+        
+            Use     : CollAmtTotalLine
+            Local   : Field : Long Prompt   : Set as  	: "Total Number of Ledgers in " + #GroupName + " :"
+            Local   : Field : CollAmtTotal  : Type    	: Number
+            Local   : Field : CollAmtTotal  : Set as  	: $$FilterCount:SelectGroup:TSPLSmplNameFilter
+
+        [Line: FilterValueLine]
+        
+            Use     : CollAmtTotalLine
+            Local   : Field : Long Prompt   : Set as  	: "Name of Second Ledger in" + #GroupName + " :"
+            Local   : Field : CollAmtTotal  : Type    	: String
+            Local   : Field : CollAmtTotal  : Set Always: Yes
+            Local   : Field : CollAmtTotal  : Set as  	: $$FilterValue:$Name:SelectGroup:2:TSPLSmplNameFilter ;;if $$IsEmpty:$$FilterValue:$Name:SelectGroup:2:NameFilter then "" else $$FilterValue:$Name:SelectGroup:2:NameFilter
+            
+        [Line: CollectionFieldLine]
+        
+            Use     : CollAmtTotalLine
+            Local   : Field : Long Prompt   : Set as  	: "Name of the Second Ledger" + " :"
+            Local   : Field : CollAmtTotal  : Type    	: String
+            Local   : Field : CollAmtTotal  : Set as  	: $$CollectionField:$Name:2:Ledger
+
+[System: Formula]
+
+    TSPLSmplNameFilter  : if $Name CONTAINS ##LedgerName then Yes else No
+    
+[Collection: Select Group]
+
+    Type    : Ledger
+    Child Of: ##GroupName
+
+[Button: SelectGroup]
+
+    Key     : F3
+    Action  : Modify Variables : Select Group  
+    
+;;Report Starts
+    
+[Report: Select Group]
+
+	Use     : Modify Variables
+	Title	: $$LocaleString:"Select Group" 
+    Local   : Part : Modify Variables 	: Lines	: Select Group, Ledger Name
+    Local   : Field: MV Title         	: Info	: $$LocaleString:"Select Group"
+    Local   : Field: Ledger Name       	: Delete: Table
+
+    [Line: Select Group]
+    
+        Fields  : Select Group Title, Select Group Info
+        
+        [Field: Select Group Title]
+        
+                Use    	 	: Medium Prompt
+                Info    	: "Group Name"
+        
+        [Field: Select Group Info]
+                
+                Use         : Name Field
+                Table       : Group
+                Show Table  : Always
+                Modifies    : GroupName
+
+;; End-of-File

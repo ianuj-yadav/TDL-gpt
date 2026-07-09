@@ -1,0 +1,66 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+-	The following program demonstrates the usage of Column SubTitles for each Format 
+	Attribute in a Collection/Table Definition
+-	Also Color is altered for the subtitle by setting values to the respective System 
+	Formulae
+
+Last modification – 
+-	Altered on 09/11/2009
+*/
+
+[Report: ColSubTitle]
+
+	Form 	: ColSubTitle
+	Auto	: Yes
+
+[Form: ColSubTitle]
+
+	Parts	: Form SubTitle, ColSubTitle
+
+[Part: ColSubTitle]
+
+	Lines	: ColSubTitle
+
+	[Line: ColSubTitle]
+	
+		Fields	: Long Prompt, ColSubTitle
+		Local	: Field	: Long Prompt	: Set As	: "Ledger (Sundry Debtors) :"
+
+		[Field: ColSubTitle]
+		
+			Use          : Name Field
+			Table        : DebtorsLedTable
+			Show Table   : Always
+			Common Table : No
+
+[Collection: DebtorsLedTable]
+
+	Type     	: Ledger
+	Child Of	: $$GroupSundryDebtors
+	Fetch		: Name, StateName, OpeningBalance, ClosingBalance
+	
+	Format   	: $Name, 15
+	Format   	: $StateName, 15
+	Format   	: $OpeningBalance, 10
+	Format   	: $ClosingBalance, 10
+
+;; Sub Titles should be in the order specified with the Format Attribute
+
+	Sub Title	: $$LocaleString:"Name"
+	Sub Title	: $$LocaleString:"State"
+	Sub Title	: $$LocaleString:"Op.Balance"
+	Sub Title	: $$LocaleString:"Cl.Balance"
+	Title		: $$LocaleString:"Table Sub-Titles"
+
+;; Sub Titles can also be entered as a list separated with commas
+
+[#System: Formula]
+
+	SV_TABLE_SUB_TITLE_STYLE: "Large Serif"
+	SV_TABLE_SUB_TITLE_BG   : @@SV_RELEASEDBLUE_ROYAL
+ 	SV_TABLE_SUB_TITLE_FG   : @@SV_RELEASEDWHITE
+
+;; End-of-File

@@ -1,0 +1,40 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	The objective of this program is to demonstrate the process of extracting value from a 
+	Local Variable using Symbol '##'
+-	A Variable value can be accessed by using Symbol Prefix '##'
+-	Variables helps control the behavior of a Report
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Variable: Variable Name]		;; Variable Definition
+
+	Type	: String
+	Default	: "Default Variable Value is being accessed"
+
+[Report: Variable Value]
+
+	Form	: Variable Value
+	Variable: Variable Name		;; Variable 'Variable Name' declared in this Report 'Variable Value'
+
+[Form: Variable Value]
+
+	Parts	: Variable Value
+	
+[Part: Variable Value]
+
+	Lines	: Variable Value
+
+	[Line:	Variable Value]
+
+		Fields	: Variable Value
+	
+		[Field:	Variable Value]
+
+			Set As	: ##VariableName	 	;; ## is used to access Variable value
+
+;; End-Of-File

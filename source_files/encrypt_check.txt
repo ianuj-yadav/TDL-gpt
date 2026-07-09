@@ -1,0 +1,34 @@
+[#Menu:Gateway of Tally]
+	Add		: Item		: "Strcrypt" 	: Alter	: Strcrypt
+	
+[Report:Strcrypt]
+	Form		: Strcrypt
+	
+[Form:Strcrypt]
+	Part		: Strcrypt
+	
+[Part:Strcrypt]
+	Lines		: Strcrypt01, Strcrypt02
+	[Line:Strcrypt01]
+		Field		: Medium Prompt, Strcrypt01
+		Local		: Field		: Medium Prompt		: Info		: $$LocaleString:"String for crypt"
+		[Field: Strcrypt01]
+			Use			: Name Field
+			Type		: String
+			
+		
+	[Line:Strcrypt02]
+		Field		: Medium Prompt, Strcrypt02,EncryptedField
+		Local		: Field		: Medium Prompt		: Info		: $$LocaleString:"Encrypted String"
+		[Field: Strcrypt02]
+			Use			: Name Field
+			Set Always	: Yes
+			Set as		: $$LocaleString:($$EncryptStr:"1234":"12345678")
+			Line		: 10
+			Width		: 100
+			[Field : EncryptedField]
+				Use : NameField
+				Set As : $$CallDLLFunction:CryptoDll:EncryptText:"Hello"
+			
+			
+		

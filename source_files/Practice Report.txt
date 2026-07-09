@@ -1,0 +1,138 @@
+[#Menu:GAteway of Tally]
+	Add	: Item	:  Before : @@LocQuit	: Check :Alter	: Check Report
+	
+[Report:Check Report]
+	Form	: Check Report
+	
+[Form	:Check Report]
+	Part	: Check Report
+	
+[Part:Check Report]
+	Line	: Check Report;, EXPINV AddressTirlok
+	Bottom Line	: TwoFields
+	Repeat		: Check Report	: HsnSTKGRPTirlok;All Hsn;HsnTirlok
+	
+	Scroll		: Vertical
+	Total	: Fl1,Fl2,Fl3
+	;Collection	: HsnSTKGRPTirlok
+	[Line:Check Report]
+		Field		: Fl1,Fl2,Fl3,/*Fl4,Fl5,Fl6,Fl7,Fl8,*/
+		Right Field	: FlFinal
+		;Remove If	: Not $$IsEmpty:$hsncode
+		[Field:Fl1]
+			Use		: Name Field
+			;Type	: Number
+			Set as	: $$String:@CMPHSN
+			CMPHSN	: $HSNCode:HsnSTKGRPTirlok:$Hsn;:AllHsn:$hsn:Clothing;##SVCurrentCompany; If $$InDisplayMode Then @@GSTMstHSNCode Else
+			;Storage	: UDFFl1
+			Skip	: Yes
+		[Field:Fl2]
+			Use		: Name Field
+			Type	: Number
+			;Storage	: UDFFl2
+			Set as		: 67
+			Skip	: Yes
+		[Field:Fl3]
+			Use		: Name Field
+			Type	: Number
+			;Storage	: UDFFl3
+			Skip	: Yes
+		[Field:FlFinal]
+			Type		: String;Number
+			Set as		: "An Indent  a Field.";#Fl1+#Fl2+#Fl3
+			;Background	: Red
+;			Read Only	: Yes
+;			Set Always	: Yes
+			Width		: 50
+			Line		: 0
+			;Wide Space	: Yes
+			Auto		: Yes
+			Skip		: Yes
+			Background	: Yellow
+		
+	
+	[Line:TwoFields]
+		Lines	: TwoFields1, TwoFields2
+		[Field:TwoFields]
+			Top Lines		: TwoFields1, TwoFields2	
+			[Line:TwoFields1]
+				Field	: TwoFields1
+				;Indent : @@IndentByLevel
+				[Field:TwoFields1]
+					Set as	: "TwoFields1"
+					Indent : @@IndentByLevel
+
+			[Line:TwoFields2]
+				Field	: TwoFields2
+				Indent : @@IndentByLevel
+				[Field:TwoFields2]
+					Set as	: "TwoFields2"
+					Indent : @@IndentByLevel
+
+[System:UDF]
+	UDFFl1		: Number	: 20401
+	UDFFl2		: Number	: 20402
+	UDFFl3		: Number	: 20403
+
+
+[#Form: VCHBasic InvoiceMode]
+	Background		: Red
+	Delete			: Bottom Part
+
+[#Part: EI Details]
+	;Background		: Yellow
+	
+[Collection:STKGROUPTIRLOK]
+	Type	: Stock Group
+[Collection:CmpHsncodeTirlok]
+	Type	: Company
+	
+[Collection:HsnCmpTirlok]
+	Source Collection	: CmpHsncodeTirlok
+	Walk				: HsnDetails
+	Fetch				: Hsncode, Hsn,*
+
+[Collection:HsnSTKGRPTirlok]
+	Source Collection	: STKGROUPTIRLOK
+	Walk				: HsnDetails
+	Fetch				: Hsncode, Hsn,*
+	
+[Collection:All Hsn]
+	Collections	: HsnSTKGRPTirlok, HsnCmpTirlok
+	
+[Collection:AllVchs]
+	Type	: Voucher
+	
+[Collection:InventVch]
+	Source Collection	: AllVchs
+	Walk				: Inventory Entries
+	Fetch				: *
+	
+
+[Collection:LedgerVch]
+	Source Collection	: AllVchs
+	Walk				: Ledger Entries
+	Fetch				: *
+	
+
+[Collection:LedgerVch1]
+	Source Collection	: LedgerVch
+	Walk				: Inventory Allocations
+	Fetch				: *
+
+
+[#Form: Purchase Color]
+	;Background	: Yellow
+	
+[#Part: PDCN Party]
+	Print BG	: Yellow
+	
+[#Part: PDCN PurcBillRefDetails]
+	Print BG	: Yellow
+	
+[#Field: VCH Ref Combo]
+	Border	: Thin Bottom
+	;Background	: Red
+	
+[#Part: EXPINV TopLeft]
+	Print BG	: Red

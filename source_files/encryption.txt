@@ -1,0 +1,62 @@
+[#Menu:Gateway of Tally]
+	Add		: Item		: Encryption		: Alter	: Encryption
+	Add		: Item		: Decryption		: Display	: Decryption
+	
+[Report:Encryption]
+	Form		: Encryption
+	
+[Form:Encryption]
+	Part		: Encryption
+	
+[Part:Encryption]
+	Line		: EncryptionL1, EncryptionL2
+	[Line:EncryptionL1]
+		Fields		: LongPrompt, EncryptionL1F1
+		Local		: Field	: LongPrompt	: Info	: "Encrypted String"
+		[Field:EncryptionL1F1]
+			Use			: Name Field
+			Set as		: $$DecryptStr:@str:@pass
+			str			: ##EncData
+			pass		: $$LicenseInfo:SerialNumber
+			
+			
+
+	[Line:EncryptionL2]
+		Fields		: LongPrompt, EncryptionL2F1
+		Local		: Field	: LongPrompt	: Info	: "Encrypted String"
+		[Field:EncryptionL2F1]
+			Use			: Name Field
+			Set as		: $$EncryptStr:@or_str:@pass 
+			or_str		: #EncryptionL1F1;"BinarySoft"
+			pass		: $$LicenseInfo:SerialNumber
+			Modifies	: EncData
+			Set Always	: yes
+			Width		: 80% Page
+			Line		: 0
+			
+			
+
+
+[Report:Decryption]
+	Form		: Decryption
+	
+[Form:Decryption]
+	Part		: Decryption
+	
+[Part:Decryption]
+	Line		: Decryption
+	[Line:Decryption]
+		Fields		: Decryption1
+		[Field:Decryption1]
+			
+			Set as		: $$DecryptStr:@str:@pass
+			str			: ##EncData
+			pass		: $$LicenseInfo:SerialNumber
+			
+
+[Variable:EncData]
+	Type		: String
+	Persistent	: Yes
+	
+[System	: Variable]
+	EncData		: ""

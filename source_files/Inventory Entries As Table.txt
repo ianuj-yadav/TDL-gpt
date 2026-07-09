@@ -1,0 +1,35 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+-	The following code demonstrates the collection as Table with Walk.  
+-	This code demonstrates the usage of Walk and the resultant objects 
+	in the Collection being displayed as Table in the Field.
+
+Last modification – 
+-	Altered on 09/11/2009
+
+Dependencies -
+-	Supporting File 'Simple Voucher as Table.txt' for the Report as well as variables
+*/
+
+[Collection: Vch Collection]
+
+	Type		: Voucher
+	Fetch		: Name
+
+[Collection: Summ CollectionW]
+
+	Title               : Table - Inventory Entries
+	Source Collection	: Vch Collection
+	Walk				: Inventory Entries
+	By					: Name		: $StockItemName
+	Format 				: $Name, 20
+
+[Report: VchAsTableW]
+
+	Form		: CollAsTable
+	Variable	: VchAsTableW
+	Set			: VchAsTableW	: Yes
+
+;; End-of-File

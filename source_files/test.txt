@@ -1,0 +1,114 @@
+[#Menu:Gateway of Tally]
+	Add		: Item	: Before : @@locQuit : "Firm Calculator" : Alter	: FirmCalculator
+	
+[Report:FirmCalculator]
+	Form		: FirmCalculator
+	
+[Form:FirmCalculator]
+	Parts	: Form SubTitle, FirmCalculator
+	Height	: 100% Page
+	Width	: 80% Page
+[Part:FirmCalculator]
+	Width	: 80% Page
+	
+	
+	Lines	: FirmType
+	
+	Bottom Line	: FinalCategory,check,
+	[Line:FirmType]
+		Height		: 2
+		Field		: Calc Prompt, FirmType
+		Local		: Field		: Calc Prompt		: Info	: $$LocaleString:"Firm Type:"
+		
+		[Field:FirmType]
+			Use			: Name Field
+			Width       : @@AmountWidth
+			Table		: FirmTypes
+			Show Table	: Always
+
+	
+	
+
+[Line:FinalCategory]
+	Height		: 2
+    Field       : Calc Prompt, FinalCategory
+    Local       : Field  : Calc Prompt  : Info : $$LocaleString:"Final Category : "
+	Border		: Thick Box
+[Field:FinalCategory]
+    Use         : Name Field
+    Set Always	: Yes
+	On			: Focus		: Yes	: Call	: FormCategoryCalculator:#FirmType
+[Line:check]
+		Height		: 2
+    Field       : Calc Prompt, check
+    Local       : Field  : Calc Prompt  : Info : $$LocaleString:"check Category : "
+	Border		: Thick Box
+[Field:check]
+    Use         : Name Field
+    Set Always	: Yes
+	Set as		: Set as		: $$FormCategoryCalculator:#FirmType
+	Width		: 100
+	Lines		: 0
+
+
+[Function : FormCategoryCalculator]
+    Parameter : FirmType    				: String
+    
+    Variable : finalCategory            	: String
+	Variable : URL            	: String
+	Variable : a : String
+    
+
+
+; --------------------------
+    ; CATEGORY CALCULATION LOGIC
+    ; --------------------------
+	200 : Log : "FirmType=" + ##FirmType
+	202	: Set	: a		: "/" + ##FirmType
+
+	
+	
+	400 : SET : URL : "http://127.0.0.1" + ##a 
+	405 : Set	: MyNewUrl	: $$LocaleString:##URL
+
+	410		: Call		: SendUrlMef
+
+	
+[Function: SendUrlMef]
+	Variable	: PopMessage		: String
+	100	: Walk Collection	: MefUrl 
+	200	: End Walk
+	
+[Collection: MefUrl]
+
+
+	Remote URL 		: ##MyNewUrl
+	Client Only		: Yes
+	
+[Collection:FirmTypes]
+	Object		: Proprietary, Partnership
+	
+[Object:Proprietary]
+	Name	: Proprietary
+	
+[Object:Partnership]
+	Name	: Partnership
+	
+[Field:Calc Prompt]
+	Align       : Prompt
+    Width       : 50
+    Skip        : Yes
+    Fixed       : Yes
+	Style		: Calc
+	
+[Style:Calc]
+	Height		: 10
+	Bold		: Yes
+	
+[Variable: MyNewUrl]
+	Type		: String
+	Persistent	: Yes
+	Volatile    : Yes
+[System:Variables]
+	MyNewUrl 	: "" 
+

@@ -1,0 +1,25 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the usage of User Defined Functions in displaying Reports
+-	Various config options can be set before viewing the Reports
+-	The Final Accounts are displayed; one after the other i.e, Trial Balance, Profit
+	& Loss A/c and Balance Sheet are viewed based on the preset configuration i.e.,
+	Exploded Reports
+
+Last Modification -
+-	Altered on 09-11-2009
+*/
+
+[Function: Detailed Final Accounts]
+
+;; Procedural Block
+
+	01  : SET		: ExplodeFlag		: "Yes"
+	02	: DISPLAY	: Trial Balance
+	03	: DISPLAY	: Profit and Loss
+	04	: DISPLAY	: Balance Sheet
+	05  : SET		: ExplodeFlag		: "No"
+
+;; End-of-File

@@ -1,0 +1,35 @@
+---
+title: Actions
+type: sample_code
+objects: Menu, Button
+source: Actions.txt
+---
+
+# Actions
+
+## Source Code
+
+```tdl
+[#Menu:Gateway of Tally]
+	Add		: Item		: Before	: @@locquit		: "Actions "	: Menu	: Action_Events
+
+	
+[Menu:Action_Events]
+	Add		: Key Item	: "Create"				: C	: Create	: LedgerCreate
+	Add		: Key Item	: "Modify"				: M : Alter		: LedgerModify
+	Add		: Key Item	: "Set Object Values"	: E		: Execute	: LedgerObjectSet
+	
+	Button	: ModifyLedger	, BackupCompany, OpenNotepad
+
+[Include:LedgerCreate.txt]
+[Include:Modify Object.txt]
+[Include:Ledger Object Set.txt]
+[Include:Backup Company.txt]
+
+
+[Button:ModifyLedger]
+	Title	: "Modify Ledger"
+	Key		: Alt+M
+	Action	: Modify Object		: (Ledger, "Dollar Company").Parent:$$GroupSundryDebtors,Opening Balance:$$AsAmount:0
+	
+```

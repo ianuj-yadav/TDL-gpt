@@ -1,0 +1,66 @@
+[Collection:CompanyTdlUrlsColls]
+	Data Source 		: File JSON 	: "E:\wamp64\www\TdlUrl\storage\app\public\tally_urls.json";"E:\tirlok\tdl files\Gold Rate\Gold Rate Json File.json" 	; File Path/Name
+	JSON Object Path	: tdlurls		: 1				; Main object path
+	Client Only			: Yes
+	
+[#Menu:GatewayofTally]
+	Add	: Item	: ShowTDlUrlsJson	: Display		: ShowTDlUrlsJson
+	
+[Report:ShowTDlUrlsJson]
+	Form	: ShowTDlUrlsJson
+	
+[Form:ShowTDlUrlsJson]
+	Part		: ShowTDlUrlsJson
+	Add			: Button		: Browse Url
+	Add			: Button		: XMLReqResp
+	Add			: Button		: ExportJsonTdlUrls
+[Part:ShowTDlUrlsJson]
+	Line		: ShowTDlUrlsJson
+	Repeat		: ShowTDlUrlsJson	: CompanyTdlUrlsColls
+	Scroll		: Vertical	
+	
+	[Line:ShowTDlUrlsJson]
+		Field		: TDlUrlsId, TDlUrlsName
+		Right Field	: TDlUrlsTime
+		[Field:TDlUrlsId]
+			Use		: Name Field
+			Set as	: $last_insert_id
+			
+		[Field:TDlUrlsName]
+			Use		: Name Field
+			Set as	: $$DecryptStr:$encrypted_url:$password
+			Full Width	: Yes
+			Line		: 0
+			
+		[Field:TDlUrlsTime]
+			Use		: Name Field
+			Set as	: $current_time_date
+			
+
+
+
+
+;;=================================
+[Button:ExportJsonTdlUrls]
+	Title		: "ExportJson"
+	Key			: Ctrl+f10		
+	Action		: Call	: ExportJsonTdlUrls
+	
+[Function:ExportJsonTdlUrls]
+
+
+000: Set   :SVExportFormat  : $$SysName:UTF8JSON
+
+005: Set   :SVExportLanguage: $$SysName:UTF8JSON
+
+010: Set   :SVPrintFileName : "D:\Export\export.json"
+
+015: Export:ShowTDlUrlsJson  : Yes:Yes
+	
+[Key : XMLReqResp]
+Key : Ctrl + R
+Action : HTTP Post : @@MyUrl : ASCII : ShowTDlUrlsJson;: ERRRespRep : SuccRep
+Scope : All Lines
+;;URL Specification must be done as a system formula
+[System : Formula]
+MyUrl : "http://127.0.0.1:8000/newData"

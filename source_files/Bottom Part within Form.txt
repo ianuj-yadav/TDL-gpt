@@ -1,0 +1,35 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This program demonstrates the impact of Dimensional Attribute 'Bottom Parts' within Form
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Bottom Parts within Form]       
+
+	Form		: Bottom Parts within Form
+
+[Form: Bottom Parts within Form]
+
+	Parts		: Default Dimensions
+	Bottom Parts: BPWF Bottom Part
+	Height		: 50% Page
+	Width		: 50% Page
+	Local: Field: Default Dimensions : Set as	: "Sample code to demonstrate the impact of Top and Bottom Parts within the Form"
+
+	[Part: BPWF Bottom Part]
+
+		Lines	: Dimensions Bottom Part  	
+
+		[Line: Dimensions Bottom Part]
+
+	 		Fields	: Dimensions Bottom Part
+
+	  		[Field: Dimensions Bottom Part]
+
+				Set as	: "Bottom Part of the Form"
+
+;; End-of-File

@@ -1,0 +1,25 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+;; Menu Definition for Grouping & Aggregate Collection
+
+[Menu: Grouping and Aggregation]
+
+	Key Item: Itemwise Sales 		 		: S : Display			: ProductwiseRpt
+	Item	: Blank
+
+	Key Item: Itemwise InOut Breakup		: B : Display			: STQuery
+	Item	: Blank
+
+	Key Item: Partywise VoucherType Stats	: T : Display Collection: TransVchLedgerColl
+	Item	: Blank
+
+	Key Item: Itemwise Partywise Sales 		: I : Display			: CFBK Rep
+	Item	: Blank
+	Item	: Blank
+
+[Include: Itemwise Sales.txt]
+[Include: Itemwise InOut Breakup.txt]
+[Include: Partywise VoucherType Stats.Txt]
+[Include: Itemwise Partywise Sales.txt]
+
+;; End-of-File

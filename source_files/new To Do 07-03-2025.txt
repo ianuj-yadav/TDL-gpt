@@ -1,0 +1,41 @@
+[Object: ToDo]
+    
+    ToDoListDesc		: $ToDoListDesc
+	TaskStartDate		: $TaskStartDate
+	TaskCycle			: $TaskCycle
+	TaskEndDate			: $TaskEndDate
+	RemindDays			: $RemindDays
+	YourName			: $YourName
+	Remarks				: $Remarks
+[System: UDF]
+	ToDoListDesc	        : String 	: 41070
+    ToDoListEntry           : Aggregate : 41071
+    TaskStartDate           : Date      : 41072
+    TaskCycle            	: Number    : 41073
+    TaskEndDate             : Date    	: 41074
+    RemindDays            	: Number    : 41075
+    YourName                : String	: 41076
+    Remarks  				: String	: 41077
+
+[Collection: EmployeeCollection]
+    
+    Type        : CustomEmployee
+    Fetch       : Name, EmployeeID, Department, Salary
+[Function: AddEmployee]
+
+    Variable : NewEmpName  : String
+    Variable : NewEmpID    : String
+    Variable : NewDept     : String
+    Variable : NewSalary   : Number
+
+    00 : NEW OBJECT    : CustomEmployee
+    10 : SET VALUE     : Name        : ##NewEmpName
+    20 : SET VALUE     : EmployeeID  : ##NewEmpID
+    30 : SET VALUE     : Department  : ##NewDept
+    40 : SET VALUE     : Salary      : ##NewSalary
+    50 : SAVE TARGET
+[Button: AddNewEmployee]
+    Key      : Alt + E
+    Action   : Call : AddEmployee
+[#Menu:Gateway Of Tally]
+	Add		: Button	: AddNewEmployee

@@ -1,0 +1,43 @@
+---
+title: Add Signature in Comapny
+type: sample_code
+objects: Line, Field
+source: Add Signature in Comapny.txt
+---
+
+# Add Signature in Comapny
+
+## Source Code
+
+```tdl
+
+[#Part: Company PeriodDetails]	
+	Add: Lines:Show Signature, Signature
+	
+[System:UDF]
+	Signature:String:2014
+	SignEnable	: Logical	: 2011
+	
+	[Line:Show Signature]
+		Space Top:0.1
+		Field:Medium Prompt,Show Signature
+		Local:Field:Medium Prompt:Set as:"Show Signature:"
+		Local       : Field : Medium Prompt : Width	: @@MediumWidth	+ 19
+		[Field:Show Signature]
+			Width:3 inch
+			Use:Name Field
+			Storage:SignEnable
+			Table	: YesNoTable
+			Type	: Logical
+			
+	[Line:Signature]
+		Space Top:0.1
+		Field:Medium Prompt,Signature
+		Local:Field:Medium Prompt:Set as:"Signature Path:"
+		Local       : Field : Medium Prompt : Width	: @@MediumWidth	+ 19
+		[Field:Signature]
+			Width:3 inch
+			Use:Name Field
+			Storage:Signature
+			Type	: String
+```

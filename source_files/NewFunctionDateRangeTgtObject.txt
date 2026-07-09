@@ -1,0 +1,84 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This Code demonstrates the usage of TypeCasting Functions "DateRange" 
+-	This Code which auto creates a Purchase Order Voucher demonstrates the usage of 
+	Functions "DateRange" and "TgtObject".
+
+Last Modification -
+-	Altered on 09-11-2009
+
+Dependencies -
+-	To check the working of this code,
+	i)  Enable Purchase Order from F11 Features
+	ii) Create 2 Ledgers "Test Party" and "Purchase"
+	iii)Create an Item "Item 1"
+	iv) Alter the Voucher Type "Purchase Order" to have Manual Voucher Numbering
+*/
+
+[Function: DateRange and TgtObject]
+
+	10	: SET FILE LOG ON
+	
+	20	: NEW OBJECT	: Voucher
+	30  : SET           : SVViewName 		: $$SysName:InvVchView
+
+	40	: SET VALUE		: Date				: $$Date:"01-05-2010"
+	50	: SET VALUE		: VoucherTypeName	: "Purchase Order"
+	60	: SET VALUE		: VoucherNumber		: "xxx"
+	70	: SET VALUE		: PartyLedgerName	: "Test Party"
+	80	: SET VALUE		: IsInvoice			: Yes
+	90	: SET VALUE		: Reference			: "Test"
+
+	100	: INSERT COLLECTION OBJECT			: LEDGER ENTRIES
+	110	: SET VALUE		: LedgerName		: "Test Party"
+	120	: SET VALUE		: IsDeemedPositive	: Yes
+	130	: SET VALUE		: Amount			: -1000
+	140	: SET TARGET	: ..
+
+	150	: INSERT COLLECTION OBJECT			: INVENTORY ENTRIES
+	160	: SET VALUE		: StockItemName		: "Item 1"
+	170	: SET VALUE		: IsDeemedPositive	: No
+	171	: SET VALUE		: ActualQty			: ($$TgtObject:($$AsQty:"10")) * -1
+	172	: SET VALUE		: BilledQty			: ($$TgtObject:($$AsQty:"10")) * -1
+	173	: SET VALUE		: Rate				: ($$TgtObject:($$AsRate:"100"))
+	180	: SET VALUE		: Amount			: 1000
+
+	190	: INSERT COLLECTION OBJECT			: BATCH ALLOCATIONS
+
+;; Field & Method of Type Due Date cannot accept values directly
+;; and there was no Type casting function available like $$Date,
+;; $$String, etc. This function has been introduced to convert
+;; any Type to Date Range Type which can be imported to Field
+;; of Type Due Date
+
+;; DateRange Function accepts 3 parameters
+;; i)  Number of Days/Months/Weeks/Years or Date
+;; ii) From Date
+;; iii)Logical value denoting inclusion of current date
+
+;; TgtObject Function evaluates the parameter in context of Target Object
+
+	200	: SET VALUE		: OrderDueDate		: $$DateRange:"10 Days":($$TgtObject:$Date):True
+	210	: SET VALUE		: GodownName		: "Main Location"
+	220	: SET VALUE		: BatchName			: "Test"
+	230	: SET VALUE		: OrderNo			: "Test"
+	240	: SET VALUE		: ActualQty			: ($$TgtObject:($$AsQty:"10")) * -1
+	250	: SET VALUE		: BilledQty			: ($$TgtObject:($$AsQty:"10")) * -1
+	260	: SET VALUE		: Rate				: ($$TgtObject:($$AsRate:"100"))
+	270	: SET VALUE		: Amount			: ($$TgtObject:($$AsAmount:"1000"))
+	280	: SET TARGET	: ..
+
+	290	: INSERT COLLECTION OBJECT			: ACCOUNTING ALLOCATIONS
+	300	: SET VALUE		: LedgerName		: "Purchase"
+	310	: SET VALUE		: Amount			: 1000
+	320	: SET TARGET	: ...
+	
+	330 : SET VALUE    	: PersistedView 	: ##SVViewName
+	340	: CREATE TARGET
+	350	: MSGBOX		: "Status" 			: "Created a Purchase Order!!"
+	360	: SET FILE LOG OFF
+	370	: RETURN
+
+;; End-of-File

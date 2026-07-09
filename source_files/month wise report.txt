@@ -1,0 +1,126 @@
+[#Menu: Gate Way Of Tally]
+
+Add : Item : Test : Display : Test
+[Report: Test]
+
+Use : DSP Template
+; Set : SV From Date : ##SVFromDate ;;$$MonthStart:##SVCurrentDate
+; Set : SV To Date : ##SVToDate ;;$$MonthEnd:##SVCurrentDate
+
+[Form: Test]
+
+Use : DSP Template
+Part : Test
+Width : 100% Page
+Height : 100% Page
+
+[Part: Test]
+
+Line : Test,bd
+Repeat:bd:ledgerout
+Scroll : Both
+[Line : Test]
+
+Fields : partynem,Month Field
+Repeat:Month Field: Monthcoll
+
+
+[Field:partynem]
+Use:name field
+Set as:"Party Name"
+
+[Line:bd]
+Add:Field:bd,amtd
+
+Repeat : amtd : Monthcoll
+
+[Field:bd]
+Use:name field
+Set as:$na
+Background: yellow
+
+[Field:amtd]
+Use:amount field
+Set as:$$amtfn:#bd:mad:DFrom:mad:DTo
+
+DFrom : $$PeriodDateFrom
+DTo : $$PeriodDateTo
+
+[Function:amtfn]
+Parameter : PartyName :String
+Parameter : PerFrom :Date
+Parameter : PerTo :Date
+Variable : SVFromDate : Date
+Variable : SVToDate : Date
+Variable : RetAmt : Amount
+Return : Amount
+
+01as:Log:"Start"
+05: Log: ##PerFrom
+06: Log: ##PerTo
+08: Set : RetAmt : ($$AsAmount:0)
+09: Log: ##RetAmt
+01:Set:SVFromDate : ##SVFromDate
+02:Set:SVToDate : ##PerTo
+
+03:Set:RetAmt: ($$FilterAmtTotal:SaleVchsSum:SelLedName:$Amount) - ($$FilterAmtTotal:RecptVchsSum:SelLedName:$Amount)
+07: Log: ##RetAmt
+04: Return : ##RetAmt
+[Collection: TestLedCol]
+
+Type : Ledger
+Fetch: Name, ClosingBalance
+Filter: SelLedName
+
+[Collection: SaleVchs]
+
+Type : Vouchers : VoucherType
+Child Of : $$VchTypeSales
+
+[Collection: SaleVchsSum]
+
+Source Collection : SaleVchs
+Walk : Ledger Entries
+
+By : LedgerName : $LedgerName
+By : Date : $..Date
+
+Aggr Compute : Amount : Sum : $Amount
+[Collection: RecptVchs]
+
+Type : Vouchers : VoucherType
+Child Of : $$VchTypeReceipt
+
+[Collection: RecptVchsSum]
+
+Source Collection : RecptVchs
+Walk : Ledger Entries
+
+By : LedgerName : $LedgerName
+By : Date : $..Date
+
+Aggr Compute : Amount : Sum : $Amount
+
+[System: Formulae]
+
+SelLedName : $LedgerName = ##PartyName
+
+[Field:Month Field]
+
+Use: Name Field
+Set as : $MonthName
+Background: green 
+
+[Collection: Monthcoll]
+Type : Period
+Repeat : Month
+ClientOnly : Yes
+Compute : MonthName: $$FullMonthName:$$PeriodDateFrom
+
+;;select 
+
+[Collection:ledgerout]
+Type:ledger
+Child Of:$$GroupSundryDebtors
+Compute:na:$name
+Compute:bal:$closingbalance

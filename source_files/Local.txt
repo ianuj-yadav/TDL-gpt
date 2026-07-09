@@ -1,0 +1,90 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+-	This program demonstrates the usage and power of Modifier 'Local'
+-	Modifier 'Local' along with reusability Modifier 'Use' helps minimizing the code by
+	reusing major code and locally modifying the ones required.
+-	There are 4 parts split into 2 each and the same parts are used by locally modifying
+	required fields within the line.
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: LReport]
+
+	Form		: LReport
+
+[Form: LReport]
+
+	Parts		: LPart 1, LPart 2
+	Height		: 100% Screen
+	Width		: 100% Screen
+
+[Part: LPart 1]
+
+	Parts		: LPart 1 Left Part, LPart 1 Right Part
+	Height		: 50% Page
+	
+	[Part: LPart 1 Left Part]
+
+		Lines		: Note, LLine1, LLine2, LLine3
+		Local: Field: Default	: Style	: Normal
+		Width		: 50% Page
+
+		[Line: Note]
+
+			Fields		: Name Field
+			Local: Field: Name Field	: Set As	: "(This is Part1 - Left Part)"
+			Local: Field: Name Field	: Skip		: Yes
+			Local: Field: Name Field	: Width		: 50% Screen
+			Local: Field: Name Field	: Lines		: 0
+			Local: Field: Default		: Style		: Normal Italic
+			Space Bottom: 1
+
+		[Line: LLine1]
+	
+			Fields		: Medium Prompt, Name Field
+			Local: Field: Medium Prompt	: Info		: "Field 1:"
+			Local: Field: Name Field	: Set As	: "Name Field in LLine 1 from LPart 1 Left Part"
+	
+		[Line: LLine2]
+	
+			Fields		: Medium Prompt, Name Field
+			Local: Field: Medium Prompt	: Info		: "Field 2:"
+			Local: Field: Name Field	: Set As	: "Name Field in LLine 2 from LPart 1 Left Part"
+
+		[Line: LLine3]
+	
+			Fields		: Medium Prompt, Name Field
+			Local: Field: Medium Prompt	: Info		: "Field 3:"
+			Local: Field: Name Field	: Set As	: "Name Field in LLine 3 from LPart 1 Left Part"
+	
+	[Part: LPart 1 Right Part]
+
+		Use			: LPart 1 Left Part
+		
+		;; The entire Left Part is used and all the Lines and fields are locally modified
+		;; within this part
+		Local: Line	: LLine 1	: Local		: Field	: Name Field: Set As	: "Name Field in LLine 1 from LPart 1 Right Part"
+		Local: Line	: LLine 1	: Local		: Field	: Name Field: Style		: Normal Bold
+		Local: Line	: Note		: Local		: Field	: Name Field: Set As	: "(This is Part1 - Right Part wherein all the Lines from the Left Parts are being used and Name Field within Line 1 is locally modified)"
+		Border		: Thin Left
+
+[Part: LPart 2]
+
+	Use			: LPart 1
+
+	;; The entire Top Part is used and all the Parts, Lines and fields are locally modified
+	;; within this part
+	Local: Part	: LPart 1 Left Part: Local	: Line	: LLine 2	: Local		: Field	: Name Field	: Set As	: "Name Field in LLine 2 from LPart 2 Left Part"
+	Local: Part	: LPart 1 Left Part: Local	: Line	: LLine 2	: Local		: Field	: Name Field	: Style		: Normal Bold
+	Local: Part	: LPart 1 Left Part: Local	: Line	: Note		: Local		: Field	: Name Field	: Set As	: "(This is Part2 - Left Part wherein the entire Top Part is used and Left Part Line 2 is locally modified)"
+
+	Local: Part	: LPart 1 RightPart: Local	: Line	: LLine 3	: Local		: Field	: Name Field	: Set As	: "Name Field in LLine 3 from LPart 2 Right Part"
+	Local: Part	: LPart 1 RightPart: Local	: Line	: LLine 3	: Local		: Field	: Name Field	: Style		: Normal Bold	
+	Local: Part	: LPart 1 RightPart: Local	: Line	: Note		: Local		: Field	: Name Field	: Set As	: "(This is Part2 - Right Part wherein the entire Top Part is used and Right Part Line 3 is locally modified)"
+	Border		: Thin Top
+
+;; End-of-File

@@ -1,0 +1,16 @@
+[Include:Enabling Module.txt]
+[Include:Agent Name Creation.txt]
+[Include:Agent Details Creation.txt]
+[Include:Show Agent Name in Invoice Fill Form.txt]
+
+[Include:Collections.txt]
+[Include:Formulas.txt]
+[Include:ApparelProPrint.txt]
+[Include:UDFs.txt]
+[Include:ApperalPro Clothing.txt]
+[Include:Conditions.txt]
+
+
+
+
+

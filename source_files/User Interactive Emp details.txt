@@ -1,0 +1,167 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+
+
+/*
+
+	Displays the Interactive Employee details
+
+*/
+
+
+
+
+[Menu:InteractiveEmp]
+	add:item:enter details:execute:userreport
+
+[report:userreport]
+	form				:userform
+	
+[form:userform]
+	part				:userpart
+	button				:bt	
+[part:userpart]
+	line				:userline
+	
+	[line:userline]
+		left field		:userfield1
+		right field		:userfield2
+	
+	[field:userfield1]
+		info			:"Enter the name of the department"
+		use			:medium prompt
+		
+	[field:userfield2]
+		use			:name field
+		modifies		:nameempvar1
+		 
+	
+
+[report:empreport]
+	form		:Intempform
+	
+[form:Intempform]
+	part		:Intemppart
+	height		:100% screen
+	width		:100% screen
+[part:Intemppart]
+	line		:Intemptitle,Intempdetails
+	
+	repeat		:Intempdetails:Intempcoll
+	total		:Intemplbasics,Intemplhra
+	common border:yes
+		
+	[line:Intemptitle]
+		field		:Intemplnametitle,Intempldepttitle
+		right field	:Intemplbasictitle,Intemplhratitle,Intemplsaltitle
+		border		:thin top bottom
+	
+		[field:Intemplnametitle]
+			set as		:"EmployeeName"
+			width		:@@namewidth
+			align		:center
+			
+		[field:Intempldepttitle]
+			set as		:"Department"
+			width		:@@namewidth
+			align		:center
+		
+		[field:Intemplbasictitle]
+			set as		:"Basic salary"
+			width		:@@Amtwidth
+			align		:center
+			
+		[field:Intemplhratitle]
+			set as		:"HRA"
+			width		:@@Amtwidth
+			align		:center
+		[field:Intemplsaltitle]
+			set as		:"Gross salary" 
+			width		:@@amtwidth
+			align		:center	
+		[line:Intempdetails]
+			field		:Intemplname,Intempldept
+			right field	:Intemplbasic,Intemplhra,Intemplsal
+		
+			
+		[field:Intemplname]
+			set as		:$empname
+			width		:@@namewidth
+			space left	:3	
+			
+		[field:Intempldept]
+			set as		:$empdept
+			width		:@@namewidth
+			space left	:3	
+		
+			
+		[field:Intemplbasic]
+			type		:amount
+			set as		:$$asamount:$empbasic
+			width		:@@amtwidth
+			align		:right	
+			border		:thin   left right
+		[field:Intemplhra]
+			use			:Intemplbasic
+			set as		:@@Intemphra
+			border		:thin right
+		[field:Intemplsal]
+			use			:Intemplhra
+			set as		:#emplbasic+#emplhra
+	
+[collection:Intmydept]
+	objects:Intdept1,Intdept2,Intdept3
+	
+[object:Intdept1]
+	deptname	:"training"
+	
+[object:Intdept2]
+	deptname	:"R & D"
+	
+[object:Intdept3]
+	deptname	:"Documentation"
+	
+	
+[collection:Intempcoll]
+	objects		:Intemp1,Intemp2,Intemp3,Intemp4,Intemp5
+	filter		:my filter
+[object:Intemp1]
+	empname		:"Amrita"
+	empbasic	:1000
+	empdept		:"Documentation"
+[object:Intemp2]
+	empname		:"Mudit mathur"
+	empbasic	:1000
+	empdept		:"R & D"
+[object:Intemp3]
+	empname		:"Priya"
+	empbasic	:1000
+	empdept		:"Training"
+
+[object:Intemp4]
+	empname		:"sujata"
+	empbasic	:1000
+	empdept		:"Training"
+
+[object:Intemp5]
+	empname		:"Anil"
+	empbasic	:1000
+	empdept		:"Training"
+
+[system:formula]
+	Intemphra		:$empbasic*0.10
+	;;amtwidth	:10
+	my filter	:$empdept contains ##nameempvar1
+		
+[variable:nameempvar1]
+	type			:string
+	volatile		:yes
+[system:variable]
+	nameempvar1		:" documentation"
+[button:bt]
+	key			:f1
+	action		:display:empreport
+	title		:view the report	
+
+
+;;End-Of-File

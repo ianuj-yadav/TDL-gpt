@@ -1,0 +1,153 @@
+
+/*
+Objective(s) – 
+- 	This code demonstrates the usage of Collection related functions
+
+    */
+[#Menu: Gateway of Tally]
+
+	Add	: Item	: Before : @@locQuit	: Collection Related Functions		: Display	: CollReport
+
+[Report: CollReport]
+
+	Form    : CollForm
+	Variable: GroupName                          ;;;define report level variable
+	Variable: LedgerName                         ;;;define report level variable
+	Set     : LedgerName: "Supp"                 ;;;set ledgername variable value to "Supp"
+	Set     : GroupName : "Sundry Creditors"     ;;;set groupname variable to "Sundry Creditors"  
+	
+[Form: CollForm]
+
+	Part    : CollPart
+	Button  : SelectGroup
+
+[Part: CollPart]
+
+    Parts   : Form SubTitle,CollPartDetails
+    Local   : Field : Form SubTitle : Set as  : "Usage of Collection Functions with Ledger Collection"
+    Vertical: Yes
+    
+    [Part: CollPartDetails]
+    
+        Lines   : CollAmtTotalLine
+        Lines   : NumItemsLine
+        Lines   : FilterAmtTotalLine
+        Lines   : FilterCountLine
+        Lines   : FilterValueLine
+        Lines   : CollectionFieldLine
+        Border  : Thin Box
+      
+        [Line: CollAmtTotalLine]
+        
+            Fields  : Long Prompt,CollAmtTotal
+            Local   : Field : Long Prompt 	: Set as 	: "Closing Balances of All Ledgers :"
+            
+            [Field: CollAmtTotal]
+            
+                Use     : Name Field
+                Type    : Amount
+                
+                ;;;$$CollAmtTotal is used to get sum of required method
+                ;;;it takes method of type amount and collection name as parameter
+
+                Set as  : $$CollAmtTotal:Ledger:$ClosingBalance
+                Width   : 25
+            
+        [Line: NumItemsLine]
+        
+            Use     : CollAmtTotalLine
+            Local   : Field : Long Prompt   : Set as    : "Total Number of Ledgers in" + #GroupName + " :"
+            Local   : Field : CollAmtTotal  : Type      : Number
+            
+            ;;Function $$NumItems provides the count of items present in a collection
+            ;;Currently it provides the total numbers of ledgers
+            Local   : Field : CollAmtTotal  : Set as    : $$NumItems:SelectGroup   
+
+                
+        [Line: FilterAmtTotalLine]
+        
+            Use     : CollAmtTotalLine
+            Local   : Field : Long Prompt   : Set as  	: "Closing Balance of Ledgers of " + #GroupName + " :"
+            
+            ;;Function $$FilterAmtTotalgives total amount value of a collection based on filter condition
+            ;;Currently it provides total of closing balance of a particular ledger name
+
+            Local   : Field : CollAmtTotal  : Set as  	: $$FilterAmtTotal:SelectGroup:TSPLSmplNameFilter:$ClosingBalance
+           
+        [Line: FilterCountLine]
+        
+            Use     : CollAmtTotalLine
+            Local   : Field : Long Prompt   : Set as  	: "Total Number of Ledgers in " + #GroupName + " :"
+            Local   : Field : CollAmtTotal  : Type    	: Number
+            
+            ;; Function $$FilterCount gives the counts of ledgers in a collection based on filter condition
+
+            Local   : Field : CollAmtTotal  : Set as  	: $$FilterCount:SelectGroup:TSPLSmplNameFilter
+
+        [Line: FilterValueLine]
+        
+            Use     : CollAmtTotalLine
+            Local   : Field : Long Prompt   : Set as  	: "Name of Second Ledger in" + #GroupName + " :"
+            Local   : Field : CollAmtTotal  : Type    	: String
+            Local   : Field : CollAmtTotal  : Set Always: Yes
+            
+            ;;Function $$Filtervalue terun the value of a method at a articular position of the resultant collection 
+            ;;which satisfies tthe given filter expression
+
+            Local   : Field : CollAmtTotal  : Set as  	: $$FilterValue:$Name:SelectGroup:2:TSPLSmplNameFilter ;;if $$IsEmpty:$$FilterValue:$Name:SelectGroup:2:NameFilter then "" else $$FilterValue:$Name:SelectGroup:2:NameFilter
+            
+        [Line: CollectionFieldLine]
+        
+            Use     : CollAmtTotalLine
+            Local   : Field : Long Prompt   : Set as  	: "Name of the Second Ledger" + " :"
+            Local   : Field : CollAmtTotal  : Type    	: String
+            
+            ;;Function $$CollectionField return the value of a method at a particular position of the given collection
+
+            Local   : Field : CollAmtTotal  : Set as  	: $$CollectionField:$Name:2:Ledger
+
+[System: Formula]
+
+    TSPLSmplNameFilter  : if $Name CONTAINS ##LedgerName then Yes else No
+    
+;;;Collection of all the ledgers of a particular group name
+
+[Collection: Select Group]
+
+    Type    : Ledger
+    Child Of: ##GroupName
+
+;;Declare button to modify variable
+
+[Button: SelectGroup]
+
+    Key     : F3
+    Action  : Modify Variables : Select Group            
+    
+;;Report Starts
+    
+[Report: Select Group]
+
+    Use     : Modify Variables
+    Title   : $$LocaleString:"Select Group" 
+    Local   : Part : Modify Variables 	: Lines	: Select Group, Ledger Name
+    Local   : Field: MV Title         	: Info	: $$LocaleString:"Select Group"
+    Local   : Field: Ledger Name       	: Delete: Table
+
+    [Line: Select Group]
+    
+        Fields  : Select Group Title, Select Group Info
+        
+        [Field: Select Group Title]
+        
+                Use    	 	: Medium Prompt
+                Info    	: "Group Name"
+        
+        [Field: Select Group Info]
+                
+                Use         : Name Field
+                Table       : Group
+                Show Table  : Always
+                Modifies    : GroupName
+
+;; End-of-File

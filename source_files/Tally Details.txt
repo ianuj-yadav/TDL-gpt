@@ -1,0 +1,163 @@
+[#Menu : Gateway of Tally]
+	Add		: Item	: "Tally and Tss Details"	: Display	: TallyDetails
+	;Delete		: Key Item   	: @@locQuit					: Q
+	;Delete	: Key					: Unconditional Quit
+
+
+    
+[Report:TallyDetails]
+	Form		: TallyDetails
+	
+[Form:TallyDetails]
+	Part		: TallyDetails
+		
+[Part:TallyDetails]
+	Lines		: SrNo, RemoteSerialNumber, AccountID, SiteID, AdminEmailID, IsAdmin,+
+	IsIndian, IsSilver, IsGold, IsEducationalMode, IsLicensedMode, LicServerDate, LicServerTime, +
+	LicServerDateTime, LicExpiry,  AddonDisplayDate, vAddonBuildDate, +
+	TSSExpiryDate, TSSExpired, IsTallyNetSubscExpired1, IsInternetActive, TallyRelease
+	
+	[Line:SrNo]
+		Field			: Medium Prompt, SrNo
+		Space Bottom	: 1
+		Local			: Field		: Medium Prompt		: Info	: $$LocaleString:"Serial Number"
+		Local			: Field		: Medium Prompt		: Width	: 70
+		Local			: Field		: Medium Prompt		: Style	: Normal Bold
+		[Field:SrNo]
+			Use				: Name Field
+			Set as			: $$LocaleString:($$LicenseInfo:SerialNumber)
+			Width			: 50
+			Skip			: Yes
+			Set Always		: Yes
+			
+	[Line:RemoteSerialNumber]
+		Use				: SrNo
+		Local			: Field		: Medium Prompt		: Info			: $$LocaleString:"Remote Serial Number in case of Remote Login"
+		Local			: Field		: SrNo				: Set as		: $$LocaleString:($$LicenseInfo:RemoteSerialNumber)
+
+
+	[Line:AccountID]
+		Use				: SrNo
+		Local			: Field		: Medium Prompt		: Info			: $$LocaleString:"Account ID"
+		Local			: Field		: SrNo				: Set as		: $$LocaleString:($$LicenseInfo:AccountID)
+
+
+	[Line:SiteID]
+		Use				: SrNo
+		Local			: Field		: Medium Prompt		: Info			: $$LocaleString:"Site ID"
+		Local			: Field		: SrNo				: Set as		: $$LocaleString:($$LicenseInfo:SiteID)
+
+
+	[Line:AdminEmailID]
+		Use				: SrNo
+		Local			: Field		: Medium Prompt		: Info			: $$LocaleString:"Admin Email ID"
+		Local			: Field		: SrNo				: Set as		: $$LocaleString:($$LicenseInfo:AdminEmailID)
+
+
+	[Line:IsAdmin]
+		Use				: SrNo
+		Local			: Field		: Medium Prompt		: Info			: $$LocaleString:"Whether System logged in user is Administrator or not"
+		Local			: Field		: SrNo				: Set as		: $$LocaleString:($$LicenseInfo:IsAdmin)
+
+
+	[Line:IsIndian]
+		Use				: SrNo
+		Local			: Field		: Medium Prompt		: Info			: $$LocaleString:"Whether country is India or not"
+		Local			: Field		: SrNo				: Set as		: $$LocaleString:($$LicenseInfo:IsIndian)
+
+
+	[Line:IsSilver]
+		Use				: SrNo
+		Local			: Field		: Medium Prompt		: Info			: $$LocaleString:"Whether Product flavour is Silver"
+		Local			: Field		: SrNo				: Set as		: $$LocaleString:($$LicenseInfo:IsSilver)
+
+
+	[Line:IsGold]
+		Use				: SrNo
+		Local			: Field		: Medium Prompt		: Info			: $$LocaleString:"Whether Product flavour is Gold"
+		Local			: Field		: SrNo				: Set as		: $$LocaleString:($$LicenseInfo:IsGold)
+
+
+	[Line:IsEducationalMode]
+		Use				: SrNo
+		Local			: Field		: Medium Prompt		: Info			: $$LocaleString:"Whether Product is running in Educational mode"
+		Local			: Field		: SrNo				: Set as		: $$LocaleString:($$LicenseInfo:IsEducationalMode)
+
+
+	[Line:IsLicensedMode]
+		Use				: SrNo
+		Local			: Field		: Medium Prompt		: Info			: $$LocaleString:"Whether Product is running in Licensed mode"
+		Local			: Field		: SrNo				: Set as		: $$LocaleString:($$LicenseInfo:IsLicensedMode)
+
+
+	[Line:LicServerDate]
+		Use				: SrNo
+		Local			: Field		: Medium Prompt		: Info			: $$LocaleString:"License Server Date"
+		Local			: Field		: SrNo				: Set as		: $$LocaleString:($$LicenseInfo:LicServerDate)
+
+
+	[Line:LicServerTime]
+		Use				: SrNo
+		Local			: Field		: Medium Prompt		: Info			: $$LocaleString:"License Server Time"
+		Local			: Field		: SrNo				: Set as		: $$LocaleString:($$LicenseInfo:LicServerTime)
+
+
+	[Line:LicServerDateTime]
+		Use				: SrNo
+		Local			: Field		: Medium Prompt		: Info			: $$LocaleString:"License Server Date & Time"
+		Local			: Field		: SrNo				: Set as		: $$LocaleString:($$LicenseInfo:LicServerDateTime)
+
+	[Line:LicExpiry]
+		Use				: SrNo
+		Local			: Field		: Medium Prompt		: Info			: $$LocaleString:"License Expiry"
+		Local			: Field		: SrNo				: Set as		: $$LocaleString:($$LicenseInfo:LicExpiryDate)
+
+	[Line:AddonDisplayDate]
+		Use				: SrNo
+		Local			: Field		: Medium Prompt		: Info			: $$LocaleString:"AddonDisplayDate"
+		Local			: Field		: SrNo				: Set as		: $$LocaleString:($$Date:$AddonDisplayDate)
+
+
+	[Line:vAddonBuildDate]
+		Use				: SrNo
+		Local			: Field		: Medium Prompt		: Info			: $$LocaleString:"##vAddonBuildDate"
+		Local			: Field		: SrNo				: Set as		: $$LocaleString:(##vAddonBuildDate)
+
+
+	[Line:IsTallyNetSubscExpired]
+		Use				: SrNo
+		Local			: Field		: Medium Prompt		: Info			: $$LocaleString:"IsTallyNetSubscExpired"
+		Local			: Field		: SrNo				: Set as		: $$LocaleString:($$TNSubscInfo:IsTallyNetSubscExpired)
+
+
+	[Line:TSSExpiryDate]
+		Use				: SrNo
+		Local			: Field		: Medium Prompt		: Info			: $$LocaleString:"TSS Expiry Date"
+		Local			: Field		: SrNo				: Set as		: $$LocaleString:($$Date:$$TNSubscValidTillInDateFormat)
+
+
+	[Line:TSSExpired]
+		Use				: SrNo
+		Local			: Field		: Medium Prompt		: Info			: $$LocaleString:"IsTNSubscExpired"
+		Local			: Field		: SrNo				: Set as		: $$LocaleString:$$IsTNSubscExpired
+		
+
+	[Line:IsTallyNetSubscExpired1]
+		Use				: SrNo
+		Local			: Field		: Medium Prompt		: Info			: $$LocaleString:"IsTallyNetSubscExpired"
+		Local			: Field		: SrNo				: Set as		: $$LocaleString:($$TNSubscInfo:IsTallyNetSubscExpired)
+
+
+	[Line:IsInternetActive]
+		Use				: SrNo
+		Local			: Field		: Medium Prompt		: Info			: $$LocaleString:"IsInternetActive"
+		Local			: Field		: SrNo				: Set as		:  $$LocaleString:($$IsInternetActive)
+	[Line:TallyRelease]
+		Use				: SrNo
+		Local			: Field		: Medium Prompt		: Info			: $$LocaleString:"Pan Number And TallyRelease"
+		;Local			: Field		: SrNo				: Set as		: $$SPrintf:@@TNetCannotOpenRemCmp:$SRVMAJORREL:$SRVMINORREL:@@MinServerMajorRelease:@@MinServerMinorRelease;@@CapProductDetails;$$LocaleString:($$IsInternetActive)
+		;Local			: Field		: SrNo				: Set as		: $$SPrintf:@@CapProductDetails:@@VersionReleaseString:@@VersionBuildString:@@ProductBitnessStr:($$String:@@MajorReleaseeFormula):($$String:@@MinorReleaseFormula):"0":@@CapBuildNumberFormula
+		Local			: Field		: SrNo				: Set as		: $IncomeTaxNumber:Company:##SVCurrentCompany +"==="+ @@Releaseversion;:($$String:@@MajorReleaseeFormula):($$String:@@MinorReleaseFormula):"0";:@@CapBuildNumberFormula
+[System:Formula]
+	Release  			: "-v-%s"
+	Releaseversion		: $$SPrintf:@@Release:@@VersionReleaseString

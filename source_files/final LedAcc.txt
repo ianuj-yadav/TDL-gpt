@@ -1,0 +1,190 @@
+[#Form: Ledger Vouchers]
+;	Delete	: Option      	: Normal Ledger         : NOT ##ExtractMode AND (NOT ##ColumnarDayBook) AND ((NOT ##InConfirmMode) OR $$InDisplayMode OR $$InDraftMode)
+;    Add		: Option		: BinaryCollapseLedger	: ##CollapseLedger And (NOT ##ExtractMode AND (NOT ##ColumnarDayBook) AND ((NOT ##InConfirmMode) OR $$InDisplayMode OR $$InDraftMode))
+;	Add		: Option      	: Normal Ledger         : NOT ##ExtractMode AND (NOT ##ColumnarDayBook) AND ((NOT ##InConfirmMode) OR $$InDisplayMode OR $$InDraftMode)
+[#Form:LV InSamePage]
+
+[#Form:Normal Ledger]
+	Delete			: Button		: CollapseLedger
+	
+[#Form: LV WithScrTotals]
+	Add			: Button		: CollapseLedger
+	
+[Button:CollapseLedger]
+	Title		: "Collapse Ledger Wise"
+	Key			: Alt + 3
+	Action		: Display	: CollapseLedger
+	;Action		: Set		: CollapseLedger	: NOT ##CollapseLedger
+	
+[#Form: Ledger Vouchers]
+
+	
+[#Form:LV InSamePage]
+
+
+
+[#Part: LV Totals]
+
+	;Background	: red
+	
+[#Line:LVSelectTotal]
+	
+[#Part:LV VchTitle];, LV Title, LV VchTitle, LV Body
+	
+	
+[Report:CollapseLedger]
+	Form		: BinaryCollapseLedger
+	Title		: "Collapse Report Ledger Wise"
+[Form:BinaryCollapseLedger]
+	Page Break  	: DYBK ClPageBreak, DYBK OpPageBreak
+    Local       	: Field				: Default       : Skip : Yes
+    Local       	: Field				: BR BankDate   : Skip : No
+    Balancing   	: LV ClosingBalance : @@BalancingBreak
+    OpeningBal  	: LV OpeningBalance
+    Parts       	: LV Title, LV BinTitle, LV BinBody
+	Bottom Part		: LVBinTotal
+
+	 
+[Part:LV BinTitle]
+	Border				: Thick cover
+	Line				: LV BinTitle
+	[Line:LV BinTitle]
+		Use				: LV BinBody
+		Space Top		: 0.3
+		Space Bottom	: 0.6
+		Height			: 1
+		Local			: Field	: Default		: Style	: "Normal Bold"
+		Local			: Field	: Default		: Align	: Left
+		Local			: Field	: Default		: Type	: String
+		
+		Local			: Field	: LVBinLedName			: Set as	: "Ledger Name"
+		Local			: Field	: LVBinVchType			: Set as	: "Voucher Type"
+		Local			: Field	: LVBinDebit			: Set as	: "Debit"
+		Local			: Field	: LVBinCredit			: Set as	: "Credit"
+[Part:LV BinBody]
+	Border		: Thick Cover
+	Line		: LV BinBody
+	Repeat		: LV BinBody		: Vouchers of LedgerBin
+	Scroll		: Vertical
+
+	[Line:LV BinBody]
+		Left Fields		: LVBinLedName
+		Right Fields	: LVBinVchType, LVBinDebit, LVBinCredit
+		Space Top		: If $$Line = 1 Then 1 Else 0
+		
+		[Field:LVBinLedName]
+			Use         : DSPVchLedAccount
+			Set as		: $PartyLedgerName1
+			QuickSearch : Yes
+			FullWidth   : Yes
+			Width       : @@ShortNameWidth
+    
+	 
+		[Field:LVBinVchType]
+			Use         : DSPVchType
+			Set as		: $VoucherTypeName;if NOT $$IsVoucher then "" else  if NOT $$InPixelMode then @@AdditionalName else $Name:VoucherType:$VoucherTypeName
+		[Field:LVBinDebit]
+			Use         : DSPVchDrAmt
+			Set as      : $BillDrAmt
+			;Style       : if $$InPrintMode then "Normal" else "Normal Bold"
+			
+		[Field:LVBinCredit]
+			Use         : DSPVchCrAmt
+			Set as      : $BillCrAmt
+			;Style       : if $$InPrintMode then "Normal" else "Normal Bold"
+			
+		
+		
+
+[Part:LVBinTotal]
+	Line	: LVBinOpAmt, LVBinCurTotalAmt, LVBinClAmt;, LVBinCurTotalAmt1
+	Border	: Thin Box
+	Repeat	: LVBinCurTotalAmt	: AggrDtls
+	[Line:LVBinCurTotalAmt]
+		Right Fields    : Info Field,LVBinDrTotalAmt, LVBinCrTotalAmt, DSP VchLedBalance
+			
+		Local			: Field	: DSP VchLedBalance		: Set as	: ""
+		Local           : Field : Info Field : Info     : $$LocaleString:"Current Total" + " " + ":"
+		Border			: Full Thin Bottom
+		[Field:LVBinDrTotalAmt]
+			Use     	: Amount Field
+			Set as  	: $BillDr;Amt1;$$Total:LVBinDebit;#DSPVCHDrTotalAmt;
+			;Background	: Green
+		[Field:LVBinCrTotalAmt]
+			Use     	: Amount Field
+			Set as  	: $BillCrAmt1;$$Total:LVBinCredit;#DSPVCHCrTotalAmt;
+			;Background	: Green
+		
+	[Line:LVBinOpAmt]
+		Right Fields    : Info Field,LVBinDrOpAmt,LVBinCrOpAmt,DSP VchLedBalance;, DSP VchDrOpAmt, DSP VchCrOpAmt, DSP VchLedBalance
+		;Right Fields    : Info Field, DSP VchDrOpAmt, DSP VchCrOpAmt, DSP VchLedBalance
+        Local           : Field : Info Field : Info     : $$LocaleString:"Opening Balance" + " " + ":"
+		Local			: Field	: DSP VchLedBalance		: Set as	: ""
+;		Local   		: Field : Info Field : Cells 	: If (##IsCCReport AND (##ExplodeFlag OR $$KeyExplode)) Then 6 Else If ##IsCCReport Then 4 Else @@VCHOpBalanceCells
+;		Local           : Field : Info Field : Align	: Right
+        Border          : Full Thin Top
+;       Invisible       : ##IsCashFlowReport
+		[Field:LVBinDrOpAmt]
+			Use     : Amount Field
+			Set as  : if ##IsCCReport then $$IfDr:@@CCOpening else +
+								if ##IsGrpReport then $$IfDr:@@GrpOpening else +
+								$$IfDr:@@LedOpening
+			;Switch	: DSP VchForexDrOpAmt	: DSP VchForexDrOpAmt : @@ShowForex
+		[Field:LVBinCrOpAmt]
+			Use     : Amount Field
+			Set as  : if ##IsCCReport then $$IfCr:@@CCOpening else +
+						if ##IsGrpReport then $$IfCr:@@GrpOpening else +
+								$$IfCr:@@LedOpening
+		
+			;Switch	: DSP VchForexCrOpAmt	: DSP VchForexCrOpAmt : @@ShowForex
+		[Field:LVBinOpAmt]
+			Use     : DSP VchLedBalance
+		
+		
+			
+;	[Line:LVBinCurTotalAmt1]
+;		Right Fields    : Info Field,LVBinDrTotalAmt, LVBinCrTotalAmt, DSP VchLedBalance
+;			
+;		Local			: Field	: DSP VchLedBalance		: Set as	: ""
+;		Local           : Field : Info Field : Info     : $$LocaleString:"Current Total" + " " + ":"
+;		Border			: Full Thin Bottom
+;		[Field:LVBinDrTotalAmt]
+;			Use     	: Amount Field
+;			Set as  	: $$BillDrAmt;$$Total:LVBinDebit;#DSPVCHDrTotalAmt;
+;			;Background	: Green
+;		[Field:LVBinCrTotalAmt]
+;			Use     	: Amount Field
+;			Set as  	: $$BillCrAmt;$$Total:LVBinCredit;#DSPVCHCrTotalAmt;
+;			;Background	: Green
+			
+	[Line:LVBinClAmt]
+		Right Fields    : Info Field, DSP VchDrClAmt, DSP VchCrClAmt, DSP VchLedBalance
+		;Right Fields    : Info Field, LVBinDrClAmt
+		Local           : Field : Info Field : Info     : $$LocaleString:"Closing Balance" + " " + ":"
+		Local           : Field : Info Field : Style	: "Normal Bold"
+		Local			: Field	: DSP VchLedBalance		: Set as	: ""
+		[Field: LVBinDrClAmt]
+			Use     : Amount Field
+			Set as  : If @@ShowForex Then $$IfForexDr:$$ForexAsPositive:@@VchClg Else $$IfDr:@@VchClg
+			Style   : Normal Bold
+[Collection: Vouchers of LedgerBin]
+	Use				: Vouchers of Ledger
+	By           	: PartyLedgerName1 	: $PartyLedgerName
+	Option			: Voucher Filter Methods	: @@FetchVoucherMethods
+	Aggr Compute 	: BillDrAmt 		: Sum 	: $TotalLedDrVchAmt
+	Aggr Compute 	: BillCrAmt 		: Sum 	: $TotalLedCrVchAmt
+	
+[Collection:AggrDtls]
+	Use				: Vouchers of LedgerBin
+	By           	: BillDr 	: $BillDrAmt
+	By           	: BillCr 	: $BillCrAmt
+	Aggr Compute 	: BillDrAmt1 		: Sum 	: $BillDr
+	Aggr Compute 	: BillCrAmt1 		: Sum 	: $BillCr
+
+
+	
+	
+
+
+
+	

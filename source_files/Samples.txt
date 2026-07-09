@@ -1,0 +1,74 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+[#Menu: Gateway of Tally]
+
+	Add	: Item		: Before 	: @@locQuit	: Blank
+	Add	: Indent	: Before 	: @@locQuit	: "Sample TDL"
+	Add	: Item		: Before 	: @@locQuit	: Blank
+	Add	: Key Item	: Before 	: @@locQuit	: TDL - The Development Language : U : Menu		: DevpLang
+
+;; Default Menu 'Gateway of Tally' is altered by prefixing # and a new Menu Item
+;; 'Demo TDLs' is added with action as 'Menu' and Menu Name as 'Demo TDLs'
+;; This means that if Menu Item 'Demo TDLs' is selected by the user, a sub-Menu
+;; 'Demo TDLs' is displayed
+
+[Menu: DevpLang]
+
+	Indent		: "Basics of TDL"
+	Item		: Blank
+
+	Key Item	: "Language Components"				: L : Menu	: TDL Language Components
+	Key Item	: "Symbols & Prefixes"				: S : Menu	: Symbols and Prefixes
+	Key Item	: "Dimensions & Formatting"			: D : Menu	: Dimensions and Formatting
+	Item		: Blank
+
+	Indent		: "TDL Artifacts"
+	Item		: Blank
+
+	Key Item	: "Variables & Buttons"				: V : Menu	: Variables and Buttons
+	Key Item	: "Objects & Collections"			: O : Menu	: Objects and Collections
+	Key Item	: "Actions in TDL"					: A : Menu	: Actions in TDL
+	Key Item	: "User Defined Fields"				: U : Menu	: User Defined Fields
+	Key Item	: "User Defined Functions"			: F : Menu	: User Defined Functions
+	Item		: Blank
+
+	Indent		: "Application of TDL"
+	Item		: Blank
+
+	Key Item	: "Reports & Printing"				: R : Menu	: Reports and Printing
+	Key Item	: "Voucher & Invoice Customisation"	: S : Menu	: Voucher Customisation
+	Key Item	: "Remote Compliant Reports"		: M : Menu	: Remote Compliant Reports
+	Item		: Blank
+
+	Indent		: "What's New ?"
+	Item		: Blank
+
+	Key Item	: "Tally.ERP 9"		 				: 9 : Menu	: Tally.ERP9
+	Key Item	: "TallyPrime"			            : P : Menu  : TallyPrime
+	Title		: "TDL - The Development Language"
+
+	Control		: "User Defined Fields"				: NOT $$IsRemoteCompany
+	
+;;System Variables
+
+[System: Variables]
+	
+	Variable: LicSlNo, EncString: String
+
+;; Include Files - TDL - The Development Language
+
+[Include: TDL Language Components\TDL Language Components.txt]
+[Include: Symbols & Prefixes\Symbols & Prefixes.txt]
+[Include: Dimensions & Formatting\Dimensions & Formatting.txt]
+[Include: Variables & Buttons\Variables & Buttons.txt]
+[Include: Objects & Collections\Objects & Collections.txt]
+[Include: Actions in TDL\Actions in TDL.txt]
+[Include: User Defined Fields\User Defined Fields.txt]
+[Include: User Defined Functions\User Defined Functions.txt]
+[Include: Reports & Printing\Reports & Printing.txt]
+[Include: Voucher Customisation\Voucher Customisation.txt]
+[Include: Remote Compliant TDL Reports\Remote Compliant TDL Reports.txt]
+[Include: Whats New\Whats New.txt]
+[Include: Whats New\Rel TP.x\Whats New TallyPrime.txt]
+
+;; End of file

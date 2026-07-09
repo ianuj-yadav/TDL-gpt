@@ -1,0 +1,53 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the alteration of sales Voucher
+-	The default field for Discount Percentage in Sales Invoice is altered to accept
+	Discount Amount and the behavior for calculating Final Amount is changed
+
+Last modification -
+-	Altered on 09-11-2009
+*/
+
+[#Field: MPSDiscountTitle] ;; Field in The Multiple Price List Report
+
+	Set as  : "Discount Amt"
+	
+[#Line: EI ColumnOne] ;; Column Title in the Invoice
+
+    Add     : Option    : Disc EI ColumnOne     : @@IsSales
+    
+    [!Line: Disc EI ColumnOne] ;; Optional definition
+
+        Local   : Field     : VCH DiscTitle         : Set as    : "Disc Amt"
+    
+[#Line: VCHBATCH ColumnOne] ;; Column Title in the Batch Subform
+
+    Add     : Option    : Disc EI ColumnName    : @@IsSales
+    
+    [!Line: Disc EI ColumnName] ;; Optional definition
+
+        Local   : Field     : VCH DiscTitle         : Info      : "Disc Amt"
+
+[#System: Formula] ;; Recalculate the following Formula rest will be taken care by Tally
+
+    CalcedAmt   : ($Rate * $BilledQty) - $BatchDiscount
+    NrmlAmount  : ($BilledQty * $Rate) - $BatchDiscount
+    
+[#Field: VCHBATCH Discount] ;; Batch Discount Field to remove the percent format
+
+    Delete  : Format
+    Add     : Format    : "NoPercent,NoZero"
+    
+[#Field: VCH Discount] ;; Invoice Discount Field to remove the percent format
+
+    Delete  : Format
+    Add     : Format    : "NoPercent,NoZero"
+    
+[#Field : VCH Value] ;; To change the Invoice Value field when there are no Batch Allocations
+
+    ResetVal: if (@@NoBaseUnits OR $$IsEmpty:$BilledQty) then $$Value +
+              else (($Rate * $BilledQty) - $Discount)
+
+;; End-of-File

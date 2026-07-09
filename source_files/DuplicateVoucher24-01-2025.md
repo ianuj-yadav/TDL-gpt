@@ -1,0 +1,117 @@
+---
+title: DuplicateVoucher24-01-2025
+type: sample_code
+objects: Function, Button
+source: DuplicateVoucher24-01-2025.txt
+---
+
+# DuplicateVoucher24-01-2025
+
+## Source Code
+
+```tdl
+
+[#Form:Journal Color]
+	Add		: Button		: ChangeLedgers
+	
+
+[Button:ChangeLedgers]
+	Title	: "Interchange Ledgers"
+	Key		: Ctrl+7
+	Action	: Call		: ChangeLedgers
+	
+[Function: ChangeLedgers]
+	Static Variable	: Ledg1	: String	: $LedgerEntries[1].LedgerName
+	Static Variable	: Ledg2	: String	: $LedgerEntries[2].LedgerName
+	Variable		: Count1	: Number	: 0
+	
+	100	: Walk Collection	: LedgerEntries
+	110	: Increment	: Count1
+	
+	200	: Do If	: ($$IsEqual:##Count1:1 And $$Owner:$$InDuplicateMode)	: Set Value		: LedgerName	: ##Ledg2
+	210	: Do If	: ($$IsEqual:##Count1:2 And $$Owner:$$InDuplicateMode)	: Set Value		: LedgerName	: ##Ledg1
+	
+	300	: End Walk
+	
+	500	: Refresh Data
+	
+/*
+[#Form	: Daybook]
+	Add	: Button	: FormDup;,ChangeLegerVariable
+	Add	: Key		: ChangeVarLedgerDaybook
+
+[Key:ChangeVarLedgerDaybook]
+	Key		: Alt+C
+	Action	: Call	: ChangeLedgerVar
+[#Form:Voucher]
+	Add	: Button		: ChangeLegerVariable, RefreshData1
+	Add	: Key			: ChgLedgerVar
+	
+[Key:ChgLedgerVar]
+	Key			: Alt+R
+	Action		: Call		: ChangeLedgerVar
+	
+[Key: Form Dup]
+
+	Title		: $$LocaleString:"Duplicate"
+	Key     	: Alt+4
+	Inactive    : NOT $$HasVouchers OR (NOT $$Allow:Create:Vouchers) OR NOT ##OnFocusInactiveCreate
+	Action	    : Trigger Key	: Alt+2, $$Date:$$SysInfo:SystemDate, Enter, Alt+7
+	Scope	    : Current
+	BottomToolbar Position : BottomToolBarBtn5
+
+	
+[Button:RefreshData1]
+	Key			: Alt+5
+	Action		: Refresh Data
+
+
+[Button: ChangeLegerVariable]
+	Title	: "Change Ledger"
+	Key		: Alt+ 6
+	Action	: Call	: ChangeLedgerVar
+	;Action		: Trigger Key	: Enter,Enter, Ctrl+C,Alt+R,;Esc; Y, Y, Y, Y, 
+	Inactive    : NOT @@IsJournal And Not ($$Owner:$$InDuplicateMode)
+	
+	
+[#Form: SV Quit Query]
+	Background		: Red
+	
+	
+[#Part: YesNo Query Part]
+	Background		: Red
+	
+[System:Variable]
+	ChangeLegerVariable		: No	
+	
+[Variable:ChangeLegerVariable]
+	Default		: No
+	Type		: Logical
+	Persistent	: No
+	Volatile	: No
+[Function:ChangeLedgerVar]
+	10	: Set		: ChangeLegerVariable	: Not ##ChangeLegerVariable
+	20	: Msg Box	: "My Msg"	: $LedgerEntries[1].Amount	: Yes
+	30	: Refresh Data
+	
+	
+[#Form: SV Quit Query]
+	Background		: Red
+	
+
+[#Field:VchToBy]
+	Set By Condition		: @@IsDr And ($$Owner:$$InDuplicateMode) And ##ChangeLegerVariable : @@CrStr
+	Set By Condition		: @@IsDr And ($$Owner:$$InDuplicateMode) And Not ##ChangeLegerVariable : @@DrStr
+	Set By Condition		: Not @@IsDr And ($$Owner:$$InDuplicateMode) And ##ChangeLegerVariable : @@DrStr
+	Set By Condition		: Not @@IsDr And ($$Owner:$$InDuplicateMode) And Not ##ChangeLegerVariable : @@CrStr
+	
+
+;[#Field:VchDrAmt]
+;	Set Always	: Yes
+;	Set By Condition	: ($$Owner:$$InDuplicateMode) 	: $LedgerEntries[1].Amount
+;
+;[#Field:VchCrAmt]
+;	Set Always	: Yes
+;	Set By Condition	: ($$Owner:$$InDuplicateMode) 	: $LedgerEntries[1].Amount
+*/
+```

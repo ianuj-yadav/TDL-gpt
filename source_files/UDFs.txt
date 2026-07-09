@@ -1,0 +1,40 @@
+
+[System:UDF]
+	CmpAgentName 			: String	: 20001
+	IsAgentModuleEnabled	: Logical	: 20002
+	AgentDtls				: Aggregate	: 20003
+	AgentName				: String	: 20004
+	AgentDOJ				: Date		: 20005
+	AgentComm				: Number	: 20006
+	EIAgentName				: String	: 20010
+	EIAgentCommission		: Number	: 20011
+	IsColorEnabled			: Logical	: 20012
+	CmpColorName			: String	: 20013
+	GarmentSize1			: Quantity	: 20501
+	GarmentSize2       		: Quantity	: 20502
+    GarmentSize3       		: Quantity	: 20503
+    GarmentSize4       		: Quantity	: 20504
+    GarmentSize5       		: Quantity	: 20505
+    GarmentSize6       		: Quantity	: 20506
+    GarmentSize7       		: Quantity	: 20507
+    GarmentSize8       		: Quantity	: 20508
+    GarmentSize9       		: Quantity	: 20509
+    GarmentSize10      		: Quantity	: 20510
+    GarmentSize11      		: Quantity	: 20511
+    GstPercent				: Number	: 20550
+	
+	AggrUDFProgulf			: Aggregate	: 21001
+	NameList				: String	: 21011
+	IsQuotationEnabled		: Logical	: 22001
+
+	
+
+[Style:ArialNormal24]
+	Font Name		: "Arial"
+	Height			: 24
+	
+[Field:ApperalProInvPrompt]
+	Align       : Prompt
+    Skip        : Yes
+    Fixed       : Yes
+	Width		: @@ShortNameWidth

@@ -1,0 +1,51 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the object fetched at Report Level to be used within 
+	the same report in remote environment
+-	If the Report depends on any Methods of the Object being fetched, 'Prefetch 
+	Object' attribute is used.
+
+Syntax -
+-	Pre Fetch Object: <Object Type>	: <Object Identifier> : <List of Required Methods separated by commas>
+-	These methods fetched will be available for use within the current Report
+	Definition which can be used to set variable values like SVFromDate & SVToDate
+
+Last modification -
+-	Altered on 09-11-2009
+
+Dependencies -
+-	Supporting File 'Object Fetch.txt'
+*/
+
+[Collection: Led Coll]
+
+    Use         : Alias Collection      ;; Default Collection for including Alias
+    Type        : Ledger
+    Variable    : LedgerName            ;; Default Variable LedgerName is used
+    Trigger     : Remote Triggered Led Report
+    Report      : Led Report For Obj Pre Fetch
+
+;; Ledger method Name needs to be fetched from Server to show the Ledger collection as Table
+
+	Fetch		: Name
+
+;;Report Definition begins here
+   
+[Report: Led Report For Obj Pre Fetch]
+
+    Use             : DSP Template
+    Form            : Remote Final Led Report
+    Title           : "Display of Ledger Vouchers for Last Voucher Date"
+
+;; Particular Ledger Object is pre-fetched with required Methods for this Report
+
+	Pre Fetch Object: Ledger : Ledger Name: LastVoucherDate
+
+	Set      		: SVFromDate	: $LastVoucherDate:Ledger:##LedgerName
+	Set      		: SVToDate   	: $LastVoucherDate:Ledger:##LedgerName
+
+	Fetch Object	: Ledger		: #LedgerName	: Name, LedgerContact, LedgerPhone, OpeningBalance, LedOpeningBalance, TBalOpening
+
+;; End-of-File

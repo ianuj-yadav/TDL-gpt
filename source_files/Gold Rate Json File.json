@@ -1,0 +1,29 @@
+{
+  "goldrates": [
+    {
+      "quality": "24 Carat",
+      "ratepergram": 6284.00,
+	  "Date": "05-04-19"
+    },
+    {
+      "quality": "22 Carat",
+      "ratepergram": 5760,
+	  "Date": "05-04-19"
+    },
+    {
+      "quality": "18 Carat",
+      "ratepergram": 4710,
+	  "Date": "05-04-19"
+    },
+    {
+      "quality": "14 Carat",
+      "ratepergram": 4005,
+	  "Date": "05-04-19"
+    },
+    {
+      "quality": "10 Carat",
+      "ratepergram": 2865,
+	  "Date": "05-04-19"
+    }
+  ]
+}

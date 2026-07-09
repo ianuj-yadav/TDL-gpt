@@ -1,0 +1,1113 @@
+---
+title: New Vaara Clothing Print
+type: sample_code
+objects: Part, Line, Field
+source: New Vaara Clothing Print.txt
+---
+
+# New Vaara Clothing Print
+
+## Source Code
+
+```tdl
+[#Report: Printed Invoice]
+	Object		: Voucher	:$$Sprintf:@@VCHMasterId:$VoucherNumber
+
+[#Form: Comprehensive Invoice]
+
+	Option: Global Invoice    : @@IsSales
+
+[#Form: Simple Printed Invoice]
+
+	Option: Global Invoice    : @@IsSales; AND ##VaaraClotingConfig
+	
+[!Form : Global Invoice]
+
+	Delete  	: Parts
+	Delete	    : Bottom Parts
+	Delete	    : PageBreak
+	Space Top	: 3
+ 	Space Right	: 1
+	Space Bottom: 1
+	Space Left	: 2
+	
+	add			:Parts			: STD Invoice Top,GI OpPgBrkVaara, ItemDtlsPartVaara
+	add			:Bottom Parts	: InvoiceBottomVaara
+
+	add			:Page Break		: GI ClPgBrkVaara, GI OpPgBrkVaara
+	
+	Full Height	: Yes
+	Full Width	: Yes
+	;Print BG	: Yellow
+	
+
+[Part: GI ClPgBrkVaara]
+
+	Lines		: GI ClPgBrkVaara
+	
+	[Line: GI ClPgBrkVaara]
+
+		Fields		: Simple Field
+		Local		: Field			: Simple Field	: Set As	: "Continue...."; + $$PageNo+1
+		Local		: Field			: Simple Field	: FullWidth	: Yes
+		Local		: Field			: Simple Field	: Align		: Right
+		
+
+[Part: GI OpPgBrkVaara]
+
+	Parts		: Vaara Details, VaaraGstPart, VaaraInv,ItemDtlsTitleVaara1,ItemDtlsTitleVaara2
+	Vertical	: Yes
+
+
+[Part:Vaara Details]
+	Parts			: Cmp Logo, Cmp Detail
+	Border			: Thin Cover
+	;Height			: 1.1 Inch
+[Part	: Cmp Logo]
+	;Use				: EXPINV Logo
+	Line		: Empty
+	Graph Type	: $Logopath:Company:##SVCurrentCompany
+	Height		: If ((NOT $$InPrintMode) AND ($$InExportAction OR $$InMailAction OR $$InWhatsAppAction)) Then 15% Else 8% Page
+	Width		: 15% Page
+	Invisible	: If $$InPrintMode OR $$InMailAction OR $$InWhatsAppAction OR ($$InExportMode And $$IsSysNameEqual:HTML:##SVExportFormat) then No Else Yes
+;	Space Top	: 0.5
+;	
+;	[Line:VaaraLogoLine]
+;		Field		: VaaraLogoFld
+;		Remove if 	: NOT #SACompLogo
+;		[Field:VaaraLogoFld]
+;			Set as		: ""
+
+
+
+;	Use				: EXPINV Logo
+;	Use				: EXPSMP Logo
+;	Line			: empty
+;	Graph Type		: $Logopath:Company:##SVCurrentCompany
+;	Width			: 18% Page
+	
+	
+	
+[Part	: Cmp Detail]
+	Lines			: GAnesh, VaaraTaxInvoice, VaaraCmpName, VaaraCmpAddress, VaaraCmpMobiles
+	Width			: 85% Page
+	;Repeat	: VaaraCmpAddress   : Company Address
+					
+	
+	[Line:GAnesh]
+		Field	: Ganesh
+		[Field:Ganesh]
+			Set as		: "|| SHREE GANESHAY NAMAHA ||" 
+			Full Width	: Yes
+			Style		: ArialNormal10
+			Align		: Center
+			
+			
+
+	[Line:VaaraTaxInvoice]
+		Field	: VaaraTaxInvoice
+		[Field:VaaraTaxInvoice]
+			Set as		: "TAX INVOICE"
+			Full Width	: Yes
+			Style		: ArialBold12
+			Align		: Center
+			
+
+	[Line:VaaraCmpName]
+		Field	: VaaraCmpName
+		[Field:VaaraCmpName]
+			Set as		: @@CmpMailName
+			Full Width	: Yes
+			Style		: TimesNormal24
+		
+/*
+	[Line:VaaraCmpAddress]
+		Field   : EXPINV Address Vaara
+		Option  : GST Print ItemTaxDetailsStyleTiny : @@IsGSTOnAppl AND @@IsGSTTaxAnalysisWithItems
+		
+		[Field:EXPINV Address Vaara]
+			Set as		: $Address
+*/
+	[Line:VaaraCmpAddress]
+		Field	: VaaraCmpAddress ;Company Address
+		[Field:VaaraCmpAddress]
+			Set as		: $$FullList:VaaraCompanyAddress:$Address/*$_Address1:Company:##SVCurrentcompany + ",+
+			" + $_Address2:Company:##SVCurrentcompany + ", " + $_Address3:Company:##SVCurrentcompany + ",+
+			" + $_Address4:Company:##SVCurrentcompany + ", " + $_Address5:Company:##SVCurrentcompany + ", +
+			" + $PriorStateName:Company:##SVCurrentcompany + "-" + $PinCode:Company:##SVCurrentcompany*/
+			Full Width	: Yes;
+			Style		: ArialNormal10
+			Lines		: 0
+			
+	
+	[Line:VaaraCmpMobiles]
+		Field	: VaaraCmpMobiles
+		[Field:VaaraCmpMobiles]
+			Set as		: "TEL :"+$MobileNumbers:Company:##SVCurrentcompany + "/+
+			" + $PhoneNumber:Company:##SVCurrentcompany + " Email :  " + $Email:Company:##SVCurrentcompany 
+			Full Width	: Yes
+			Style		: ArialNormal10
+			
+	
+[Part:VaaraGstPart]
+	Line		: VaaraGstPart
+	;Repeat		: VaaraGstPart		: HsnVaara
+	Border		: Thin Cover
+	[Line:VaaraGstPart]
+		Fields	: VaaraGstNo, VaaraHsnCode
+		[Field:VaaraGstNo]
+			Set as			: "GST NO:-"+@@CMPGSTCurrRegNumber 
+			Style			: ArialBold14
+			Width			: 50% PAge
+			
+		[Field:VaaraHsnCode]
+			Set as			: "HSN CODE:-"+$CmpHsnCode:Company:##SVCurrentcompany ;;$$String:$Hsncode + $$String:$Hsn;
+			Style			: ArialBold14
+			Width			: 50% PAge
+			
+
+[Part:VaaraInv]
+	Parts			: VaaraCustDtls
+	Right Parts		: VaaraInvDtls
+	Border			: Thin Cover
+[Part:VaaraCustDtls]
+	Line	: BillingAddress, VaaraCustName, VaaraCustAddress1, VaaraCustAddress3, VaaraCustAddress5, VAaraCustState+
+				, VaaraCustTelephone, VaaraCustGst
+	Width	: 64% Page
+	;Border	: Thin Right
+	
+	
+	[Line:BillingAddress]
+		Field	: BillingAddress
+		[Field:BillingAddress]
+			Set as		: "Billing Address :"
+			Full Width	: Yes
+			Style		: TimesBold12
+
+	[Line:VaaraCustName]
+		Field	: VaaraCustName
+		[Field:VaaraCustName]
+			Set as		: $PartyLedgerName
+			Full Width	: Yes
+			Style		: TimesBold12
+
+	[Line:VaaraCustAddress1]
+		Field	: VaaraCustAddress1
+		[Field:VaaraCustAddress1]
+			Set as		: $_Address1:Ledger:$PartyLedgerName+", "+$_Address2:Ledger:$PartyLedgerName
+			Full Width	: Yes
+
+
+	[Line:VaaraCustAddress3]
+		Field	: VaaraCustAddress3
+		[Field:VaaraCustAddress3]
+			Set as		: $_Address3:Ledger:$PartyLedgerName+", "+$_Address4:Ledger:$PartyLedgerName
+			Full Width	: Yes
+
+
+	[Line:VaaraCustAddress5]
+		Field	: VaaraCustAddress5
+		[Field:VaaraCustAddress5]
+			Set as		: $PriorStateName:Ledger:$PartyLedgerName+"-"+$Pincode:Ledger:$PartyLedgerName
+			Full Width	: Yes
+
+
+	[Line:VAaraCustState]
+		Field	: Short Prompt, VAaraCustState
+		Local	: Field	: Short Prompt	: Info	:$$LocaleString:"STATE	"
+		Local	: Field	: Short Prompt	: Style	: TimesBold12
+		Space Top	: 1
+		[Field:VAaraCustState]
+			Set as		: $PriorStateName:Ledger:$PartyLedgerName+"-"+$$getgststatecode:($LedStateName:Ledger:$PartyLedgerName )
+			Full Width	: Yes
+			Style		: TimesBold12
+			
+
+
+
+	[Line:VaaraCustTelephone]
+		Field	: Short Prompt, VaaraCustTelephone
+		Local	: Field	: Short Prompt	: Info	:$$LocaleString:"TELE NO	"
+		Local	: Field	: Short Prompt	: Style	: TimesBold12
+		[Field:VaaraCustTelephone]
+			Set as		: "-"+$LedgerMobile:Ledger:$PartyLedgerName
+			Full Width	: Yes
+			Style		: TimesBold12
+			
+
+	[Line:VaaraCustGst]
+		Field	: Short Prompt, VaaraCustGst
+		Local	: Field	: Short Prompt	: Info	:$$LocaleString:"GST NO	"
+		Local	: Field	: Short Prompt	: Style	: TimesBold12
+		[Field:VaaraCustGst]
+			Set as		: "-"+$PartyGSTIN
+			Full Width	: Yes
+			Style		: TimesBold12
+			
+
+
+
+[Part:VaaraInvDtls]
+	Line	: VaaraInvNo, VaaraLrNo, VaaraParcel, VaaraTransport, VaaraBroker, VaaraRemoveDate, VaaraPlaceOfSupply
+	;Width	: 36% Page
+	Border	: Thin Left
+	;Print BG	: REd
+	[Line: VaaraInvNo]
+		Left Field	: VaaraInvoice
+		Right Field	: VaaraInvDate
+		Space Top	: 0.2
+		[Field:VaaraInvoice]
+			Fields	: Short Prompt,VaaraInvNo
+			Width	: 18% Page
+			Full Width	: Yes
+			Local	: Field		: Short Prompt	: Info	: $$LocaleString:"Invoice No"
+			Local	: Field		: Short Prompt	: Style	: ArialBold10
+			
+			[Field:VaaraInvNo]
+				Set as		: $VoucherNumber
+				Style		: TimesBold12
+				Full Width	: Yes
+			
+		[Field:VaaraInvDate]
+			Fields	: Short Prompt,VaaraDateNo
+			Width	: 18% Page
+			Full Width	: Yes
+			Local	: Field		: Short Prompt	: Info	: $$LocaleString:"Date"
+			Local	: Field		: Short Prompt	: Style	: TimesBold12
+			
+			[Field:VaaraDateNo]
+				Set as		: $$String:$Date:ShortDate
+				Style		: TimesBold12
+				Full Width	: Yes
+			
+
+
+	[Line: VaaraLrNo]
+		Field	: VaaraLR
+		Right Field	: VaaraLRDate
+		Space Top	: 0.2
+		[Field:VaaraLR]
+			Fields	: Short Prompt,VaaraLRNo
+			Width	: 18% Page
+			Full Width	: Yes
+			Local	: Field		: Short Prompt	: Info	: $$LocaleString:"Lr No"
+			Local	: Field		: Short Prompt	: Style	: ArialBold10
+			
+			[Field:VaaraLRNo]
+				Set as		: $BillofLadingNo
+				Style		: TimesBold12
+				Full Width	: Yes
+			
+		[Field:VaaraLRDate]
+			Fields	: Short Prompt,VaaraLRDateNo
+			Width	: 18% Page
+			Full Width	: Yes
+			Local	: Field		: Short Prompt	: Info	: $$LocaleString:"Date"
+			Local	: Field		: Short Prompt	: Style	: TimesBold12
+			
+			[Field:VaaraLRDateNo]
+				Set as		: $BillofLadingDate;$$String:$Date:ShortDate
+				Style		: TimesBold12
+				Full Width	: Yes
+			
+
+	[Line: VaaraParcel]
+		Field	: VaaraParcel
+		Space Top	: 0.2
+		[Field:VaaraParcel]
+			Fields	: Short Prompt,VaaraParcel1
+			Full Width	: Yes
+			Local	: Field		: Short Prompt	: Info	: $$LocaleString:"Parcel"
+			Local	: Field		: Short Prompt	: Style	: ArialBold10
+			
+			[Field:VaaraParcel1]
+				Set as		: $VoucherNumber
+				Style		: TimesBold12
+				Full Width	: Yes
+			
+		
+	[Line: VaaraTransport]
+		Field	: VaaraTransport
+		Space Top	: 0.2
+		[Field:VaaraTransport]
+			Fields	: Short Prompt,VaaraTransport1
+			Full Width	: Yes
+			Local	: Field		: Short Prompt	: Info	: $$LocaleString:"Transport"
+			Local	: Field		: Short Prompt	: Style	: ArialBold10
+			
+			[Field:VaaraTransport1]
+				Set as		: $VoucherNumber
+				Style		: TimesBold12
+				Full Width	: Yes
+		
+	[Line: VaaraBroker]
+		Field	: VaaraBroker
+		Space Top	: 0.2
+		[Field:VaaraBroker]
+			Fields	: Short Prompt,VaaraBroker1
+			Full Width	: Yes
+			Local	: Field		: Short Prompt	: Info	: $$LocaleString:"Broker"
+			Local	: Field		: Short Prompt	: Style	: ArialBold10
+			
+			[Field:VaaraBroker1]
+				Set as		: $EICheckPost
+				Style		: TimesBold12
+				Full Width	: Yes
+			
+		
+	[Line: VaaraRemoveDate]
+		Field	: VaaraRemoveDate
+		Space Top	: 0.2
+		[Field:VaaraRemoveDate]
+			Fields	: Medium Prompt,VaaraRemoveDate1
+			Full Width	: Yes
+			Local	: Field		: Medium Prompt	: Info	: $$LocaleString:"Remove Date"
+			Local	: Field		: Medium Prompt	: Style	: ArialBold10
+			
+			[Field:VaaraRemoveDate1]
+				Set as		: $$String:$Date:ShortDate
+				Style		: TimesBold12
+				Full Width	: Yes
+			
+		
+	[Line: VaaraPlaceOfSupply]
+		Field	: VaaraPlaceOfSupply
+		Space Top	: 0.2
+		[Field:VaaraPlaceOfSupply]
+			Fields	: Medium Prompt,VaaraPlaceOfSupply1
+			Full Width	: Yes
+			Local	: Field		: Medium Prompt	:Info	: $$LocaleString:"Place Of Supply"
+			Local	: Field		: Medium Prompt	: Style	: ArialBold10
+			
+			[Field:VaaraPlaceOfSupply1]
+				Set as		: #VAaraCustState
+				Style		: TimesBold12
+				Full Width	: Yes
+			
+		
+		
+	
+[Part:ItemDtlsTitleVaara1]
+	Line			: ItemDtlsTitleVaara1
+	Common Borders	: Yes
+	Border			: Thin Cover
+	
+	[Line:ItemDtlsTitleVaara1]
+		Use				: ItemDtlsPartVaara
+		Space Top		: 0.3
+		Height			: 1
+		Local			: Field	: Default		: Style	: TimesBold12
+		Local			: Field	: Default		: Align	: Center
+		Local			: Field	: Default		: Type	: String
+		
+		Local			: Field	: SINoVaaraB			: Set as	: "Sr."
+		Local			: Field	: DesignNoVaaraB		: Set as	: "Design No."
+		Local			: Field	: SizeVaaraB			: Delete	: Fields
+		Local			: Field	: SizeVaaraB			: Delete	: Border
+		Local			: Field	: SizeVaaraB			: Set as	: "Size"
+		Local			: Field	: SizeVaaraB			: Width		: 39% Page
+		Local			: Field	: SizeVaaraB			: Border	: Full Thin Bottom
+		Local			: Field	: RateVaaraB			: Set as	: "Rate"
+		Local			: Field	: DiscountVaaraB		: Set as	: "Disc"
+		Local			: Field	: NRateVaaraB			: Set as	: "N.Rate"
+		Local			: Field	: GstVaaraB				: Info		: $$LocaleString:"GST"
+		Local			: Field	: QuantityVaaraB		: Set as	: "Qty"
+		Local			: Field	: AmountVaaraB			: Set as	: "Amount"
+		
+[Part:ItemDtlsTitleVaara2]
+	Line			: ItemDtlsTitleVaara2
+	Common Borders	: Yes
+	Border			: Thin Left Right
+	
+	[Line:ItemDtlsTitleVaara2]
+		Use				: ItemDtlsPartVaara
+		Height			: 1
+		Space Bottom	: 0.3
+		Local			: Field	: Default		: Style	: TimesBold12
+		Local			: Field	: Default		: Align	: Center
+		Local			: Field	: Default		: Type	: String
+		
+		Local			: Field	: SINoVaaraB			: Set as	: ""
+		Local			: Field	: DesignNoVaaraB		: Set as	: ""
+		Local			: Field	: SizeVaara1			: Set as	: "16"
+		Local			: Field	: SizeVaara2			: Set as	: "18"
+		Local			: Field	: SizeVaara3			: Set as	: "20"
+		Local			: Field	: SizeVaara4			: Set as	: "22"
+		Local			: Field	: SizeVaara5			: Set as	: "24"
+		Local			: Field	: SizeVaara6			: Set as	: "26"
+		Local			: Field	: SizeVaara7			: Set as	: "28"
+		Local			: Field	: SizeVaara8			: Set as	: "30"
+		Local			: Field	: SizeVaara9			: Set as	: "32"
+		Local			: Field	: SizeVaara10			: Set as	: "34"
+		Local			: Field	: SizeVaara11			: Set as	: "36"
+		Local			: Field	: SizeVaara12			: Set as	: "38"
+		Local			: Field	: SizeVaara13			: Set as	: "40"
+		Local			: Field	: RateVaaraB			: Set as	: ""
+		Local			: Field	: DiscountVaaraB		: Set as	: "%"
+		Local			: Field	: NRateVaaraB			: Set as	: ""
+		Local			: Field	: GstVaaraB				: Info		: $$LocaleString:"%"
+		Local			: Field	: QuantityVaaraB		: Set as	: ""
+		Local			: Field	: AmountVaaraB			: Set as	: ""
+
+[Part:ItemDtlsPartVaara]
+	Line	: ItemDtlsPartVaara
+	Repeat	: ItemDtlsPartVaara		: Inventory Entries
+	Border	: Thick Cover
+	Common Borders	: Yes
+	Scroll      	: Vertical
+	
+	[Line:ItemDtlsPartVaara]
+		Fields			: SINoVaaraB, DesignNoVaaraB,SizeVaaraB
+		Right Fields	:RateVaaraB,DiscountVaaraB, NRateVaaraB, GstVaaraB, QuantityVaaraB, AmountVaaraB
+		Space Top		: 0.5
+		[Field:SINoVaaraB]
+			Width	: 5% Page
+			Set as	: $$Line
+			Style	: TimesNormal9
+			Align	: Center
+			
+		[Field:DesignNoVaaraB]
+			Width	: 20% Page
+			Set as	: if NOT $$IsSysName:$StockItemName then @@InvItemName else ""
+			Border	: Thin Left Right
+			Style	: TimesNormal9
+			
+			
+			
+		[Field:SizeVaaraB]
+			;width	: 39% Page
+			Style	: TimesNormal9
+			Border	: Thin Right
+			Fields	: SizeVaara1, SizeVaara2, SizeVaara3, SizeVaara4, SizeVaara5, SizeVaara6,+
+						SizeVaara7, SizeVaara8, SizeVaara9, SizeVaara10, SizeVaara11, SizeVaara12, SizeVaara13 
+			
+			[Field:SizeVaara1]
+				Use			: Qty Field
+				Set as		: $Fldv1
+				Format		: "NoSymbol"
+				Width		: 3% Page
+				Border		: Thin Right
+				Style		: TimesNormal9
+				
+			[Field:SizeVaara2]
+				Use			: Qty Field
+				Set as		: $Fldv2
+				Format		: "NoSymbol"
+				Width		: 3% Page
+				Border		: Thin Right
+				Style		: TimesNormal9
+
+
+			[Field:SizeVaara3]
+				Use			: Qty Field
+				Set as		: $Fldv3
+				Format		: "NoSymbol"
+				Width		: 3% Page
+				Border		: Thin Right
+				Style		: TimesNormal9
+
+			[Field:SizeVaara4]
+				Use			: Qty Field
+				Set as		: $Fldv4
+				Format		: "NoSymbol"
+				Width		: 3% Page
+				Border		: Thin Right
+				Style		: TimesNormal9
+
+
+			[Field:SizeVaara5]
+				Use			: Qty Field
+				Set as		: $Fldv5
+				Format		: "NoSymbol"
+				Width		: 3% Page
+				Border		: Thin Right
+				Style		: TimesNormal9
+
+
+			[Field:SizeVaara6]
+				Use			: Qty Field
+				Set as		: $Fldv6
+				Format		: "NoSymbol"
+				Width		: 3% Page
+				Border		: Thin Right
+				Style		: TimesNormal9
+
+
+			[Field:SizeVaara7]
+				Use			: Qty Field
+				Set as		: $Fldv7
+				Format		: "NoSymbol"
+				Width		: 3% Page
+				Border		: Thin Right
+				Style		: TimesNormal9
+
+
+			[Field:SizeVaara8]
+				Use			: Qty Field
+				Set as		: $Fldv8
+				Format		: "NoSymbol"
+				Width		: 3% Page
+				Border		: Thin Right
+				Style		: TimesNormal9
+
+
+			[Field:SizeVaara9]
+				Use			: Qty Field
+				Set as		: $Fldv9
+				Format		: "NoSymbol"
+				Width		: 3% Page
+				Border		: Thin Right
+				Style		: TimesNormal9
+
+
+			[Field:SizeVaara10]
+				Use			: Qty Field
+				Set as		: $Fldv10
+				Format		: "NoSymbol"
+				Width		: 3% Page
+				Border		: Thin Right
+				Style		: TimesNormal9
+
+
+			[Field:SizeVaara11]
+				Use			: Qty Field
+				Set as		: $Fldv11
+				Format		: "NoSymbol"
+				Width		: 3% Page
+				Border		: Thin Right
+				Style		: TimesNormal9
+
+
+			[Field:SizeVaara12]
+				Use			: Qty Field
+				Set as		: $Fldv12
+				Format		: "NoSymbol"
+				Width		: 3% Page
+				Border		: Thin Right
+				Style		: TimesNormal9
+
+
+			[Field:SizeVaara13]
+				Use			: Qty Field
+				Set as		: $Fldv13
+				Format		: "NoSymbol"
+				Width		: 3% Page
+				Style		: TimesNormal9
+
+
+		[Field:RateVaaraB]
+			Use     : Rate Price Field
+			Width	: 7% Page
+			Set as	: $Rate
+			Border	: Thin Left Right
+			Style	: TimesNormal9
+			Align	: Right
+			Full Width	: Yes
+			
+		[Field:DiscountVaaraB]
+			;Use		: Number Field
+			Width	: 5% Page
+			Set as	: $Discount
+			Style	: TimesNormal9
+			Border	: Thin Left Right
+			Align	: Right
+			
+		[Field:NRateVaaraB]
+			Use     : Rate Price Field
+			Width	: 7% Page
+			Set as	: $NewRate
+			Border	: Thin  Right
+			Style	: TimesNormal9
+			Align	: Right
+			
+		[Field:GstVaaraB]
+			;Use         : Number Field
+			Width		: 4% Page
+			Set as		: $GstPercent
+			Style		: TimesNormal9
+			;Set always  : Yes
+			Border		: Thin Right
+			Align		: Right
+		
+		[Field:QuantityVaaraB]
+			Use		: Qty Field
+			Width	: 5% Page
+			Set as	: $BilledQty
+			Style	: TimesNormal9
+			Border	: Thin Right
+			Align	: Right
+			Format	: "No Symbol"
+			
+
+		[Field:AmountVaaraB]
+			;Use		: Amount Forex Field
+			Width	: 10% Page
+			Set as	: $Amount
+			Border	: Thin Left
+			Style	: TimesNormal9
+			Align	: Right
+	
+[Part:InvoiceBottomVaara]
+	Parts	: InvoiceBottomVaara1, InvoiceBottomVaara2, InvoiceBottomVaara3, InvoiceBottomVaara4
+	Vertical	: Yes
+
+	
+[Part:InvoiceBottomVaara1]
+	Part	: GStPartBottomVaara,TotalBottomVaara
+	Border	: Thin Cover	
+	;Common Borders	: Yes
+
+[Part:GStPartBottomVaara]
+	Line	: GstBreakUp, GStPartBottomVaara
+	Repeat	: GStPartBottomVaara		:  My Repeat Coll
+	
+	Width	: 75% Page
+
+	[Line:GstBreakUp]
+		Field	: GstBreakUp
+		Border	: Thin Bottom
+		Height	: 1.1
+		
+		[Field:GstBreakUp]
+			Set as		: "GST BREAKUP"
+			Style		: Normal Bold
+			Full Width	: Yes
+			Align		: Center
+			
+	[Line:GStPartBottomVaara]
+		
+		Fields	: GStPartBottomVaaraAmtT,GStPartBottomVaaraQty,GStPartBottomVaaraAmtB
+		Border	: Thin Bottom
+		Height	: 1.1
+		Remove If 	: NOT( $$IsEqual:($$String:#VaaraInvNo):($$String:$VchNumber1))
+		
+		
+		[Field:GStPartBottomVaaraAmtT]
+			Fields	: GStPartBottomVaaraAmtT1, GStPartBottomVaaraAmtT2
+			Width	: 25% Page
+			[Field:GStPartBottomVaaraAmtT1]
+				Use			: Short Prompt
+				;Set as		: If  NOT( $$IsEqual:($$String:#VaaraInvNo):($$String:$VchNumber1)) Then "" Else $$String:$GstPer+"% AMT"
+				Set as		: $$String:"GST"
+								
+				
+			[Field:GStPartBottomVaaraAmtT2]
+				;Set as		: If  NOT( $$IsEqual:($$String:#VaaraInvNo):($$String:$VchNumber1)) Then "" Else $ValAmount
+				Set as		: $$String:$GstPer+" %"
+				Align		: Right
+				Format		: "No Comma, Percentage";
+				Full Width	: Yes
+				
+			
+		[Field:GStPartBottomVaaraQty]
+			Fields	: GStPartBottomVaaraQty1, GStPartBottomVaaraQty2
+			Width	: 25% Page
+			Border	: Thin Left Right
+			[Field:GStPartBottomVaaraQty1]
+				Use			: Short Prompt
+				;Set as		: If  NOT( $$IsEqual:($$String:#VaaraInvNo):($$String:$VchNumber1)) Then "" Else $$String:$GstPer+"% QTY"
+				Set as		: $$String:"GST QTY"
+				
+			[Field:GStPartBottomVaaraQty2]
+				;Set as		: If  NOT( $$IsEqual:($$String:#VaaraInvNo):($$String:$VchNumber1)) Then "" Else $ValBilledQty;$BilledQty
+				Set as		: $ValBilledQty;$BilledQty
+				Align		: Right
+				Full Width	: Yes
+				
+			
+		[Field:GStPartBottomVaaraAmtB]
+			Fields	: GStPartBottomVaaraAmtB1, GStPartBottomVaaraAmtB2
+			Width	: 25% Page
+			[Field:GStPartBottomVaaraAmtB1]
+				Use			: Short Prompt
+				;Set as		: If  NOT( $$IsEqual:($$String:#VaaraInvNo):($$String:$VchNumber1)) Then "" Else $$String:$GstPer+"% TOTAL";+$GstPercent
+				Set as		: $$String:"GST TOTAL";+$GstPercent
+				
+			[Field:GStPartBottomVaaraAmtB2]
+				Set as		:  $ValAmount;$Amount
+				Align		: Right
+				Full Width	: Yes
+				Border		: Thin Right
+		
+
+			
+			
+[Part:TotalBottomVaara]
+	Parts		: TAmountVaara,TotalAmountVaara
+	Vertical	: Yes
+
+	
+[Part: TAmountVaara]
+	Line	: TAmountVaara, TAmountVaara1
+	;Width	: 25% Page
+	Border	: Thin Left
+	Common Border	: Yes
+	[Line:TAmountVaara]
+		Right Fields	: TAmountVaaraFld1, TQtyVaaraFld2, TAmountVaaraFld3
+		Border			: Full Thin Bottom
+		Height	: 1.1
+		[Field:TAmountVaaraFld1]
+			Use		: Amount Field
+			Set as	: $$CollAmtTotal:InventoryEntries:$Amount
+			Width	: 10% Page
+			Align	: Right
+			;Border	: Thin Left
+			Full Width	: Yes
+		[Field:TQtyVaaraFld2]
+			Use		: Qty Field
+			Set as	: $$CollAmtTotal:InventoryEntries:$BilledQty
+			Width	: 5% Page
+			Align	: Right
+			Border	: Thin Left Right
+			Format	: "No Symbol"
+			;Full Width	: Yes
+			
+		[Field:TAmountVaaraFld3]
+			Use		: Amount Field
+			Set as	: $$CollAmtTotal:InventoryEntries:$Amount
+			Width	: 10% Page
+			Align	: Right
+			;Full Width	: Yes
+						
+			
+	[Line:TAmountVaara1]
+		Use		: TAmountVaara
+		Border	: Full Thin Bottom
+		Local	: Field		: TAmountVaaraFld1	: Set as	:""
+		Local	: Field		: TQtyVaaraFld2		: Set as	:""
+		Local	: Field		: TAmountVaaraFld3	: Set as	:""
+
+[Part: TotalAmountVaara]
+	Parts	: TotalAmountVaara1, TotalAmountVaara2
+	Common Border	: Yes
+	Border		: Thin Box
+	
+[Part:TotalAmountVaara1]
+	Line	: TotalAmountVaara1
+	Height	: 1.1
+	Border	: Thin Right
+	[Line:TotalAmountVaara1]
+		Field	: TotalAmountVaara1
+		[Field:TotalAmountVaara1]
+			Align		: Center
+			Set as		: "GROSS TOTAL"
+			Full Width	: Yes
+			Style		: TimesBold12
+			
+[Part:TotalAmountVaara2]
+	Line	: TotalAmountVaara2
+	
+	[Line:TotalAmountVaara2]
+		Field	: TotalAmountVaara2
+		Height	: 1.1
+		[Field:TotalAmountVaara2]
+			Set as	: $$CollAmtTotal:InventoryEntries:$Amount
+			Width	: 10% Page
+			Align	: Right
+
+
+[Part:InvoiceBottomVaara2]
+	Parts		: NotificationVaara, NetTotalVaara
+	Border		: Thin Cover
+	
+
+[Part:NotificationVaara]
+	Line	: TermsAndConditions
+	Repeat	: TermsAndConditions		: AllConditionsVaaraFinal
+	Scroll	: Vertical
+	Width	: 75% Page
+	
+	
+	[Line:TermsAndConditions]
+		Fields		: SrNoTerms, TermAndCondition
+		Remove if	: $VaaraYesNoCondition="No"
+		Space Top	: If $$Line=1 Then 1 Else 0
+		
+		[Field:SrNoTerms]
+			Set as	: $$String:$$Line+". "
+			Width	: 3% PAge
+			
+		[Field:TermAndCondition]
+			Set as	: $ConditionsVaara
+			Width	: 72% PAge
+			Full Width	: Yes
+			
+
+
+/*
+	Lines	: NoticeVaara1, NoticeVaara2, NoticeVaara3, NoticeVaara4, NoticeVaara5, NoticeVaara6 
+	Width	: 75% Page
+	
+	[Line:NoticeVaara1]
+		Space Top	: 1
+		Field	: NoticeVaara1
+		[Field:NoticeVaara1]
+			Set as		: "1. Payment Within 30 Days.		SUBJECT TO MUMBAI JURISDICTION"
+			Full Width	: Yes
+			Style		: ArialNormal8
+			
+	[Line:NoticeVaara2]
+		Field	: NoticeVaara2
+		[Field:NoticeVaara2]
+			Set as		: "2. In Case of unpaid bill interest @ 24% will be charge extra from the date of bill."
+			Full Width	: Yes
+			Style		: ArialNormal8
+			
+	[Line:NoticeVaara3]
+		Field	: NoticeVaara3
+		[Field:NoticeVaara3]
+			Set as		: "3. Payment of this bill will be accepted only by payee A/c or draft."
+			Full Width	: Yes
+			Style		: ArialNormal8
+			
+	[Line:NoticeVaara4]
+		Field	: NoticeVaara4
+		[Field:NoticeVaara4]
+			Set as		: "4. Goods once sold not be taken back."
+			Full Width	: Yes
+			Style		: ArialNormal8
+			
+	[Line:NoticeVaara5]
+		Field	: NoticeVaara5
+		[Field:NoticeVaara5]
+			Set as		: "5. Once the goods are delivered We are not responsible for any claim."
+			Full Width	: Yes
+			Style		: ArialNormal8
+			
+	[Line:NoticeVaara6]
+		Field	: NoticeVaara6
+		[Field:NoticeVaara6]
+			Set as		: "6. Customers are requested not to deduct discount on net amt"
+			Full Width	: Yes
+			Style		: ArialNormal8
+			
+			
+			*/
+			
+			
+			
+[Part:NetTotalVaara]
+	Line			: GStLedgerVaara
+	Bottom Lines	: RoundOff
+	Repeat			: GStLedgerVaara	: Ledger Entries
+	Width			: 25% Page
+	Border			: Thin Left
+	Common Border	: Yes
+	Total			: GstLedgerAmtVaara
+	
+	[Line:GStLedgerVaara]
+		Fields		: GStLedgerNameVaara, GstLedgerAmtVaara
+		;Remove if	: $LedgerName = $PartyLedgerName
+		[Field:GStLedgerNameVaara]
+			Use		: Name Field
+			Align	: Center
+			Width	: 17% Page
+			Set as	: $LedgerName
+			
+		[Field:GstLedgerAmtVaara]
+			Set as	: $Amount;$$RoundUp:
+			Width	: 8% Page
+			Align	: Right
+			Border	: Thin Left
+			Full Width	: Yes
+
+	[Line:RoundOff]
+		Fields	: RoundOffTitle, RoundOffAmt
+		
+		[Field:RoundOffTitle]
+			Use			: GStLedgerNameVaara
+			Set as		: "Round Off...."
+			
+		
+		[Field:RoundOffAmt]
+			Width		: 8% Page
+			Align		: Right
+			Border		: Thin Left
+			Full Width	: Yes
+			TotalGst	: $Amount-($$CollAmtTotal:LedgerEntries:$Amount)
+			;Set as		: $$Total:GstLedgerAmtVaara
+			Set as		: $$Round:@TotalGst:1
+			
+
+[Part:InvoiceBottomVaara3]
+	Parts	: NetVaaraWords, NetVaaraDigit
+	Border	: Thin Cover
+[Part:NetVaaraWords]
+	Line	: NetVaaraWords
+	Width	: 75% Page
+	
+	[Line:NetVaaraWords]
+		Field	: Vaara Prompt, NetVaaraWords
+		Local	: Field	: Vaara Prompt	: Info	:$$LocaleString:"Amount (In Word)"
+		Local	: Field	: Vaara Prompt	: Style	:ArialBold8
+		Local	: Field	: Vaara Prompt	: Width	:12
+		[Field:NetVaaraWords]
+			Amt			: $$Round:$Amount:1
+			Set as		: $$InWords:@Amt
+			Full Width	: Yes
+			Style		: TimesNormall0
+			
+[Part:NetVaaraDigit]
+	Border	: Thin Left
+	Line	: NetVaaraDigit
+	[Line:NetVaaraDigit]
+		Use			: GStLedgerVaara,,,,GStLedgerNameVaara, GstLedgerAmtVaara
+		Local	: Field	: GStLedgerNameVaara	: Info		:$$LocaleString:"NET TOTAL"
+		Local	: Field	: GstLedgerAmtVaara		: Set as	: $$Round:$Amount:1
+
+
+
+[Part:InvoiceBottomVaara4]
+	Parts	: DeclarationVaara
+	Border	: Thin Box
+	Right Parts	: BankVaara, SignatoryVaara
+	
+	
+[Part:DeclarationVaara]
+	Width			: 26% PAge
+	Space Bottom	: 0.2
+	Space Top		: 0.2
+	Lines			: DelarationVaaraBase
+	Border			: Thin Right
+	;
+	
+	[Line:DelarationVaaraBase]
+		Field	: DelarationVaaraBase
+		[Field:DelarationVaaraBase]
+			Set as		: "Certified that the particulars given above are true & correct & the+
+			amount indicated represents the price actually charged & there is no flow of additional +
+			consideration directly or indirectly from the buyers."
+			Lines		: 0
+			Full Width	: Yes
+			Style		: ArialNormal7
+
+	
+
+[Part:BankVaara]
+	;Width	: 50% Page
+
+	Use		: EXPINV BankDetails
+	Add		: Line	: EXPINV BankBranchInfoIFS
+	Local	: Line	: EXPINV BankBranchInfo	: Local     : Field : Medium Prompt   	: Set as    : $$LocaleString:"Branch :"   
+	Local	: Line	: EXPINV BankBranchInfo	: Local     : Field : EXPINV BankBranchName   	: Set as    : $$Sprintf:"%s":@BranchName
+	Delete	: Line	: EXPINV BankTitle
+	Local	: Line	: Default				: Local		: Field	: Default			: Style	: ArialBold10
+	Local	: Line	: Default				: Local		: Field	:	Medium Prompt	: Style	: ArialBold10
+				  
+[Line:EXPINV BankBranchInfoIFS]
+	Fields	: Medium Prompt, EXPINV BankBranchInfoIFS
+	Local	: Field	: Medium Prompt	: Set as    : $$LocaleString:"IFSC CODE :"
+	Local   : Field : Medium Prompt : Width     : 18% Page
+	
+	[Field: EXPINV BankBranchInfoIFS]
+	
+		Use		    : Name Field
+		Set as	    : $$Sprintf:"%s":@IFSCode
+		IFSCode		: $IFSCode:Ledger:@@VchBankName
+
+
+[Part:SignatoryVaara]
+	Width	: 20% PAge
+	Lines	: CmpNameVaara, SignatoryVaara
+	
+	[Line:CmpNameVaara]
+		Field	: CmpNameVaara
+		[Field:CmpNameVaara]
+			Set as		: "FOR " +$$String:##SVCurrentCompany
+			Style		: ArialBold12
+			Full Width	: Yes
+			Align		: Right
+
+	[Line:SignatoryVaara]
+		Field		: SignatoryVaara
+		Space Top	: 3
+		[Field:SignatoryVaara]
+			Set as		: "Authorised Signature"
+			Full Width	: Yes
+			Align		: Center
+			
+
+
+
+
+
+;;;--------------------Other Details---------------------------
+[Style:TimesBold48]
+	Font Name		: "Times New Roman"
+	Bold			: Yes
+	Height			: 48
+	
+[Style:ArialBold14]
+	Font Name		: "Arial"
+	Bold			: Yes
+	Height			: 14
+
+[Style:ArialBold12]
+	Font Name		: "Arial"
+	Bold			: Yes
+	Height			: 12
+	
+[Style:ArialNormal10]
+	Font Name		: "Arial"
+	Height			: 10
+	
+[Style:ArialNormal8]
+	Font Name		: "Arial"
+	Height			: 8
+	
+[Style:ArialNormal7]
+	Font Name		: "Arial"
+	Height			: 7
+	
+[Style:ArialBold10]
+	Font Name		: "Arial"
+	Height			: 10
+	Bold			: Yes
+[Style: TimesNormal14]
+	Font Name		: "Times New Roman"
+	Height			: 14
+	
+	
+[Style: TimesBold12]
+	Font Name		: "Times New Roman"
+	Height			: 12
+	Bold			: Yes
+	
+
+[Style: TimesNormall2]
+	Font Name		: "Times New Roman"
+	Height			: 12
+	
+[Style		: TimesNormall0]
+	Font Name		: "Times New Roman"
+	Height			: 10
+[Style		: TimesNormal24]
+	Font Name		: "Times New Roman"
+	Height			: 24
+	
+[Style	:ArialBold8]
+	Font Name		: "Arial"
+	Height			: 8
+	Bold			: Yes
+[Border	: Thick Top Right Bottom ]
+	Top		: Thick
+	Right	: Thick
+	Bottom	: Thick
+	
+
+[Border	: Thick Left Right Bottom]
+	Left	: Thick
+	Right	: Thick
+	Bottom	: Thick
+	
+[Field:Vaara Prompt]
+			
+			Style	: ArialBold12
+			Width	: 15
+			Align   : Prompt
+			Skip    : Yes
+			Fixed   : Yes
+
+;; End Of File
+
+```

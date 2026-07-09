@@ -1,0 +1,72 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the Object Association with Identifier at the Report Level
+-	The Program displays the Parent, Description, Opening Balance and Closing Balance of the
+	selected Item Object which is associated at Report using the new Object Identifier Syntax. 
+
+Syntax -
+-	Object	: <Object Type>[	: <Object Identifier>]
+
+Last Modification -
+-	Altered on 09-11-2009
+*/
+
+[Collection: Stock Item Report Association]
+
+    Use   		: Stock Item
+	Report		: Report Object Association
+	
+[Report: Report Object Association]
+
+	Form		: Report Object Association
+	Object 		: Stock Item 	: ##SStockItem		
+	FetchValues : OpeningBalance, ClosingBalance, Parent, Description
+;; Object Stock Item is associated here with an Identifier retrieved from Variable Value
+;; SStockItem
+
+[Form: Report Object Association]
+
+	Parts	: Form SubTitle, Report Object Association
+	Local	: Field	: Form Subtitle	: Set As		: "Details of Stock Item - " + ##SStockItem
+	Width	: 30% Page
+
+[Part: Report Object Association]
+
+	Lines	: Report Object Association Parent
+	Lines	: Report Object Association Desc
+	Lines	: Report Object Association OB
+	Lines	: Report Object Association CB
+
+	[Line: Report Object Association Parent]
+
+		Fields		: Medium Prompt, Report Object Association
+		Local: Field: Medium Prompt				: Info		: "Stock Group :"
+		Local: Field: Report Object Association	: Set As	: $Parent
+		Invisible	: $Parent = $$SysName:Primary
+
+	[Line: Report Object Association Desc]
+
+		Fields		: Medium Prompt, Report Object Association
+		Local: Field: Medium Prompt				: Info		: "Description :"
+		Local: Field: Report Object Association	: Set As	: $Description
+		Invisible	: $$IsEmpty:$Description
+
+	[Line: Report Object Association OB]
+
+		Fields		: Medium Prompt, Report Object Association
+		Local: Field: Medium Prompt				: Info		: "Opening Balance :"
+		Local: Field: Report Object Association	: Set As	: $OpeningBalance
+		Local: Field: Report Object Association	: Format	: "NoZero"
+		Local: Field: Report Object Association	: Type		: Quantity	: Primary Units
+
+	[Line: Report Object Association CB]
+
+		Use			: Report Object Association OB
+		Local: Field: Medium Prompt				: Info		: "Closing Balance :"
+		Local: Field: Report Object Association	: Set As	: $ClosingBalance
+
+		[Field: Report Object Association]
+
+;; End-of-File

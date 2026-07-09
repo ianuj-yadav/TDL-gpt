@@ -1,0 +1,32 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the usage of Event On: Focus
+
+Syntax -
+-	On	: Focus	: <Logical Formula>	: <Action>	: <Action Parameters>
+-	On is an Attribute of Part, Line or Field which is currently built to execute only in 
+	alter, execute or create mode
+-	When the focus comes to the current part, line or field, this action will be executed
+
+Last Modification -
+-	Altered on 23-01-2010
+*/
+
+[Report: On Focus]
+
+	Form : On Form Accept Modify Object
+	Local: Field: On Form Accept Modify Object Reference: On 		: Focus	: Yes	: CALL 	: Event On Focus
+	Local: Line	: Note	: Local	: Field: Name Field	: Info		: "Event On Focus"
+	Local: Line	: Note	: Local	: Field: Name Field	: FullWidth	: Yes
+	Local: Line	: Note	: Local	: Field: Name Field	: Align		: Centre
+	Local: Line	: Note	: Local	: Field: Default	: Style		: Normal Italic
+	Local: Line	: Note	: Local	: Field: Name Field	: Border	: Thin Bottom
+	Local: Line	: Note	: Space Bottom : 1
+
+[Function: Event On Focus]
+
+	01	: MSGBOX: "Focus"	: "Your Focus is currently on reference Field"
+
+;; End-of-File

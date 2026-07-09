@@ -1,0 +1,38 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This program demonstrates the impact of Dimensional Attribute 'Top Line' and 'Bottom Line'
+	within Part
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Top and Bottom Lines within Part]
+
+	Form		: Top and Bottom Lines within Part
+
+[Form: Top and Bottom Lines within Part]
+
+	Parts		: TBL Part
+
+[Part: TBL Part]
+
+	Top Lines 	: TBL Part Top Line
+	Bottom Lines: TBL Part Bottom Line
+
+	[Line: TBL Part Top Line]
+	
+		Fields	: TBL Field
+
+		[Field: TBL Field]
+
+			Set as	: "This is Top Line"
+	
+	[Line: TBL Part Bottom Line]
+	
+		Fields	: TBL Field
+		Local	: Field	: TBL Field	: Set As	: "This is Bottom Line"
+
+;; End-of-File

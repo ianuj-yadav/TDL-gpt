@@ -1,0 +1,111 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	The objective of this program is to demonstrate the mixed usage of all the Symbols learnt
+-	The objective of the following code is to find out the Quotient
+	and Reminder of user entered values.
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Reminder Calc]
+	
+	Form	: Reminder Calc
+	
+[Form: Reminder Calc]
+
+	Parts	: Reminder Calc
+	Width	: 30% Page
+	
+[Part: Reminder Calc]
+
+	Lines	: RC Info Line, RC Dividend, RC Divisor, RC Quotient, RC Reminder, RC FootNote
+
+	[Line: RC Info Line]
+
+		Fields	: Info Field
+		Local	: Field	: Info Field	: Info		: "Quotient/Reminder Calculation Program"
+		Local	: Field	: Info Field	: FullWidth	: Yes
+		Local	: Field	: Info Field	: Align		: Center
+		Local	: Field	: Info Field	: Border	: Thin Bottom
+		Local	: Field	: Info Field	: Style		: Normal Italic
+		Space Bottom	: 1
+
+	[Line: RC Dividend]
+
+		Fields	: Medium Prompt, RC Dividend
+		Local 	: Field : Medium Prompt : Info 		: "Enter the Dividend :"
+
+		[Field: RC Dividend]
+
+			Use		: Number Field
+			Width	: 15
+
+	[Line: RC Divisor]
+
+		Fields: Medium Prompt, RC Divisor
+		Local : Field : Medium Prompt	: Info 		: "Enter the Divisor"
+
+		[Field: RC Divisor]
+
+			Use			: Number Field
+			Width		: 15
+
+	[Line: RC Quotient]
+
+		Fields: Medium Prompt, RC Quotient
+		Local : Field : Medium Prompt 	: Info	 	: "The Quotient is"
+
+		[Field: RC Quotient]
+		
+			Use 		: Number Field
+			Set As 		: $$RoundDown:@@RCQuotient:1.0
+			Set Always 	: Yes
+			Skip		: Yes
+
+;; Function 'RoundDown' is used for Rounding off the parameter of type Number
+;; downwards. This Function uses 2 parameters, first the Number to be rounded
+;; and the second is the Rounding Limit
+;; 'RoundFor' is a Global Formula defined under System Formula Definition below
+;; the result of which is a parameter to the Function 'RoundDown'
+		
+	[Line: RC Reminder]
+
+		Fields: Medium Prompt, RC Reminder
+		Local : Field : Medium Prompt 	: Info 		: "The Reminder is"
+
+		[Field: RC Reminder]
+
+			Use 		: Number Field
+			Set As 		: $$RoundUp:@Locfrmula:1
+			Locfrmula	: @@RCValue1 - @@RCValue2
+			Set Always 	: Yes
+			Read Only	: Yes
+
+	[Line: RC Foot Note]
+
+		Fields		: RC Foot Note
+		Space Top	: 1
+
+		[Field: RC Foot Note]
+
+			Set as		: @ThankU
+			Skip		: Yes
+			FullWidth	: Yes
+			Align		: Center
+			Style		: Normal Italic
+			ThankU  	: "Thank you for using this program"
+;; Formula 'ThankU' is a local formula within the Field 'Foot Note Field' that can only be 
+;; locally accessed by this Field. Symbol Prefix '@' is used to access its value
+
+;; System Formula Definition that can be used by globally
+
+[System: Formula]
+
+	RC Quotient	: #RCDividend / #RCDivisor		;; Referencing the Field using #
+	RC Value1 	: @@RCQuotient * #RCDivisor		;; Retrieving the value of the System Formula "roundfor" using @@
+	RC Value2	: #RCQuotient * #RCDivisor
+
+;; End-of-File

@@ -1,0 +1,123 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	The concepts learnt so far is applied in Reports with a exploded Trial Balance
+	consisting of both accounting Groups and Ledgers
+
+Last modification -
+-	Altered on 09-11-2009
+*/
+
+[Report: My TB Report]
+
+    Form        : My TB
+
+[Form: My TB]
+
+	Button      : F2ChangePeriod, ChangeCompany
+	Keys        : ChangePeriod
+	Parts       : My TB Part
+    Height      : 100% Page
+    Width       : 100% Page
+		
+[Part: My TB Part]
+
+    Lines       : My TB Title, My TB Details
+    BottomLines : My TB Total
+    Repeat      : My TB Details	: My TB GroupsLedgers
+    Total       : My TB Dr Amt Field, My TB Cr Amt Field
+    Scroll      : Vertical
+    CommonBorder: Yes
+		
+    [Line: My TB Title]
+        
+        Use     : My TB Details
+        Local   : Field : Default           : Type  : String
+        Local   : Field : Default           : Align : Centre		
+        Local   : Field : My TB Name Field  : Set as: "Name"
+        Local   : Field : My TB ParNameField: Set as: "Parent"
+        Local   : Field : My TB Dr Amt Field: Set as: "Debit"
+        Local   : Field : My TB Cr Amt Field: Set as: "Credit"
+        Border  : Flush Totals
+
+    [Line: My TB Details]
+
+        Fields      : My TB Name Field, My TB ParName Field
+        Right Fields: My TB Dr Amt Field, My TB Cr Amt Field
+        Explode     : My TB Group Explosion : $$IsGroup and $$KeyExplode
+		
+        [Field: My TB Name Field]
+
+			Use         : Name Field
+			Set as      : $Name
+			Variable    : MyGroupName1
+			                            
+        [Field: My TB ParName Field]
+
+			Use         : Name Field
+			Set as      : $Parent
+			Border      : Thin Left
+
+        [Field: My TB Dr Amt Field]
+
+			Use         : Amount Field
+		    Set as      : if $$IsDr:$ClosingBalance then $ClosingBalance else 0
+		    Border      : Thin Left
+
+        [Field: My TB Cr Amt Field]
+
+            Use         : Amount Field
+		    Set as      : if NOT $$IsDr:$ClosingBalance then $ClosingBalance else 0
+		    Border      : Thin Left
+		    					
+    [Line: My TB Total]
+
+        Use     : My TB Details
+        Local   : Field : My TB Name Field  : Align : Centre
+        Local   : Field : My TB Name Field  : Set as: "TOTAL"
+        Local   : Field : My TB Dr Amt Field: Set as: $$Total:MyTBDrAmtField
+        Local   : Field : My TB Cr Amt Field: Set as: $$Total:MyTBCrAmtField
+        Border  : Thin Top Bottom
+
+;; Explode Part
+
+[Part: My TB Group Explosion]
+
+    Lines       : My TB Details Explosion
+    Repeat      : My TB Details Explosion   : My TB GroupsLedgers
+    Scroll      : Vertical
+    
+    [Line: My TB Details Explosion]
+    
+        Fields      : My TB Name Field, My TB ParName Field
+        Right Fields: My TB Dr Amt Field, My TB Cr Amt Field
+        Explode     : My TB Group Explosion : $$IsGroup and $$KeyExplode
+        Indent      : 2  * $$ExplodeLevel
+        Local       : Field     : Default   : Delete: Border
+
+;; Explode Part Ends here
+
+[Collection: My TB GroupsLedgers]
+
+    Collection  : My TB Groups, My TB Ledgers
+
+[Collection: My TB Groups]
+
+    Type        : Group
+    Child Of    : #MyGroupName1
+    Filter      : TSPL Smp TB Zero Filter
+	Fetch		: Name, ClosingBalance
+    
+[Collection: My TB Ledgers]
+
+    Type        : Ledger
+    Child Of    : #MyGroupName1
+    Filter      : TSPL Smp TB Zero Filter
+	Fetch		: Name, ClosingBalance
+    
+[System: Formula]
+
+    TSPL Smp TB Zero Filter : $ClosingBalance > 0 AND NOT $$IsLedgerProfit
+    
+;; End-of-File

@@ -1,0 +1,97 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	The following code demonstrates the usage of Variables Repeated across Columns
+- 	The Variable Value is changed and Report is repeated for the modified variable
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Multi Col TB]
+
+	Form		: Multi Col TB
+	ColumnReport: ColRep
+	Repeat		: SVCurrentCompany
+
+[Form: Multi Col TB]
+
+	Parts		: Multi Col TB
+	
+;; To incorporate the auto column buttons in TallyPrime
+;	Add			: Button	: At End	: Add Column, Alter Column, Delete Column
+
+	Add			: Bottom Button	: Add Column, Alter Column, Delete Column
+	
+
+[Part: Multi Col TB]
+
+	Lines			: Multi Col TB Title, Multi Col TB Details
+	Repeat			: Multi Col TB Details	: Multi Col TB Collection
+	Scroll			: Vertical
+	Common Border	: Yes
+
+	[Line: Multi Col TB Title]
+
+		Use		: Multi Col TB Details
+		Local	: Field		: Default				: Type	: String
+		Local	: Field		: Default				: Align	: Center
+
+		Local	: Field		: Multi Col TB Name		: Set As: "Name"
+		Local	: Field		: Multi Col TB Closing	: Set As: ##SVCurrentCompany
+		Border	: Thin Top Bottom
+
+	[Line: Multi Col TB Details]
+
+		Fields		: Multi Col TB Name, Multi Col TB Closing
+		Repeat		: Multi Col TB Closing
+
+		[Field: Multi Col TB Name]
+
+			Use		: Name Field
+			Set As	: $$Name
+
+		[Field: Multi Col TB Closing]
+
+			Use		: Amount Forex Field
+			Set As	: $ClosingBalance
+			Border	: Thin Left
+
+[Collection: Multi Col TB Collection]
+
+	Type		: Ledger
+	Fetch		: Name, ClosingBalance
+
+;; Multi Column Report
+
+[Report: ColRep]
+
+	Form	: ColRep
+
+[Form: ColRep]
+
+	Parts	: ColRep
+
+[Part: ColRep]
+
+	Lines	: ColRep
+
+	[Line: ColRep]
+
+		Fields	: Medium Prompt, Col Rep
+		Local	: Field	: Medium Prompt	: Set As	: "Select Company"
+
+		[Field: Col Rep]
+
+			Use			: Name Field
+			Table		: TSPL Smp List of Companies
+			Show Table	: Always
+			Modifies	: SVCurrentCompany
+			
+[Collection: TSPL Smp List of Companies]
+	
+	Title	: $$LocaleString:"List of Companies"
+	Type	: Company
+
+;; End-of-File

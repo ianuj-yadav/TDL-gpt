@@ -1,0 +1,179 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This code demonstrates the usage of Function 'IsObjectBelongsTo'
+-	This function checks whether the current object belongs to the given group/stock group, etc. 
+	This Function provides explicit control in the hands of the programmer by allowing him to 
+	specify the Object Type and Name in addition to Parentage against which it needs to be checked.
+
+Syntax -
+-	$$IsObjectBelongsTo:ObjectType:ObjectName:BelongsToName
+
+Last modification – 
+-	Altered on 07/11/2009
+-   Last Modified 07/06/12
+*/
+
+[Report: IsObjectBelongsTo Report]
+
+	Form    	: IsObjectBelongsTo Report
+	Variable	: SVChangeGroup
+
+[Form: IsObjectBelongsTo Report]
+
+    Parts		: Note, IsObjectBelongsTo Report
+    Height		: 100% Screen
+    Width		: 100% Screen
+	Button		: Change IsObjectBelongsTo Group
+
+[Part: Note]
+
+	Lines		: Note
+	Local: Line	: Note	: Local	: Field	: Name Field	: Set As	: "(Please click on the Button 'Change Group' to observe the behavior of IsObjectBelongsTo Function with the user selected Groups)"
+	Local: Line	: Note	: Local	: Field	: Name Field	: Width		: 100% Screen
+    
+[Part: IsObjectBelongsTo Report]
+
+    Lines		: IsObjectBelongsTo RepLineTitle, IsObjectBelongsTo RepLine
+    Repeat		: IsObjectBelongsTo RepLine			: TSPL Smp Groups
+    Scroll		: Vertical
+	CommonBorder: Yes
+    
+	[Line: IsObjectBelongsTo RepLineTitle]
+	
+		Use		: IsObjectBelongsTo RepLine
+
+		Local	: Field: Default					: Type		: String
+ 		Local	: Field: Default					: Align		: Center
+		Local	: Field: Default					: Style		: Normal Bold
+
+		Local	: Field: IsObjectBelongsTo Name		: Set as	: "Particulars"
+		Local	: Field: IsObjectBelongsTo Parent	: Set as	: "Parent"
+		Local	: Field: IsObjectBelongsTo Value	: Set as	: "IsObjectBelongsTo " + @@GroupSel
+		Border	: Column Titles
+	
+	[Line: IsObjectBelongsTo RepLine]
+	
+	    Fields  		: IsObjectBelongsTo Name, IsObjectBelongsTo Parent
+		Right Fields	: IsObjectBelongsTo Value
+		
+		Local	: Field	: Default					: Style		: Normal
+    
+		[Field: IsObjectBelongsTo Name]
+		
+		    Use		: Name Field
+		    Set as  : $Name
+			Width	: 35
+    
+		[Field: IsObjectBelongsTo Parent]
+
+		    Use		: Name Field
+		    Set as  : $Parent
+			Border	: Thin Left
+		    
+		[Field: IsObjectBelongsTo Value]
+
+		    Use		: Logical Field
+;; 	IsObjectBelongTo here checks whether Name Method falls under the Group 
+;; 	##SVChangeGroup which returns the Function for individual Groups
+;; 	which is selected by the user in the Button F4
+		    Set as  : $TSPLSmpIsObjBelongs   
+			Border	: Thin Left
+			Width	: 35
+
+
+	
+[Collection: TSPL Smp Groups]
+	Type	: Group
+	Fetch   : Name, Parent
+	
+
+;; Dependencies need to send to server from remote client
+
+	Parm Var: pGrpName	: String : ##SVChangeGroup
+
+	Compute	: TSPLSmpIsObjBelongs  	: ($$IsObjectBelongsTo:Group:$Name:##pGrpName)
+
+
+
+[System: Formula]
+
+	CPGroup	: $$GroupCapital
+	CLGroup	: $$GroupCurrentLiab
+	CAGroup	: $$GroupCurrentAssets
+	SDGroup	: $$GroupSundryDebtors
+	SCGroup	: $$GroupSundryCreditors
+	CSGroup	: $$GroupCash
+	BKGroup	: $$GroupBank
+	BOGroup	: $$GroupBankOD
+	DTGroup	: $$GroupDuties	
+	PUGroup	: $$GroupPurchase
+	SAGroup	: $$GroupSales
+	PrGroup	: ""
+
+	GroupSel: if ##SVChangeGroup = "Capital Account"   		then @@CPGroup else +
+			  if ##SVChangeGroup = "Current Liabilities" 	then @@CLGroup else +
+			  if ##SVChangeGroup = "Current Assets" 		then @@CAGroup else +
+			  if ##SVChangeGroup = "Sundry Debtors"   		then @@SDGroup else +
+			  if ##SVChangeGroup = "Sundry Creditors" 		then @@SCGroup else +
+			  if ##SVChangeGroup = "Cash" 					then @@CSGroup else +
+			  if ##SVChangeGroup = "Bank Accounts" 			then @@BKGroup else +
+			  if ##SVChangeGroup = "Bank OD" 				then @@BOGroup else +
+			  if ##SVChangeGroup = "Duties and Taxes" 		then @@DTGroup else +
+			  if ##SVChangeGroup = "Purchase Accounts"		then @@PUGroup else +
+			  if ##SVChangeGroup = "Sales Accounts"			then @@SAGroup else +
+			  @@PrGroup
+
+[Variable: SVChangeGroup]
+
+	Type	: String
+
+[Button: Change IsObjectBelongsTo Group]
+
+	Key		: F4
+	Action	: Modify Variables	: Change Group for IsObjectBelongsTo
+	Title	: $$LocaleString:"Change Group"
+
+;; Report Definition for accepting Group Name from the user
+
+[Report: Change Group for IsObjectBelongsTo]    ;; Auto Report
+
+    Use     : Modify Variables
+	Local   : Form : Modify Variables : Vertical Align : Top
+    Local   : Part : Modify Variables : Lines          : SVChangeGroup
+    Local   : Field: MV Title         : Info           : $$LocaleString:"Change Group"
+    Local   : Field: Medium Prompt    : Invisible      : Yes
+	Title	: $$LocaleString:"Change Group"
+
+    [Line: SVChangeGroup]
+
+        Field   : Medium Prompt, SVChangeGroup
+        Local   : Field : Medium Prompt : Info : $$LocaleString:"Group"
+
+        [Field: SVChangeGroup]
+
+            Use         : Short Name Field
+            Table       : Smp List of Groups, All Items
+            Show Table  : Always
+            Modifies    : SVChangeGroup
+            Variable    : SVChangeGroup
+            CommonTable : No
+
+;; Table definition to control user input
+
+[Table: Smp List of Groups]
+
+	List Name	: "Capital Account"
+	List Name	: "Current Liabilities"
+	List Name	: "Current Assets"
+	List Name	: "Sundry Debtors"
+	List Name	: "Sundry Creditors"
+	List Name	: "Cash"
+	List Name	: "Bank Accounts"
+	List Name	: "Bank OD"
+	List Name	: "Duties and Taxes"
+	List Name	: "Purchase Accounts"
+	List Name	: "Sales Accounts"
+	
+;; End-of-File

@@ -1,0 +1,714 @@
+[#Report: Printed Invoice]
+	;Object		: Voucher	:$$Sprintf:@@VCHMasterId:$VoucherNumber
+
+[#Form: Comprehensive Invoice]
+
+	Option: ApperalProInvoice    : @@IsSales
+	
+[#Form: Simple Printed Invoice]
+
+	Option: ApperalProInvoice    : @@IsSales; AND ##ApperalProClotingConfig
+	
+[!Form : ApperalProInvoice]
+
+	Delete  	: Parts
+	Delete	    : Bottom Parts
+	Delete	    : PageBreak
+	Space Top	: 0.2 Inch
+ 	Space Right	: 0.2 Inch
+	Space Bottom: 0.2 Inch
+	Space Left	: 0.2 Inch
+	
+	add			:Parts			: STD Invoice Top,OpPgBrkApperalPro, ApperalProDetails;, EXPINV Details;ApperalProDetails,
+	add			:Bottom Parts	: InvoiceBottomApperalPro
+
+	add			:Page Break		: ClPgBrkApperalPro, OpPgBrkApperalPro
+	
+	Full Height	: Yes
+	Full Width	: Yes
+	;Print BG	: Yellow
+	
+[#Part: ExpInvInventoryInfo] 
+	Print BG	: Red
+[Part: ClPgBrkApperalPro]
+
+	Lines		: ClPgBrkApperalPro
+	
+	[Line: ClPgBrkApperalPro]
+
+		Fields		: Simple Field
+		Local		: Field			: Simple Field	: Set As	: "Continue...."; + $$PageNo+1
+		Local		: Field			: Simple Field	: FullWidth	: Yes
+		Local		: Field			: Simple Field	: Align		: Right
+		
+
+[Part: OpPgBrkApperalPro]
+
+	Parts		: EXPINV Title,ApperalProDtls, ApperalProInvDtls,ApperalProColumn
+	Vertical	: Yes
+	
+		
+;[Part:ApperalProDtls]
+;	Parts			: Cmp Logo, Cmp Detail
+;	Border			: Thin Cover
+;	Height			: 1.1 Inch
+;[Part	: Cmp Logo]
+;	Use				: EXPSMP Logo
+
+;	Line			: empty
+;	Graph Type		: $Logopath:Company:##SVCurrentCompany
+;	Width			: 18% Page
+	
+	
+	
+[Part	: ApperalProDtls]
+	
+	Lines			: ApperalProCmpName, ApperalProCmpAdd, ApperalProCmpMob, ApperalProCmpGst
+	Width			: 100% Page
+	Border			: Thin Cover
+	;Repeat	: ApperalProCmpAddress   : Company Address
+					
+	
+	[Line:ApperalProCmpName]
+		Field	: ApperalProCmpName
+		[Field:ApperalProCmpName]
+			Set as		: If NOT ($$IsSysNameEqual:Primary:##SVAddressToPrint OR $$IsEmpty:##SVAddressToPrint) Then $(Company, ##SVCurrentCompany).MultiAddressList[1, @@IsSameCmpAddrType].MailingName Else @@CmpMailName
+			Full Width	: Yes
+			Style		: ArialNormal24
+			Align		: Center
+			
+			
+
+	[Line:ApperalProCmpAdd]
+		Field	: ApperalProCmpAdd
+		[Field:ApperalProCmpAdd]
+			Set as		: $$FullList:ApperalProCompanyAddress:$Address
+			Full Width	: Yes
+			;Style		: ArialBold12
+			Align		: Center
+			
+			
+
+	[Line:ApperalProCmpMob]
+		Field	: ApperalProCmpMob
+		[Field:ApperalProCmpMob]
+			Set as		: "Mob No :"+$MobileNumbers:Company:##SVCurrentcompany + "/+
+			" + $PhoneNumber:Company:##SVCurrentcompany + " E-mail :  " + $Email:Company:##SVCurrentcompany 
+			Full Width	: Yes
+			Align		: Center
+			
+
+	[Line:ApperalProCmpGst]
+		Field	: ApperalProCmpGst 
+		[Field:ApperalProCmpGst]
+			Set as		: "GSTIN : "+@@CMPGSTCurrRegNumber  + ", State Name : " + $PriorStateName:Company:##SVCurrentcompany + ", Code :  " + $$getGSTStateCode:$PriorStateName:Company:##SVCurrentcompany + ", Pincode :  " + $Pincode:Company:##SVCurrentcompany
+			Full Width	: Yes
+			; Style		: ArialNormal10
+			Lines		: 0
+			Align		: Center
+	
+			
+	
+
+
+[Part:ApperalProInvDtls]
+	Parts		: ApperalProBuyerDtls
+	Right Part	: ApperalProInvDtlsPrint
+	Border		: Thin Cover
+	Width		: 100% Page
+[Part:ApperalProBuyerDtls]
+	Parts 		: EXPINV Consignee, EXPINV ConsigneeContact, EXPINV Buyer, EXPINV Contact
+    Bottom Parts: EXPINV Country
+	Width		: 40% Page
+	Vertical	: Yes
+	Border		: Thin Right
+	
+/*
+	Print BG	: Red
+[#Part:EXPINV Consignee]
+	Width		: (If @@IsSales Then 40 Else 50)% Page
+	Local   	: Field : Name Field : Width  : (If @@IsSales Then 40 Else 50)% Page
+	Print BG	: Green
+
+[#Part:EXPINV ConsigneeContact]
+	Width		: (If @@IsSales Then 40 Else 50)% Page
+	Local   	: Field : Name Field : Width  : (If @@IsSales Then 40 Else 50)% Page
+
+[#Part:EXPINV Buyer]
+	Width		: (If @@IsSales Then 40 Else 50)% Page
+	Local   	: Field : Name Field : Width  : (If @@IsSales Then 40 Else 50)% Page
+	Local   	: Field : Name Field : Print Bg   : Blue
+
+[#Part:EXPINV Contact]
+	Width		: (If @@IsSales Then 40 Else 50)% Page
+	Local   	: Field : Name Field : Width  : (If @@IsSales Then 40 Else 50)% Page
+	Print BG	: Green
+
+[#Part:EXPINV Country]
+	Width		: (If @@IsSales Then 40 Else 50)% Page
+	Local   	: Field : Name Field : Width  : (If @@IsSales Then 40 Else 50)% Page
+*/
+
+
+[Part:ApperalProInvDtlsPrint]
+	;Width		: 60% Page
+	Parts		: ApperalProInvTop
+	Right Part	: ApperalProInvRight
+	
+[Part:ApperalProInvTop]
+	;Width		: 28% Page
+	Line		: ApperalProInvTop1, ApperalProInvTop2, ApperalProInvTop3, ApperalProInvTop4, ApperalProInvTop5, ApperalProInvTop6
+	Border		: Thin Right
+[Line:ApperalProInvTop1]
+		Field		: ApperalProInvPrompt, ApperalProInvTop1
+		Local		: Field		: ApperalProInvPrompt		: Info	: $$LocaleString:"Invoice No."
+		Border			: Full Thin Bottom
+		[Field:ApperalProInvTop1]
+			Set as		: $VoucherNumber
+			Style		: Normal Bold
+			Full Width	: Yes
+			;Width		: @@ShortWidth
+
+	[Line:ApperalProInvTop2]
+		Field		: ApperalProInvPrompt, ApperalProInvTop2
+		Local		: Field		: ApperalProInvPrompt		: Info	: $$LocaleString:"Supplier Ref."
+		Border			: Full Thin Bottom
+		[Field:ApperalProInvTop2]
+			Set as		: $VoucherNumber
+			Style		: Normal Bold
+			Full Width	: Yes
+			
+
+	[Line:ApperalProInvTop3]
+		Field		: ApperalProInvPrompt, ApperalProInvTop3
+		Local		: Field		: ApperalProInvPrompt		: Info	: $$LocaleString:"LR No."
+		Border			: Full Thin Bottom
+		[Field:ApperalProInvTop3]
+			Set as		: $VoucherNumber
+			Style		: Normal Bold
+			Full Width	: Yes
+			;Width		: @@ShortWidth
+
+	[Line:ApperalProInvTop4]
+		Field		: ApperalProInvPrompt, ApperalProInvTop4
+		Local		: Field		: ApperalProInvPrompt		: Info	: $$LocaleString:"E-Way Bill No."
+		Border			: Full Thin Bottom
+		[Field:ApperalProInvTop4]
+			Set as		: $VoucherNumber
+			Style		: Normal Bold
+			Full Width	: Yes
+			;Width		: @@ShortWidth
+	[Line:ApperalProInvTop5]
+		Field		: ApperalProInvPrompt, ApperalProInvTop5
+		Local		: Field		: ApperalProInvPrompt		: Info	: $$LocaleString:"Broker"
+		Border			: Full Thin Bottom
+		[Field:ApperalProInvTop5]
+			Set as		: $VoucherNumber
+			Style		: Normal Bold
+			Full Width	: Yes
+			;Width		: @@ShortWidth
+	[Line:ApperalProInvTop6]
+		Field		: ApperalProInvPrompt, ApperalProInvTop6
+		Local		: Field		: ApperalProInvPrompt		: Info	: $$LocaleString:"Tranporter Name"
+		Border			: Full Thin Bottom
+		[Field:ApperalProInvTop6]
+			Set as		: $VoucherNumber
+			Style		: Normal Bold
+			Full Width	: Yes
+			;Width		: @@ShortWidth
+
+[Part:ApperalProInvRight]
+	Use			: ApperalProInvTop
+	;Local		: Field		: ApperalProInvPrompt		: Border	: Thin Left
+	Local		: Line		: ApperalProInvTop1	: Local		: Field		: ApperalProInvPrompt		: Info	: $$LocaleString:"Date"
+	Local		: Line		: ApperalProInvTop1	: Local		: Field		: ApperalProInvTop1			: Set as: $Date
+	Local		: Line		: ApperalProInvTop2	: Local		: Field		: ApperalProInvPrompt		: Info	: $$LocaleString:"Terms Of Payment"
+	Local		: Line		: ApperalProInvTop2	: Local		: Field		: ApperalProInvTop2			: Set as: $Date
+	Local		: Line		: ApperalProInvTop3	: Local		: Field		: ApperalProInvPrompt		: Info	: $$LocaleString:"Date"
+	Local		: Line		: ApperalProInvTop3	: Local		: Field		: ApperalProInvTop3			: Set as: $Date
+	Local		: Line		: ApperalProInvTop4	: Local		: Field		: ApperalProInvPrompt		: Info	: $$LocaleString:"Date"
+	Local		: Line		: ApperalProInvTop4	: Local		: Field		: ApperalProInvTop4			: Set as: $Date
+	Local		: Line		: ApperalProInvTop5	: Local		: Field		: ApperalProInvPrompt		: Info	: $$LocaleString:"Broker %"
+	Local		: Line		: ApperalProInvTop5	: Local		: Field		: ApperalProInvTop5 		: Set as: $Date
+	Local		: Line		: ApperalProInvTop6	: Local		: Field		: ApperalProInvPrompt		: Info	: $$LocaleString:"Vehicle No. "
+	Local		: Line		: ApperalProInvTop6	: Local		: Field		: ApperalProInvTop6			: Set as: $Date
+	
+
+
+
+[Part:ApperalProColumn]
+	Line		: ApperalProColumn
+	Border		: Thin Cover
+	Common Border	: Yes
+	[Line:ApperalProColumn]
+		Use			: ApperalProDetails
+		Space Top		: 0.3
+		Height			: 1
+		Local			: Field	: Default		: Style	: Normal Bold
+		Local			: Field	: Default		: Align	: Center
+		Local			: Field	: Default		: Type	: String
+		
+		Local			: Field	: ApperalProSr			: Set as	: "SR"
+		Local			: Field	: ApperalProDrawingNo	: Set as	: "Drawing No"
+		Local			: Field	: ApperalProItem		: Set as	: if @@AcctsInvoice then $$LocaleString:"Particulars" else $$LocaleString:"Description of Goods"
+		Local			: Field	: ApperalProHsn			: Set as	: "HSN/"
+		Local			: Field	: sizeS					: Set as	: "34"
+		Local			: Field	: sizeM					: Set as	: "36"
+		Local			: Field	: sizeL					: Set as	: "38"
+		Local			: Field	: sizeXL				: Set as	: "40"
+		Local			: Field	: sizeXXL				: Set as	: "42"
+		Local			: Field	: size3XL				: Set as	: "44"
+		Local			: Field	: size4XL				: Set as	: "46"
+		Local			: Field	: size5XL				: Set as	: "48"
+		Local			: Field	: size6XL				: Set as	: "50"  
+		Local			: Field	: ApperalProRate		: Set as	: "Rate"
+		Local			: Field	: ApperalProDisc		: Set as	: "Disc"
+		Local			: Field	: ApperalProNRate		: Set as	: "N Rate"
+		Local			: Field	: ApperalProQty			: Set as	: "Qty"
+		Local			: Field	: ApperalProAmount		: Set as	: "Amount"
+		
+		
+		
+			 
+			
+			
+[Part:ApperalProDetails]
+	Parts			: ApperalProDetailsItems, ApperalProDetailsTotal
+	Vertical		: Yes
+	
+
+[Part:ApperalProDetailsItems]
+	Line			: ApperalProDetails
+	Repeat			: ApperalProDetails		: Inventory Entries
+	Border			: Thin Cover
+	Common Borders	: Yes
+	Scroll      	: Vertical
+	[Line:ApperalProDetails]
+		Field			: ApperalProSr, ApperalProDrawingNo,ApperalProItem 
+		Right Fields	: ApperalProHsn, sizeS, sizeM, sizeL, sizeXL, sizeXXL, size3XL, size4XL, size5XL, size6XL ,  ApperalProRate, ApperalProDisc, ApperalProNRate, ApperalProQty, ApperalProAmount
+		Space Top		: 0.5
+		[Field:ApperalProSr]
+			Use			: Number Field
+			Set As		: $$Line
+			Format		: "NoZero"
+			Style		: Normal
+			Width		: 3% Page
+			
+		[Field:ApperalProDrawingNo]
+			Use			: EXPINV PartNo
+			Style		: Normal
+			Width		: 8% Page
+			Invisible	: No
+			Border		: Thin Left right
+			
+		[Field:ApperalProItem]
+			FullWidth   : Yes
+			Width       : 0
+			Lines       : 0
+			Set as      : If @@InvWithPartNo And (@@UseNamePartNo OR @@UsePartNoName) Then $StockItemName Else If NOT $$IsSysName:$StockItemName then @@InvItemName else ""
+			Style       : Normal Bold
+		
+		 
+		[Field:ApperalProHsn]
+			Set as      : If NOT $IsGSTApplicable Then "" Else $ComputedHSNCode
+			Style       : Normal Bold
+			Width		: 6% Page
+			Border		: Thin Left Right
+			
+		[Field:sizeS]
+			Use         : Qty Primary Field
+			Set as		: $GarmentSize1
+			Width		: 2.5% Page
+			Style       : Normal Bold
+			Align       : Right
+			Border		: Thin Right
+			Format			: "NoSymbol"
+
+		[Field:sizeM]
+			Use         : Qty Primary Field
+			Set as		: $GarmentSize2
+			Width		: 2.5% Page
+			Style       : Normal Bold
+			Align       : Right
+			Border		: Thin Right
+			Format			: "NoSymbol"
+
+		[Field:sizeL]
+			Use         : Qty Primary Field
+			Set as		: $GarmentSize3
+			Width		: 2.5% Page
+			Style       : Normal Bold
+			Align       : Right
+			Border		: Thin Right
+			Format			: "NoSymbol"
+
+		[Field:sizeXL]
+			Use         : Qty Primary Field
+			Set as		: $GarmentSize4
+			Width		: 2.5% Page
+			Style       : Normal Bold
+			Align       : Right
+			Border		: Thin Right
+			Format			: "NoSymbol"
+
+		[Field:sizeXXL]
+			Use         : Qty Primary Field
+			Set as		: $GarmentSize5
+			Width		: 2.5% Page
+			Style       : Normal Bold
+			Align       : Right
+			Border		: Thin Right
+			Format			: "NoSymbol"
+
+		[Field:size3XL]
+			Use         : Qty Primary Field
+			Set as		: $GarmentSize6
+			Width		: 2.5% Page
+			Style       : Normal Bold
+			Align       : Right
+			Border		: Thin Right
+			Format			: "NoSymbol"
+
+		[Field:size4XL]
+			Use         : Qty Primary Field
+			Set as		: $GarmentSize7
+			Width		: 2.5% Page
+			Style       : Normal Bold
+			Align       : Right
+			Border		: Thin Right
+			Format			: "NoSymbol"
+
+		[Field:size5XL]
+			Use         : Qty Primary Field
+			Set as		: $GarmentSize8
+			Width		: 2.5% Page
+			Style       : Normal Bold
+			Align       : Right
+			Border		: Thin Right
+			Format			: "NoSymbol"
+
+		[Field:size6XL]
+			Use         : Qty Primary Field
+			Set as		: $GarmentSize9
+			Width		: 2.5% Page
+			Style       : Normal Bold
+			Align       : Right
+			Border		: Thin Right
+			Format			: "NoSymbol"
+
+		[Field:size7XL]
+			Use         : Qty Primary Field
+			Set as		: $GarmentSize10
+			Width		: 2.5% Page
+			Style       : Normal Bold
+			Align       : Right
+			Border		: Thin Right
+			Format			: "NoSymbol"
+
+		[Field:size8XL]
+			Use         : Qty Primary Field
+			Set as		: $GarmentSize11
+			Width		: 2.5% Page
+			Style       : Normal Bold
+			Align       : Right
+			Border		: Thin Right
+			Format			: "NoSymbol"
+			
+
+		
+		[Field:ApperalProRate]
+			Use			: EXPINV Rate
+			Format      : "NoSymbol,Forex"
+			Width			: 6% Page
+		[Field:ApperalProDisc]
+			Use			: EXPINV Discount
+		[Field:ApperalProNRate]
+			Use			:  Rate Price Field
+			Format      : "NoSymbol,Forex"
+			Width		: 6% Page
+			Border		: Thin Left
+			Set as		: #ApperalProRate*(100-#ApperalProDisc)/100
+			Style		: Normal
+		[Field:ApperalProQty]
+			Use			: EXPINV ActualQty
+			Format			: "NoSymbol"
+			Width		: 5% Page
+		[Field:ApperalProAmount]
+			Use			: EXPINV Amount
+			Width		: 8% Page
+		
+[Part:ApperalProDetailsTotal]
+	Line			: ApperalProTotal
+	Border			: Thin Cover
+	Common Border	: Yes
+	[Line:ApperalProTotal]
+		Use				: ApperalProDetails
+		Space Top		: 0.3
+		Height			: 1
+		Local			: Field	: Default		: Style	: Normal Bold
+		Local			: Field	: Default		: Align	: Right
+		;Local			: Field	: Default		: Type	: String
+		Local			: Field	: Default		: Format: "NoSymbol"
+		
+		Local			: Field	: ApperalProSr			: Set as	: $$String:""
+		Local			: Field	: ApperalProDrawingNo	: Set as	: ""
+		Local			: Field	: ApperalProItem		: Set as	: "Total"
+		Local			: Field	: ApperalProHsn			: Set as	: ""
+		Local			: Field	: sizeS					: Set as	: $$CollAmtTotal:InventoryEntries:$GarmentSize1
+		Local			: Field	: sizeM					: Set as	: $$CollAmtTotal:InventoryEntries:$GarmentSize2
+		Local			: Field	: sizeL					: Set as	: $$CollAmtTotal:InventoryEntries:$GarmentSize3
+		Local			: Field	: sizeXL				: Set as	: $$CollAmtTotal:InventoryEntries:$GarmentSize4
+		Local			: Field	: sizeXXL				: Set as	: $$CollAmtTotal:InventoryEntries:$GarmentSize5
+		Local			: Field	: size3XL				: Set as	: $$CollAmtTotal:InventoryEntries:$GarmentSize6
+		Local			: Field	: size4XL				: Set as	: $$CollAmtTotal:InventoryEntries:$GarmentSize7
+		Local			: Field	: size5XL				: Set as	: $$CollAmtTotal:InventoryEntries:$GarmentSize8
+		Local			: Field	: size6XL				: Set as	: $$CollAmtTotal:InventoryEntries:$GarmentSize9
+		Local			: Field	: ApperalProRate		: Set as	: ""
+		Local			: Field	: ApperalProDisc		: Set as	: ""
+		Local			: Field	: ApperalProNRate		: Set as	: ""
+		Local			: Field	: ApperalProQty			: Set as	: $$CollAmtTotal:InventoryEntries:$ActualQty
+		Local			: Field	: ApperalProAmount		: Set as	: $$CollAmtTotal:InventoryEntries:$Amount
+ 	
+[Part:InvoiceBottomApperalPro]
+	Parts	: InvoiceBottomApperalPro1, InvoiceBottomApperalPro2, InvoiceBottomApperalPro3
+	Vertical	: Yes
+	Width		: 100% Page
+
+			
+
+
+[Part:InvoiceBottomApperalPro1]
+	Parts	: NotificationApperalPro
+	Right Part	: NetTotalApperalPro
+	Border	: Thin Cover
+	;Width	: 65% Page
+[Part:NotificationApperalPro]
+	Lines		: NotificationApperalProVal
+	Repeat		: NotificationApperalProVal		:Output Coll
+	
+	;Invisible	: Not ($IsQuotationEnabled:Company:##SVCurrentCompany)
+	Border		: Thin Right
+	[Line:ProgulfTermsTitle]
+		Field		: MediumPrompt
+		Local		: Field		: MediumPrompt	: Info	: $$LocaleString:"Terms & Conditions for Sale"
+		Local		: Field		: MediumPrompt	: Style	: Normal Bold
+		
+	
+[Line:NotificationApperalProVal]
+	Field	: NotificationApperalProVal
+
+	[Field:NotificationApperalProVal]
+		Set as	: $NameList
+		;Width	: 100% Page
+		Line	: 0
+		Full Width	: Yes
+
+
+[Part:NetTotalApperalPro]
+	Line			: GStLedgerApperalPro
+	Repeat			: GStLedgerApperalPro	: Ledger Entries
+	Width			: 30% Page
+	
+	Common Border	: Yes
+	Total			: GstLedgerAmtApperalPro
+	[Line:GStLedgerApperalPro]
+		Fields	: GStLedgerNameApperalPro, GstLedgerAmtApperalPro
+		[Field:GStLedgerNameApperalPro]
+			Use		: Name Field
+			Align	: Center
+			;Width	: 17% Page
+			Set as	: $LedgerName
+			
+		[Field:GstLedgerAmtApperalPro]
+			Set as	: $Amount;$$RoundUp:
+			Width	: 8% Page
+			Align	: Right
+			Border	: Thin Left
+			Full Width	: Yes
+
+	
+			
+
+[Part:InvoiceBottomApperalPro2]
+	Parts		: NetApperalProWords
+	Right Part	: NetApperalProDigit
+	Border		: Thin Cover
+[Part:NetApperalProWords]
+	Line	: NetApperalProWords
+	
+	
+	[Line:NetApperalProWords]
+		Field	: ApperalPro Prompt, NetApperalProWords
+		Local	: Field	: ApperalPro Prompt	: Info	:$$LocaleString:"Amount (In Word)"
+		Local	: Field	: ApperalPro Prompt	: Style	:ArialBold8
+		Local	: Field	: ApperalPro Prompt	: Width	:12
+		[Field:NetApperalProWords]
+			Amt			: $$Round:$Amount:1
+			Set as		: $$InWords:@Amt
+			Full Width	: Yes
+			Style		: TimesNormall0
+			
+[Part:NetApperalProDigit]
+	Border	: Thin Left
+	Line	: NetApperalProDigit
+	Width			: 30% Page
+	[Line:NetApperalProDigit]
+		Use			: GStLedgerApperalPro,,,,GStLedgerNameApperalPro, GstLedgerAmtApperalPro
+		Local	: Field	: GStLedgerNameApperalPro	: Info		:$$LocaleString:"NET TOTAL"
+		Local	: Field	: GstLedgerAmtApperalPro		: Set as	: $$Round:$Amount:1
+		Local	: Field	: GstLedgerAmtApperalPro		: Width		: 8% Page
+
+
+
+[Part:InvoiceBottomApperalPro3]
+	Parts	: DeclarationApperalPro
+	Border	: Thin Box
+	Right Parts	: BankApperalPro, SignatoryApperalPro
+	
+	
+[Part:DeclarationApperalPro]
+	Width			: 26% PAge
+	Space Bottom	: 0.2
+	Space Top		: 0.2
+	Lines			: DelarationApperalProBase
+	Border			: Thin Right
+	;
+	
+	[Line:DelarationApperalProBase]
+		Field	: DelarationApperalProBase
+		[Field:DelarationApperalProBase]
+			Set as		: "Certified that the particulars given above are true & correct & the+
+			amount indicated represents the price actually charged & there is no flow of additional +
+			consideration directly or indirectly from the buyers."
+			Lines		: 0
+			Full Width	: Yes
+			Style		: ArialNormal7
+
+	
+
+[Part:BankApperalPro]
+	;Width	: 50% Page
+
+	Use		: EXPINV BankDetails
+	Add		: Line	: EXPINV BankBranchInfoIFS
+	Local	: Line	: EXPINV BankBranchInfo	: Local     : Field : Medium Prompt   	: Set as    : $$LocaleString:"Branch :"   
+	Local	: Line	: EXPINV BankBranchInfo	: Local     : Field : EXPINV BankBranchName   	: Set as    : $$Sprintf:"%s":@BranchName
+	Delete	: Line	: EXPINV BankTitle
+	Local	: Line	: Default				: Local		: Field	: Default			: Style	: ArialBold10
+	Local	: Line	: Default				: Local		: Field	:	Medium Prompt	: Style	: ArialBold10
+				  
+[Line:EXPINV BankBranchInfoIFS]
+	Fields	: Medium Prompt, EXPINV BankBranchInfoIFS
+	Local	: Field	: Medium Prompt	: Set as    : $$LocaleString:"IFSC CODE :"
+	Local   : Field : Medium Prompt : Width     : 18% Page
+	
+	[Field: EXPINV BankBranchInfoIFS]
+	
+		Use		    : Name Field
+		Set as	    : $$Sprintf:"%s":@IFSCode
+		IFSCode		: $IFSCode:Ledger:@@VchBankName
+
+
+[Part:SignatoryApperalPro]
+	Width	: 20% PAge
+	Lines	: CmpNameApperalPro, SignatoryApperalPro
+	
+	[Line:CmpNameApperalPro]
+		Field	: CmpNameApperalPro
+		[Field:CmpNameApperalPro]
+			Set as		: "FOR " +$$String:##SVCurrentCompany
+			Style		: ArialBold12
+			Full Width	: Yes
+			Align		: Right
+
+	[Line:SignatoryApperalPro]
+		Field		: SignatoryApperalPro
+		Space Top	: 3
+		[Field:SignatoryApperalPro]
+			Set as		: "Authorised Signature"
+			Full Width	: Yes
+			Align		: Center
+			
+
+
+
+
+
+;;;--------------------Other Details---------------------------
+[Style:TimesBold48]
+	Font Name		: "Times New Roman"
+	Bold			: Yes
+	Height			: 48
+	
+[Style:ArialBold14]
+	Font Name		: "Arial"
+	Bold			: Yes
+	Height			: 14
+
+[Style:ArialBold12]
+	Font Name		: "Arial"
+	Bold			: Yes
+	Height			: 12
+	
+[Style:ArialNormal10]
+	Font Name		: "Arial"
+	Height			: 10
+	
+[Style:ArialNormal8]
+	Font Name		: "Arial"
+	Height			: 8
+	
+[Style:ArialNormal7]
+	Font Name		: "Arial"
+	Height			: 7
+	
+[Style:ArialBold10]
+	Font Name		: "Arial"
+	Height			: 10
+	Bold			: Yes
+[Style: TimesNormal14]
+	Font Name		: "Times New Roman"
+	Height			: 14
+	
+	
+[Style: TimesBold12]
+	Font Name		: "Times New Roman"
+	Height			: 12
+	Bold			: Yes
+	
+
+[Style: TimesNormall2]
+	Font Name		: "Times New Roman"
+	Height			: 12
+	
+[Style		: TimesNormall0]
+	Font Name		: "Times New Roman"
+	Height			: 10
+[Style		: TimesNormal24]
+	Font Name		: "Times New Roman"
+	Height			: 24
+	
+[Style	:ArialBold8]
+	Font Name		: "Arial"
+	Height			: 8
+	Bold			: Yes
+[Border	: Thick Top Right Bottom ]
+	Top		: Thick
+	Right	: Thick
+	Bottom	: Thick
+	
+
+[Border	: Thick Left Right Bottom]
+	Left	: Thick
+	Right	: Thick
+	Bottom	: Thick
+	
+[Field:ApperalPro Prompt]
+			
+			Style	: ArialBold12
+			Width	: 15
+			Align   : Prompt
+			Skip    : Yes
+			Fixed   : Yes
+
+;; End Of File

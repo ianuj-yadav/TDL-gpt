@@ -1,0 +1,140 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the process of displaying Grouping and Aggregate 
+	Collection with Reports in remote environment.
+-	Following Report displays the list of Stock Items along with the quantities 
+	Purchased, Consumed, Produced and Sold with the help of Collection Attribute 'By'.
+
+Last modification -
+-	Altered on 09-11-2009
+*/
+
+[Report: RemoteSTQuery]
+
+	Form 		: RemoteSTQuery
+	Title		: "Itemwise Breakup"
+	PrintSet	: Report Title	: "Itemwise Breakup"
+	Title		: "Itemwise Breakup to demonstrate Remoting Capability"
+	
+[Form: RemoteSTQuery]
+
+	Parts 		: DB Title, RemoteSTQuery
+	Local		: Line	: DB Title	: Local	: Field	: Name Field: Set as	: "Itemwise Columnar Breakup"
+
+	;; Locally altering the default Line DB Title (within the default Part DB Title) to change 
+	;; the value set in the Field Name Field to "Itemwise Columnar Breakup" */
+
+[Part: RemoteSTQuery]
+
+	Lines			: RemoteSTQueryT, RemoteSTQuery
+	Repeat			: RemoteSTQuery	: RemoteSItemColl
+	Scroll	 		: Vertical
+	Common Borders	: Yes
+	Total			: RemoteOpQty, RemoteInQty, RemoteConsQty, RemoteProdQty, RemoteOutwQty, RemoteClosQty
+
+	[Line: RemoteSTQueryT]
+
+		Use 	: RemoteSTQuery
+		Local	: Field	: Default			: Type	: String
+		Local	: Field	: Default			: Align	: Center
+		Local	: Field	: Default			: Lines	: 0
+		Local	: Field	: RemoteItemName	: Align	: Left
+		Local	: Field	: RemoteItemName	: Set as: "Particulars"
+		Local	: Field	: RemoteOpQty		: Set as: "Opening Quantity"
+		Local	: Field	: RemoteInQty		: Set as: "Inwards Quantity"
+		Local	: Field	: RemoteConsQty		: Set as: "Consumption Quantity"
+		Local	: Field	: RemoteProdQty		: Set as: "Production Quantity"
+		Local	: Field	: RemoteOutwQty 	: Set as: "Outwards Quantity"
+		Local	: Field	: RemoteClosQty		: Set as: "Closing Quantity"
+		Border	: Thin Top Bottom
+	
+	[Line: RemoteSTQuery]
+	
+		Fields		: RemoteItemName, RemoteOpQty, RemoteInQty, RemoteConsQty, RemoteProdQty, RemoteOutwQty, RemoteClosQty
+		Repeat		: RemoteClosQty
+		Option		: AlterOnEnter
+	
+		[Field: RemoteItemName] 	;; Stock Item Name
+		
+			Use	   		: Name Field
+			Style		: Normal
+			Width		: 30
+			Maximum		: 30
+			Set As 		: $Name
+			Fixed		: Yes
+ 		
+		[Field: RemoteOpQty] 		;; Opening Qty
+		
+			Use			: Qty Primary Field
+			Style		: Normal
+			Format		: "No Zero"
+			Set as		: $ItOpQty
+			Border		: Thin Left Right
+			Scroll		: Yes
+			Display		: Stock Summary
+		
+		[Field: RemoteInQty] 		;; Purchase Qty
+		
+			Use			: RemoteOpQty
+			Set As 		: $TrPurcQty
+			Border		: Thin Right
+		
+		[Field: RemoteConsQty] 	;; Consumption of Stock journal
+		
+			Use			: RemoteInQty
+			Set As 		: $TrTranOutQty
+			Border		: Thin Right
+		
+		[Field: RemoteProdQty] 	;; Production of Stock journal
+		
+			Use			: RemoteInQty
+			Set As 		: $TrTranInQty
+		
+		[Field: RemoteOutwQty] 	;; Sales Qty
+		
+			Use			: RemoteInQty
+			Set As 		: $TrSaleQty
+		
+		[Field: RemoteClosQty] 	;; Closing Qty
+		
+			Use			: RemoteInQty
+			Set As 		: $ItClQty
+			Delete		: Border
+			Style		: Normal Bold
+
+;; Collection Definition
+
+[Collection: RemoteVoucher Collection]
+
+	Type	: Voucher
+
+[Collection: RemoteSItemColl]
+
+	Source Collection	: RemoteVoucher Collection
+
+	Walk				: All Inventory Entries
+
+	By					: Name				: $StockItemName ;; Grouping done by Stock Item
+
+;; All Aggr Compute & Compute methods are avilabe at client side
+
+	Aggr Compute		: TrPurcQty			: Sum : If @@RemotePurcVr Then $BilledQty Else 0
+	Aggr Compute		: TrSaleQty			: Sum : If @@RemoteSaleVr Then $BilledQty Else 0
+	Aggr Compute		: TrTranOutQty		: Sum : If @@RemoteStockJrnlVr And NOT $$IsInwards:$BilledQty Then $BilledQty Else 0
+	Aggr Compute		: TrTranInQty		: Sum : If @@RemoteStockJrnlVr And $$IsInwards:$BilledQty Then $BilledQty Else 0
+	Compute				: ItClQty			: $StkClBalance:StockItem:$StockItemName
+	Compute				: ItOpQty			: $StkOpBalance:StockItem:$StockItemName
+
+	Sort				: @@SortAlphaIncr 	: $Name
+
+;; System Formula
+
+[System: Formula]
+
+	RemotePurc Vr		: $$IsPurchase:$VoucherTypeName
+	RemoteSale Vr		: $$IsSales:$VoucherTypeName
+	RemoteStock Jrnl Vr	: $$IsStockJrnl:$VoucherTypeName
+
+;; End-of-File

@@ -1,0 +1,112 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the alteration of sales Voucher
+-	Sub Form have been triggered from Item to accept dimension in Sales Invoice
+
+Last modification -
+-	Altered on 09-11-2009
+*/
+
+[#Field: VCHACC StockItem]
+
+	Option	: VCH ACC Stock Item SF	: ##VrVarC2
+
+	[!Field: VCH ACC Stock Item SF]
+
+	    Add     : SubForm   : At Beginning  : StkVCH Dimension  : NOT $$IsEnd:$StockItemName
+
+[Report: StkVCH Dimension]
+
+    Form    : StkVCH Dimension
+    
+[Form: StkVCH Dimension]  	
+
+    Parts               : StkVCH Dimension 	
+    Horizontal Alignment: Center
+    Vertical Alignment  : Center 	     
+    
+[Part:StkVCH Dimension]  		
+
+    Lines   : StkVCH DimensionTitle 		
+    Lines   : StkVCH Dimension 		         
+    
+    [Line: StkVCH DimensionTitle]  			
+    
+        Use     : StkVCH Dimension  			
+        Local   : Field : Default           : Delete    : Storage 			
+        Local   : Field : Default           : Type      : String 			
+        Local   : Field : Default           : Width     : 8 			
+        Local   : Field : Default           : Skip      : Yes  			
+        Local   : Field : StkVCH Height     : Set As    : "Height" 			
+        Local   : Field : StkVCH Width      : Set As    : "Width" 			
+        Local   : Field : StkVCH Dimension  : Set As    : "Dimension" 			         
+        
+    [Line: StkVCH Dimension] 			 			
+    
+        Fields      : StkVCH Height, StkVCH Width, StkVCH Dimension             
+        Border      : Subtotals                      
+        
+        [Field: StkVCH Height]  				
+        
+            Use         : Number Field 				
+            Storage     : StkHeight 				
+            Align       : Centre 				
+            Border      : Thin Left Right              
+            
+        [Field: StkVCH Width]  				
+        
+            Use         : Number Field 				
+            Storage     : StkWidth 				
+            Align       : Centre              
+            
+        [Field: StkVCH Dimension]  				
+        
+            Use         : Number Field 				
+            Skip        : Yes 				
+            Set always  : Yes 				
+            Set as      : $StkHeight * $StkWidth 				
+            Format      : "NoZero, NoComma" 				
+            Align       : Centre 				
+            Border      : Thin Left Right  
+            
+[System: UDF]  	
+
+    StkHeight   : Number    : 101 	
+    StkWidth    : Number    : 102 	 
+    
+[#Object: Inventory Entry]      
+
+    StkDimension: $StkHeight * $StkWidth 	 
+    
+[#Field: VCH ActualQty]                        
+
+    Option      : Diff VCH Qty          : $DiffActualQty      
+    
+[#Field: VCH BilledQty]                                
+
+	Switch : VCHActualQuantity	: Diff VCH Qty          : NOT $DiffActualQty
+
+   
+    [!Field: Diff VCH Qty]              
+
+		Set By Condition	: NOT ($$IsEmpty:$StkDimension)  : $StkDimension  
+        Set Always  : Yes  
+       
+[#Field: VCHBATCH ActualQty]    
+	
+	Switch		: VCHBatchQuantity: Diff VCHBATCH Qty     : $DiffActualQty 
+
+    
+[#Field: VCHBATCH BilledQty]      
+	
+	Switch :VCHBATCH NrmlBQty : Diff VCHBATCH Qty     : NOT $DiffActualQty 
+
+    
+    [!Field: Diff VCHBATCH Qty]              
+    
+		Set By Condition 	: NOT ($$IsEmpty:$$Owner:$StkDimension)  : ($$Owner:$StkDimension)  
+        Type        : Quantity  : Forced
+
+;; End-of-File

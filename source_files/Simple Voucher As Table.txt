@@ -1,0 +1,127 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+-	The following code demonstrates the collection of Simple Voucher as Table.  
+-	A report is created to displays relevant Tables in the Field.  This report has 
+	a common form which is used by all the reports to display disparate tables based 
+	on the variable value.  All the collection as table is demonstrated using the same 
+	field.
+
+Last modification – 
+-	Altered on 09/11/2009
+*/
+
+[Collection: Vch CollectionS]
+
+	Title       : "Table - Simple Voucher"
+	Type		: Voucher
+	Fetch		: VoucherNumber,VoucherTypeName,PartyLedgerName,Amount
+	Format		: $VoucherNumber, 10
+	Format		: $VoucherTypeName, 25
+	Format		: $PartyLedgerName, 25
+	Format		: $Amount, 15
+
+;; Report to demonstrate various types of Collections As Table
+
+[Report: VchAsTableS]
+
+	Form		: CollAsTable
+	Variable	: VchAsTableS
+	Set			: VchAsTableS	: Yes
+
+[Form: CollAsTable]
+
+	Parts	: Form SubTitle, CollAsTable
+	Local	: Field : Form SubTitle	: Info	: "Using Voucher as Table with Function Table"
+	Width	: 40% Page
+
+[Part: CollAsTable]
+
+	Lines	: CollAsTable, CollAsTable1
+
+	[Line: CollAsTable]
+
+		Fields	: Long Prompt, CollAsTable
+		Local	: Field	: Long Prompt	: Set AS	: "Table from Collection:"
+
+		[Field: CollAsTable]
+
+			Use			: Name Field
+			Show Table	: Always
+
+			Switch		: Case 1	: CollAsTableS	: ##VchAsTableS
+			Switch		: Case 1	: CollAsTableW	: ##VchAsTableW
+			Switch		: Case 1	: CollAsTableA	: ##VchAsTableA
+			Switch		: Case 1	: ODBCAsTable	: ##ODBCAsTable
+			Switch		: Case 1	: XMLAsTable	: ##XMLAsTable
+
+			[!Field: CollAsTableS]
+
+				Table		: Vch CollectionS
+		
+			[!Field: CollAsTableW]
+
+				Table		: Summ CollectionW
+
+			[!Field: CollAsTableA]
+
+				Table		: Summ CollectionA
+
+			[!Field: ODBCAsTable]
+
+				Table		: ODBC Excel Collection	: $$NumItems:ODBCExcelCollection>0
+
+			[!Field: XMLAsTable]
+
+				Table		: XML Table
+
+	[Line: CollAsTable1]
+
+		Fields	: Long Prompt, CollAsTable1
+		Local	: Field	: Long Prompt	: Set AS	: "Corresponding Name using $$Table :"
+		Local	: Field	: Long Prompt	: Inactive	: NOT ##VchAsTableS
+
+		[Field: CollAsTable1]
+
+			Use			: Name Field
+			Set AS		: $$Table:CollAsTable:$PartyLedgerName
+			Inactive	: NOT ##VchAsTableS
+			Set Always	: Yes
+
+;; Variables Definition
+
+[Variable: VchAsTableS]
+
+	Type		: Logical
+	Default		: No
+
+[Variable: VchAsTableW]
+
+	Type		: Logical
+	Default		: No
+
+[Variable: VchAsTableA]
+
+	Type		: Logical
+	Default		: No
+
+[Variable: ODBCAsTable]
+
+	Type		: Logical
+	Default		: No
+
+[Variable: XMLAsTable]
+
+	Type		: Logical
+	Default		: No
+
+[System: Variable]
+
+	VchAsTableA	: No
+	VchAsTableW	: No
+	VchAsTableS	: No
+	ODBCAsTable	: No
+	XMLAsTable	: No
+
+;; End-of-File

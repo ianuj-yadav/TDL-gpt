@@ -1,0 +1,284 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the concept of User Defined Functions with a Calculator
+	function
+
+Last Modification -
+-	Altered on 09-11-2009
+*/
+
+[Report: Calc Entry]
+
+	Form		: Calc Entry
+	Auto		: Yes
+	Title		: "Calculator"
+
+[Form: Calc Entry]
+
+	Parts		: Form SubTitle, Calc Entry
+	Buttons		: Print Button
+	Keys		: Field Left, Field Right
+	Height		: 35% Screen
+	Width		: 25% Screen
+	Space Left	: 0.5
+	Space Right	: 0.5
+	Background	: Grey
+	Local: Field: Form SubTitle	: Info	: "Calculator"
+
+[Part: Calc Entry]
+
+	Lines	: Calc Input, Calc Button Line0, Calc Button Line1, Calc Button Line2, Calc Button Line3
+	Lines	: Calc Button Line4
+	Local	: Field	: Simple Field		: Skip		: Yes
+	Local	: Field	: Simple Field2		: Skip		: Yes
+	Local	: Field	: Simple Field3		: Skip		: Yes
+	Local	: Field	: Simple Field4		: Skip		: Yes
+
+	Local	: Field	: Calc Button Div	: Delete	: Keys
+	Local	: Field	: Calc Button Div	: Add		: Keys	: Operator MouseClick, Operator KeyEnter
+	Local	: Style	: Default			: Height	: 12
+
+	[Line: Calc Input]
+
+		Fields		: Number Field
+		Local: Field: Number Field		: FullWidth	: Yes
+		Local: Field: Number Field		: Align		: Right
+		Local: Field: Number Field		: Set always: Yes
+		Local: Field: Number Field		: Set as	: ##CurVarValue
+		Local: Field: Number Field		: Border	: Thin Box
+		Local: Field: Number Field		: Background: White
+
+	[Line: Calc Button Line0]
+
+		Use			: Calc Button Line1
+		Delete		: Right Fields
+		Add			: Right Fields		: Calc Button No7, Simple Field, Calc Button No8, Simple Field2, Calc Button No9
+
+		Local: Field: Calc Button MC	: Set As	: ""
+		Local: Field: Calc Button No7	: Set As	: "Backspace"
+		Local: Field: Calc Button No8	: Set As	: "CE"
+		Local: Field: Calc Button No9	: Set As	: "C"
+
+		Local: Field: Calc Button No7	: Width		: 10
+		Local: Field: Calc Button No8	: Width		: 6
+		Local: Field: Calc Button No9	: Width		: 3
+
+		Local: Field: Calc Button MC	: Skip		: Yes
+
+		Local: Field: Calc Button No7	: Delete: Keys
+		Local: Field: Calc Button No7	: Add	: Keys	: BackSpace MouseClick, BackSpace KeyEnter
+
+	[Line: Calc Button Line1]
+
+		Fields		: Calc Button MC
+		Right Fields: Calc Button No7, Simple Field, Calc Button No8, Simple Field2, Calc Button No9
+		Right Fields: Simple Field3, Calc Button Div, Simple Field4, Calc Button Sqrt
+		Space Top	: 1
+
+		Local: Field: Simple Field		: Width		: 0.8
+		Local: Field: Simple Field2		: Width		: 0.8
+		Local: Field: Simple Field3		: Width		: 0.8
+		Local: Field: Simple Field4		: Width		: 0.8
+
+		[Field: Calc Button MC]
+
+			Use			: Calc Button No7
+			Set As		: "MC"
+
+		[Field: Calc Button No7]
+
+			Use			: Name Field
+			Width		: 3
+			Max			: 1
+			Align		: Centre
+			Set As		: "7"
+			Border		: Thin Box
+			Key			: AppendVar MouseClick, AppendVar KeyEnter
+			Read Only	: Yes
+			Background	: Grey
+
+		[Field: Calc Button No8]
+
+			Use			: Calc Button No7
+			Set As		: "8"
+
+		[Field: Simple Field2]
+
+			Use			: Simple Field
+
+		[Field: Calc Button No9]
+
+			Use			: Calc Button No7
+			Set As		: "9"
+
+		[Field: Simple Field3]
+
+			Use			: Simple Field
+
+		[Field: Calc Button Div]
+
+			Use			: Calc Button No7
+			Set As		: "/"
+
+		[Field: Simple Field4]
+
+			Use			: Simple Field
+
+		[Field: Calc Button Sqrt]
+
+			Use			: Calc Button No7
+			Set As		: "Sqrt"
+
+	[Line: Calc Button Line2]
+
+		Use			: Calc Button Line1
+		Local: Field: Calc Button MC	: Set As: "MR"
+		Local: Field: Calc Button No7	: Set As: "4"
+		Local: Field: Calc Button No8	: Set As: "5"
+		Local: Field: Calc Button No9	: Set As: "6"
+		Local: Field: Calc Button Div	: Set As: "*"
+		Local: Field: Calc Button Sqrt	: Set As: "%"
+
+	[Line: Calc Button Line3]
+
+		Use			: Calc Button Line1
+		Local: Field: Calc Button MC	: Set As: "MS"
+		Local: Field: Calc Button No7	: Set As: "1"
+		Local: Field: Calc Button No8	: Set As: "2"
+		Local: Field: Calc Button No9	: Set As: "3"
+		Local: Field: Calc Button Div	: Set As: "-"
+		Local: Field: Calc Button Sqrt	: Set As: "1/x"
+
+	[Line: Calc Button Line4]
+
+		Use			: Calc Button Line1
+		Local: Field: Calc Button MC	: Set As: "M+"
+		Local: Field: Calc Button No7	: Set As: "0"
+		Local: Field: Calc Button No8	: Set As: "+/-"
+		Local: Field: Calc Button No9	: Set As: "."
+		Local: Field: Calc Button Div	: Set As: "+"
+		Local: Field: Calc Button Sqrt	: Set As: "="
+
+		Local: Field: Calc Button Sqrt	: Delete: Keys
+		Local: Field: Calc Button Sqrt	: Add	: Keys	: Result MouseClick, Result KeyEnter
+
+;; General Keys
+
+[Key: Field Left]
+
+	Key		: Left
+	Action	: Field Prev
+	Mode	: Edit
+
+[Key: Field Right]
+
+	Key		: Right
+	Action	: Field Next
+	Mode	: Edit
+
+;; Key Definition
+
+[Key: AppendVar MouseClick]
+
+	Key		: Left Click
+	Action	: CALL	: AppendVar	: $$Value
+
+[Key: AppendVar KeyEnter]
+
+	Key		: Enter
+	Action	: CALL	: AppendVar	: $$Value
+
+[Key: Operator MouseClick]
+
+	Key		: Left Click
+	Action	: CALL	: Operator	: $$Value
+
+[Key: Operator KeyEnter]
+
+	Key		: Enter
+	Action	: CALL	: Operator	: $$Value
+
+[Key: Result MouseClick]
+
+	Key		: Left Click
+	Action	: CALL	: Result
+
+[Key: Result KeyEnter]
+
+	Key		: Enter
+	Action	: CALL	: Result
+
+[Key: Backspace MouseClick]
+
+	Key		: Left Click
+	Action	: CALL	: Backspace
+
+[Key: Backspace KeyEnter]
+
+	Key		: Enter
+	Action	: CALL	: Backspace
+
+;; Function Definition
+
+[Function: Calculator]
+
+	Variable		: OrigVarValue	: Number
+	Variable		: CurVarValue	: Number
+	Variable		: Operator		: String
+	Variable		: AfterEquals	: Logical
+
+	01	: SET		: OrigVarValue	: 0
+	02	: SET		: CurVarValue	: 0
+	03	: SET		: Operator		: ""
+	04	: SET		: AfterEquals	: No
+
+	05	: ALTER		: Calc Entry
+	06	: RETURN
+
+[Function: AppendVar]
+
+	Parameter		: InputNo		: Number
+
+	01	: IF		: ##AfterEquals = Yes
+	02	: 	SET		: CurVarValue	: 0
+	03	: 	SET		: AfterEquals	: No
+	04	: END IF
+	05	: SET		: CurVarValue	: $$String:##CurVarValue + $$String:##InputNo
+	06	: RETURN
+
+[Function: Operator]
+
+	Parameter		: InputOp		: String
+
+	01	: EXCHANGE	: CurVarValue	: OrigVarValue
+	02	: SET		: Operator		: ##InputOp
+	03	: RETURN
+
+[Function: Backspace]
+
+	01	: SET		: CurVarValue	: $$StringPart:##CurVarValue:0:($$Number:($$StringLength:##CurVarValue) - 1)
+	02	: RETURN
+
+[Function: Result]
+
+	01	: IF	: $$ExactMatch:##Operator:"+"
+	02	: 	SET		: CurVarValue	: ##OrigVarValue + ##CurVarValue
+	03	: ELSE	:		
+	04	: 	IF		: $$ExactMatch:##Operator:"-"
+	05	: 		SET		: CurVarValue	: ##OrigVarValue - ##CurVarValue
+	06	: 	ELSE	:
+	07	: 		IF		: $$ExactMatch:##Operator:"*"
+	08	:			SET		: CurVarValue	: ##OrigVarValue * ##CurVarValue
+	09	: 		ELSE	:
+	10	: 			SET		: CurVarValue	: ##OrigVarValue / ##CurVarValue
+	11	: 		END IF
+	12	: 	END IF
+	13	: END IF
+	14	: SET		: Operator		: ""
+	15	: SET		: OrigVarValue	: 0
+	16	: SET		: AfterEquals	: Yes
+	17	: RETURN
+
+;; End-of-File

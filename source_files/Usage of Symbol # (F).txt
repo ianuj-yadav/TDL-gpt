@@ -1,0 +1,41 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	The objective of this program is to demonstrate the process of extracting value from a 
+	Field using Symbol '#'
+-	A Field value can be referred by using Symbol Prefix '#' which may be useful in summing
+	up multiple fields and displaying various Totals/ Sub-Totals or comparing Field value 
+	with any other derived value, etc..
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Field Value]
+	
+	Form	: Field Value
+
+[Form: Field Value]
+
+	Parts	: Field Value
+
+[Part: Field Value]
+	
+	Lines	: Field Value
+
+	[Line: Field Value]
+
+		Fields	: Field Value1, Field Value2
+
+		[Field:	Field Value1]
+
+			Set As	: "Testing # as Field Accesser"
+
+		[Field:	Field Value2]
+
+;; Value of the field 'FieldValue1' is accessed in Field 'FieldValue2' thru Symbol Prefix '#'
+			Set As	: #FieldValue1 + " through second field"
+			Style	: Normal Bold
+
+;; End-Of-File

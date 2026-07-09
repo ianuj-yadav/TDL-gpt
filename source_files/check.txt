@@ -1,0 +1,184 @@
+;; ============================================================
+;; Employee Object Based Collection - Using SET VALUE
+;; ============================================================
+
+
+;; ------------------------------------------------------------
+;; COLLECTION & OBJECT
+;; ------------------------------------------------------------
+
+[Variable:NewEmpName]
+	Type		: String
+	Persist		: Yes
+	
+[Variable:NewEmpMobile]
+	Type		: String
+	Persist		: Yes
+	
+[Variable:NewEmpSalary]
+	Type		: Amount
+	Persist		: Yes
+	
+[System:Variables]
+	NewEmpName			: ""
+	NewEmpMobile		: ""
+	NewEmpSalary		: 0
+	
+[Collection : Employee Collection]
+    New Object : Employee Data
+	Fetch		: EmpName, EmpMobile, EmpSalary
+
+[Object : Employee Data]
+	
+    Storage : EmpName   : String
+    Storage : EmpMobile : String
+    Storage : EmpSalary : Amount
+[#Object:StockItem]
+
+[System:UDF]
+	EmpName   : String		: 52001
+    EmpMobile : String		: 52002
+    EmpSalary : Amount		: 52003
+;; ------------------------------------------------------------
+;; GATEWAY MENU
+;; ------------------------------------------------------------
+
+[#Menu: Gateway of Tally]
+    Add : Item : Create Employee  : Create  : Employee Entry Report
+    Add : Item : Display Employee : Display : Employee Display Report
+
+
+;; ------------------------------------------------------------
+;; CREATE REPORT
+;; ------------------------------------------------------------
+
+[Report: Employee Entry Report]
+    Form : Employee Entry Form
+
+
+[Form: Employee Entry Form]
+    Parts  : Employee Entry Part
+    Width  : 100% Screen
+    Height : 100% Screen
+    On     : Form Accept : Yes : CALL : EmployeeSave:#EmployeeNameField:#EmployeeMobileField:#EmployeeSalaryField
+
+
+[Part: Employee Entry Part]
+    Lines : Employee Name Line, Employee Mobile Line, Employee Salary Line
+
+
+;; ------------------------------------------------------------
+;; INPUT FIELDS (LOCAL VARIABLES)
+;; ------------------------------------------------------------
+
+
+
+
+[Line: Employee Name Line]
+    Fields : Employee Name Field
+
+[Field: Employee Name Field]
+    Use    : Name Field
+    Set as : ##NewEmpName
+    Modifies : NewEmpName
+	Variable	:NewEmpName
+    Width  : 40
+
+
+[Line: Employee Mobile Line]
+    Fields : Employee Mobile Field
+
+[Field: Employee Mobile Field]
+    Use    : Name Field
+    Set as : ##NewEmpMobile
+    Modifies : NewEmpMobile
+	Variable	:NewEmpMobile
+    Width  : 40
+
+
+[Line: Employee Salary Line]
+    Fields : Employee Salary Field
+
+[Field: Employee Salary Field]
+    Use    : Amount Field
+    Set as : ##NewEmpSalary
+    Modifies : NewEmpSalary
+	Variable	:NewEmpSalary
+    Width  : 40
+
+
+;; ------------------------------------------------------------
+;; SAVE FUNCTION USING SET VALUE
+;; ------------------------------------------------------------
+
+[Function: EmployeeSave]
+	Parameter	: EmpName1		: String
+    Parameter	: EmpMobile1		: String
+    Parameter	: EmpSalary1		: Amount
+    10 : NEW OBJECT : Employee Data
+    20 : SET VALUE  : EmpName   : ##EmpName1
+    30 : SET VALUE  : EmpMobile : ##EmpMobile1
+    40 : SET VALUE  : EmpSalary : ##EmpSalary1
+	45: Log		: ##EmpSalary1
+    50 : CREATE TARGET
+    60 : MSGBOX : "Success" : "Employee Saved Successfully"
+    70 : RETURN
+
+
+;; ------------------------------------------------------------
+;; DISPLAY REPORT
+;; ------------------------------------------------------------
+
+[Report: Employee Display Report]
+    Form : Employee Display Form
+
+
+[Form: Employee Display Form]
+    Parts  : Employee Display Part
+    Width  : 100% Screen
+    Height : 100% Screen
+
+
+[Part: Employee Display Part]
+    Lines  : Employee Display Header, Employee Display Line
+    Repeat : Employee Display Line : Employee Collection
+    Scroll : Vertical
+
+
+[Line: Employee Display Header]
+    Fields : HEmployeeName, HEmployeeMobile, HEmployeeSalary
+    Local  : Field : Default : Style : Normal Bold
+
+
+[Field: HEmployeeName]
+    Set as : "Employee Name"
+    Width  : 30
+
+
+[Field: HEmployeeMobile]
+    Set as : "Mobile"
+    Width  : 25
+
+
+[Field: HEmployeeSalary]
+    Set as : "Salary"
+    Width  : 20
+
+
+[Line: Employee Display Line]
+    Fields : DEmployeeName, DEmployeeMobile, DEmployeeSalary
+
+
+[Field: DEmployeeName]
+    Set as : $EmpName
+    Width  : 30
+
+
+[Field: DEmployeeMobile]
+    Set as : $EmpMobile
+    Width  : 25
+
+
+[Field: DEmployeeSalary]
+    Set as : $EmpSalary
+    Width  : 20

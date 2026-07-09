@@ -1,0 +1,120 @@
+[#Form: Simple Printed Invoice]
+	Delete		: Bottom Part	: EXPSMP Totals		;: EXPSMP TotalsGSt
+	Replace		: Part	: EXPSMP Invoice	: EXPSMP InvoiceGSt
+	Replace		: Part	: EXPSMP Column		: EXPSMP ColumnGst
+	Add			: Part	: EXPSMP TotalsGSt
+	
+	
+
+[Part: EXPSMP InvoiceGSt]
+	Line		:  EXPSMP InvoiceGSt	
+	Repeat		:  EXPSMP InvoiceGSt	: Inventory Entries
+	Scroll		: Vertical
+	Border		: Thin Left Right
+	Common Borders	: Yes
+	Total			: AmountInclusive, QuantityGst
+	
+	[Line:EXPSMP InvoiceGSt]
+		Fields			: SLNoGst, DescriptionGst,
+		Right Fields	:  HSNGst,QuantityGst, RateInclusive, DiscountGst, AmountInclusive
+		
+		[Field: SLNoGst]
+			Use		: Number Field
+			Set as	: $$Line
+			Format		: "NoZero"
+			Style		: Normal
+			Width		: @SLWidthPage
+			SLWidth     : If $$InDMPMode then 5% Else +
+				  If $$InDraftMode then 8% Else 3%
+			
+		[Field: DescriptionGst]
+			Use		: Name Field
+			Set as	: $StockitemName
+			Border	: Thin Left 
+			Full Width	: Yes
+			
+		[Field: HSNGst]
+			Use		: ShortName Field
+			Set as	: $ComputedHSNCode
+			Border	: Thin Left Right
+			Width	: 12
+			
+		[Field: QuantityGst]
+			Use		: Qty Primary Field
+			Set as	: $BilledQty
+			Align	: Center
+			
+		[Field: RateInclusive]
+			Use         : Amount Field
+			Width       : @@RateWidth
+			Align       : Right
+			Set as     	: $$AsAmount:$$Number:$InclusiveTaxValue			;;	If $$IsEmpty:$InclusiveTaxValue Then ($$MulDivAmt:#EXPINVVATGCCTotalAmt:1:($$Number:$BilledQty)) Else $$AsAmount:$$Number:$InclusiveTaxValue
+			Style       : Small
+			Border      : Thin Left
+			
+		
+		[Field: DiscountGst]
+			Use         : Number Field
+			Set as      : $Discount
+			Align       : Right
+			Style       : Small
+			Width       : 5
+			Border      : Thin Left
+			Format      : "NoZero,Percentage"
+		
+		[Field: AmountInclusive]
+			Use		: Amount Forex Field
+			Set as	: $InclusiveTaxValue*$BilledQty*(100-$Discount)/100
+			Border	: Thin Left 
+			
+[Part: EXPSMP ColumnGst]
+	Line		: EXPSMP ColumnGst1,EXPSMP ColumnGst2
+	Border		: Thin Box
+	Common Border	: Yes
+	[Line:EXPSMP ColumnGst1]
+		Use			: EXPSMP InvoiceGSt
+	
+		Local		: Field	: Default	: Style	: Normal
+		Local		: Field	: Default	: Align	: Center
+		Local		: Field	: Default	: Type	: String
+	
+		Local : Field : SLNoGst   			: Info	 : $$StringWord:1:$$LocaleString:"Sl No." 
+		Local : Field : DescriptionGst		: Info	 : $$LocaleString:"Description of Goods" 
+		Local : Field : HSNGst   			: Info	 : $$LocaleString:"HSN/SAC" 
+		Local : Field : QuantityGst			: Info	 : $$LocaleString:"Quantity" 
+		Local : Field : RateInclusive		: Info	 : $$StringWord:1:$$LocaleString:"Rate (Incl. of Tax)" 
+		Local : Field : DiscountGst   		: Info	 : $$LocaleString:"Disc. %"  
+		Local : Field : AmountInclusive		: Info	 : $$StringWord:1:$$LocaleString:"Amount" 
+	[Line:EXPSMP ColumnGst2]
+		Use			: EXPSMP ColumnGst1
+	
+		Local		: Field	: Default	: Style	: Normal
+		Local		: Field	: Default	: Align	: Center
+		Local		: Field	: Default	: Type	: String
+	
+		Local : Field : SLNoGst   			: Info	 : $$LocaleString:"No." 
+		Local : Field : DescriptionGst		: Info	 : $$LocaleString:"" 
+		Local : Field : HSNGst   			: Info	 : $$LocaleString:"" 
+		Local : Field : QuantityGst			: Info	 : $$LocaleString:"" 
+		Local : Field : RateInclusive		: Info	 : $$LocaleString:"(Incl. of Tax)" 
+		Local : Field : DiscountGst   		: Info	 : $$LocaleString:""  
+		Local : Field : AmountInclusive		: Info	 : $$StringWord:1:$$LocaleString:"" 
+	
+[Part:EXPSMP TotalsGSt]
+	Line		: EXPSMP TotalsGSt
+	Border		: Thin Box
+	
+	[Line:EXPSMP TotalsGSt]
+		Use			: EXPSMP InvoiceGSt
+	
+		Local		: Field	: Default	: Style	: Normal Bold
+		Local		: Field	: Default	: Align	: Center
+		;Local		: Field	: Default	: Type	: String
+	
+		Local : Field : SLNoGst   			: Info	 	: $$StringWord:1:$$LocaleString:"" 
+		Local : Field : DescriptionGst		: Info	 	: $$LocaleString:"Total" 
+		Local : Field : HSNGst   			: Info	 	: $$LocaleString:"" 
+		Local : Field : QuantityGst			: Set as	: $$Total:QuantityGst
+		Local : Field : RateInclusive		: Info	 	: $$StringWord:1:$$LocaleString:"" 
+		Local : Field : DiscountGst   		: Info	 	: $$LocaleString:""  
+		Local : Field : AmountInclusive		: Set as	: $$Round:($$Total:AmountInclusive):1

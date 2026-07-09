@@ -1,0 +1,56 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the usage of User Defined Functions in displaying Reports
+-	Various config options can be set before viewing the Reports
+-	Stock Summary and Stock Category Summary Reports are viewed based on the preset
+	configuration
+
+Last Modification -
+-	Altered on 09-11-2009
+*/
+
+[Function: Detailed Stock Summary]
+
+;; Definition Block
+
+	Variable		: DSPShowRate		: Logical
+	Variable		: DSPShowValue		: Logical
+	Variable		: DSPShowOpening	: Logical
+	Variable		: DSPShowInwards	: Logical
+	Variable		: DSPShowOutwards	: Logical
+
+	Variable		: TempSVCurrentCo	: String
+	Variable		: TempSVFromDate	: Date
+	Variable		: TempSVToDate		: Date
+
+;; Procedural Block
+
+	01  : SET		: TempSVCurrentCo	: ##SVCurrentCompany
+	02  : SET		: TempSVFromDate	: ##SVFromDate
+	03	: SET		: TempSVToDate		: ##SVToDate
+
+	04  : SET		: ExplodeFlag		: "Yes"
+	05	: SET		: DSPShowRate		: "No"
+	06	: SET		: DSPShowValue		: "No"
+	07	: SET		: DSPShowOpening	: "Yes"
+	08	: SET		: DSPShowInwards	: "Yes"
+	09	: SET		: DSPShowOutwards	: "Yes"
+
+	10	: ALTER		: StockGroupColumnFunc
+	11	: DISPLAY	: Stock Summary
+	12	: DISPLAY	: Stock Category Summary
+
+	13  : SET		: ExplodeFlag		: "No"
+
+	14	: SET		: SVFromDate		: ##TempSVFromDate
+	15	: SET		: SVToDate			: ##TempSVToDate
+	16  : SET		: SVCurrentCompany	: ##TempSVCurrentCo
+
+[Report: StockGroupColumnFunc]
+
+	Use		: StockGroupColumn
+    Local   : Part  : Modify Variables : Delete	: Lines  : SVCurrency, StockGroupName, SVValuationMethod, SVBudget, SVVariance, DSPOrderCombo, DSPDueOrders
+
+;; End-of-File

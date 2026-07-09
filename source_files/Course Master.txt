@@ -1,0 +1,53 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the usage of UDF repeated over itself to store multiple values of a single data type
+
+Last Modification -
+-	Altered on 09-11-2009
+*/
+
+[Report: Course Offered to Students]
+
+	Form		: Course Offered to Students
+	Object		: Company
+
+[Form: Course Offered to Students]
+
+    Part        : FormSubTitle, Course Offered to Students
+    FullWidth   : No
+	Height		: 90% Screen
+    Background  : @@SV_CHEQUE
+    SpaceRight  : 0.5
+    SpaceLeft   : 1.5
+    Local       : Field : Form SubTitle : Info  : $$LocaleString:"Course Offered to Students"
+    Option      : Small Size Form
+
+[Part: Course Offered to Students]
+
+    Lines       : CMP Course Offered
+    Repeat      : CMP Course Offered   : Course Offered
+    Break on    : $$IsEmpty:$CourseOffered
+	Scroll		: Vertical
+    Height      : 50% Screen
+
+    [Line: CMP Course Offered]
+
+        Fields      : Multi SNo, CMPCourse Offered
+        Local       : Field : Default : Delete : Border
+
+        [Field: CMPCourse Offered]
+
+            Use     : Short Name Field
+            Storage : Course Offered
+            Unique  : Yes 
+
+[System: UDF]
+
+	Course Offered 	: String	: 1010
+
+;; Commented the below since Repeat Flag is no more supported and TD9 Compiler returns a warning
+;	Course Offered 	: String	: 1010	: Yes
+
+;; End-of-File

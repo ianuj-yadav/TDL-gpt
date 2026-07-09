@@ -1,0 +1,40 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the usage of UDF
+-	This code is written to add a new line into Company Accounting Feature screen and associate an UDF within Company 
+	Object
+
+Last Modification -
+-	Altered on 09-11-2009
+*/
+
+;;[#Part: CMP AccFeat Right]		;;This has been removed in default code of TallyPrime
+;[#Part: CMP TallyShopFeatures Left]
+;
+;	Option	: TSPL Smp NR CMP AccFeat Right	: NOT $$IsRemoteCompany
+
+;[!Part: TSPL Smp NR CMP AccFeat Right]
+	
+[#Part: Company F11 Acc Features]
+	
+	Local	: Part	: Cfg PartContent	: Add		: Lines   :CMP Student Fees Feature
+
+		[Line: CMP Student Fees Feature]
+
+			Fields      : Medium Prompt, CMP Student Fees Feature
+			Local       : Field : Medium Prompt : Info    : $$LocaleString:"Enable Student Module "
+			Space Top   : 0.4
+
+			[Field: CMP Student Fees Feature]
+			
+				Use		: Logical Field
+				Storage	: Student Feature
+				Sub Form: Course Offered to Students : $$Value = "Yes"
+
+[System: UDF]
+
+	 Student Feature: Logical	: 1000
+	 
+;; End-of-File

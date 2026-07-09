@@ -1,0 +1,80 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the usage of Event On: Form Accept
+
+Syntax -
+-	On	: Form Accept	: <Logical Formula>	: <Action>	: <Action Parameters>
+-	On is an Attribute of Form which is currently built to execute only in alter, 
+	execute or create mode
+
+Last Modification -
+-	Altered on 23-01-2010
+*/
+
+[Report: On Form Accept Modify Object]
+
+	Form	: On Form Accept Modify Object
+
+[Form: On Form Accept Modify Object]
+	<InUse: System:Formulae : TSPLSmpVoucherID>
+
+	Parts	: On Form Accept Modify Object
+	On 		: Form Accept	: Yes	: MODIFY OBJECT	: (Voucher, @@TSPLSmpVoucherID).Narration: #OnFormAcceptModifyObject
+	Width	: 35% Screen
+
+[Part: On Form Accept Modify Object]
+
+	Lines: Note, On Form Accept Modify Object Date, On Form Accept Modify Object Reference
+	Lines: On Form Accept Modify Object
+	Local: Line	: Note	: Local	: Field: Name Field	: Info		: "Action Modify Object with Event On Form Accept"
+	Local: Line	: Note	: Local	: Field: Name Field	: FullWidth	: Yes
+	Local: Line	: Note	: Local	: Field: Name Field	: Align		: Centre
+	Local: Line	: Note	: Local	: Field: Default	: Style		: Normal Italic
+	Local: Line	: Note	: Local	: Field: Name Field	: Border	: Thin Bottom
+	Local: Line	: Note	: Space Bottom : 1
+
+	[Line: On Form Accept Modify Object Date]
+
+		Fields	: Medium Prompt, On Form Accept Modify Object Date
+		Local	: Field	: Medium Prompt	: Set As	: "Date :"
+
+		[Field: On Form Accept Modify Object Date]
+
+			Use		: Uni Date Field
+			Set As	: $$Date:"01-Apr-2010"
+			Width	: 20
+			Align	: Left
+			Style	: Normal Italic
+
+	[Line: On Form Accept Modify Object Reference]
+
+		Fields	: Medium Prompt, On Form Accept Modify Object Reference
+		Local	: Field	: Medium Prompt	: Set As	: "Reference :"
+
+		[Field: On Form Accept Modify Object Reference]
+
+			Use		: Name Field
+			Set As	: "Ref123"
+			Style	: Normal Italic
+
+	[Line: On Form Accept Modify Object]
+
+		Fields	: Medium Prompt, On Form Accept Modify Object
+		Local	: Field	: Medium Prompt	: Set As	: "Narration :"
+
+		[Field: On Form Accept Modify Object]
+
+			Use		: Name Field
+			Set As	: ""
+			Tooltip	: "This will replace the narration in the first voucher containing the above date and reference"
+			Width	: @@MaxNameWidth
+			Style	: Normal Italic
+			Lines	: 3
+
+[System: Formula]
+
+	TSPL Smp Voucher ID	: "Date:'" + $$String:#OnFormAcceptModifyObjectDate + "'" + ":Reference:'" + #OnFormAcceptModifyObjectReference + "'"
+
+;; End-of-File

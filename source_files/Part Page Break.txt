@@ -1,0 +1,256 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the usage of Part Level Page Break which are used to define
+	Closing Line in the previous pages and Opening Lines in the subsequent pages for 
+	Page Totals Carried/ Brought Forward.
+
+Last modification -
+-	Altered on 09-11-2009
+*/
+
+[Report: Part Pgbk Trial Balance Report]
+
+	Title		: $$LocaleString:"Trial Balance"
+	Form		: Part Pgbk Trial Balance
+
+	Repeat      : SVCurrentCompany, SVFromDate, SVToDate
+	ColumnReport: MyMultiColumns
+
+	Variable	: Part Pgbk TB Group, IsLedgerWise, SVPeriodicity
+
+    PrintSet    : Report Title      : $$LocaleString:"Trial Balance"
+    Set         : IsLedgerWise      : No
+
+[Form: Part Pgbk Trial Balance]
+    
+    Buttons     : F2ChangePeriod, ChangeCompany, LedgerWiseButton
+	Keys        : ChangePeriod
+
+;;To incorporate the change in TallyPrime
+	Bottom Button	: Add Column, Alter Column, Delete Column
+
+	BottomButton: MyAutoButton, BlankButton, InvReports, AcctReports, ReportOperations, FilterButton, ValueButton
+	Buttons		: PrintButton, ExportButton, UploadButton, MailButton
+	Parts		: Part Pgbk TB Title, Part Pgbk TB Details
+	Page Break  : DSP ClPageBreak, Part Pgbk TB OpPgPart
+	Height		: 100% Page
+	Width		: 100% Page
+	Background	: Released Pale Yellow
+	Option		: Prn Part Pgbk TB	: $$InPrintMode
+	
+	[!Form: Prn Part Pgbk TB]
+	
+        Add         : Parts     : At Beginning  : DSP CompanyName, DSP CompanyAddress, DSP ReportTitle
+   		Space Left	: 0.25 inch
+		Local: Part	: DSP CompanyName	: Preprinted	: Yes
+		Local: Part	: DSP CompanyAddress: Preprinted	: Yes
+		Local: Part	: DSP ReportTitle	: Preprinted	: Yes
+   		
+;; For enabling Titles during Printing, Form Level Optional parts 
+;; Company Name, Address and Report Title are used from defTDL.
+       
+    [Part: Part Pgbk TB OpPgPart]
+    
+        Parts       : DSP CompanyName, DSP CompanyAddress, DSP ReportTitle, Part Pgbk TB Title
+        Vertical    : Yes
+
+;; Every continuous page should have the above parts during Printing
+
+	[Part: Part Pgbk TB Title]
+
+		Lines		: Part Pgbk TB Title1, Part Pgbk TB Title2, Part Pgbk TB Title3, Part Pgbk TB STitle
+		Border      : Thin Top
+
+		[Line: Part Pgbk TB Title1]
+
+			Use			: Part Pgbk TB Title3
+			Local		: Field		: Name Field		    : Set as		: ""
+			Local		: Field		: Part Pgbk TB DrAmt Field	: Set as		: @@CmpMailName
+			Local		: Field		: Part Pgbk TB DrAmt Field	: Lines			: 0
+			Local		: Field		: Part Pgbk TB DrAmt Field	: Border		: Thin Left
+			Invisible   : $$IsCommon:SVCurrentCompany AND $$InPrintMode
+			
+;; This Line is made Invisible in Print Mode only if Columns selected
+;; are of single company
+
+		[Line: Part Pgbk TB Title2]
+
+			Use			: Part Pgbk TB Title3
+			Local		: Field		: Default		    	: Style			: Normal
+			Local		: Field		: Name Field		    : Set as		: $$LocaleString:"Particulars"
+			Local		: Field		: Name Field		    : Style			: Normal Bold
+			Local		: Field		: Name Field	    	: WideSpaced	: Yes
+			Local		: Field		: Part Pgbk TB DrAmt Field	: Set as		: @@DSPDateStr
+			Local		: Field		: Part Pgbk TB DrAmt Field	: Border		: Left Full Thin Bottom
+			
+;; DSPFDateStr is the Default Formula which displays the values 
+;; present in both the date variables - SVFromDate & SVTodate 
+
+		[Line: Part Pgbk TB Title3]
+
+			Fields		: Name Field, Part Pgbk TB DrAmt Field
+			Local		: Field		: Default			    : Type			: String
+			Local		: Field		: Name Field		    : Set as		: ""
+			Local		: Field		: Name Field		    : Align			: Center
+			Local		: Field		: Part Pgbk TB DrAmt Field	: Align			: Centre
+			Local		: Field		: Part Pgbk TB DrAmt Field	: Border		: Left Full Thin Bottom
+			Local		: Field		: Part Pgbk TB DrAmt Field	: Set as		: $$LocaleString:"Closing Balance"
+			Repeat		: Part Pgbk TB DrAmt Field
+
+		[Line: Part Pgbk TB STitle]
+
+			Fields		: Name Field, Part Pgbk TB Amount Field
+			Local		: Field		: Default			    : Style			: Normal
+			Local		: Field		: Default			    : Align			: Centre
+			Local		: Field		: Default			    : Type			: String
+			Local		: Field		: Name Field		    : Set as		: ""
+			Local		: Field		: Part Pgbk TB DrAmt Field	: Set as		: $$LocaleString:"Debit"
+			Local		: Field		: Part Pgbk TB CrAmt Field	: Set as		: $$LocaleString:"Credit"
+			Local		: Field		: Part Pgbk TB CrAmt Field	: Border		: Thin Left
+			Repeat		: Part Pgbk TB Amount Field
+			Border		: Thin Bottom
+			
+	[Part: Part Pgbk TB Details]
+
+		Lines		: Part Pgbk TB Details
+		BottomLines	: Part Pgbk TB Total
+		Repeat		: Part Pgbk TB Details	: Part Pgbk TB GroupLed
+		Total		: Part Pgbk TB DrAmt Field, Part Pgbk TB CrAmt Field
+		Scroll		: Vertical
+		CommonBorder: Yes
+		Float		: Yes
+		Page Break  : Part Pgbk TB ClPgLine, Part Pgbk TB OpPgLine
+		
+        Option      : Part Pgbk TB Details Led : ##IsLedgerWise
+        
+;; Part Level Page Breaks is introduced to have Page Totals
+;; at the beginning (except first page) and end (except last page)
+;; of every page
+
+        [!Part: Part Pgbk TB Details Led]
+
+		    Repeat		: Part Pgbk TB Details	: Part Pgbk TB Led
+		    Local       : Collection: Part Pgbk TB Led         : BelongsTo     : Yes
+	    
+        [Line: Part Pgbk TB ClPgLine] ;; Line for Closing Page Totals
+        
+            Use         : Part Pgbk TB Details
+            Delete      : Fields    : Part Pgbk TB Amount Field
+            Add         : Fields    : Part Pgbk TB AmountSTField
+            Delete      : Repeat    : Part Pgbk TB AmountSTField
+            Add         : Repeat    : Part Pgbk TB AmountSTField
+
+            Local       : Field     : Default               	: Style         : Normal Bold
+			Local		: Field		: Part Pgbk TB Name Field	: Set as		: "Carried Over"
+			Local		: Field		: Part Pgbk TB Name Field	: WideSpaced    : Yes
+			Local		: Field		: Part Pgbk TB DrAmtSTField	: Set as		: $$Total:PartPgbkTBDrAmtField
+			Local		: Field		: Part Pgbk TB DrAmtSTField	: Border        : Totals
+			Local		: Field		: Part Pgbk TB CrAmtSTField	: Set as		: $$Total:PartPgbkTBCrAmtField
+			Local		: Field		: Part Pgbk TB CrAmtSTField	: Border        : Totals					    		
+			Space Top   : 1
+
+        [Line: Part Pgbk TB OpPgLine] ;; Line for Opening Page Totals
+        
+            Use         : Part Pgbk TB ClPgLine
+			Local		: Field		: Part Pgbk TB DrAmtSTField: Delete        : Border
+			Local		: Field		: Part Pgbk TB CrAmtSTField: Delete        : Border
+			Local		: Field		: Part Pgbk TB Name Field	: Set as		: "Brought Foward"
+			Space Top   : 0
+			Space Bottom: 1
+						
+            [Field: Part Pgbk TB AmountSTField] ;; New Field Definition for the Page Totals
+            
+				Fields		: Part Pgbk TB DrAmt STField, Part Pgbk TB CrAmt STField
+				Border		: Thin Left
+				
+                [Field: Part Pgbk TB DrAmtSTField]
+                
+                    Use         : Part Pgbk TB DrAmt Field
+
+                [Field: Part Pgbk TB CrAmtSTField]
+                
+                    Use         : Part Pgbk TB CrAmt Field
+                                    
+		[Line: Part Pgbk TB Details]
+
+			Fields		: Part Pgbk TB Name Field, Part Pgbk TB Amount Field
+			Local		: Field		: Part Pgbk TB Name Field	: Set as		: $$Name
+			Local		: Field		: Part Pgbk TB DrAmt Field	: Set as		: if $$IsDr:$ClosingBalance then $ClosingBalance else 0
+			Local		: Field		: Part Pgbk TB CrAmt Field	: Set as		: if $$IsDr:$ClosingBalance then 0 else $ClosingBalance
+			Repeat		: Part Pgbk TB Amount Field
+	
+			[Field: Part Pgbk TB Name Field]
+
+				Use			: Name Field
+				Variable	: Part Pgbk TB Group
+				Display		: Part Pgbk Trial Balance Report: $$IsGroup
+				Option		: Part Pgbk TB LedName Field	: $$IsLedger
+
+				[!Field: Part Pgbk TB LedName Field]
+
+					Variable	: LedgerName
+					Display		: Ledger Monthly Summary
+					Style       : Normal Italic
+
+			[Field: Part Pgbk TB Amount Field]
+
+				Fields		: Part Pgbk TB DrAmt Field, Part Pgbk TB CrAmt Field
+				Border		: Thin Left
+				Display		: Part Pgbk Trial Balance Report	: $$IsGroup
+				Display		: Ledger Monthly Summary    		: $$IsLedger
+			    			    
+				[Field: Part Pgbk TB DrAmt Field]
+
+					Use			: Amount Field
+					Style       : Normal
+
+				[Field: Part Pgbk TB CrAmt Field]
+
+					Use			: Amount Field
+					Style       : Normal
+
+			[Collection: Part Pgbk TB GroupLed]
+			
+				Collection	: Part Pgbk TB Group, Part Pgbk TB Led
+			
+			[Collection: Part Pgbk TB Group]
+			
+				Type		: Group
+				Child Of	: ##PartPgbkTBGroup
+				Filter		: NoProfit
+				Fetch		: Name, ClosingBalance
+
+				
+			[Collection: Part Pgbk TB Led]
+			
+				Type		: Ledger
+				Child Of	: ##PartPgbkTBGroup
+				Filter		: NoProfit
+				Fetch		: Name, ClosingBalance
+
+			[Variable: Part Pgbk TB Group]
+			
+				Type		: String
+				Default     : ""
+				Volatile	: Yes
+	
+;;			[System: Formula]
+;;
+;;				NoProfit	: NOT $$IsLedgerProfit AND $ClosingBalance > 0
+
+    	[Line: Part Pgbk TB Total]
+
+			Use			: Part Pgbk TB Details
+			Local       : Field     : Default               : Style         : Normal Bold
+			Local		: Field		: Part Pgbk TB Name Field	: Set as		: "GRAND TOTAL"
+			Local       : Field     : Part Pgbk TB Name Field	: WideSpaced    : Yes
+			Local		: Field		: Part Pgbk TB Name Field	: Align			: Centre
+			Local		: Field		: Part Pgbk TB DrAmt Field	: Set as		: $$Total:PartPgbkTBDrAmtField
+			Local		: Field		: Part Pgbk TB CrAmt Field	: Set as		: $$Total:PartPgbkTBCrAmtField
+			Border		: Flush Totals
+			Fixed		: Yes
+			Space Top   : 1
+
+;; End-of-File

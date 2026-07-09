@@ -1,0 +1,19 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This program demonstrates the concept of Submenu with Actions.
+- 	When an action Menu is instanced from any Menu (in this case, Menu 'Actions in TDL'), another Menu 
+	is called.
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Menu: Sample Final Accounts]	;; Menu Definition to display when the above Item is activated
+
+	Key Item : Trial Balance : T : Display 	: Trial Balance
+	Key Item : Profit & Loss : P : Display 	: Profit and Loss
+	Key Item : Balance Sheet : B : Display	: Balance Sheet
+
+;; End-of-File

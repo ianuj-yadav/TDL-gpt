@@ -1,0 +1,68 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the concept of User Defined Functions with a Palindrome
+	checking function
+
+Last Modification -
+-	Altered on 09-11-2009
+
+Dependencies -
+-	Supporting files 'Simple Interest.txt'
+*/
+
+[Report: Palindrome]
+
+	Use		: Simple Interest Calculator
+
+	Local	: Form	: Interest Calc		: Local		: Field	: Form SubTitle	: Info		: "Palindrome checker"
+	Local	: Form	: Interest Calc		: Width		: 50% Page
+	Local	: Field	: Medium Prompt		: Width		: 25
+
+	Local	: Line	: Interest Principal: Local		: Field	: Medium Prompt	: Info		: "String to be checked :"
+	Local	: Field	: Interest Principal: Type		: String
+	Local	: Field	: Interest Principal: Case		: Title Case
+	Local	: Field	: Interest Principal: Width		: 50
+	Local	: Field	: Interest Principal: Align		: Left
+
+	Local	: Line	: Interest Rate		: Invisible	: Yes
+	Local	: Line	: Interest NoOfYrs	: Invisible	: Yes
+
+	Local	: Line	: Interest Result	: Local		: Field	: Medium Prompt	: Info		: "Result (!):"
+	Local	: Line	: Interest Result	: Local		: Field	: Default		: Inactive	: $$IsEmpty:#InterestPrincipal
+	Local	: Field	: Interest Result	: Set As	: $$Palindrome:#InterestPrincipal
+	Local	: Field	: Interest Result	: Type		: String
+	Local	: Field	: Interest Result	: Width		: 50
+	Local	: Field	: Interest Result 	: Align		: Left
+
+;; Function to check whether the given string is a Palindrome or Not
+
+[Function: Palindrome]
+
+;; Definition Block
+
+	Parameter 	: InputString 	: String
+	Returns	  	: String
+
+	Variable  	: Counter 		: Number
+	Variable  	: RevString 	: String
+
+
+;; Procedural Block
+
+	01 : SET 	: Counter 		: $$StringLength:##InputString
+	01b: SET 	: RevString		: ""
+
+    02 : WHILE 	: ##Counter >= 0
+	03 : 	SET			: RevString 	: ##RevString + ($$StringPart:##InputString:##Counter:1)
+	04 : 	DECREMENT	: Counter
+	05 : END WHILE
+
+	06 : IF 	: ##RevString = ##InputString
+	07 : 	RETURN	: ($$Upper:##InputString + " (" + $$Upper:##RevString + ")" + " is a Palindrome.")
+	08 : ELSE 	: 
+	09 : 	RETURN 	: ($$Upper:##InputString + " (" + $$Upper:##RevString + ")" + " is not a Palindrome.")
+	10 : END IF
+
+;; End-of-File

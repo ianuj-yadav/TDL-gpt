@@ -1,0 +1,44 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	The objective of this program is to demonstrate the process of extracting value from a 
+	Local Formula using Symbol '@'
+-	Single Complex expression can be broken down into Multiple Simple Formula
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Local Formula]
+
+	Form		: Local Formula
+
+[Form: Local Formula]
+
+	Parts		: Local Formula
+	Background	: Green
+
+[Part: Local Formula]
+
+	Lines		: Local Formula
+
+	[Line: Local Formula]
+
+		Fields		: Local Formula
+
+		[Field: Local Formula]
+
+			Set As		: @LF1 + @LF2   ;; Here the plus symbol is used for String concatenation
+			Width		: 100% Screen
+			Align		: Centre
+			LF1			: "The value of a Local formula can be accessed "
+			LF2			: "using the symbol prefix @"
+			Style		: TextStyle
+
+[Style: TextStyle]
+
+	Font	: Algerian
+	Height	: 16
+
+;; End-Of-File

@@ -1,0 +1,62 @@
+[#Form : Purchase Color]
+Button: Address Print
+
+[#Form : Sales Color]
+Button: Address Print
+
+[Button : Address Print ]
+Key : Ctrl + E
+Action : Print Report: EnvelopePrint
+
+[Report: EnvelopePrint]
+Form: EnvPrintForm
+Object: Ledger
+Object: Voucher
+
+[Form: EnvPrintForm]
+Width:100% Page
+Height:100% Page
+Space Top:0.5 inch
+Space Left:0.5 inch
+Space Right:0.5 inch
+Part:EnvPrintBody
+
+[Part: EnvPrintBody]
+Part:EnvPrintBodyTop
+
+[Part: EnvPrintBodyTop]
+Width:100 % page
+Height:3 inch
+Space Top:0.5 inch
+Space Left:0.5 inch
+Space Right:0.5 inch
+Line:EnvelopeHead1;, FullAddress
+Repeat:FullAddress:PartyAddress
+Vertical:Yes
+[Line:FullAddress]
+Field:ToAddress, EnvelopeHead1
+Space Top:1
+[Line: EnvelopeHead1]
+Field:ToAddress, EnvelopeHead1
+Space Top:1
+
+[Field: ToAddress]
+Use:Name Field
+Set as:"To, "
+Width:15
+Align:Centre
+Style:EnvStyleBOLD
+PrintFG:Red
+
+[Field: EnvelopeHead1]
+Use:Name Field
+Setas:$LedgerName:Ledger:$PartyLedgerName
+Width:50
+style:EnvStyleBOLD
+Align:Left
+Object:Ledger
+
+[Style: EnvStyleBOLD]
+Font:"Arial Bold"
+Height:16
+Bold:yes

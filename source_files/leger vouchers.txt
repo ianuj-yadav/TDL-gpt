@@ -1,0 +1,25 @@
+[#Menu:gateway Of Tally]
+	Add		: Item		: Ledgerrsddd		: Display	: LedgerVchBin
+[Report:LedgerVchBin]
+	Form	: LedgerVchBin
+	
+[Form:LedgerVchBin]
+	Part		: LedgerVchBin
+	
+[Part:LedgerVchBin]
+	Line		: DSP VchDetail1
+	Repeat		: DSP VchDetail1: Vouchers of Ledger
+	Scroll		: Vertical
+	
+[Line:DSP VchDetail1]
+	Field		: DSP VchDetail1
+	[Field:DSP VchDetail1]
+		Set as		: $Name
+[#Form: Normal Ledger]
+	Background		: red
+	
+
+[#Part: LV Body]
+	Background		: Yellow
+	
+[#Collection: Vouchers of Ledger]

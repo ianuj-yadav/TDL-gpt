@@ -1,0 +1,24 @@
+[Variable:NewVar] ; This is the defination of variable
+	Type:String
+[Variable:NewRed]
+	Type:String
+[System:Variables]; These variables can be used in any report or in other files 
+	NewVar:"This is a variable show in the box" ; This is the declaration of varible
+	NewRed:"Red"
+	
+[#Menu: Gateway of Tally]
+	Item:VariableName:Alter:Show Variable
+	[Report:Show Variable]
+		Form:Show Variable
+		[Form:Show Variable]
+			Part:Show Variable
+			[Part:Show Variable]
+				Line:Show Variable
+				[Line:Show Variable]
+					Field:Show Variable
+					[Field:Show Variable]
+						Use:string field
+						Set as:##NewVar
+						Background:##NewRed
+						;Modifies:NewVar ; It can change the value of variable
+						

@@ -1,0 +1,58 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code introduces changes required for working in Remote environment
+-	Whether it is Simple or Aggregate Collection, the Collection attribute 'Fetch' 
+	is mandatory in case of Remote environment
+-	This Report displays the ledger name and closing balance at Remote client end
+
+Last modification -
+-	Altered on 09-11-2009
+*/
+
+[Report: LedReportForRemote]
+	
+	Form	: LedReportForRemote
+	Title	: "Basic Report to demonstrate Remoting Capability"
+
+;; Name and Closing Balnce needs to be fetched from Server
+	Local	: Collection	: Ledger	: Fetch	: Name, Closing Balance
+
+[Form: LedReportForRemote]
+
+	Parts	: LedReportForRemote
+	
+[Part: LedReportForRemote]
+
+	Lines			: LedReportForRemoteTitle, LedReportForRemoteDetails  
+	Repeat			: LedReportForRemoteDetails		: Ledger
+	Scroll			: Vertical
+	Common Borders	: Yes
+	Border			: Thin Bottom
+
+	[Line: LedReportForRemoteTitle]
+
+		Use		: LedReportForRemoteDetails
+		Local	: Field	: Default			: Type	: String	
+		Local	: Field	: Led Name			: Set as: "Ledger Name"
+		Local	: Field	: Led ClosingBalance: Set as: "Closing Balance"
+		Border	: Column Titles
+
+	[Line: LedReportForRemoteDetails]
+
+		Fields		: Led Name
+		Right Fields: LedClosingBalance
+
+		[Field: Led Name]
+
+			Use		: Name Field
+			Set as	: $Name
+
+		[Field: LedClosingBalance]
+
+			Use		: Amount Forex Field
+			Set as	: $ClosingBalance
+			Border	: Thin Left
+
+;; End-of-File

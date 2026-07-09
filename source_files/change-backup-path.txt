@@ -1,0 +1,96 @@
+/*
+[System: Events]
+	TSPL Smp CmpLoadEvent2	: Load Company		: True	: Make Dir: @@DestPath
+	onquit					: Close Company		: True 	: Call	: backFunc
+	backupstart				: Load Company		: True 	: Call	: backFunc
+	backup					: NatLang Query		: True 	: Call	: backFunc
+[System: Formula]
+	DestPath: @@DefaultBackupPathDrive+ "\"  + @@DateForm + "\" + @@TimeForm 
+	CoNumber: $$String:($CompanyNumber:Company:##SVCurrentCompany):5 
+	DateForm: $$String:$$MachineDate
+	TimeForm: @@HrsForm + @@MtsForm
+	HrsForm: If $$StringPart:$$MachineTime:0:2 CONTAINS ":" Then $$StringPart:$$MachineTime:0:1 Else $$StringPart:$$MachineTime:0:2
+	MtsForm: if $$StringPart:$$MachineTime:0:2 CONTAINS ":" Then $$StringPart:$$MachineTime:2:2 Else $$StringPart:$$MachineTime:3:2
+	DefaultBackupPathDrive		: If $$SysInfo:IsWindows Then ##SVBackupPath Else ##SVBackupPath
+	NotDisk						: If ##SVBackupDefaultDrivePath contains ":" Then Yes Else No
+	
+[#Part: SV Backup]
+	;On : FOCUS : Yes :Call	: backFunc
+	
+[#Form:SV Backup]	
+	;Background		: "Yellow"
+	;Delete		: On 				: Form Accept		: @@BackUpAllItems 		: Backup Company:"":$$FullListEx:"":ListofAllBackupCompanies:##SVBackupPath:##SVBackupSrc:$Name:$CmpNumStr
+	Add		: On 				: Form Accept		: Yes 		: Call	: backFunc
+[Function:backFunc]
+	5	: Msg Box	: Yes: @@DestPath
+	10: Make Dir	: @@DestPath
+	11: Log			: "Working1"
+	15: Set			: bcDat		: @@DestPath
+	16: Log			: "Working2"
+	20: Backup Company:"":$$FullListEx:"":ListofAllBackupCompanies:##bcDat:##SVBackupSrc:$Name:$CmpNumStr
+	21: Log			: "Working3"
+	
+	
+[System:Variable]
+	bcDat	: ##SVBackupPath
+	
+[Variable:bcDat]
+	Type	: String
+	Persist	: yes
+	
+
+
+;;;;;;;;;;;;;;;;;;;
+[#Menu	: Gateway Of Tally]
+	Add		: Item	: CVmps		: Display	: Cmps
+	
+[Report:Cmps]
+	Form	: Cmps
+	
+[Form:Cmps]
+	Part		: Cmps
+	
+[Part:Cmps]
+	Line		: Cmps
+	Repeat		: Cmps		: CT List of Companies
+	[Line:Cmps]
+		Field		: Cmps
+		[Field:Cmps]
+			Set as			: $name
+[#Collection: List of Primary Companies]
+	
+
+
+*/
+;;;;==================Licence info
+
+[#Menu	: Gateway Of Tally]
+	;Add		: Button	: FetchLicenseInfo		
+	Add		: Button	: BinaryClient		
+[Key: FetchLicenseInfo]
+	Title		: "FetchLicenseInfo"
+	Key			: Alt+f8
+	Action		: Call		: FetchLicenseInfo
+	
+[Key: BinaryClient]
+	Title		: "BinaryClient"
+	Key			: Alt+f7
+	Action		: Call		: BinaryClient:($$LicenseInfo:SerialNumber)
+[Function : FetchLicenseInfo]
+    100 : Log : $$LicenseInfo:SerialNumber ;; Fetch license serial number
+    ;110 : Log : $$LicenseInfo:AccountID ;; Fetch license account ID
+	;115 : Log : $$LicenseInfo:RemoteSerialNumber
+    02 : Log : $$LicenseInfo:IsGold ;; Fetch license type (Silver/Gold/Developer)
+    ;03 : Log : $$LicenseInfo:ExpiryDate ;; Fetch license expiry date (if applicable)
+	;05 : Log : $$LicenseInfo:LicServerDateTime ;; Fetch license expiry date (if applicable)
+	;04	: Log	: $$CurrentLicStatus
+    04 : Return
+	
+[Function:BinaryClient]
+	Parameter	: SrNo		: String
+	Variable	: BinaryUrl	: String
+	10		: Log		: ##SrNo
+	20		: Set		: BinaryUrl		: "http://127.0.0.1/practice/tally.php?name="+##SrNo
+	30		: Browse Url	: ##BinaryUrl
+	;40		: 
+	

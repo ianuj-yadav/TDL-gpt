@@ -1,0 +1,56 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the usage of User Defined Functions in Objects
+-	The function duplicates the vouchers (not done for Invoices - working for 
+	payment, receipt, etc.) and displays the duplicated ones on exit
+-	Report designed to open daybook with narration containing 'duplicated' post the 
+	execution of current function call
+
+Last Modification -
+-	Altered on 09-11-2009
+*/
+
+[Report: Dup Entries in Daybook]
+
+	Use			: Daybook
+	Set			: SVFromDate		: $$FinYearBeg:##StartDate:$StartingFrom:Company:##SVCurrentCompany
+	Set			: SVToDate			: $$FinYearEnd:##StartDate:$StartingFrom:Company:##SVCurrentCompany
+	Set			: ExplodeNarrFlag	: Yes
+	Local		: Collection		: Default	: Add	: Filter	: Dup Filter
+	FetchValues	: Date, VoucherTypeName, Narration
+
+[System: Formula]
+
+	Dup Filter	: $Narration CONTAINS "Duplicated"
+
+[Function: Voucher Duplication]
+
+	10 	: WALK COLLECTION	: TSPL Smp Company Vch
+	20  :   SET             : SVViewName 		: $$SysName:AcctgVchView
+	30	: 	NEW OBJECT 		: Voucher
+	40 	: 	SET VALUE 		: Date				: $Date
+	50 	: 	SET VALUE 		: VoucherTypeName 	: $VoucherTypeName
+	60 	: 	SET VALUE 		: Narration 		: $Narration + " Duplicated"
+	70 	:   SET VALUE       : PersistedView 	: ##SVViewName
+
+	80	: 	WALK COLLECTION : LedgerEntries
+	90	: 		INSERT COLLECTION OBJECT 	: Ledger Entries
+	100	: 		SET VALUE 					: Ledger Name 		: $LedgerName
+	110	: 		SET VALUE 					: IsDeemedPositive 	: $IsDeemedPositive
+	120	: 		SET VALUE 					: Amount 			: $Amount
+	130	: 		SET TARGET 					: ..
+	140	: 	END WALK
+	150	: 	CREATE TARGET
+	160	: END WALK
+
+	170	: DISPLAY	: Dup Entries in Daybook
+	180	: RETURN
+
+[Collection: TSPL Smp Company Vch]
+
+	Source Collection	: Company Vouchers
+	Fetch				: Date, VoucherTypeName, Narration, LedgerEntries.*
+
+;; End-of-File

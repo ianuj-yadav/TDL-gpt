@@ -1,0 +1,31 @@
+---
+title: Petrol Pump Module Main
+type: sample_code
+objects: Menu
+source: Petrol Pump Module Main.txt
+---
+
+# Petrol Pump Module Main
+
+## Source Code
+
+```tdl
+[#Menu:Gateway Of Tally]
+	Add : Key Item : After : @@LOCQuit : "Petrol Pump Module" : P : Menu : PetrolPumpMenu
+	
+[Menu:PetrolPumpMenu]
+	Add		: Key Item	: "Create"			: C		: Menu		: CreateMasters
+	
+[Menu:CreateMasters]
+	Add		: Key Item	: "Petrol Pump Items" 	: I		: Create	: PetrolPumpItems
+	Add		: Key Item	: "Petrol Tank" 		: T		: Create	: PetrolTanks
+	
+
+[Include: Petrol Tank Report.txt]
+[Include: Petrol Pump Objects.txt]
+[Include: Petrol Pump Functions.txt]
+[Include: PetrolPumpItems.txt]
+
+
+
+```

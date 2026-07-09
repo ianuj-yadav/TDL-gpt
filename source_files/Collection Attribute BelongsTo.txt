@@ -1,0 +1,133 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This code demonstrates the usage of BelongsTo Attribute within Collection
+- 	Collection Attribute 'Belongs To' depends on the Child Of Attribute specification. If 
+	Child of is Sundry Debtors and BelongsTo Attribute is set to Yes, all the Objects within 
+	the Sub Groups of Sundry Debtors will be considered in the Collection.
+-	This code displays all the ledgers under the Group Sundry Debtors including the ones under 
+	the Sub Groups within Sundry Debtors.
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: CAB Ledger List]
+
+	Form        : CAB Ledger Form
+	Title       : "Company Ledger List"
+
+[Form: CAB Ledger Form]
+
+	Use         : DSP Template
+	Parts       : CAB Ledger Part
+	Height      : 100% screen
+	Width       : 100% screen
+	Background  : Grey
+	
+[Part: CAB Ledger Part]
+
+	Lines       : CAB Ledger Title, CAB Ledger Line
+	Repeat      : CAB Ledger Line	: CAB My Ledgers
+	CommonBorder: Yes
+	Scroll      : Vertical
+
+    [Line: CAB Ledger Title]
+
+		Use     : CAB Ledger Line
+
+		Local	: Field	: Default			: Type		: String
+		Local	: Field	: Default 			: Align		: Centre
+		Local	: Field	: Default 			: Style		: Normal Bold
+		
+		Local	: Field	: CAB Led No        : Set as    : "Sl. No"
+		Local	: Field	: CAB Led Name	    : Set as    : "Ledger Name"
+		Local	: Field	: CAB Led address 	: Set as    : "Address"
+		Local	: Field	: CAB Led States  	: Set as 	: "State"
+		Local	: Field	: CAB Led Pin 		: Set as   	: "PinCode"
+		Local	: Field	: CAB Led Cont	    : Set as 	: "Contact Person"
+		Local	: Field	: CAB Led Tel 		: Set as 	: "Telephone"
+		Local	: Field	: CAB Led Faxno 	: Set as 	: "Fax"
+		Local	: Field	: CAB Led emailadd	: Set as 	: "Email"
+		Local	: Field	: CAB Led CB		: Set as 	: "Closing Balance"
+		Border  : Thin Top Bottom
+
+    [Line: CAB Ledger Line]
+
+		Fields      : CAB Led No, CAB Led Name,CAB Led Address,CAB Led States,CAB Led Pin, CAB Led Cont, CAB Led Tel, CAB Led Faxno, CAB Led emailadd, CAB Led CB
+		Repeat      : CAB Led CB
+		Option      : AlterOnEnter
+	
+        [Field: CAB Led No]
+
+			Set as      : $$Line
+			Width       : 3
+			Align       : Centre
+			Border      : Thin Right
+			Alter       : Ledger
+			    
+        [Field: CAB Led Name]
+
+			Use         : Name Field
+			Set as      : $Name
+			Border      : Thin Right
+						
+        [Field: CAB LedAddress]
+
+			Set as      : $STPartyFullAdd
+			Width       : 30
+			Border      : Thin Right
+
+        [Field: CAB Led States]
+
+			Set as      : $StateName
+			Width       : 10
+			Border      : Thin Right
+
+        [Field: CAB Led Pin]
+
+			Set as      : $PinCode
+			Width       : 10
+			Border      : Thin Right
+
+        [Field: CAB Led Cont]
+
+			Set as      : $LedgerContact
+			Width       : 10
+            Border      : Thin Right
+
+        [Field: CAB Led Tel]
+
+			Set as      : $LedgerPhone
+			Width 	    : 10
+            Border      : Thin Right
+
+        [Field: CAB Led FaxNo]
+
+			Set as      : $LedgerFax
+			Width       : 10
+			Border      : Thin Right
+
+        [Field: CAB Led EmailAdd]
+
+			Set as      : $Email
+			Width   	: 20
+			Border      : Thin Right
+
+        [Field: CAB Led CB]
+
+            Use         : Amount Forex Field
+			Set as      : $ClosingBalance
+
+[Collection: CAB My Ledgers]
+
+    Type	    : Ledger
+	Child of	: $$GroupSundryDebtors
+	Belongs to	: Yes
+;; 'Belongs To' includes the Ledgers pertaining to the subgroups of the group 
+;; mentioned in Attribute 'Child Of'.
+	Fetch	: Name, STPartyFullAdd, StateName, Pincode, LedgerContact, LedgerPhone, LedgerFax, Email, ClosingBalance
+;; Fetch attribute required for remoting 2.0
+
+;; End-of-File

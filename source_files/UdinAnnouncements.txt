@@ -1,0 +1,72 @@
+[Report:UdinAnnouncements]
+	Form			: UdinAnnouncements
+	
+[Form:UdinAnnouncements]
+	Height		: 100% Page
+	Width		: 100% Page
+	Part		: UdinAnnouncements
+[Part:UdinAnnouncements]
+	Line		: UdinAnnouncementsTitle, UdinAnnouncements
+	Repeat		: UdinAnnouncements		: UdinAnnouncements
+	Border		: Thin Bottom
+	Scroll		: Vertical
+	Common Borders		: Yes
+	
+	[Line:UdinAnnouncementsTitle]
+		Use		: UdinAnnouncements
+		Local	: Field	: Default	: Style		: Normal Bold
+		Local	: Field	: Default	: Type		: String
+		Local	: Field	: Default	: Color		: Black
+		Local	: Field	: UdinAnnouncementsDate		: Info	: $$LocaleString:"Date"
+		Local	: Field	: UdinAnnouncementsLink		: Info	: $$LocaleString:"Link"
+		Local	: Field	: UdinAnnouncementsIsNew	: Info	: $$LocaleString:"Is New"
+		
+
+	[Line:UdinAnnouncements]
+		
+		Field			: UdinAnnouncementsDate, UdinAnnouncementsLink, UdinAnnouncementsIsNew
+		Border			: Thin Bottom
+		Key   			: AnnounceOpen
+			
+		[Field: UdinAnnouncementsDate]
+			Set as			: $date
+			Border			: Thin Right
+			Width			: 15
+			Set Always		: Yes
+
+		[Field: UdinAnnouncementsLink]
+			Set as			: $url_name
+			Full Width		: Yes
+			Set Always		: Yes
+			Color 			: Blue
+			
+		
+		[Field: UdinAnnouncementsIsNew]
+			Set as			: $is_new
+			Set Always		: Yes
+			Color 			: Smalt Blue
+			Border			: Thin Left
+			Width			: 6
+		
+			
+		
+		
+	[Key: AnnounceOpen]
+		Key     	: Enter
+		Action Ex	: Set Var1	: Set			: UdinAnnouncementLink		: $link
+		ActionEx	: VchRpt	: Browse Url	: ##UdinAnnouncementLink
+
+
+[Collection:UdinAnnouncements]
+	Data Source     	: HTTP JSON			: @@WorkingUrl+"udinannouncements"
+	JSON Object Path	: announcements		: 1				; Main object path
+	Client Only			: Yes	
+	
+
+[Variable:UdinAnnouncementLink]
+	Type			: String
+	Persistent		: Yes
+
+[System: Variable]
+	UdinAnnouncementLink		: ''
+	

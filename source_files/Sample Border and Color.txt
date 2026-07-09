@@ -1,0 +1,75 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This program illustrates the Border Definition, Default Functions and Field Attributes 
+	'Color', 'Inactive' and 'Background'
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Sample Border and Color]
+
+	Form	: Sample Border and Color
+
+[Form: Sample Border and Color]
+
+	Parts	: Sample Border and Color
+
+[Part: Sample Border and Color]
+
+	Lines	: SBC Input String, SBC Calculate String Length, SBC String Length Odd Or Even
+
+	[Line: SBC Input String]
+
+		Fields	: Long Prompt, SBC Input String
+
+		Local	: Field	: Long Prompt	: Info		: "Please enter your string	:"
+
+		[Field: SBC Input String]
+
+			Use		: Name Field
+
+	[Line: SBC Calculate String Length]
+
+		Fields	: Long Prompt, SBC Calculate String Length
+
+		Local	: Field	: Long Prompt	: Set as	: "Number of characters in the string are - "
+		Local	: Field	: Long Prompt	: Inactive	: $$StringLength:#SBCInputString < 1
+		Local	: Field	: Long Prompt	: Color		: Blue
+		Local	: Field	: Long Prompt	: Style		: Normal Bold
+		Border	: White Thick Box
+
+		[Field: SBC Calculate String Length]
+
+			Set as		: $$StringLength:#SBCInputString
+			Inactive	: $$StringLength:#SBCInputString < 1
+			Set Always	: Yes
+			Skip		: Yes
+			Color		: Blue
+			Width		: 5
+
+	[Line: SBC String Length Odd Or Even]
+
+		Fields	: SBC String Length Odd Or Even
+
+		[Field: SBC String Length Odd Or Even]
+
+			Set as		: If $$IsOdd:#SBCCalculateStringLength Then "There are odd number of characters in the string" +
+						  Else "There are even number of characters in the string"
+			Inactive	: $$IsEmpty:#SBCInputString
+			Set Always	: Yes
+			Skip		: Yes
+			Color		: If $$IsOdd:#SBCCalculateStringLength Then "Red" Else "Green"
+			Style		: Normal Bold
+			Background	: Aquamarine
+			Width		: 50% Page
+			Align		: Centre
+
+[Border: White Thick Box]
+
+	Use		: Thick Box		;; Default Border used here
+	Color	: White
+
+;; End-of-File

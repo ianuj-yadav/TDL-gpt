@@ -1,0 +1,27 @@
+[#Menu:Gateway of Tally]
+	Add	: Item		: String Length 		: Alter		: StringLength
+	
+[Report:StringLength]
+	Form		: StringLength
+	
+[Form:StringLength]
+	Part		: StringLength
+	
+[Part:StringLength]
+	Line		: StringLength
+	
+	[Line:StringLength]
+		Field		: StringLength, StringLength2
+		[Field:StringLength]
+			Use			: NameField
+			Table		: Ledger
+			Show Table	: Always
+			
+			
+
+		[Field:StringLength2]
+			Width		: 100
+			Line		: 0
+			Set Always	: Yes
+			Set as		: $PinCode:Ledger:#StringLength
+			

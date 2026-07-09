@@ -1,0 +1,19 @@
+# Python & Virtual Environments
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# RAG / Index Generated Files (Large files > 50MB)
+kb_index.faiss
+kb_metadata.json
+tdl_knowledge_base.json
+kb_backups/
+*.log
+
+# OS & Ide
+.DS_Store
+Thumbs.db
+.vscode/

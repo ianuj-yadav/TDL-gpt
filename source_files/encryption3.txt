@@ -1,0 +1,179 @@
+;; create a collection to get remote data
+
+[Collection:Transactions1]
+	;Data Source			: HTTP JSON	: "http://dummy.restapiexample.com/api/v1/employees" ;; server url 
+	Data Source 		: File JSON 	: "E:\tirlok\Projects\BinarySoft Project\Encryption\encryption3.json";"E:\tirlok\tdl files\Gold Rate\Gold Rate Json File.json" 	; File Path/Name
+	;Data Source:HTTP JSON:"https://jsonplaceholder.typicode.com/users"
+	JSON Object Path	: "encryption:1"  ;; path to block we want to fetch 
+	;Client Only			: Yes
+	
+[Collection:HttpJsonColl]
+	Source Collection	: Transactions1
+	Fetch				: Name,value,asciival
+	;Filter				: name0
+	
+[System:Formula]
+	name0		: $name=#EncryptStr
+[#Menu:GatewayOf Tally]
+	Add		: Item	: Encryption		: Display		: Encryption
+	Add		: Item	: EncryptStr		: Alter			: EncryptStr
+	
+	
+[Report:Encryption]
+	Form		: Encryption
+	;Collection	: HttpJsonColl
+[Form:Encryption]
+	Part		: Encryption
+	
+[Part:Encryption]
+	Line		: Encryption
+	Repeat		: Encryption	: Transactions1
+	Scroll		: Vertical
+	[Line:Encryption]
+		Field		: Encryption1,Encryption2
+		[Field:Encryption1]
+			;Table		: Transactions1$MyVoucherCollection:VoucherType
+			Set as		: $name
+			Width		: 10
+			
+		[Field:Encryption2]
+			;Table		: Transactions1$MyVoucherCollection:VoucherType
+			Set as		: $value
+			Width		: 10
+			
+
+[Report:EncryptStr]
+	Form		: EncryptStr
+	;Collection	: Transactions1
+[Form:EncryptStr]
+	Part		: EncryptStr
+	
+[Part:EncryptStr]
+	Line		: EncryptStr, DecryptStr
+	
+	[Line:EncryptStr]
+		Field		: EncryptStr,Encryption21
+		[Field:EncryptStr]
+			;Table		: Transactions1;$MyVoucherCollection:VoucherType
+			;Show Table	: Always
+			Use			: Name Field
+			;Width		: 10
+			
+		[Field:Encryption21]
+			;Table		: Transactions1$MyVoucherCollection:VoucherType
+			Set as		: $$EncryptString;$$GetNameValuesFunction;$$CollectionField:$value:2:HttpJsonColl
+			Width		: 100
+			Set Always	: yes
+			
+	[Line:DecryptStr]
+		Field		: DecryptStr,DecryptStr21
+		[Field:DecryptStr]
+			;Table		: Transactions1;$MyVoucherCollection:VoucherType
+			;Show Table	: Always
+			
+			Width		: 100
+			
+		[Field:DecryptStr21]
+			Use			: Name Field
+			Set as		: $$DecryptString;$$GetNameValuesFunction;$$CollectionField:$value:2:HttpJsonColl
+			;Width		: 10
+			Set Always	: yes
+			
+[Function:EncryptString]
+	Parameter		: InputString	: String	: #EncryptStr
+	Variable		: OutputString	: String
+	Variable		: TestString	: String
+	Variable		: Counter		: Number
+	Return			: String
+	Log		: Log		: ##InputString
+	Log1	: Log		: $$StringLength:##InputString
+	100		: Set		: Counter	: 0
+	200		: Set		: OutputString	: ""
+	300		: WHILE 	: ##Counter < $$StringLength:##InputString
+	1100	: Set		: TestString	: ""
+	1200	: Set		: TestString	: $$StringPart:##InputString:##Counter:1
+	1300	: Log		: ##TestString+"==="+$$GetNameValuesFunc:##TestString
+	1600	: Set		: TestString	: $$GetNameValuesFunc:##TestString
+	2100		: Set		: Counter	: ##Counter+1
+	2600	: Set		: OutputString	: ##OutputString+##TestString
+	10000 : ENDWHILE
+
+	10100 : RETURN : ##OutputString
+
+[Function:DecryptString]
+	Parameter		: InputString	: String	: #DecryptStr
+	Variable		: OutputString	: String
+	Variable		: TestString	: String
+	Variable		: Counter		: Number
+	Return			: String
+	Log		: Log		: ##InputString
+	Log1	: Log		: $$StringLength:##InputString
+	100		: Set		: Counter	: 0
+	200		: Set		: OutputString	: ""
+	300		: WHILE 	: ##Counter < $$StringLength:##InputString
+	1100	: Set		: TestString	: ""
+	1200	: Set		: TestString	: $$StringPart:##InputString:##Counter:3
+	1600	: Set		: TestString	: $$GetValueNamesFunc:##TestString
+	2100		: Set		: Counter	: ##Counter+3
+	2600	: Set		: OutputString	: ##OutputString+##TestString
+	10000 : ENDWHILE
+
+	10100 : RETURN : ##OutputString
+
+
+
+[Function	: GetNameValuesFunc]
+
+
+Parameter	: pvNameValue		: String	;: #EncryptStr
+Return		: String
+;
+;Log	: Log	: ##pvNameValue
+;log1 : Log	: $$NumItems:HttpJsonColl
+
+100 : Walk Collection		: HttpJsonColl
+;101 : Log		:$$Sprintf:"PrintName >> %s>> %s":$$LoopIndex:$name
+110 : 		If	: $name = ##pvNameValue
+120 :			Return		:$value
+140 :		End If	
+150 : End Walk 
+
+[Function	: GetValueNamesFunc]
+
+
+Parameter	: pvNameValue		: String	;: #EncryptStr
+Return		: String
+;
+;Log	: Log	: ##pvNameValue
+;log1 : Log	: $$NumItems:HttpJsonColl
+
+100 : Walk Collection		: HttpJsonColl
+;101 : Log		:$$Sprintf:"PrintName >> %s>> %s":$$LoopIndex:$name
+110 : 		If	: $value = ##pvNameValue
+120 :			Return		:$name
+140 :		End If	
+150 : End Walk 
+
+
+[Function	: GetNameValuesFunction]
+Parameter	: pvNameValue		: String	: #EncryptStr
+Return		: String
+;
+;Log	: Log	: ##pvNameValue
+;log1 : Log	: $$NumItems:HttpJsonColl
+
+100 : Walk Collection		: HttpJsonColl
+;101 : Log		:$$Sprintf:"PrintName >> %s>> %s":$$LoopIndex:$name
+110 : 		If	: $name = ##pvNameValue
+120 :			Return		:$value
+140 :		End If	
+150 : End Walk 
+
+
+
+
+
+
+;;		~`!@#$%^&*()_-+={}|":<>?/.,;'[]\	
+;;		vlnsazdfmrgskplnaxzbsqvixybvlpchzcsqauorpdyfgmbvjmckrblzvlnsazdfvlnsazdfvlnsazdfvlnsazdftsqiwzmkvlnsazdfvlnsazdfvlnsazdfvlnsazdfvlnsazdfyxbvudlwnhtasbqywzoivlqtzrdgfjkujhlbywrpvlnsazdfvlnsazdfvlnsazdfvlnsazdfvlnsazdfeihzwdmvwqjkbovmflsbqdxktrvnyjsc
+;;		.!@#$%^...._.....|":<>.....'[]\

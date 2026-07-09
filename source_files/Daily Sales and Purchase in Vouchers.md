@@ -1,0 +1,41 @@
+---
+title: Daily Sales and Purchase in Vouchers
+type: sample_code
+objects: Part, Line
+source: Daily Sales and Purchase in Vouchers.txt
+---
+
+# Daily Sales and Purchase in Vouchers
+
+## Source Code
+
+```tdl
+;; This code will show the amount without Gst 
+
+[#Form:VchBasic InvoiceMode]
+	Add		: Parts		: After	: VchTitle2		: PurchaseSalesDailyTotal
+	
+[Part:PurchaseSalesDailyTotal]
+	Lines		: PurchaseDaily, SalesDaily
+	Horizontal Align	: Center
+	
+	[Line:PurchaseDaily]
+		Fields		: MediumPrompt, AmountField
+		Local		: Field		: MediumPrompt	: Info	: $$LocaleString:"Today's Purchase Amount"
+		Local		: Field		: AmountField	: Set as	: $$AsAmount:@@TodayPurchaseAmt
+		Local		: Field		: AmountField	: Set Always	: Yes
+		
+	[Line:SalesDaily]
+		Fields		: MediumPrompt, AmountField
+		Local		: Field		: MediumPrompt	: Info	: $$LocaleString:"Today's Sales Amount"
+		Local		: Field		: AmountField	: Set as	: $$AsAmount:@@TodaySalesAmt
+		Local		: Field		: AmountField	: Set Always	: Yes
+		
+
+
+[System:Formulae]
+	TodayPurchaseAmt	: $$FromValue:$Date:$$ToValue:$Date:$DebitTotals:Group:$$GroupPurchase
+	TodaySalesAmt		: $$FromValue:$Date:$$ToValue:$Date:$CreditTotals:Group:$$GroupSales
+;	TodayPurchaseAmt	: $$FromValue:##SvCurrentDate:$$ToValue:##SvCurrentDate:$DebitTotals:Group:$$GroupPurchase
+;	TodaySalesAmt		: $$FromValue:##SvCurrentDate:$$ToValue:##SvCurrentDate:$CreditTotals:Group:$$GroupSales
+```

@@ -1,0 +1,140 @@
+;;=====================================================================
+;; Simple Interest Calculator - Live UI Package
+;;=====================================================================
+
+;; --- 1. MENU ENTRY ---
+[#Menu: Gateway of Tally]
+    Add : Key Item : Before : @@locQuit : Simple Interest Calculator : S : Alter : SimpleInterestReport
+
+;; --- 2. VARIABLES DEFINITION ---
+[System: Variable]
+    SI_Principal : 0
+    SI_Rate      : 0
+    SI_Time      : 0
+
+[Variable: SI_Principal]
+    Type : Amount
+
+[Variable: SI_Rate]
+    Type : Number
+
+[Variable: SI_Time]
+    Type : Number
+
+;; --- 3. REPORT ---
+[Report: SimpleInterestReport]
+    Form     : SimpleInterestForm
+    Title    : "Simple Interest Calculator"
+    Variable : SI_Principal, SI_Rate, SI_Time
+
+;; --- 4. FORM ---
+[Form: SimpleInterestForm]
+    Width        : 40% Screen
+    Space Top    : 1 inch
+    Space Left   : 1 inch
+    Space Right  : 1 inch
+    Space Bottom : 1 inch
+    Parts        : SI_Header, SI_Body, SI_Footer
+
+;; --- 5. HEADER ---
+[Part: SI_Header]
+    Lines        : SI_TitleLine
+    Space Bottom : 0.5 inch
+
+[Line: SI_TitleLine]
+    Fields : SI_TitleField
+
+[Field: SI_TitleField]
+    Set as : "Simple Interest Calculator"
+    Style  : Large Bold
+    Align  : Center
+    Width  : Full
+
+;; --- 6. BODY ---
+[Part: SI_Body]
+    Lines : SI_PrincipalLine, SI_RateLine, SI_TimeLine, SI_ResultLine
+    Space Bottom : 5 mms
+
+;; Principal Input
+[Line: SI_PrincipalLine]
+    Fields       : SI_Prompt, SI_PrincipalField
+    Space Bottom : 2 mms
+    Local        : Field : SI_Prompt : Set as : "Principal (Rs) :"
+
+[Field: SI_Prompt]
+    Use    : Name Field
+    Width  : 40% Page
+    Style  : Normal Bold
+
+[Field: SI_PrincipalField]
+    Use      : Amount Field
+    Variable : SI_Principal
+    Modifies : Yes
+    Width    : 60% Page
+    Border   : Thin Box
+
+;; Rate Input
+[Line: SI_RateLine]
+    Fields       : SI_Prompt, SI_RateField
+    Space Bottom : 2 mms
+    Local        : Field : SI_Prompt : Set as : "Rate (% per annum) :"
+
+[Field: SI_RateField]
+    Use      : Number Field
+    Variable : SI_Rate
+    Modifies : Yes
+    Width    : 60% Page
+    Border   : Thin Box
+
+;; Time Input
+[Line: SI_TimeLine]
+    Fields       : SI_Prompt, SI_TimeField
+    Space Bottom : 5 mms
+    Local        : Field : SI_Prompt : Set as : "Time (years) :"
+
+[Field: SI_TimeField]
+    Use      : Number Field
+    Variable : SI_Time
+    Modifies : Yes
+    Width    : 60% Page
+    Border   : Thin Box
+
+;; Live Result
+[Line: SI_ResultLine]
+    Fields       : SI_Prompt, SI_ResultField
+    Local        : Field : SI_Prompt : Set as : "Interest (Rs) :"
+
+[Field: SI_ResultField]
+    Use    : Amount Field
+    ;; Fixed: Now pulls directly from the active UI fields for instant live math
+    Set as : (#SI_PrincipalField * #SI_RateField * #SI_TimeField) / 100
+    Style  : Large Bold
+    Color  : Blue
+    Width  : 60% Page
+    Border : Thin Box
+    Skip   : Yes
+
+;; --- 7. FOOTER (CLEAR BUTTON) ---
+[Part: SI_Footer]
+    Lines     : SI_ClearLine
+    Space Top : 0.5 inch
+
+[Line: SI_ClearLine]
+    Fields : SI_ClearButtonField
+
+[Field: SI_ClearButtonField]
+    Set as : "Clear"
+    Style  : Button
+    Align  : Center
+    Width  : 40% Page
+    Key    : SI_ClearAction
+
+;; --- 8. ACTION & FUNCTION LOGIC ---
+[Key: SI_ClearAction]
+    Key    : C
+    Action : Call : SI_ClearVariables
+
+[Function: SI_ClearVariables]
+    10 : SET : SI_Principal : 0
+    20 : SET : SI_Rate      : 0
+    30 : SET : SI_Time      : 0

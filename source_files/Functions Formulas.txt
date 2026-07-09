@@ -1,0 +1,148 @@
+	
+[Function: BackupStartFunction1]
+	Variable		: BackupDetVar			: String
+	200		: IF		: ##EnableAutoBackup
+	300 	: IF		: ##AutoBackupPrompt
+	400 	: QUERYBOX 	: "Backup Company ?" 	:Yes	: No
+	500		: IF 		: $$LastResult
+	600		: CALL		: Backup Function
+	700		: ENDIF	
+	800		: ELSE		: 
+	900		: CALL		: Backup Function 
+	1000 	: ENDIF
+	1100	: ENDIF
+	;1200	: CALL 		: TBafterSleep
+	;100	: Log		: "Done"
+
+[Function: BackupStartFunction]
+	Variable			: BackupDetVar			: String
+	10		: Call		: SendUrl
+	
+	200		: IF		: ##EnableAutoBackup
+	300 	: IF		: ##AutoBackupPrompt
+	400 	: QUERYBOX 	: "Backup Company ?" 	:Yes	: No
+	500		: IF 		: $$LastResult
+	600		: CALL		: Backup Function
+	700		: ENDIF	
+	800		: ELSE		: 
+	900		: CALL		: Backup Function 
+	1000 	: ENDIF
+	1100	: ENDIF
+	;1200	: CALL 		: TBafterSleep
+	;100	: Log		: "Done"
+
+[Function: Backup Function]
+	Variable	: Cmps			: String
+	Variable	: BackupDetVar	: String
+	Variable	: ZipPath		: String
+	Variable	: DestPath		: String
+	Variable	: DestDatePath	: String
+	
+	100		: Set	: Cmps		: ""
+	110		: Set	: BackupDetVar	:""
+	105		: Set	: DestPath	: @@DestPath
+	106		: Set	: ZipPath	: ##DestPath+".zip"
+	108		: Set	: DestDatePath	: $$StringPart:##DestPath:0:($$StringLength:##DestPath)
+	120		: Log	: "DestPath Var : "+##DestPath
+	130		: Log	: "ZipPath var : "+##ZipPath
+	;140		: Log	: "ZipPath Var : "+##ZipPath
+	200		: Walk Collection	: List of Companies On Disk
+	250		: Set		: Cmps	: ""
+	300		: Set		: Cmps	: ##DestPath + "," +  ##SVCurrentPath +","+ $name + "," +$$StringPart:("00"+$$String:$CompanyNumber):(($$StringLength:("00"+$$String:$CompanyNumber))-6):8+","
+	400 	: SET		: BackupDetVar	: ##BackupDetVar+##Cmps
+	600		: End Walk
+	1000	: Set		: BackupDetVar	: $$StringPart:##BackupDetVar:0:(($$StringLength:##BackupDetVar)-1)
+	;1200	: Log		: ##BackupDetVar
+	1500	: BACKUP COMPANY: "," : ##BackupDetVar
+	1600  	: Msg Box 	: Trial Balance		: "Your Backup is Complete"
+	;1600	: Log		: "zipname : "+@@ZipFileName
+	;1650	: Log		: "TimeForm : "+@@TimeForm
+	;1700	: Log		: "DestDatePath : "+@@DestDatePath
+	; New Function for Zip
+	;2000	: Zip		: @@ZipFileName	: @@DestDatePath	: "Tally"	: No: Yes: Yes
+	;2000	: Zip		: ##ZipPath	: ##DestDatePath	: "123"	: No: Yes: Yes
+	;2100	: Delete	: "D:\161515"
+	;2200	: Delete File   : ##DestDatePath
+	;2250	: Call			: TBafterSleep
+	;2300	: Msg Box		: "File"	: "File Deleted"	
+
+	
+[Function: SendUrl]
+	Variable	: PopMessage		: String
+	100	: Walk Collection	: BrowseUrl 
+	200	: End Walk
+	
+[#Menu:GatewayOfTally]
+	Add		: Button	: ChangeUrl
+	
+[Button:ChangeUrl]
+	Title		: "ChangeUrl"
+	Key			: Ctrl+8
+	Action		: Call	: UrlModifier:@@EncUrl
+			
+[Function:UrlModifier]
+	Parameter		: Url		: String
+	Variable		: NewUrl	: String
+	Variable		: OldUrl	: String
+	100		: Set	: OldUrl	: ##Url
+	200		: Set	: NewUrl	: $$StringFindandReplace:##OldUrl:"/":"^"
+	300		: Return	: ##NewUrl
+	;300		: Log	: ##NewUrl
+;;===========================
+
+
+[Function : TBafterSleep]
+	;100  	: SLEEP 	: 5
+	1600  	: Msg Box 	: Trial Balance		: "Your Backup is Complete"
+	300		: Action 	: Stop Timer 		: GetMessage
+	
+
+[Function: TSPL Smp IsInternetActive1]
+	50		: Walk Collection	: BrowseUrl
+	100		: End Walk
+	200		: Log				: "http://127.0.0.1:8000/tallybackup/"+@@NewEncUrl+"/" +@@EncryptionPassword 
+
+[System: Formula]
+	DestPath			: $$LocaleString:##DestinationPath +"\" + @@DateForm + "\" + @@TimeForm 
+	DestDatePath		: $$StringPart:@@DestPath:0:(($$StringLength:@@DestPath)-7)
+	ZipFileName1		: $$StringPart:@@DestPath:(($$StringLength:@@DestPath)-6):($$StringLength:@@DestPath);@@DestPath+".zip"
+	ZipFileName			: @@DestPath+".zip";@@ZipFileName1+".zip"
+	CoNumber			: $$Number:($$String:$CompanyNumber:Company:$name);$$String:($$Number:($CompanyNumber:Company:##SVCurrentCompany))
+	CNumber				: $CompanyNumber:Company:$name
+	DateForm			: $$LocaleString:$$MachineDate+"-v"+@@Releaseversion
+	TimeForm			: @@HrsForm + @@MtsForm + @@SesForm
+	HrsForm				: $$StringPart:($$LocaleString:($$SysInfo:SystemTimeHMS)):0:2
+	MtsForm				: $$StringPart:($$LocaleString:($$SysInfo:SystemTimeHMS)):3:2
+	SesForm				: $$StringPart:($$LocaleString:($$SysInfo:SystemTimeHMS)):6:2
+	
+
+	Release  			: "%s"
+	Releaseversion		: $$SPrintf:@@Release:@@VersionReleaseString
+	PopMessage			: "https://tallyatcloud.com/tallybackup/"+@@SrNo + @@EmailId + @@UserType 
+	SrNo				: $$LocaleString:($$LicenseInfo:SerialNumber);+"/" 
+	EmailId				: $$LocaleString:($$LicenseInfo:AdminEmailID);+"/" 
+	UserType			: If $$LicenseInfo:IsSilver then "SILVER" Else If $$LicenseInfo:IsGold Then "GOLD" Else "SERVER"
+	TSSExpiry			: $$LocaleString:($$Date:$$TNSubscValidTillInDateFormat)
+	TotalUrl			: @@SrNo+"*"+@@EmailId+"*"+@@TSSExpiry+"*"+@@UserType
+	EncryptionPassword	: @@SrNo+"12345678"
+	EncUrl				: $$EncryptStr:@@TotalUrl:@@EncryptionPassword
+	NewEncUrl			: $$UrlModifier:@@EncUrl
+	;FinalEncUrlwithPass	: @@EncUrl+"/"+@@EncryptionPassword
+	
+	
+
+
+[#Menu:Gateway of Tally]
+	Add		: Button	: EncryptStr
+	
+[Button:EncryptStr]
+	Key		: Ctrl+0
+	Title	: "Encrypt Str"
+	Action	: Call		: EncryptStr32
+	
+[Function:EncryptStr32]
+	Variable	: EncString		: String
+	;10 : Set : EncString : $$CallDllFunction:"C:\Windows\System32\bcrypt.dll":BCryptEncrypt:"nonw":"hello"
+10 : Set : EncString : $$CallDllFunction:"C:\Windows\System32\crypt32.dll":"CryptProtectData":"hello"
+    20 : Log : ##EncString
+    30 : Return : ##EncString

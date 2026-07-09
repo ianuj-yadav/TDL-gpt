@@ -1,0 +1,47 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This program demonstrates the impact of 'Height' at Part & 'Width' at Field Definition
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Part Height Field Width]
+
+	Form	: Part Height Field Width
+	
+[Form: Part Height Field Width]
+
+	Part	: PHFW Part1, PHFW Part2
+		
+[Part: PHFW Part1]
+
+	Lines	: PHFW Part1 Line
+	Height	: 50 mms	
+
+	[Line: PHFW Part1 Line]
+	
+		Fields	: PHFW Part1 Field
+			
+		[Field: PHFW Part1 Field]
+		
+			Set As	: "This Part Height has been set to 50 mms"
+			Width	: 20 cms
+			
+[Part: PHFW Part2]
+	
+	Lines	: PHFW Part2 Line
+	Height	: 25 mms
+	
+	[Line: PHFW Part2 Line]
+	
+		Fields	: PHFW Part2 Field
+			
+		[Field: PHFW Part2 Field]
+		
+			Set As	: "This Part Height has been set to 25 mms"
+			Width	: 20 cms
+
+;; End-of-File

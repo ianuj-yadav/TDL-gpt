@@ -1,0 +1,7 @@
+[#Menu:Gateway of Tally]
+	Add		: Button	: DeleteFolder
+	
+[Button:DeleteFolder]
+	Title		: "Delete Folder"
+	Key			: Ctrl + 0
+	Action		: Message Box	: "Hello"	: "This is generated message Box"	

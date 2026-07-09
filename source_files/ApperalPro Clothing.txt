@@ -1,0 +1,234 @@
+
+[#Field: VCH StockItem]
+	Width	: 20% Page
+[#Field: VCH ItemTitle]
+	Width	: 20% Page
+
+[#Line: EI ColumnOne]
+	Add:Field:After:VCH ItemTitle:SizeOfItem
+	
+
+	[Field:SizeOfItem]
+		Fields		: GarmentSize1, GarmentSize2, GarmentSize3, GarmentSize4, GarmentSize5, GarmentSize6, GarmentSize7, GarmentSize8, GarmentSize9
+		;Invisible	: Not ##VaaraClotingConfig
+		
+
+		[Field:GarmentSize1]
+			Use			: Name Field
+			Set as		: "34"
+			Type		: String
+			Width		: 4% Page
+			Border		: Thin Left Right
+			Align		: Center
+			Skip		: Yes
+			Case		: Upper Case
+					
+
+		[Field:GarmentSize2]
+			Use         : GarmentSize1	
+			Set as		: "36"
+
+		[Field:GarmentSize3]
+			Use         : GarmentSize1	
+			Set as		: "38"
+
+		[Field:GarmentSize4]
+			Use         : GarmentSize1	
+			Set as		: "40"
+
+		[Field:GarmentSize5]
+			Use        	: GarmentSize1	
+			Set as		: "42"
+
+		[Field:GarmentSize6]
+			Use         : GarmentSize1	
+			Set as		: "44"
+
+		[Field:GarmentSize7]
+			Use         : GarmentSize1	
+			Set as		: "46"
+
+		[Field:GarmentSize8]
+			Use         : GarmentSize1	
+			Set as		: "48"
+
+		[Field:GarmentSize9]
+			Use         : GarmentSize1	
+			Set as		: "50"
+
+		 
+		
+			
+
+[#Line: EI InvInfo]
+	Add	:Fields : After	: VCH StockItem	: GarmentSizeDtlsAll
+	
+	
+	[Field:GarmentSizeDtlsAll]
+		Fields	: GarmentSize1Dtls, GarmentSize2Dtls, GarmentSize3Dtls, GarmentSize4Dtls, GarmentSize5Dtls, GarmentSize6Dtls,+
+		GarmentSize7Dtls, GarmentSize8Dtls, GarmentSize9Dtls, GarmentSize10Dtls, GarmentSize11Dtls
+		;Invisible	: Not ##VaaraClotingConfig
+;		[Field:GarmentColor]
+;			Use			: Name Field
+;			Storage		: GarmentColor
+;			Align		: Right
+;			Skip		: $$IsEndOfList:#VCHStockItem
+;			Table		: ColorNameCollection
+;			Show Table	: Always
+;			Width		: 8% Page
+;			
+;			
+
+		
+		[Field:GarmentSize1Dtls]
+			Width		: 4% Page
+			Storage		: GarmentSize1
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+			
+
+		[Field:GarmentSize2Dtls]
+			Width		: 4% Page
+			Storage		: GarmentSize2
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+			
+
+		[Field:GarmentSize3Dtls]
+			Width		: 4% Page
+			Storage		: GarmentSize3
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+			
+		[Field:GarmentSize4Dtls]
+			Width		: 4% Page
+			Storage		: GarmentSize4
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+			
+
+		[Field:GarmentSize5Dtls]
+			Width		: 4% Page
+			Storage		: GarmentSize5
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+			
+
+		[Field:GarmentSize6Dtls]
+			Width		: 4% Page
+			Storage		: GarmentSize6
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+			
+
+		[Field:GarmentSize7Dtls]
+			Width		: 4% Page
+			Storage		: GarmentSize7
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+			
+
+		[Field:GarmentSize8Dtls]
+			Width		: 4% Page
+			Storage		: GarmentSize8
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+			
+
+		[Field:GarmentSize9Dtls]
+			Width		: 4% Page
+			Storage		: GarmentSize9
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+			
+
+		[Field:GarmentSize10Dtls]
+			Width		: 4% Page
+			Storage		: GarmentSize10
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+			
+
+		[Field:GarmentSize11Dtls]
+			Width		: 4% Page
+			Storage		: GarmentSize11
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+			
+
+		
+
+[#Field:VCH BilledQty ]
+	Delete		: Option
+	Use         : Qty Primary Field
+    Width       : @@VCHQtyWidth
+    Set always  : Yes
+    Storage     : Billed Qty
+    Delete		: Inactive    
+   
+    Style       : Small
+    Delete		: Key       
+	Delete		: Sub Form	   
+	Delete		: Switch		
+	Set as		: #GarmentSize1Dtls+#GarmentSize2Dtls+#GarmentSize3Dtls+#GarmentSize4Dtls+#GarmentSize5Dtls+#GarmentSize6Dtls+#GarmentSize7Dtls+#GarmentSize8Dtls+#GarmentSize9Dtls+#GarmentSize10Dtls+#GarmentSize11Dtls
+	;Set as		: $GarmentSize1+$GarmentSize2
+	Set Always	: Yes
+	Skip		: Yes
+	
+
+
+[#Line: EI ColumnOne]
+	Add		: Right Fields		: After		: VchDiscTitle	: VchGstTitle
+	
+[Field:VchGstTitle]
+	Width       : @@VCHDiscountWidth
+    Setas       : $$LocaleString:"Gst %"
+    Style       : Small
+    Align       : Centre
+	Skip        : Yes
+    Fixed       : Yes
+	;Invisible	: Not ##VaaraClotingConfig
+	
+
+[#Line: EI InvInfo]
+	Add		: Right Fields		: After		: VCH Discount	: Vch Gst
+	
+[Field:Vch Gst]
+	Use         : Number Field
+    Width       : @@VCHDiscountWidth
+    Align       : Right
+    Style       : Normal Bold
+    Storage     : GstPercent
+    Set always  : Yes
+    Format      : "NoZero,Percentage"
+	Set as		:  $GSTIGSTRate:StockItem:$StockItemName
+	Skip		: Yes
+	;Invisible	: Not ##VaaraClotingConfig
+	
+
+
+
+
+

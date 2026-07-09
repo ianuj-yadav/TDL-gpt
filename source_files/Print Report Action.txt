@@ -1,0 +1,114 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This Sample TDL demonstrates the enhancements in Action 'Print Report' wherein
+	some other report can be printed based on the Objects selected within the current
+	report.  We have taken an example of Payslip printing for selected employees.  A 
+	inbuilt Collection named 'Parameter Collection' contains the user selection which 
+	needs to be attached to the report being printed.
+
+Last modification -
+-	Altered on 09-11-2009
+*/
+
+[Report: Employee List]
+
+	Form 		: Employee List
+	Variable	: SVFromDate, SVFromDate
+    Set     	: SVFromDate    : $$MonthStart:##SVCurrentDate
+    Set     	: SVToDate      : $$MonthEnd:##SVCurrentDate
+
+[Form: Employee List]
+
+	Part		: Employee List Title, Employee List Detail
+	Buttons 	: Print Selected Payslips
+	Height		: 100% Screen
+	Width		: 100% Screen
+	Background	: SysLightClr
+
+[Part: Employee List Title]
+
+	Line	: Note, Employee List Title
+	Local	: Line : Note	: Local	: Field	: Name Field	: Set As	: "(Please select the employees by pressing Space Bar and Click on the Button 'Print Selected Payslip')"
+	Local	: Line : Note	: Local	: Field	: Name Field	: Width		: 100% Page
+
+	[Line: Employee List Title]
+
+		Use		: Employee List
+
+		Local 	: Field	: EmpNameField	: Info	: "Employee Name"
+		Local 	: Field	: EmpDeptName	: Info	: "Department"
+		Local 	: Field	: EmpNameMail	: Info	: "Employee E-Mail ID"
+		Local	: Field	: Default		: Style	:  Normal Bold
+		Border	: Thick Box	
+
+[Part: Employee List Detail]
+
+	Line			: Employee List
+	Repeat 			: Employee List 	: Employees
+	Scroll 			: Vertical
+	Common Borders	: Yes
+
+	[Line:Employee List]
+	
+		Field 	: EmpNameField, EmpDeptName, EmpNameMail
+
+		[Field : EmpNameField]
+		
+			Use		: Name Field
+			Set as	: $Name
+			Border	: Thin Right
+			Style	: Normal
+			
+		[Field : EmpDeptName]
+		
+			Use		: Name Field
+			Set as	: $Parent
+			Border	: Thin Right
+			Style	: Normal		
+
+		[Field : EmpNameMail]
+		
+			Use		: Short Name Field
+			Set as  : $EMailID
+			Width	: @@LongWidth
+			Style	: Normal
+		
+[Button: Print Selected Payslips]
+
+	Key	   		: Alt + F11
+	Title  		: "Print Payslips"
+
+	;; Multiple Payslip Print Report will be printed on activation of this Button by the user
+	;; The Report should be altered to include inbuilt Collection 'Parameter Collection' to print
+	;; the user selection employees report only
+	Action 		: Print Report 	: Multiple Payslip Print 
+	Scope  		: Selected Lines
+
+;; Multiple Payslip Report
+
+[Report: Multiple Payslip Print]
+
+	Use			: Multi Payslip Print
+
+	;; This Collection is not required to be defined by the TDL programmer as it is inbuilt and 
+	;; contains the user selected objects from the previous report
+	Collection 	: MSelectedPayslip
+	Delete		: Print	: MultiPayslipPrintConfig
+	Add			: Print	: MSelectedPayslipConfig
+
+;; Config Report
+
+[Report: MSelectedPayslipConfig]
+
+	Use			: MultiPayslipPrintConfig
+	Local: Part	: Emp Filter Details	: Delete	: Lines	: EmpFilter Category, EmpFilter Employee, EmpFilter LiabLed
+
+;; Collection Definition
+
+[Collection: MSelectedPayslip]
+	
+	Data Source	: Report	: Selected
+
+;; End-of-Code

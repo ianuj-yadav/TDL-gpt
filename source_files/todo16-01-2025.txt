@@ -1,0 +1,348 @@
+
+
+[#Collection: Accounting Masters Objects]
+	Add			: Object: TestNewObjCC 
+
+[Object: TestNewObjCC]
+	Use					: Obj Accounting Masters Template
+ 	Name				: @@loctest
+	PrmyVisbl			: Yes 
+	FeatEnabled			: Yes 
+	IsCreate			: Yes
+	IsAlter				: Yes
+	SortPos				: 36
+	Action   			: MasterAlter  	: Set       		: BaseOwnerName           		   		: @@loctest
+	Action				: MasterAlter	: Change Table		: CreateAndBack Actions, CCColl		: Yes 	: NOT $$IsActionObject
+	Action				: MasterAlter	: Ignore Field 		: Yes
+	Action				: MasterCreate	: Create Collection : CCColl
+	Action				: MasterCreate	: Ignore Field 		: Yes
+
+
+	
+
+;;;;;;;;;;;;;;; For Alteration ;;;;;;;;;;;;;;;;;;
+	
+[#Object: Cost Centre]
+	Action	: MasterAlter	: Do If : (##BaseOwnerName = @@loctest) : Alter Collection	: CCColl : ##vObjName
+
+[#Object: Obj Alter  CreateOption]
+	Action				: TableAction	: Do If : (##BaseOwnerName = "New ToDo")	: Create Collection :CC Coll
+	
+[Collection: CC Coll]
+	Use         : Alias Collection
+    Type        : Cost Centre
+    Title       : $$LocaleString:"List of ToDo"
+    Report      : Final CC Report
+    Variable    : SCostCentre
+    Trigger     : Triggered CC Report
+    IsODBCTable : Yes
+	Fetch		: Name, Language Name, CCType
+	Option		: DeleteFormat
+	Filter		: NewCCType
+
+;;;;;;;;;;;;;; For Identify the New CC with Default CC ;;;;;;;;;;;;;;;;;;;;
+
+
+
+;;;;;;;;;;;;; In Default to List only Default CC ;;;;;;;;;;;;;;
+
+[#Collection: List of Cost Centres]
+	Add	: Fetch		: CCType
+	Add	: Filter	: ExistCCType
+
+;;;;;;;;;;;;; In Default to List only Default CC ;;;;;;;;;;;;;;
+
+[Report: Triggered CC Report]
+    Title       : "Select New ToDo"
+    Form        : Triggered CC Report
+            
+[Form: Triggered CC Report]
+    Parts       : Triggered CC Report
+
+[Part: Triggered CC Report]
+    Lines       : Triggered CC Report
+    
+    [Line: Triggered CC Report]
+        Fields      : Medium Prompt, Triggered CC Report
+        Local: Field: Medium Prompt : Set as    : "New ToDo :"
+        
+        [Field: Triggered CC Report]
+            Use         : Name Field
+            Table       : CC Coll
+            Show Table  : Always
+			Tooltip		: "Please enter the New ToDo displayed/altered"
+            Modifies    : SCostCentre
+            ;; Modifies the Variable Value "TDE LedgerVar" which is passed to the subsequent
+            ;; Report through the Collection
+
+;; Final Report Definition begins here
+
+[Report: Final CC Report]
+	Use			: Cost centre
+	Variable	: CCName 
+	Set			: CCName	: "New ToDo"
+
+[Form: Final CC Report]
+	Use	: Cost Centre
+	Local	: Part	: Cost Centre	: Add	: Part	: After	: NewCCPart	: ToDoPart
+	;Local	: Part	: Cost Centre	: Add	: Part	: After	: NewCCPart	: NewCC OtherDet
+	Local	: Part	: Mst Basic		: Local	: Line	: MST Name	: Local	: Field	: MstName	: Set as	: If ##CCName = "New ToDo" Or ##CCName = "ToDo" then @@ToDoName  Else ""
+	Local	: Part	: Mst Basic		: Local	: Line	: MST Name	: Local	: Field	: MstName	: Skip		: If ##CCName = "New ToDo" Or ##CCName = "ToDo" then Yes Else No
+	Local	: Part	: Mst Basic		: Local	: Line	: MST Alias	: Local	: Field	: MST Alias	: Set as	: If ##CCName = "New ToDo" Or ##CCName = "ToDo" then "" Else ""
+	Local	: Part	: Mst Basic		: Local	: Line	: MST Alias	: Local	: Field	: MST Alias	: Skip		: Yes
+	Local	: Part	: Cost Centre	: Local	: Part	: MST CostCentreParent		: Local	: Line	: MSTCostCentreParent	: Local	: Field	: MST CostCentrePArent	: Set as	: If ##CCName = "New ToDo" Or ##CCName = "ToDo" then "ToDo List" Else ""
+	;Local	: Part	: Cost Centre	: Local	: Part	: MST CostCentreParent		: Local	: Line	: MSTCostCentreParent	: Local	: Field	: MST CostCentrePArent	: Skip		: Yes
+	;Local	: Part	: Cost Centre	: Local	: Part	: MST CostCentreParent	: Local	: Line	: MSTCostCentreParent	: Local	: Field	: MST CostCentrePArent	: Background	: Red
+	
+	Height	: 100% Page
+	
+[#Part: Cost Centre]
+	Add	: Part	: After	: MST CostCentreParent	: NewCCPart
+
+[Part: NewCCPart]
+	Line	: NewCCLine
+	Invisible	: Yes
+	
+[Line: NewCCLine]
+	Field	: NewCCType
+	
+[Field: NewCCType]
+	Use	: Name Field
+	Set as	: If ##CCName = "New ToDo" then "New ToDo" Else "ToDo"
+	Storage	: CCType
+	
+[Part: NewCC OtherDet]
+	Line	: TestLine1, TestLine2
+	
+[Line: TestLine1]
+	Field	: Medium Prompt, TestFld1
+	Local	: Field	: Medium Prompt	: Set as	: "Other Det"
+	[Field: TestFld1]
+		Use	: Name Field
+		Storage	: OtherDet
+	
+	
+[Line: TestLine2]
+	Field	: Medium Prompt, TestFld2
+	Local	: Field	: Medium Prompt	: Set as	: "Other Det1"
+
+
+	[Field: TestFld2]
+		Use	: Name Field
+		Storage	: OtherDet1
+
+
+[#Report: Cost Centre]
+	Add	: Variable	: CCName
+	Add	: Set	: CCName	: "ToDo"
+	
+[Variable: CCName]
+	Type	: String
+	
+[System: Variable]
+	CCName	: ""
+[System: Formula]
+	NewCCType	: $CCType = "New ToDo"
+	ExistCCType	: $CCType = "ToDo"
+	loctest			: $$LocaleString:"New ToDo"
+	ToDoName		: $$LocaleString:"ToDo"+$$LocaleString:@@TimeForm + $$LocaleString:@@DateForm 
+	DateForm		: @@DateToday + @@MonthToday + @@YearToday
+	Tododate			: $$MachineDate:ShortDate
+	DateToday		: $$StringPart:($$LocaleString:@@Tododate):0:2
+	MonthToday		: $$StringPart:($$LocaleString:@@Tododate):3:3
+	YearToday		: $$StringPart:($$LocaleString:$$MachineDate):7:2
+	TimeForm		: @@HrsForm + @@MtsForm + @@SesForm
+	HrsForm			: $$StringPart:($$LocaleString:($$SysInfo:SystemTimeHMS)):0:2
+	MtsForm			: $$StringPart:($$LocaleString:($$SysInfo:SystemTimeHMS)):3:2
+	SesForm			: $$StringPart:($$LocaleString:($$SysInfo:SystemTimeHMS)):6:2
+
+;;;;;;;;;;;;;;;;; Used UDF ;;;;;;;;;;;;;;;;;;;;;;;
+
+[System: UDF]
+	
+	CCType	: String	: 10001
+	OtherDet: String	: 10002
+	OtherDet1: String	: 10003
+	ToDoListDesc	        : String 	: 41070
+    ToDoListEntry           : Aggregate : 41071
+    TaskStartDate           : Date      : 41072
+    TaskCycle            	: Number    : 41073
+    TaskEndDate             : Date    	: 41074
+    RemindDays            	: Number    : 41075
+    YourName                : String	: 41076
+    Remarks  				: String	: 41077
+
+;;;;;;;;;;;;;;;;; Used UDF ;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+
+;;;;;;;;ToDo Part Start;;;;;;;;;;;;;;;;
+[Part:ToDoPart]
+	Part		: DescribeTask, TaskDate, TaskCycle, RemindDays, YourName, RemarksTodo
+	Vertical	: Yes
+[Part : DescribeTask]
+	Line		: DescribeTaskT, DescribeTaskB
+	Space Top	: 1
+	[Line:DescribeTaskT]
+		Field	: LongPrompt
+		Local	: Field		: LongPrompt	: Info	: $$LocaleString:"Describe the task"
+		
+	[Line:DescribeTaskB]
+		Field	: DescribeTaskB
+		[Field:DescribeTaskB]
+			Use			: Name Field
+			Width		: 100% Page
+			Border      : Thin Box
+			Storage     : ToDoListDesc
+			Lines		: 4
+		
+[Part : TaskDate]
+	Line		: TaskDateT, TaskDateB
+	Space Top	: 1
+	[Line:TaskDateT]
+		Field	: LongPrompt
+		Local	: Field		: LongPrompt	: Info	: $$LocaleString:"Task Date"
+		
+	[Line:TaskDateB]
+		Field	: TaskDateB
+		[Field:TaskDateB]
+			Use			: Short Date Field
+			Width		: 100% Page
+			Border      : Thin Box
+			Storage     : TaskStartDate
+			
+			
+		
+[Part : TaskCycle]
+	Line		: TaskCycleT, TaskCycleB, TaskEndT, TaskEndB
+	Space Top	: 1
+	[Line:TaskCycleT]
+		Field	: LongPrompt
+		Local	: Field		: LongPrompt	: Info	: $$LocaleString:"Cycle this task in (Every)"
+		
+	[Line:TaskCycleB]
+		Field	: TaskCycleB
+		[Field:TaskCycleB]
+			Use			: Number Field
+			Width		: 100% Page
+			Border      : Thin Box
+			Storage     : TaskCycle
+			
+	[Line:TaskEndT]
+		Field	: Name Field
+		Local	: Field		: Name Field	: Info	: $$LocaleString:"day(s) from Task Date thru"
+		
+	[Line:TaskEndB]
+		Field	: TaskEndB
+		[Field:TaskEndB]
+			Use			: Short Date Field
+			Width		: 100% Page
+			Border      : Thin Box
+			Storage     : TaskEndDate
+			
+[Part : RemindDays]
+	Line		: RemindDaysT, RemindDaysB
+	Space Top	: 1
+	[Line:RemindDaysT]
+		Field	: LongPrompt
+		Local	: Field		: LongPrompt	: Info	: $$LocaleString:"Remind Me"
+		
+	[Line:RemindDaysB]
+		Field	: RemindDaysB
+		[Field:RemindDaysB]
+			Use			: Number Field
+			Width		: 100% Page
+			Border      : Thin Box
+			Storage     : RemindDays
+			
+			
+[Part : YourName]
+	Line		: YourNameT, YourNameB
+	Space Top	: 1
+	[Line:YourNameT]
+		Field	: LongPrompt
+		Local	: Field		: LongPrompt	: Info	: $$LocaleString:"Your Name"
+		
+	[Line:YourNameB]
+		Field	: YourNameB
+		[Field:YourNameB]
+			Use			: Name Field
+			Width		: 100% Page
+			Border      : Thin Box
+			Storage     : YourName
+			Case		: Title Case
+			
+[Part : RemarksTodo]
+	Line		: RemarksTodoT, RemarksTodoB
+	Space Top	: 1
+	[Line:RemarksTodoT]
+		Field	: LongPrompt
+		Local	: Field		: LongPrompt	: Info	: $$LocaleString:"Remarks"
+		
+	[Line:RemarksTodoB]
+		Field	: RemarksTodoB
+		[Field:RemarksTodoB]
+			Use			: Name Field
+			Width		: 100% Page
+			Border      : Thin Box
+			Storage     : Remarks
+			Lines		: 4 
+			
+
+
+;;;;;;;;ToDo Part End;;;;;;;;;;;;;;;;	
+
+
+
+
+
+
+
+
+
+[#Menu:Gateway Of Tally]
+	Add		: Item		: "ToDo Lists" 		: Display	: ToDoListFilled
+	Add		: Button	: TodoLists
+
+[Report:ToDoListFilled]
+	Form		: ToDoListFilled
+	Title		: "Filled ToDo Lists"
+	
+[Form:ToDoListFilled]
+	Part		: ToDoListFilled
+	Height		: 100% Page
+	Width		: 100% PAge
+	
+[Part:ToDoListFilled]
+	Line		: ToDoListFilled
+	Repeat		: ToDoListFilled	: CC Coll
+	Scroll		: Vertical
+	[Line:ToDoListFilled]
+		Field		: TAskDesc, TaskDate
+		Right Field	: TaskYourName
+		
+		[Field:TAskDesc]
+			Use			: Name Field
+			Skip		: Yes
+			Set as		: $ToDoListDesc
+			Full Width	: Yes
+			Line		: 0
+			
+		[Field:TaskDate]
+			Use			: Short Date Field
+			Skip		: Yes
+			Set as		: $TaskStartDate
+			
+		[Field:TaskYourName]
+			Use			: Name Field
+			Skip		: Yes
+			Set as		: $YourName
+			
+[Button:TodoLists]
+	Title		: "Todo Lists"
+	Key			: Alt + X
+	Action		: Display		: ToDoListFilled
+	Background	: Red
+			
+		

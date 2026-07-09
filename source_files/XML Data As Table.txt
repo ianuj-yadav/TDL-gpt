@@ -1,0 +1,33 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+-	The following code demonstrates the collection as Table with XML Data.
+-	This code demonstrates the collection of XML Data as Table.
+
+Last modification – 
+-	Altered on 09/11/2009
+
+Dependencies -
+-	Supporting File 'Simple Voucher as Table.txt' for the Report as well as variables
+-	XML data File 'XMLData.xml' must be available at C:\INETPUT\WWWROOT Folder if IIS is
+	running as the Web Server
+*/
+
+[Collection: XML Table]
+
+	RemoteURL      	: "http://Localhost/XMLData.xml"
+	XMLObjectPath  	: CUSTOMER:1:CUSTOMERS
+	
+	Fetch			: Name, OpeningBalance
+	Format			: $Name, 25
+	Format			: $OpeningBalance, 15
+	Client Only		: Yes
+
+[Report: XMLAsTable]
+
+	Form			: CollAsTable
+	Variable		: XMLAsTable
+	Set				: XMLAsTable	: Yes
+
+;; End-of-File

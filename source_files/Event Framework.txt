@@ -1,0 +1,17 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Menu Definition for Event Enhancements
+*/
+
+[Menu: Event Framework]
+
+	Key Item: "On Form Accept - HTTP Post" 		: H : Alter	: On Form Accept HTTP Post
+	Key Item: "On Form Accept - Modify Object" 	: M : Alter	: On Form Accept Modify Object
+	Key Item: "On Focus"						: F : Alter	: On Focus
+
+[Include: On Form Accept - HTTP Post.txt]
+[Include: On Form Accept - Modify Object.txt]
+[Include: On Focus.txt]
+
+;; End-of-File

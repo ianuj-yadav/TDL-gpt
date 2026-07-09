@@ -1,0 +1,128 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the concept of Sub-Form and Aggregate UDFs
+-	While entering a receipt voucher and ledger selected is 'Bill Collection', this sub form 
+	is activated
+
+Last Modification -
+-	Altered on 09-11-2009
+
+Dependencies -
+-	Ledger by name "Bill Collection"
+*/
+
+[#Field: ACLSLed]
+
+	Sub Form	: BillDetail	: ##SVVoucherType = "Receipt" and $LedgerName = "Bill Collection"
+
+[#Field: ACLSAmt]
+
+	Set As 		: if $$NumItems:BAggre > 0 and $LedgerName = "Bill Collection" then @MyTot else @OldValue
+	MyTot 		: $$CollAmtTotal:BAggre:$BillAmt 
+	OldValue 	: $$Value
+
+[Report: BillDetail] ;; Sub Form
+
+	Form 	: BillDetail
+	Title 	: $$LocaleString:"Bill Details"
+
+[Form: BillDetail]
+
+	Parts 		: Bill Titles, Bill Details
+	Background 	: White, Lily White
+	Height 		: 70% Screen
+	Width 		: 70% Screen
+
+[Part: BillTitles]
+
+	Lines	: Bill Details
+
+	[Line: Bill Details]
+
+		Fields	: BHeader
+
+		[Field: BHeader]
+
+			Set as 		: "Bill Detail For " + $LedgerName
+			Skip 		: Yes
+			FullWidth 	: Yes
+			Align 		: Centre
+			Border 		: Thin Bottom
+			Style 		: "Normal Bold"
+
+[Part: BillDetails]
+
+	Line 		: BillDetailsH, BillDetailsD
+	Scroll 		: Vertical
+	Repeat 		: BillDetailsD		: BAggre
+	Break After : $$Line = 2
+
+	[Line: BillDetailsH]
+
+		Fields 	: SNo, CustName, BillNoTitle, BillAmt, FPrint
+		Local 	: Field : Default : Skip 	: Yes
+		Local 	: Field : Default : Width 	: 15
+		Local 	: Field : Default : Align 	: Centre
+	
+	[Line: BillDetailsD]
+
+		Fields 	: SNo1, CustName1, BillNo1, BillAmt1, FPrint1
+		Local 	: Field : Default : Width 	: 15
+		Local 	: Field : Default : Align 	: Centre
+		
+		[Field: SNo]
+
+			Set as 	: "S.No"
+
+		[Field: SNo1]
+
+			Set as 	: $$Line
+			Skip 	: Yes
+
+		[Field: CustName]
+
+			Set as 	: "Customer Name"
+
+		[Field: CustName1]
+
+			Use 	: Name Field
+			Storage : CustName
+
+		[Field: BillNoTitle]
+
+			Set as 	: "Bill Number"
+
+		[Field: BillNo1]
+
+			Use 	: Name Field
+			Storage : BillNo
+
+		[Field: BillAmt]
+
+			Set as 	: "Bill Amount"
+
+		[Field: BillAmt1]
+
+			Use 	: Amount Field
+			Storage : BillAmt
+
+		[Field: FPrint]
+
+			Set as 	: "Print"
+
+		[Field: FPrint1]
+
+			Use 	: Name Field
+			Storage : FPrint1
+
+[System: UDF]
+
+	CustName 	: String 	: 1000
+	BillNo 		: String 	: 1001
+	BillAmt 	: Amount 	: 1001
+	FPrint1 	: String 	: 1002
+	BAggre 		: Aggregate : 1000
+
+;; End-of-File

@@ -1,0 +1,42 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	The objective of this program is to demonstrate the process of extracting value from a 
+	Global Formula using Symbol '@@'
+-	Single Complex expression can be broken down into Multiple Simple Formula.
+-	This Formula can be defined once and used at as many places, as required.
+-	If required, modification need to be done only once which will effect at all the places 
+	used.
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Global Formula]
+
+	Form	: Global Formula
+		
+[Form: Global Formula]
+
+	Parts	: Global Formula
+	
+[Part: Global Formula]
+
+	Lines	: Global Formula
+	
+	[Line: Global Formula]
+
+		Fields	: Global Formula
+	
+		[Field: Global  Formula]
+
+			Set As		: @LF3					;; Local Formula used here
+			LF3			: "Background Color of this field is from a Global Formula"  ;; Local Formula
+			Background	: @@ColorFormulaRed		;; Global Formula used here
+	
+[System: Formula]		;; Global Formula Definition begins here
+
+	ColorFormulaRed		: Red
+
+;; End-Of-File

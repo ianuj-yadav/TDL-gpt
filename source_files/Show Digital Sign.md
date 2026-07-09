@@ -1,0 +1,253 @@
+---
+title: Show Digital Sign
+type: sample_code
+objects: Report, Form, Part, Line, Field, Collection, Button
+source: Show Digital Sign.txt
+---
+
+# Show Digital Sign
+
+## Source Code
+
+```tdl
+;[#Collection: Company Details]
+;	Color		: REd
+;	Object		: Cfg ShowCompanySignTirlok
+;	;Explode		: Company Logo Path	Trilok	: $Name = @@ShowCompanyLogo
+;	;Explode		: Company Logo Path		: $Name = @@ShowCompanyLogo
+;	;Explode		: Company Sign Details	: $Name = @@ShowCompanyName
+;;[#Collection: Header Details]
+;;	Color	: REd
+;	
+;[Object: Cfg ShowCompanySignTirlok]
+;	
+;	Use			: Output Configuration
+;    Name        : "Show Digital Sign Tirlok"
+;    Value       : ##SACompSignTirlok
+;	IsInvisible	: NOT @@DigiSignEnable
+;
+;	Action      : ConfigAction   : Modify Variables		:  Cfg ShowCompanySign Tirlok Report;; It IS a report
+;	
+;[Report: Cfg ShowCompanySign Tirlok Report]
+;	
+;	Use		: OutputConfig Form
+;	Variable: vCurrentPathTirlokSign
+;	Set		: SubFormTitle	: @@CompanyDetails
+;
+;	Set		: vCurrentPathTirlokSign			: If $$IsFileExists:##vCurrentPathTirlokSign Then $$GetParentDirectory:##vCurrentPathTirlokSign Else $$GetParentDirectory:@@CmpSignPath1
+;	;Set		: vCurrentFile			: If $$IsFileExists:##SALogoPath Then $$GetFileNameFromPath:##SALogoPath Else $$GetFileNameFromPath:@@CmpLogoPath
+;	Set		: ShowMoreApplicable	: Yes
+;	Set		: ShowMore				: No
+;	Delete	: Form
+;	Add		: Form	: Set Sign Form
+;	;Local	: Collection			: File Selection Table		: Add	: Advanced	: @@NonImgFiles
+;
+;[Form:Set Sign Form]
+;	Part	: Set Sign Part
+;	
+;[Part: SetSignPArt]
+;	Line:SetSign
+;	[Line:SetSign]
+;		Field:LongPrompt, SetSign
+;		Local	: Field	: Long Prompt	: Info	:$$LocaleString:"Set Sign Path"
+;		[Field:SetSign]
+;			Use	: Name Field
+;			Storage: SignPath1
+;[Variable: SASignPath]
+;
+;	Use			: Skip Save Variable
+;	Type		: String
+;	
+;[Variable:vCurrentPathTirlokSign]
+;	Use			: Skip Save Variable
+;	Type		: String
+;
+;[System:UDF]
+;	LogoEnable		: Logical	: 20010
+;	DigiSignEnable	: Logical	: 20011
+;	SignPath1		: String	: 20012
+;	LogoPath1		: String	: 20013
+;
+;
+;
+;[System:Formulae]
+;		DigiSignEnable				: $LogoEnable:Company:$$CurrentSimpleCompany
+;		
+;		CmpSignPath1				: $SignPath1:Company:$$CurrentSimpleCompany
+;
+
+
+;[#Collection: Printer Details]
+;    Object		: Show Company DigiSign	
+;	Color		: Red
+;	
+;[Object:Show Company Logo]
+;	Use         : Vch Output Configuration
+;	Name		: "Show LOgos Tirlok"
+;	Value		: ##ShowCmpLogo
+;
+;    Action		: ConfigAction : Set       : ShowCmpLogo    : NOT ##ShowCmpLogo
+;	
+;[Variable:ShowCmpLogo]
+;	Type        : Logical
+;    Persistent  : Yes
+;	
+	
+	
+
+;[Object:Show Company DigiSign]
+;	Use			: Vch Output Configuration
+;    Name        : "Show Digital Sign Tirlok"
+;    Value       : ##DigiSign
+;    IsAdvanced  : Yes
+;
+;	Action      : ConfigAction   : Modify Variables		: Change Print Mode
+;	
+;[Variable:DigiSign]
+;	Type        : Logical
+;    Persistent  : Yes
+;;;;;;;;;;;;;;;;;;;;;
+
+
+
+
+
+
+
+[#Collection: Company Details]
+	Object	: ShowDigiSign
+	;Explode		: Company DigiSign Path		: $Name = @@ShowCompanyLogo+"Tirlok Sign"
+	;Explode		: Company Logo Path		: $Name = @@ShowCompanyLogo
+	
+[Object:ShowDigiSign]
+	
+	Use			: Output Configuration
+    Name        : "Show Sign Tirlok"
+    ;Value       : ##SACompLogo
+	Value		: ##SADigiSignTirlok
+	Action      : ConfigAction   : Modify Variables	: DigiSignReport
+;	IsInvisible	: NOT @@IsCmpLogoEnabled
+;	Action      : ConfigAction   : Modify Variables	: DigiSignReport
+;	Action      : ConfigAction   : Modify Variables		: Cfg ShowCompanyLogo
+
+    
+[Variable: SADigiSignTirlok]
+
+	Use			: Skip Save Variable
+	Type 		: Logical
+	Persistent  : Yes
+[Report: DigiSignReport]
+	Form	: DigiSignReport
+	
+[Form:DigiSignReport]
+	Background		: Yellow
+	Parts			: DigiSignReport, LogoReport
+	
+[Part:DigiSignReport]
+	
+
+	Line		: DigiSignReport, DigiSignReport1
+	[Line:DigiSignReport]
+			
+		Field	: Long Prompt, DigiSignReport
+		Local	: Field	: Long Prompt	: Info	:$$LocaleString:"Show Digital Signature"
+		
+		[Field:DigiSignReport]
+			Use		: Name Field
+			Set as	: ##DigiSignEnable1
+			Modifies: DigiSignEnable1
+			Table	: YesNoTable
+			Type	: Logical
+			
+	[Line:DigiSignReport1]
+			
+		Field	: Long Prompt, DigiSignReport1
+		Local	: Field	: Long Prompt	: Info	:$$LocaleString:"Digital Signature Path"
+		
+		[Field:DigiSignReport1]
+			Use		: Name Field
+			Set as	: $Signature:Company:##SVCurrentCompany
+			Skip	: Yes
+			Type	: String
+			
+		
+
+[Part:LogoReport]
+	Line		: LogoReport;, DigiSignReport1
+	Space Top	: 1
+	[Line:LogoReport]
+			
+		Field	: Long Prompt, LogoReport
+		Local	: Field	: Long Prompt	: Info	:$$LocaleString:"Show Logo"
+		
+		[Field:LogoReport]
+			Use		: Name Field
+			Set as	: ##LogoEnable
+			Modifies: LogoEnable
+			Table	: YesNoTable
+			Type	: Logical
+	
+
+;	[Line:DigiSignReport1]
+;		
+;		Field	: Long Prompt, DigiSignReport1
+;		Local	: Field	: Long Prompt	: Info	:$$LocaleString:"Digital Signature Path"
+;		
+;		[Field:DigiSignReport1]
+;			Use		: Name Field
+;			;Set as	: $Signature:Company:$$CurrentSimpleCompany
+;			Set as	: ##SigPath
+;			Modifies: SigPath
+;			Type	: String
+;			Width	: 50
+;			Inactive: NOT #DigiSignReport
+
+
+[Variable:DigiSignEnable1]
+	Type	: Logical
+	Persist	: Yes
+	Volatile	: Yes
+	
+[Variable:SigPath]
+	Type	: String
+	Persist	: Yes
+	Volatile	: Yes
+	
+[Variable:LogoEnable]
+	Type	: Logical
+	Persist	: Yes
+	Volatile	: Yes
+	
+[Variable:MyLogoPath]
+	Type	: String
+	Persist	: Yes
+	Volatile	: Yes
+[System	: Variables]
+	DigiSignEnable1	: No
+	LogoEnable		: No
+	SigPath			: $Signature:Company:##SVCurrentCompany
+	MyLogoPath		: $Logopath:Company:##SVCurrentCompany
+[System:UDF]
+;	LogoEnable		: Logical	: 20010
+	SignPath		: String	: 20112
+;	LogoPath1		: String	: 20013
+
+	
+;[Collection: Company DigiSign Path]
+;		
+;		Use			: OutputConfig Formatting
+;		Object		: Cfg ShowImagePath
+
+
+[#Form: DSP Print RightButtons Template]
+	Add :Button : LogoDigi
+	[Button: LogoDigi]
+
+		Use		: Right Button Template
+		Key		: Alt+L
+		Title	: "logo and digital sign"
+		;Action	: Modify System	: DigiSignReport
+		Action	: Modify Variables	: DigiSignReport
+
+
+```

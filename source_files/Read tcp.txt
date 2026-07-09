@@ -1,0 +1,37 @@
+[Function:ReadFile]
+Variable : ReportText	: String
+Variable : GetPath : String
+101 : Set : ReportText : ""
+102	: Set : GetPath : "E:\tirlok\Projects\Dummy TCP\Dummy.tcp";"E:\tirlok\Projects\Dummy TCP\read.txt";
+110 : OPEN FILE : ##GetPath : Text : Read
+120 : While : NOT $$FileIsEOF
+130 : Set : ReportText : ##ReportText+$$FileRead
+131 : End While
+140 : CLOSE FILE
+;150 : WALK COLLECTION : UpdateDB
+;160 : Msg Box : After : "After Walk Collection"
+;170 : END WALK
+1000	: Log	: ##ReportText
+
+
+[Function : TestFileReadRaw]
+Variable : GetPath : String
+Variable : Get_DownLoad_FileLine : String
+
+;001 : Set : GetPath : "E:\tirlok\Projects\Dummy TCP\read.txt";"E:\Practice\betadisc2head.html";
+;010 : Open File : ##GetPath : TExt : Read
+;020 : While : (TRUE)
+;030 : Set : Get_DownLoad_FileLine : $$FileReadRaw
+;040	: End While 
+;50		: CLOSE TARGET FILE
+;1000	: Log	:  ##Get_DownLoad_FileLine
+
+
+001 : Set : GetPath : "E:\tirlok\Projects\Dummy TCP\read.txt";"E:\Practice\betadisc2head.html";
+10 : OPEN FILE : ##GetPath : Text : Read
+20 : LOG : $$FileRead
+30 : CLOSEFILE 
+
+
+[#Menu: Gateway Of tally]
+	Add		: Item	: Read		: Call	: ReadFile

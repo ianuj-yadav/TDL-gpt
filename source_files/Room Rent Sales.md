@@ -1,0 +1,768 @@
+---
+title: Room Rent Sales
+type: sample_code
+objects: Report, Form, Part, Line, Field, Collection, Function, Button
+source: Room Rent Sales.txt
+---
+
+# Room Rent Sales
+
+## Source Code
+
+```tdl
+;; Change Voucher Creation Inventory Title
+/*
+[#Form:Sales Color]
+	;Background	: Red
+
+
+[#Line:EI ColumnOne]
+	Switch		: EI ColumnOne	: EIColumnOneRoomRents	: @@IsRentSales And Not ($$Owner:$$InDuplicateMode) 
+	
+
+
+[!Line:EIColumnOneRoomRents]
+	Delete		: Left Fields 	: VCH ItemTitle
+	Delete		: Right Fields 	: VCH QtyTitle, VCH InclRateTitle, VCH RateTitle, VCH RateUnitsTitle, VCH DiscTitle, VCH AmtTitle
+	Add			: Left Fields		: FromDateRoomRentsTitle, ToDateRoomRentsTitle
+	Add			: Right Fields		: TotalNightsTitle, RoomsTitle, ChargesTitle, ExtrasTitle, VCH AmtTitle
+	
+	[Field:FromDateRoomRentsTitle]
+		Set as		: "From Date"
+		Skip		: Yes
+		Style		: Normal Bold
+		Width		: 10
+		Align		: Center
+		
+	[Field:ToDateRoomRentsTitle]
+		Set as		: "To Date"
+		Skip		: Yes
+		Style		: Normal Bold
+		Width		: 10
+		Align		: Center
+		
+	[Field:TotalNightsTitle]
+		Set as		: "Total Nights"
+		Skip		: Yes
+		Style		: Normal Bold
+		Width		: 10
+		Align		: Center
+		
+	[Field:RoomsTitle]
+		Set as		: "Room"
+		Skip		: Yes
+		Style		: Normal Bold
+		Width		: 10
+		Align		: Center
+		
+	[Field:ChargesTitle]
+		Set as		: "Charges"
+		Skip		: Yes
+		Style		: Normal Bold
+		Width		: 10
+		Align		: Center
+		
+	[Field:ExtrasTitle]
+		Set as		: "Extras"
+		Skip		: Yes
+		Style		: Normal Bold
+		Width		: 10
+		Align		: Center
+		
+	[#Field: VCH AmtTitle]
+		Switch		: VCH AmtTitle		: AmountRoomsTitle		: @@IsRentSales And Not ($$Owner:$$InDuplicateMode) 
+		
+	[!Field:AmountRoomsTitle]
+		Setas       : $$LocaleString:"Total Amount"
+		Align		: Center
+	
+
+
+;; Change Voucher Creation Inventory Details
+[#Line: EI InvInfo]
+	Switch		: EI ColumnOne	: EIColumnOneRoomRentsInfo	: @@IsRentSales
+	
+	
+
+[!Line:EIColumnOneRoomRentsInfo]
+	Delete		: Left Fields 	: EI DeemedPos, VCH StockItem
+	Delete		: Right Fields 	: VCH ActualQty, VCH BilledQty, VCH RateIncl, VCH Rate, VCH RateUnit, VCH PrevItem, VCH Discount, VCH Value
+
+	Add			: Left Fields 	: FromDateRoomRentsValue, ToDateRoomRentsValue
+	Add			: Right Fields 	: TotalNightsValue, RoomsValue, ChargesValue, ExtrasValue, TotalAmountValue;VCH Value
+	
+	[Field:FromDateRoomRentsValue]
+		Use			: Uni Date Field
+		Width		: 10
+		Storage		: FromDateRoomRents
+
+	[Field:ToDateRoomRentsValue]
+		Use			: Uni Date Field
+		Width		: 10
+		Storage		: ToDateRoomRents
+
+
+	[Field:TotalNightsValue]
+		Use			: Number Field
+		Width		: 10
+		Skip		: Yes
+		Storage		: TotalNights
+		Set Always	: Yes
+		Set as		: #ToDateRoomRentsValue-#FromDateRoomRentsValue
+
+
+
+	[Field:RoomsValue]
+		Use			: Number Field
+		Width		: 10
+		Storage		: RoomsQty
+
+
+
+	[Field:ChargesValue]
+		Use			: Amount Field
+		Width		: 10
+		Storage		: Charges
+
+
+
+	[Field:ExtrasValue]
+		Use			: Amount Field
+		Width		: 10
+		Storage		: Extras
+
+
+	[Field:TotalAmountValue]
+		Use			: Amount Field
+		Set as		: $$AsAmount:@FinalAmount
+		FinalAmount	: (#TotalNightsValue*#RoomsValue*#ChargesValue)+#ExtrasValue
+		Storage		: TotalAmountValue
+		Skip		: Yes
+		Set Always	: Yes
+		
+	
+
+
+
+
+
+
+;; Room Formulas/formulae/
+[System: Formula]   
+	 IsRentSales	: ##SVVoucherType="Room Rents Sales"
+	 
+;; Room UDFs 
+
+[System:UDF]
+	FromDateRoomRents		: Date		: 15001
+	ToDateRoomRents			: Date		: 15002
+	TotalNights				: Number	: 15003
+	RoomsQty				: Number	: 15004
+	Charges					: Amount	: 15005
+	Extras					: Amount	: 15006
+	TotalAmountValue		: Amount	: 15007
+	
+
+*/
+
+
+;;=================================================
+	 
+
+
+/*
+[#Form:Sales Color]
+	Add			: Button		: RoomMode
+			
+[#Form: VCHBasic InvoiceMode]
+	Switch			: VCHBASIC Form					: RoomRentForm					: @@IsRentSales
+	
+[!Form:RoomRentForm]
+	Add			: Parts			: After	: VchTitle2		: EIRoomCustomer
+	
+[#Part:EI PartyInfo]
+	;Invisible	: @@IsRentSales
+	;Background	: red
+	
+
+;, , , , 
+[#Part:EI CurrBalanceInfo]
+	Invisible	: @@IsRentSales
+	Background	: red
+[#Part:EI TurnOverInfo]
+	Invisible	: @@IsRentSales
+	
+[#Part:EI SalesLedInfo]
+	;Invisible	: @@IsRentSales
+	
+[#Part:EI SalesCurrBalanceInfo]
+	Invisible	: @@IsRentSales
+	
+
+	
+[Part:EIRoomCustomer]
+	Line		: EIRoomCustomer
+	[Line:EIRoomCustomer]
+		Fields		: MediumPrompt, EIRoomCustomer
+		Local		: Field		: MediumPrompt		: Info	: $$LocaleString:"Customer Name"
+		
+		[Field:EIRoomCustomer]
+			Use		: Name Field
+			Width	: 30
+			Storage	: RoomCustomerName
+			case	: Upper Case
+		
+[Button:RoomMode]
+	Title		: If NOT ##RoomModeVar Then "Enable Room Mode" ELse "Disable Room Mode"
+	Key			: Alt + R
+	Action		: Call		: RoomModeFunction
+	
+[Function:RoomModeFunction]
+	10		: Set		: RoomModeVar		: Not ##RoomModeVar
+	
+[Variable:RoomModeVar]
+	Type		: Logical
+	Default		: No
+	
+
+[System:Variable]
+	RoomModeVar		: No
+
+
+[#Line:EI ColumnOne]
+	Switch		: EI ColumnOne	: EIColumnOneRoomRents	: @@IsRentSales 
+	
+
+
+[!Line:EIColumnOneRoomRents]
+	Delete		: Right Fields 	: VCH QtyTitle, VCH InclRateTitle, VCH RateTitle, VCH RateUnitsTitle, VCH DiscTitle, VCH AmtTitle
+	Add			: Left Fields		: FromDateRoomRentsTitle, ToDateRoomRentsTitle
+	Add			: Right Fields		: TotalNightsTitle, RoomsTitle, ChargesTitle, ExtrasTitle, VCH AmtTitle
+	
+	[#Field:VCH ItemTitle]
+		Width		: 30
+		
+	[Field:FromDateRoomRentsTitle]
+		Set as		: "From Date"
+		Skip		: Yes
+		Style		: Normal Bold
+		Width		: 10
+		Align		: Center
+		
+	[Field:ToDateRoomRentsTitle]
+		Set as		: "To Date"
+		Skip		: Yes
+		Style		: Normal Bold
+		Width		: 10
+		Align		: Center
+		
+	[Field:TotalNightsTitle]
+		Set as		: "Total Nights"
+		Skip		: Yes
+		Style		: Normal Bold
+		Width		: 10
+		Align		: Center
+		
+	[Field:RoomsTitle]
+		Set as		: "Room"
+		Skip		: Yes
+		Style		: Normal Bold
+		Width		: 10
+		Align		: Center
+		
+	[Field:ChargesTitle]
+		Set as		: "Charges"
+		Skip		: Yes
+		Style		: Normal Bold
+		Width		: 10
+		Align		: Center
+		
+	[Field:ExtrasTitle]
+		Set as		: "Extras"
+		Skip		: Yes
+		Style		: Normal Bold
+		Width		: 10
+		Align		: Center
+		
+	[#Field: VCH AmtTitle]
+		Switch		: VCH AmtTitle		: AmountRoomsTitle		: @@IsRentSales And Not ($$Owner:$$InDuplicateMode) 
+		
+	[!Field:AmountRoomsTitle]
+		Setas       : $$LocaleString:"Total Amount"
+		Align		: Center
+	
+
+
+;; Change Voucher Creation Inventory Details
+[#Line: EI InvInfo]
+	Switch		: EI ColumnOne	: EIColumnOneRoomRentsInfo	: @@IsRentSales
+	
+	
+
+[!Line:EIColumnOneRoomRentsInfo]
+	Delete		: Left Fields 	: EI DeemedPos, VCH StockItem
+	Delete		: Right Fields 	: VCH ActualQty, VCH BilledQty, VCH RateIncl, VCH Rate, VCH RateUnit, VCH PrevItem, VCH Discount, VCH Value
+
+	Add			: Left Fields 	: VCH StockItem, FromDateRoomRentsValue, ToDateRoomRentsValue
+	Add			: Right Fields 	: TotalNightsValue, RoomsValue, ChargesValue, ExtrasValue, VchValue;TotalAmountValue;VCH Value
+	[#Field:VCH StockItem]
+		Width		: 30
+	[Field:FromDateRoomRentsValue]
+		Use			: Uni Date Field
+		Width		: 10
+		Storage		: FromDateRoomRents
+
+	[Field:ToDateRoomRentsValue]
+		Use			: Uni Date Field
+		Width		: 10
+		Storage		: ToDateRoomRents
+
+
+	[Field:TotalNightsValue]
+		Use			: Number Field
+		Width		: 10
+		Skip		: Yes
+		Storage		: TotalNights
+		Set Always	: Yes
+		Set as		: #ToDateRoomRentsValue-#FromDateRoomRentsValue
+
+
+
+	[Field:RoomsValue]
+		Use			: Number Field
+		Width		: 10
+		Storage		: RoomsQty
+
+
+
+	[Field:ChargesValue]
+		Use			: Amount Field
+		Width		: 10
+		Storage		: Charges
+
+
+
+	[Field:ExtrasValue]
+		Use			: Amount Field
+		Width		: 10
+		Storage		: Extras
+
+
+	[!Field:TotalAmountValue]
+		Use			: Amount Field
+		Set as		: $$AsAmount:@FinalAmount
+		FinalAmount	: (#TotalNightsValue*#RoomsValue*#ChargesValue)+#ExtrasValue
+		;Storage		: Amount
+		Skip		: Yes
+		Set Always	: Yes
+		Background	: Red
+		
+	
+[#Field: VCH Value]
+	Delete		: Inactive	    : $$IsSysName:#VchStockItem
+	Delete		: Switch		: VCH Value	: VCH JrnlValue : @@IsStockJrnl
+    Delete		: Switch		: VCH Value	: VCH NrmlValue : NOT @@IsStockJrnl AND NOT @@IsPOSInvoice AND NOT (@@IsJournal AND $$IsSysNameEqual:CENVATAvailing:@IsCenvat)
+    Delete		: Switch		: VCH Value	: VCH POSValue  : NOT @@IsStockJrnl AND @@IsPOSInvoice
+	Delete		: Switch		: VCH Value	: VCH DNCENVATAvailing Value	: @@IsDebitNote AND $$IsSysNameEqual:CENVATAvailing:@IsCenvat
+	Delete		: Switch		: VCH JobOrderValue	 : VCH JobOrderVal		: @@IsJoborderVouchers
+	Delete		: Switch		: TraderExcise	: Trader Excise CN VCHValue	: @@IsExciseDealerOn AND ($$IsInvoicingOn AND @@IsCreditNote)
+	Add			: Switch		: Vch Value		: TotalAmountValue			: @@IsRentSales
+	Add			: Switch		: VCH Value	: VCH JrnlValue : @@IsStockJrnl
+    Add			: Switch		: VCH Value	: VCH NrmlValue : NOT @@IsStockJrnl AND NOT @@IsPOSInvoice AND NOT (@@IsJournal AND $$IsSysNameEqual:CENVATAvailing:@IsCenvat)
+    Add			: Switch		: VCH Value	: VCH POSValue  : NOT @@IsStockJrnl AND @@IsPOSInvoice
+	Add			: Switch		: VCH Value	: VCH DNCENVATAvailing Value	: @@IsDebitNote AND $$IsSysNameEqual:CENVATAvailing:@IsCenvat
+	Add			: Switch		: VCH JobOrderValue	 : VCH JobOrderVal		: @@IsJoborderVouchers
+	Add			: Switch		: TraderExcise	: Trader Excise CN VCHValue	: @@IsExciseDealerOn AND ($$IsInvoicingOn AND @@IsCreditNote)
+	
+	
+
+
+
+
+
+;; Room Formulas/formulae/
+[System: Formula]   
+	 IsRentSales	: ##SVVoucherType="Room Rents Sales" And ##RoomModeVar
+	 
+;; Room UDFs 
+
+[System:UDF]
+	FromDateRoomRents		: Date		: 15001
+	ToDateRoomRents			: Date		: 15002
+	TotalNights				: Number	: 15003
+	RoomsQty				: Number	: 15004
+	Charges					: Amount	: 15005
+	Extras					: Amount	: 15006
+	TotalAmountValue		: Amount	: 15007
+	RoomCustomerName		: String	: 15008
+*/
+
+
+
+;;=============================Tdl Expert File
+
+/*
+[#Part: MST LED Details]
+Add : Line : At End: Name,Chkin,Chkout,Advance,Total,Room
+
+[System : Formula]
+GroupHead : "Hotel"
+
+[Line : Name]
+    Field        : Long Prompt,Name
+    Local        : Field:Long Prompt : Set as : "Name"
+    Invisible    : $Parent! = @@GroupHead
+    ;Invisible    : Not ($$IsBelongsTo:$$GroupInvestments)
+    Local    : Field    : Long Prompt : Color : white
+    Local    : Field    : Long Prompt : Background : "Dodger Blue"
+    Local    : Field    : Long Prompt : Border : Thin Box
+    Local    : Field    : Long Prompt : Style : Tiny Bold
+   
+[Line : Room ]
+    Field        : Long Prompt,Room
+        Local        : Field:Long Prompt : Set as : "Room No"
+    Invisible    : $Parent! = @@GroupHead
+    ;Invisible    : Not ($$IsBelongsTo:$$GroupInvestments)
+    Local    : Field    : Long Prompt : Color : white
+    Local    : Field    : Long Prompt : Background : "Dodger Blue"
+    Local    : Field    : Long Prompt : Border : Thin Box
+    Local    : Field    : Long Prompt : Style : Tiny Bold
+
+[Line : Advance]
+    Field        : Long Prompt,Advance
+    Local        : Field:Long Prompt : Set as : "Advance"
+    Invisible    : $Parent! = @@GroupHead
+    ;Invisible    : Not ($$IsBelongsTo:$$GroupInvestments)
+    Local    : Field    : Long Prompt : Color : white
+    Local    : Field    : Long Prompt : Background : "Dodger Blue"
+    Local    : Field    : Long Prompt : Border : Thin Box
+    Local    : Field    : Long Prompt : Style : Tiny Bold
+
+[Line : Chkin]
+    Field        : Long Prompt,Chkin
+    Local        : Field:Long Prompt : Set as : "Chkin"
+    Invisible    : $Parent! = @@GroupHead
+    ;Invisible    : Not ($$IsBelongsTo:$$GroupInvestments)
+    Local    : Field    : Long Prompt : Color : white
+    Local    : Field    : Long Prompt : Background : "Dodger Blue"
+    Local    : Field    : Long Prompt : Border : Thin Box
+    Local    : Field    : Long Prompt : Style : Tiny Bold
+
+[Line : Chkout]
+    Field        : Long Prompt,Chkout
+    Local        : Field:Long Prompt : Set as : "Chkout"
+    Invisible    : $Parent! = @@GroupHead
+    ;Invisible    : Not ($$IsBelongsTo:$$GroupInvestments)
+    Local    : Field    : Long Prompt : Color : white
+    Local    : Field    : Long Prompt : Background : "DodgerBlue"
+    Local    : Field    : Long Prompt : Border : Thin Box
+    Local    : Field    : Long Prompt : Style : Tiny Bold
+
+
+[Line : Total]
+    Field        : Long Prompt,Total
+    Local        : Field:Long Prompt : Set as : "Total"
+    Invisible    : $Parent! = @@GroupHead
+    ;Invisible    : Not ($$IsBelongsTo:$$GroupInvestments)
+    Local    : Field    : Long Prompt : Color : white
+    Local    : Field    : Long Prompt : Background : "Dodger Blue"
+    Local    : Field    : Long Prompt : Border : Thin Box
+    Local    : Field    : Long Prompt : Style : Tiny Bold
+
+[Field : Name]
+    Use        : Name Field
+    Storage     : Name
+    ;Color         : Blue
+    Background     : Electric Blue
+    Border         : Thin Box
+    Style         : Normal Bold
+    Fullwidth    : Yes
+    Align        : Right
+
+[Field : Chkin]
+    Use        : Uni Date Field
+    Storage     : Chkin
+    Color         : Blue
+    Background     : Electric Blue 
+    Border         : Thin Box
+    Style         : Normal Bold
+    Fullwidth    : Yes
+    Align        : Right
+
+[Field : Chkout]
+    Use        :Uni Date Field
+    Storage     : Chkout
+    Color         : Blue
+    Background     : Electric Blue
+    Border         : Thin Box
+    Style         : Normal Bold
+    Fullwidth    : Yes
+    Align        : Right
+
+[Field : Advance]
+    Use        : Amount Field
+    Storage     : Advance
+    Fullwidth    : Yes
+    Color         : Blue
+    Background     : Electric Blue
+    Border         : Thin Box
+    Style         : Normal Bold
+
+[Field : Room]
+    Use        : Number Field
+    Storage     : Room
+    Fullwidth    : Yes
+    Color         : Blue
+    Background     : Electric Blue
+    Border         : Thin Box
+    Style         : Normal Bold
+    Align           : Right
+
+[Field : Total]
+    Use        :  Amount Field
+    Storage     : Total
+    Fullwidth    : Yes
+    Color         : Blue
+    Background     : Electric Blue
+    Border         : Thin Box
+    Style         : Normal Bold
+
+
+
+[System : UDF]
+Name         : String     : 2101
+Advance     : Amount     : 2103
+Chkin    : Date        : 2103
+Chkout     : Date         : 2104
+Room      : Number     : 2105
+Total     : Amount     : 2106
+
+
+[#Menu:Gate Wayof Tally]
+Add : Item : Hotel : Display : Hotel
+
+[Report : Hotel]
+
+Variable     : SVFromDate, SVToDate
+Set         : SVfromDate     : ##SVDate
+Set         : SVToDate     : ##SVCurrentDate
+Form         : Hotel
+
+[Form : Hotel]
+    Parts         : DSP Company Name, DSP Company Address
+    Use         : DSP Template
+    Height         : 100% Screen
+    Width         : 100% Screen
+    ;BackGround     : Dodger Blue;Canary Yellow
+    Space Top     : If $$InPrintMode Then 0.5 Else 0 inches
+    Part         : Hotel Tit, HotelInformationpart
+    Button          : PrintButton, ExportButton,F2 ChangePeriod
+    Bottom ToolBar Button    : BottomToolBarBtn8, BottomToolBarBtn9, BottomToolBarBtn10, BottomToolBarBtn11, BottomToolBarBtn12
+
+[Part : Hotel Tit]
+    Line         : Hotel Tit Line, BkdDate Field
+
+[Line : Hotel Tit Line]
+    Field : Hotel Tit Field
+
+[Field : Hotel Tit Field]
+    Use         : Name Field
+    Set as         : "Hotel Booking"
+    Align         : Center
+    Width         : 100% screen
+    Style         : Large Bold
+    ;Background    : Dodger Blue;Viridian
+    Print FG    : Black
+    Color        : Dodger Blue;Canary Yellow
+    Widespaced    : Yes
+
+[Line : BkdDate Field]
+    Field : Bkd Details Report
+
+[Field : Bkd Details Report]
+    Use            : Name Field
+    Set as         : "Details for the period " + $$String:##SVFromDate +" to "+ $$String:##SVToDate
+    Width         : 100% screen
+    Align          : Center
+    Style          : Normal Bold Italic
+    ;Background    : Dodger Blue;Viridian
+    Print FG    : Black
+    Color        : Dodger Blue;Canary Yellow
+
+[Part:HotelInformationpart]
+    Line         : Hotel Details ReportcolumnTitles, Hotel Details ReportInfo
+    Repeat         : Hotel Details ReportInfo : SKC1collection2
+    Scroll         : Vertical
+    Common Border     : Yes
+    Bottom Line     : Hotel Details ReportTotals
+    Total         : total1, Advancee, BalancePay
+
+[Line : Hotel Details ReportcolumnTitles]
+    Border     : Column Titles
+    Use     : Hotel Details ReportInfo
+    Local    : Field:Default:Color:Black
+    Local    : Field:Default:Type: String
+    Local    : Field:Default:Align: Center
+    Local     : Field : SNo2 : Set as: "SR.No"
+    Local    : Field:SNo2:Background:Green
+    Local    : Field : CName: Set as: "Name"
+    Local    : Field:CName:Background:Yellow
+    Local     : Field : RmNo     : Set as: "Room No"
+    Local    : Field:RmNo:Background:Green
+    Local     : Field : Advancee: Set as: "Advance"
+    Local     : Field : Advancee:Background    : Green
+    Local     : Field : Bkd Date     : Set as: "Chk in Date"
+    Local    : Field:Bkd Date:Background:Green
+    Local     : Field : ODate     : Set as: "Chk out Date"
+    Local    : Field:ODate:Background:Yellow
+    Local     : Field : Total1     : Set as: "Total"
+    Local    : Field:Total1:Background:Yellow
+    Local     : Field : BalancePay    : Set as: "Balance Due"
+    Local    : Field: BalancePay :Background:Yellow
+
+[Line : Hotel Details ReportInfo]
+        Fields: SNo2, Cname, RmNo, Bkd Date, ODate, Total1, Advancee, BalancePay
+        Border : Thin Top Bottom
+        Local : Field : Default : Color : If ##ChkinDate > @@ChkoutPayDate Then "blue" else "black"
+        Local : Field : Default : Background     : If ##ChkinDate > @@ChkoutDate Then "grey" else "canary Yellow"
+
+[Line: Hotel Details ReportTotals]
+
+    Use : Hotel Details ReportInfo
+;    Fields : SNo1, CName, Bkd Date,Odate,Advancee,RmNo
+    Local : Field : SNo2         : Set as: ""
+;    Local : Field : SNo2         : Delete: Border
+    Local : Field : Cname     : Set as: "    "
+;    Local : Field : Cname     : Delete: Border
+    Local : Field : Bkd Date     : Set as: ""
+;    Local : Field : Bkd Date     : Delete: Border
+    Local : Field : RmNo     : Set as: ""
+;    Local : Field : RmNo     : Delete: Border
+    Local : Field : ODate     : Set as: ""
+;    Local : Field : Odate    : Delete: Border
+    Local : Field : Total1     : Set as: $$Total:Total1
+;    Local : Field : Total1     : Border : Thin Left Right
+    Local : Field : Advancee     : Set as: $$Total:Advancee
+;    Local : Field : Advancee     : Delete: Border
+    Local : Field : BalancePay     : Set as: $$Total:BalancePay
+   
+[Field : SNo2]
+    ;Use     : Number Field
+    Set as     : $$Line
+    Width     : 5
+    Style     : Normal
+    Align     : Center
+    Border     : Thin Left
+
+[Field :Cname]
+    Use     : Name Field
+    Set as     : $Name
+    Width     : 25
+    Style     : Normal
+    Border     : Thin Left
+    Option     : Alter on Enter
+    Alter     : Ledger
+    ;Variable: Ledger Name
+    ;Display    : Premium Paid Statement
+
+[Field : RmNo ]
+    Use     : Name Field
+    Set as     :     $Room
+    Width     : 10
+    Style     : Normal
+    Align    : Centre
+    ;Border     : Thin Box    
+;Space Right:0
+   
+
+[Field :Advancee]
+    Use     : Amount Field
+    Set as     :$Advance
+    Width     : 15
+    Style     : Normal Bold
+    Border     : Thin Left right
+    Align     : Right
+    ;BackGround    : Green
+    ;Color        : Yellow
+
+
+[Field :BKd Date]
+    Use     : Short Date Field
+    Set as     : $Chkin
+    Width     : 15
+    Style     : Normal
+    Border     : Thin Left
+    Align     : Center
+
+[Field : Odate]
+    Use     : Short Date Field
+    Set as     : $Chkout
+    Width     : 15
+    Style     : Normal
+    Border     : Thin Left
+    Align     : Center
+
+[Field : Total1]
+    Use     : Amount Field
+    Set as     : $Total
+    Width     : 15
+    Style     : Normal Bold
+    Border     : Thin Left Right
+    Align    : Right
+
+[Field : BalancePay]
+    Use     : Amount Field
+    Set as     : $Total - $Advance
+    Width     : 15
+    Style     : Normal Bold
+    Border     : Thin Left Right
+    Align    : Right
+
+[Collection:Hotel]
+Type         : Vouchers : group
+Childof     : @@GroupHead
+Belongs To     : Yes
+;Fetch         : SNo2, CName, Bkd Date,Odate,Advancee
+
+[Collection:SKC1collection2]
+    Type         : Ledger
+    Child Of     : @@GroupHead
+    Belongs To     : Yes
+
+;[Color: yellow green]
+;    RGB: 154,205,50
+
+;[Color: Canary Yellow]
+;    RGB: 255,239,0
+
+;[Color: Dodger Blue]
+;    RGB: 31,159,205
+
+;[Color: Electric Blue]
+;    RGB: 125,249,255
+
+;[Color: Viridian]
+;    RGB: 64,130,109
+
+;[Color:caribbean green]
+;    RGB:0,204,153
+
+;; EOF
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```

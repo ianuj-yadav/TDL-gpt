@@ -1,0 +1,57 @@
+---
+title: Ledger Object Set
+type: sample_code
+objects: Report, Form, Part, Line, Field, Function
+source: Ledger Object Set.txt
+---
+
+# Ledger Object Set
+
+## Source Code
+
+```tdl
+[Report:LedgerObjectSet]
+	Form		: LedgerObjectSet
+	
+[Form:LedgerObjectSet]
+	Part		: LedgerObjectSet
+	Height		: 40% Page
+	Width		: 50% Page
+	Option		: Small Size Form		: Yes
+	
+[Part:LedgerObjectSet]
+	Line		: FormSubtitle, LedgerObjectSet
+	Local		: Field		: FormSubtitle	: Info	: "Ledger Selection"
+	
+	[Line:LedgerObjectSet]
+		Fields		: LongPrompt, LedgerSetName, LedgerSetParent
+		Local		: Field	: LongPrompt	: Info	: "Ledger Name"
+		
+		[Field:LedgerSetName]
+			Use		: Name Field
+			Table	: Ledger
+			Show Table	: Always
+			Delete	: Key
+			Add		: Key	: LedgerSet
+			
+		[Field:LedgerSetParent]
+			Use		: Name Field
+			Set as	: $(Ledger,#LedgerSetName).Parent
+			Set Always	: Yes
+			
+[Key:LedgerSet]
+	Key			: Enter
+	Action List	: Field Accept, LedModify
+	
+[Key:LedModify]
+	Key			: Enter
+	Action		: Call		: LedgerSetFunction:#LedgerSetName
+	
+[Function:LedgerSetFunction]
+	Parameter		: LedgerNameSet		: String
+	Object			: Ledger			: ##LedgerNameSet
+	
+	002	: Set Target	;; It set the target ##LedgerNameSet
+	003	: Set Object Values		: Opening Balance	:($$AsAmount:9000)
+	004	: Alter Target
+```

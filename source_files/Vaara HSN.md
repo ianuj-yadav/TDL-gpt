@@ -1,0 +1,70 @@
+---
+title: Vaara HSN
+type: sample_code
+objects: Line, Field
+source: Vaara HSN.txt
+---
+
+# Vaara HSN
+
+## Source Code
+
+```tdl
+[#Part: Company PeriodDetails]	
+	Add		: Lines	: CompanyHsnCode
+	
+[System:UDF]
+	CmpHsnCode	: String	: 2018
+	
+	[Line:CompanyHsnCode]
+		Space Top	: 0.1
+		Field	: Medium Prompt,CompanyHsnCode
+		Local	: Field		: Medium Prompt		: Set as		: "Company Hsn Code:"
+		Local   : Field 	: Medium Prompt 	: Width			: @@MediumWidth	+ 19
+		[Field:CompanyHsnCode]
+			Width		: 3 inch
+			Use			: Number Field
+			Storage		: CmpHsnCode
+			Type		: String
+			
+
+
+[#Part: EI Despatch Supp OrderDetails]
+	;Background		: Red
+	
+
+[#Part: EI DelNoteInfo	]
+	;Background		: Red
+	
+[#Part:EI DelNoteDetails]
+	;Background		: Yellow
+	
+
+
+
+[#Line:EI ShipDetails]
+	Border	: Thick Right
+	
+[#Line:EI PreCarriage]
+	Border	: Thick left
+	
+[#Line:EI PortDestination]
+	Border	: Thick top
+	
+[#Line: GST EI LRDetails]
+	Border	: Thick right
+	
+[#Line:EI BillOrLRR No]
+	Border	: Thick bottom
+	
+[#Part:  GST EI DBNoteBillofLadingVehNoDetails]
+	Background	: Red
+	
+[#Line: EI BillOrLRR No]
+	Border	: Thick Box
+	
+
+	
+
+
+```

@@ -1,0 +1,55 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the difference between Set As and Info and the precedence
+-	The attributes Set as and Info are treated as same attribute with aliases, when
+	'Info' is used, it had a special 'Skip' and 'Prompt' privilege. If both are 
+	specified the Attribute 'Info' takes higher precedence than 'Set As'.
+
+Last modification – 
+-	Altered on 09/11/2009
+*/
+    
+[Report: Sample Setasinfo]
+
+    Form        : Sample Setasinfo
+       
+[Form: Sample Setasinfo]
+
+    Part        : Sample Setasinfo
+    
+[Part: Sample Setasinfo]
+
+    Line        : Sample Setasinfo, Sample InfoLine
+    
+    [Line: Sample Setasinfo]
+    
+        Field   : Sample Setasinfo
+        
+        ;; even though the below field is modified locally, the 'info' at the field
+        ;; defintion level will take precedence
+        Local   : Field : Sample Setasinfo 	: Set as: "Locally Modified set by Set As attribute at Line locally"
+        
+    [Line: Sample InfoLine]
+    
+        Field   : Info Field
+
+        Local   : Field : Info Field 		: Info  : "(Though the above field is modified locally using 'Set As' Attribute, the 'Info' attribute at the Field Definition takes precedence)"
+        Local   : Field : Info Field 		: Lines	: 0
+        Local   : Field : Info Field 		: Style : Small Italic
+        Local   : Field : Info Field 		: Align : Centre
+        Local   : Field : Info Field 		: Width	: 30% Screen  
+		Space Top		: 1
+        
+;; Field Definition
+;; to check the funtionality change the below 'Info' as 'Set as'
+
+[Field: Sample Setasinfo]
+
+	Use			: Name Field
+    Info        : "Field Value set by Info Attribute"
+    Align       : Centre
+    Width       : 30% Screen
+
+;; End-of-file

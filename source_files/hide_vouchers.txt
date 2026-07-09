@@ -1,0 +1,57 @@
+[#Part:REPDB Body]
+	;Background	: Red
+	
+[#Line: DSP VchDetail]
+	;Border		: Thick Box
+	;Add				: Right Fields		: Sysname
+	Remove If 		: ($Name:VoucherType:$VoucherTypeName)="Multi Currency Sales Voucher" 
+	
+	
+[#Form: Voucher Type]
+	Background		: Yellow
+;[#Part: NRM DBBody]
+;	;Border		: Thick Box
+;	Break On	: $Name:VoucherType:$VoucherTypeName = "Receipt"
+	
+;[Field: Sysname]
+;	Use         : Short Name Field
+;	Background		: Green
+;	Set as			: $Name:VoucherType:$VoucherTypeName="Receipt" 
+	
+	
+[Collection:Faqs]
+	Data Source 		: File JSON 	: "E:\wamp64\www\practice\faq.json";"E:\tirlok\tdl files\Gold Rate\New Transactions Api 1000.json";
+	;Data Source     	: HTTP JSON		: "http://localhost/MasterAuto/wp-content/uploads/2024/04/new-1.json";"http://localhost/MasterAuto/wp-content/uploads/2024/04/New-Transaction-Api-1000-2-to-28-march.json"
+	JSON Object Path	: mainEntity	: 1				; Main object path
+	Client Only			: Yes
+	
+[#Menu : Gateway of Tally]
+	Add		: Item	: "Faq"		: Display		: Faq
+	
+[Report:Faq]
+	Form		: Faq
+	
+[Form:Faq]
+	Part		: Faq
+	
+[Part:Faq]
+	Line		: Faq
+	Repeat		: Faq			: Faqs
+	Scroll		: Vertical
+	
+	[Line:Faq]
+		Border		: Thick Bottom
+		Left Field		: FaqQ
+		Right Field		: FaqAns
+		[Field:FaqQ]
+			Use			: NameField
+			Set as		: $name
+			Line		:0
+			Width		: 48% Page
+
+
+		[Field:FaqAns]
+			Use			: NameField
+			Set as		: $acceptedAnswer[1].text
+			Line		:0
+			Width		: 48% Page

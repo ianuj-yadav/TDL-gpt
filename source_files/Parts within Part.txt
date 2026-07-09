@@ -1,0 +1,102 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This program demonstrates the impact of Dimensional Attribute 'Part', 'Left Part', 'Right Part', 
+	'Height' and 'Width' within Part
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Parts within Part]
+
+	Form   	: Parts within Part
+	Print	: TB Configure
+
+[Form: Parts within Part]
+
+	Parts	: PWP Part1, PWP Part2, PWP Part3, PWP Part4
+	Height  : 100% Screen
+	Width   : 100% Screen
+	Button  : Print Button
+
+[Part: PWP Part1]
+
+	Left Parts	: PWP Part1 Left Part
+	Right Parts	: PWP Part1 Right Part
+	Vertical 	: No
+
+	[Part: PWP Part1 Left Part]
+	
+		Lines 	: PWP Line
+		Height 	: 10
+		Width 	: 50% Screen
+		Border 	: Thin Box
+
+		[Line: PWP Line]
+	
+			Fields	: PWP Field
+	
+			[Field: PWP Field]
+		
+				Set As 		: "This is printed from Part 1 Left Part"
+				FullWidth 	: Yes
+				Align 		: Centre
+
+	[Part: PWP Part1 Right Part]
+	
+		Lines 	: PWP Line
+		Height 	: 10
+		Width 	: 50% Screen
+		Border 	: Thin Box
+		Local	: Field	: PWP Field	: Set As	: "This is printed from Part 1 Right Part"
+
+[Part: PWP Part2]
+
+	Lines	: PWP Line
+	Height 	: 10
+	Width 	: 100% screen
+	Border 	: Thin Box
+	Local	: Field	: PWP Field	: Set As	: "This is printed from Part 2"
+
+[Part: PWP Part3]
+
+	Left Parts 	: PWP Part3 Left Part1, PWP Part3 Left Part2
+	Right Parts	: PWP Part3 Right Part
+	Vertical 	: No
+
+	[Part: PWP Part3 Left Part1]
+	
+		Lines		: PWP Line
+		Height 		: 10
+		Width 		: 33.3% screen
+		Border 		: Thin Box
+		Local: Field: PWP Field	: Set As	: "This is printed from Part 3 Left Part 1"
+	
+	[Part: PWP Part3 Left Part2]
+	
+		Lines		: PWP Line
+		Height 		: 5
+		Width 		: 33.3% Screen
+		Border 		: Thin Box
+		Local: Field: PWP Field	: Set As	: "This is printed from Part 3 Left Part 2"
+	
+	[Part: PWP Part3 Right Part]
+	
+		Lines		: PWP Line
+		Height 		: 5
+		Width 		: 33.3% Screen
+		Border 		: Thin Box
+		Background	: Red
+		Local: Field: PWP Field	: Set As	: "This is printed from Part 3 Right Part"
+
+[Part: PWP Part4]
+
+	Lines	: PWP Line
+	Height 	: 5
+	Width 	: 100% Screen
+	Border 	: Thin Box
+	Local	: Field	: PWP Field	: Set As	: "This is printed from Part 4"
+
+;; End-of-File

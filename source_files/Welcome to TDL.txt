@@ -1,0 +1,34 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+-	An Introductory TDL, wherein the objective is to introduce the learner to the world 
+	of TDL.
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: First TDL Report]
+
+	Form	: First TDL Form
+
+[Form: First TDL Form]
+
+	Parts	: First TDL Part
+	Button	: Export Button
+
+[Part: First TDL Part]
+
+	Lines	: First TDL Line
+	Scroll	: Vertical
+	
+	[Line: First TDL Line]
+
+		Fields	: First TDL Field
+
+		[Field: First TDL Field]
+
+			Set as	: "Welcome to the world of TDL"
+
+;; End-of-File

@@ -1,0 +1,64 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	The concepts learnt so far is applied in Reports with a Simple Trial Balance
+	consisting only of accounting Groups
+
+Last modification -
+-	Altered on 09-11-2009
+*/
+
+[Report: My Trial Balance]
+
+    Form       	: My Trial Balance
+
+[Form: My Trial Balance]
+
+    Parts       : My Trial Balance Part
+    Height      : 100% Page
+    Width       : 100% Page
+		
+[Part: My Trial Balance Part]
+
+    Lines       : My Trial Balance Title, My Trial Balance Details
+    Repeat      : My Trial Balance Details	: My Trial Balance Groups
+    Scroll      : Vertical
+    CommonBorder: Yes
+		
+    [Line: My Trial Balance Title]
+        
+        Use     : My Trial Balance Details
+        Local   : Field : Default           			: Type  : String
+        Local   : Field : Default           			: Align : Centre		
+        Local   : Field : My Trial Balance Name Field  	: Set as: "Particulars"
+        Local   : Field : My Trial Balance Amount Field	: Set as: "Amount"
+        Border  : Flush Totals
+
+    [Line: My Trial Balance Details]
+
+        Fields      : My Trial Balance Name Field
+        Right Fields: My Trial Balance Amount Field
+		
+        [Field: My Trial Balance Name Field]
+
+			Use         : Name Field
+			Set as      : $Name
+
+        [Field: My Trial Balance Amount Field]
+
+            Use         : Amount Field
+		    Set as      : $ClosingBalance
+		    Border      : Thin Left
+					
+[Collection: My Trial Balance Groups]
+
+    Type        : Group
+    Filter      : Non Zero Closing Balance
+	Fetch		: Name, ClosingBalance
+    
+[System: Formula]
+
+	Non Zero Closing Balance   : $ClosingBalance > 0
+
+;; End-of-File

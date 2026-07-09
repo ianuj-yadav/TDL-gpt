@@ -1,0 +1,172 @@
+;; PRODUCT: <Enter the product name>
+;; PRODUCT-ID: 5db09eca-ec91-44d2-aa1d-390795c7e21a
+;; AUTHOR: TallyDeveloper
+
+
+[#Menu: Gateway of Tally]
+
+    Add 	: Item  : Before    : Quit  : Ledger List   : Display   : Ledger List
+
+[Report: Ledger List]
+
+	Form        : Ledger Form
+	Title       : "Company Ledger List"
+
+[Form: Ledger Form]
+
+	Use         : DSP Template
+	Parts       : Ledger Part
+	Height      : 100% screen
+	Width       : 100% screen
+	Background  : Light Magenta
+	Button		: State Filter Button
+	
+[Part: Ledger Part]
+
+	Lines       : Ledger Title, Ledger Line
+	Repeat      : Ledger Line	: My Ledgers
+	CommonBorder: Yes
+	Scroll      : Vertical
+
+    [Line: Ledger Title]
+
+		Use     : Ledger Line
+		Local	: Field	: Default		: Type		: String
+		Local	: Field	: Default 		: Align		: Centre
+		Local	: Field	: Default 		: Style		: Normal Bold
+		
+		Local	: Field	: Led No        : Set as    : "Sl. No"
+		Local	: Field	: Led Name	    : Set as    : "Ledger Name"
+		Local	: Field	: Led address 	: Set as    : "Address"
+		Local	: Field	: Led States  	: Set as 	: "State"
+		Local	: Field	: Led Pin 		: Set as   	: "PinCode"
+		Local	: Field	: Led Cont	    : Set as 	: "Contact Person"
+		Local	: Field	: Led Tel 		: Set as 	: "Telephone"
+		Local	: Field	: Led Faxno 	: Set as 	: "Fax"
+		Local	: Field	: Led emailadd	: Set as 	: "Email"
+		Local	: Field	: Led CB		: Set as 	: "Closing Balance"
+		Border  : Thin Top Bottom
+
+    [Line: Ledger Line]
+
+		Fields      : Led No, Led Name,Led Address,Led States,Led Pin, Led Cont, Led Tel, Led Faxno, Led emailadd, Led CB
+		Repeat      : Led CB
+		Option      : AlterOnEnter
+	
+        [Field: Led No]
+
+			Set as      : $$Line
+			Width       : 3
+			Align       : Centre
+			Border      : Thin Right
+			Alter       : Ledger
+			    
+        [Field: Led Name]
+
+			Use         : Name Field
+			Set as      : $Name
+			Border      : Thin Right
+						
+        [Field: LedAddress]
+
+			Set as      : $STPartyFullAdd
+			Width       : 30
+			Border      : Thin Right
+
+        [Field: Led States]
+
+			Set as      : $StateName
+			Width       : 10
+			Border      : Thin Right
+
+        [Field: Led Pin]
+
+			Set as      : $PinCode
+			Width       : 10
+			Border      : Thin Right
+
+        [Field: Led Cont]
+
+			Set as      : $LedgerContact
+			Width       : 10
+            Border      : Thin Right
+
+        [Field: Led Tel]
+
+			Set as      : $LedgerPhone
+			Width 	    : 10
+            Border      : Thin Right
+
+        [Field: Led FaxNo]
+
+			Set as      : $LedgerFax
+			Width       : 10
+			Border      : Thin Right
+
+        [Field: Led EmailAdd]
+
+			Set as      : $Email
+			Width   	: 20
+			Border      : Thin Right
+
+        [Field: Led CB]
+
+            Use         : Amount Forex Field
+			Set as      : $ClosingBalance
+
+[Collection: My Ledgers]
+
+    Type	    : Ledger
+	Child of	: $$GroupSundryDebtors
+	Belongs to	: Yes
+	Filter		: Ledger Filter
+
+
+[System : Formula]
+	Ledger Filter : $StateName = ##FilterVar
+
+[Button: State Filter Button]
+
+	Key     	: F4
+	Title	    : "State Filter"
+	Action	    : Execute	: Ledger Filter Report
+
+[Report: Ledger Filter Report]
+
+	Form 		: Ledger Filter Form
+
+[Form: Ledger Filter Form]
+
+	Part		: Ledger Filter Part
+
+[Part	: Ledger Filter Part]
+
+	Line 		: Ledger Filter Line
+
+	[Line : Ledger Filter Line]
+
+		Field 	: Medium Prompt, Ledger Filter Field
+		Local	: Field : Medium Prompt : Info : "Enter the State Name"
+		
+		[Field : Ledger Filter Field]
+
+			Use 		: Name Field
+			Table		: Ledger Filter Collection
+			Show Table	: Always
+			Modifies	: FilterVar
+
+[Collection : Ledger Filter Collection]
+	
+	Title		: $$LocaleString:"List of Ledgers"
+	Type	    : Ledger
+	Child of	: $$GroupSundryDebtors
+	Belongs to	: Yes
+	Format		: $StateName,20
+	
+[Variable: FilterVar]
+
+	Type    	: String
+		
+[System: Variable]
+
+	FilterVar  : ""

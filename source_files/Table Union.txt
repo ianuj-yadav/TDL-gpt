@@ -1,0 +1,65 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+-	The following program demonstrates the union of multiple collection
+
+Last modification – 
+-	Altered on 09/11/2009
+
+Dependencies -
+-	Supporting File 'Table Subtitle.txt'
+*/
+
+[Report: Table Union]
+
+	Use			: ColSubTitle
+	Local: Part	: ColSubTitle: Add	  : Lines	: TableCreditors, TableUnion
+	Local: Collection: DebtorsLedTable: Title	: $$LocaleString:"List of Sundry Debtors"
+	Auto		: Yes
+
+	[Line: TableCreditors]
+
+		Use		: ColSubTitle
+		Local	: Field	: Long Prompt : Set As	: "Ledger (Sundry Creditors) :"
+		Local	: Field	: ColSubTitle : Delete	: Table
+		Local	: Field	: ColSubTitle : Add		: Table	: CreditorsLedTable
+
+	[Line: TableUnion]
+
+		Use		: ColSubTitle
+		Local	: Field	: Long Prompt : Set As	: "Union of both the above Groups :"
+		Local	: Field	: ColSubTitle : Delete	: Table
+		Local	: Field	: ColSubTitle : Add		: Table	: LedTable
+
+[Collection: LedTable]
+
+	Collection	: DebtorsLedTable, CreditorsLedTable
+
+	Format   	: $Name, 15
+	Format   	: $StateName, 15
+	Format   	: $OpeningBalance, 10
+	Format   	: $ClosingBalance, 10
+	
+	Fetch		: Name, StateName, OpeningBalance, ClosingBalance
+	Sub Title	: $$LocaleString:"Name", $$LocaleString:"State", $$LocaleString:"Op.Balance", $$LocaleString:"Cl.Balance"
+	Title		: $$LocaleString:"List of Sundry Debtors & Creditors"
+
+[Collection: CreditorsLedTable]
+
+	Type     	: Ledger
+	Child Of	: $$GroupSundryCreditors
+	Fetch		: Name, StateName, OpeningBalance, ClosingBalance
+	Format   	: $Name, 15
+	Format   	: $StateName, 15
+	Format   	: $OpeningBalance, 10
+	Format   	: $ClosingBalance, 10
+
+;; Column Sub Titles must be in same order as specified in Format above
+
+	Sub Title	: $$LocaleString:"Name", $$LocaleString:"State", $$LocaleString:"Op.Balance", $$LocaleString:"Cl.Balance"
+	Title		: $$LocaleString:"List of Sundry Creditors"
+
+;; The above Sub Titles can also be separated by commas within a single attribute
+
+;; End-of-File

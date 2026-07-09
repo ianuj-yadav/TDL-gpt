@@ -1,0 +1,251 @@
+[Report:UDINReports]
+	Title	: "Reports in which UDIN Enabled"
+	Form	: UDINReports
+	
+	
+[Form:UDINReports]
+	Width		: 30% Page
+	Part		: UDINReports
+	
+[Part:UDINReports]
+	Lines		: UDINReportsTitle, URDayBook, URBalanceSheet, URProfitLoss
+	Common Borders		: Yes
+	[Line:UDINReportsTitle]
+		Use	: URDayBook
+		Local	: Field	: Default			: Type	: String
+		Local	: Field	: Default			: Line	: 0
+		Local	: Field	: Default			: Align	: Center
+		Local	: Field	: Default			: Style	: Normal Bold
+		Local	: Field	: Default			: Delete: Storage
+		
+		Local	: Field	: URDayBookName		: Info		: "Name of Reports"
+		Local	: Field	: URDayBookValue	: Info		: ""
+		Local	: Field	: CmpAgentName		: Border	: Thin Bottom
+		Border			: Full Double Bottom
+		Space Bottom	: 1
+
+	[Line:URDayBook]
+		Field	: URDayBookName, URDayBookValue
+		Border	: Thin Bottom
+		[Field:URDayBookName]
+			Use			: Name Field
+			Info		: $$LocaleString:"Day Book"
+			Unique		: Yes
+			Full Width	: Yes
+			
+		[Field:URDayBookValue]
+			Type		: Logical
+			Width		: 3
+			Modifies	: UREnableDayBook
+			Max			: 3
+			Set as		: ##UREnableDayBook
+			Table		: YesNoTable
+			Show Table	: On Error
+			Key			: LogicalToggle		
+			Style		: Normal Bold
+			Align		: Right
+			Set Always	: Yes
+
+			
+	[Line:URBalanceSheet]
+		Use			: URDayBook
+		Local		: Field		: URDayBookName		: Info		: $$LocaleString:"Balance Sheet"
+		Local		: Field		: URDayBookValue	: Modifies	: URBalanceSheet
+		Local		: Field		: URDayBookValue	: Set as	: ##URBalanceSheet
+			
+			
+	[Line:URProfitLoss]
+		Use			: URDayBook
+		Local		: Field		: URDayBookName		: Info		: $$LocaleString:"Profit & Loss A/c"
+		Local		: Field		: URDayBookValue	: Modifies	: URProfitLoss
+		Local		: Field		: URDayBookValue	: Set as	: ##URProfitLoss
+			
+			
+		
+
+
+	
+
+
+[Variable: UREnableDayBook] 
+	Type		: Logical
+	Persistent	: Yes 
+
+[Variable: URBalanceSheet] 
+	Type		: Logical
+	Persistent	: Yes 
+
+[Variable: URProfitLoss] 
+	Type		: Logical
+	Persistent	: Yes 
+
+[System: Variable]
+	UREnableDayBook		: Yes
+	URBalanceSheet		: Yes
+	URProfitLoss		: Yes
+			
+
+
+[#Form:DayBook]
+	;Background		: If ##UREnableDayBook Then "Red" Else "Green"
+	;Add		: Button		: UDINDaybookMain
+	
+
+[Button:UDINDaybookMain]
+	Title	: $$LocaleString:"UDIN"
+	Key		: D
+	Inactive		: NOT ##UREnableDayBook
+	Action			: Alter	: AddUDINDaybook
+
+
+[#Report:DYBK Landing]
+	;Background		: Green
+	
+[#Form: Landing Page]
+	;Background	: Red
+	[#Part: DYBK LandingDefault]
+		;Background		: Red
+		Option			: DYBK LandingDefaultUDIN		: ##UREnableDayBook
+		[!Part:DYBK LandingDefaultUDIN]
+			Add			: Line		: DYBK LandingDefaultUDIN
+			[Line:DYBK LandingDefaultUDIN]
+				Fields      : Medium Prompt, DYBK LandingDefaultUDIN
+				Local       : Field : Medium Prompt : Info 			: $$LocaleString:"UDIN Number"
+				Local       : Field : Medium Prompt : Background 	: Yellow
+				[Field:DYBK LandingDefaultUDIN]
+					Type		: String
+					Set as		: ##DYBKUDINLanding
+					Style		: Normal Bold
+					Skip		: No
+					Inactive	: No
+					Background	: Red
+					Width		: 20
+					
+	
+
+[Variable:DYBKUDINLanding]
+	Type			: String
+	Persistent		: No
+
+[System: Variable]
+	DYBKUDINLanding		: ''
+	
+				
+[#Part:SV Output Actions]
+	;Background		: Red
+
+	[#Part: Print Buttons]
+		Option				: Print UDIN Buttons		: ##EnableUDIN AND ##UREnableDayBook
+		
+[!Part:Print UDIN Buttons]
+	Add			: Button	: UDINDaybook
+	
+
+[Button:UDINDaybook]
+	
+	Use				: InlineButton Template Large
+	Title			: $$LocaleString:"Add UDIN"
+
+	Key				: D
+
+	ActionEx		: Set Var		: Alter	: AddUDINDaybook
+	;ActionEx		: Form Accept	: Form Accept
+
+	Space Right		: 1.25 % Screen
+	Space Left		: 1.25 % Screen
+	;Skip Forward	: if $$IsEdited Then No Else (NOT ##IsSetPreviewAsDefault) OR @@SVDraftDMPMode
+
+	Inactive		: NOT ##UREnableDayBook
+[System	: UDF]
+	DYBKUDINLanding			: String		: 36001
+	
+[Report:AddUDINDaybook]
+	Form		: AddUDINDaybook
+	
+[Form:AddUDINDaybook]
+	Part		: AddUDINDaybook
+	No Confirm	: Yes
+	
+[Part:AddUDINDaybook]
+	Line		: AddUDINDaybook
+	[Line:AddUDINDaybook]
+		Fields		: Medium Prompt	, AddUDINDaybook
+		Local		: Field		: MediumPrompt		: Info	: $$LocaleString:"UDIN"
+		[Field: AddUDINDaybook]
+			Use				: Name Field
+			Case			: Upper Case
+			Set as			: ##DYBKUDINLanding
+			Modifies		: DYBKUDINLanding
+
+
+;;=========================================================================
+/*
+[Collection:AllUdinReports]
+	Objects			: UREnableDayBook,URBalanceSheet
+	
+[Object:UREnableDayBook]
+	URName				: "DayBook"
+	URString			: "Day Book"
+	URVariable			: "UREnableDayBook"
+	URReport			: "DayBook"
+
+[Object:URBalanceSheet]
+	URName				: "BalanceSheet"
+	URString			: "Balance Sheet"
+	URVariable			: "URBalanceSheet"
+	URReport			: "Balance Sheet"
+
+
+[#Menu:Gateway of Tally]
+	Add		: Item		: CollReport		: Create		: UDINReportsColl
+[Report:UDINReportsColl]
+	Title	: "Reports in which UDIN Enabled"
+	Form	: UDINReportsColl
+	
+	
+[Form:UDINReportsColl]
+	Width		: 30% Page
+	Part		: UDINReportsColl
+	
+[Part:UDINReportsColl]
+	Lines		: UDINReportsCollTitle, UDINReportsColl
+	Repeat		: UDINReportsColl		: AllUdinReports
+	Common Borders		: Yes
+	[Line:UDINReportsCollTitle]
+		Use	: UDINReportsColl
+		Local	: Field	: Default			: Type	: String
+		Local	: Field	: Default			: Line	: 0
+		Local	: Field	: Default			: Align	: Center
+		Local	: Field	: Default			: Style	: Normal Bold
+		Local	: Field	: Default			: Delete: Storage
+		Local	: Field	: Default			: Skip	: Yes
+		
+		Local	: Field	: URDayBookName		: Info		: "Name of Reports"
+		Local	: Field	: URDayBookValue	: Info		: ""
+		;Local	: Field	: CmpAgentName		: Border	: Thin Bottom
+		Border			: Full Double Bottom
+		Space Bottom	: 1
+
+	[Line:UDINReportsColl]
+		Field	: UDINReportsCollName, UDINReportsCollValue
+		[Field:UDINReportsCollName]
+			Use			: Name Field
+			Info		: $$LocaleString:$URString
+			Unique		: Yes
+			
+		[Field:UDINReportsCollValue]
+			Type		: Logical
+			Width		: 3
+			Modifies	: UREnableDayBook
+			;Variable	: $URVariable
+			Max			: 3
+			Set as		: ##UREnableDayBook
+			Table		: YesNoTable
+			Show Table	: On Error
+			Key			: LogicalToggle		
+			Style		: Normal Bold
+			Align		: Right
+			Background	: Red
+			;repo		: $$LocaleString:$URReport
+			;Sub Form	: Daybook	: $$Value=Yes
+*/

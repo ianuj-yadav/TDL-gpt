@@ -1,0 +1,81 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+-	This program demonstrates the capability of XML Collection to retrieve the data from 
+	unicode XML File present at a specified URL.Further it displays the data fetched in 
+	a Report and maps the response XML to a TDL Object
+-	The XML data thus fetched from the XML File is displayed in a Report.
+
+Syntax -
+-	Collection Attribute 'Remote URL' Syntax
+	Remote URL 	: <URL Specification>
+-	XML Object specification using 'XML Object'
+	XML Object : <Object Name> where 
+	object should contain storages and collections mapped with XML File contents
+
+Last modification – 
+-	Altered on 07/11/2009
+
+Dependencies -
+-	Supporting files 'XML Data.txt' & 'Simple Get.txt'
+-	XML Data Unicode File 'TestXML.XML' which must be available at C:\INETPUB\WWWROOT in
+	case if IIS is setup as the Web Server
+*/
+
+;; Report displaying XML Data 
+
+[Report: XML Get CollObjSpec]
+
+	Form 	: XML Get CollObjSpec
+	Title 	: "Simple Get Request With Object Specification"
+
+[Form: XML Get CollObjSpec]
+
+	Parts		: XML Get CollObjSpec, XML Data
+	Height		: 100% Screen
+	Width		: 100% Screen
+	Buttons		: PrintButton, ExportButton, UploadButton, MailButton
+	FullObject	: Yes
+
+[Part: XML Get CollObjSpec]
+
+	Lines	: XML Get CollObjSpec
+	Repeat	: XML Get CollObjSpec	: XML Get CollObjSpec	
+	Scroll  : Vertical
+
+	[Line: XML Get CollObjSpec]
+
+		Fields		: XML Name, XMLEmp ID
+		Explode 	: XML Phone
+		Explode 	: XML Add
+		FullObject	: Yes
+
+;; Collection retrieving data from an XML file located at a predefined URL 
+
+[Collection: XML Get CollObjSpec]
+
+	Remote URL  : "http://Localhost/TestXML.xml"  	;; URL specification
+	XML Object 	: Customer Data                   	;; TDL Object Specification 
+	Client Only	: Yes
+
+;; Specification starts here
+
+[Object: Customer Data]
+
+    Storage  	: Name      : String
+    Storage 	: EmpId 	: String
+    Collection 	: Phone    	: XML Phone Coll      	;; Complex Collection
+    Collection 	: Address 	: XML AddressColl     	;; Complex Collection
+
+[Object: XML Phone Coll]
+
+    Storage 	: OfficeNo 	: String
+    Storage 	: HomeNo 	: String
+    Storage 	: Mobile    : String
+ 
+[Object: XML AddressColl]
+
+   Collection 	: AddrLine	: String   				;; Simple Collection
+
+;; End-of-File

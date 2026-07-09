@@ -1,0 +1,50 @@
+---
+title: Before After Cancel Object
+type: sample_code
+objects: Function
+source: Before After Cancel Object.txt
+---
+
+# Before After Cancel Object
+
+## Source Code
+
+```tdl
+;; To See This Code Result You Have To Cancel any Voucher in Daybook
+
+
+
+[System: Events]
+	BeforeCancelObjectEvent	: Before Cancel Object	: Yes	: Call	: BeforeCancelObjectEventFunction
+	AfterCancelObjectEvent	: After Cancel Object	: Yes	: Call	: AfterCancelObjectEventFunction
+
+[Function:BeforeCancelObjectEventFunction]
+	Local Formula	: StrMasterID	: $$String:$MasterID
+	
+	001	: Log	: "Before Cancel Object Event " + @StrMasterID + " Starts Here"
+	005	: Log	: $VoucherNumber
+	010	: Log	: $VoucherTypeName
+	015	: Log	: "Before Cancel Object Event " + @StrMasterID + " Ends Here"
+	
+[Function:AfterCancelObjectEventFunction]
+	Local Formula	: StrMasterID	: $$String:$MasterID
+	
+	001	: Log	: "After Cancel Object Event " + @StrMasterID + " Starts Here"
+	005	: Log	: $VoucherNumber
+	010	: Log	: $VoucherTypeName
+	015	: Log	: "After Cancel Object Event " + @StrMasterID + " Ends Here"
+	
+
+
+
+[#Key: BtmBar Form Duplicate Voucher]
+	Color	: Red
+	Background	: Yellow
+	
+
+
+
+
+
+
+```

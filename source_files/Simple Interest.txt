@@ -1,0 +1,91 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code introduces the concept of User Defined Functions with a basic Simple
+	Interest Calculation code
+
+Last Modification -
+-	Altered on 09-11-2009
+*/
+
+[Report: Simple Interest Calculator]
+
+	Form	: Interest Calc
+	Auto	: Yes
+
+[Form: Interest Calc]
+
+	Parts	: Form SubTitle, Interest Calc
+	Local	: Field	: Form SubTitle		: Info		: "Simple Interest Calculator"
+	Width	: 30% Page
+
+[Part: Interest Calc]
+
+	Lines	: Interest Principal, Interest Rate, Interest NoOfYrs, Interest Result
+
+	[Line: Interest Principal]
+
+		Fields	: Medium Prompt, Interest Principal
+		Local	: Field	: Medium Prompt	: Info		: "Principal Amount :"
+
+		[Field: Interest Principal]
+
+			Use			: Amount Field
+
+	[Line: Interest Rate]
+
+		Fields	: Medium Prompt, Interest Rate
+		Local	: Field	: Medium Prompt	: Info		: "Rate :"
+
+		[Field: Interest Rate]
+
+			Use			: Number Field
+			Format		: "No Zero, Percentage"
+			Align		: Right
+		    Width       : @@AmountWidth
+
+	[Line: Interest NoOfYrs]
+
+		Fields	: Medium Prompt, Interest NoOfYrs
+		Local	: Field	: Medium Prompt	: Info		: "Tenure :"
+
+		[Field: Interest NoOfYrs]
+
+			Use			: Number Field
+			Format		: "NoZero"
+			Align		: Right
+		    Width       : @@AmountWidth
+
+	[Line: Interest Result]
+
+		Fields	: Medium Prompt, Interest Result
+		Local	: Field	: Medium Prompt		: Info		: "Simple Interest Amount :"
+		Local	: Field	: Default			: Inactive	: $$IsEmpty:#InterestPrincipal OR $$IsEmpty:#InterestRate OR $$IsEmpty:#InterestNoOfYrs
+		SpaceTop: 1
+
+		[Field: Interest Result]
+
+			Use			: Amount Field
+			Set Always	: Yes
+			Set As		: $$SICalc:#InterestPrincipal:#InterestRate:#InterestNoOfYrs
+
+;; Function to calculate Simple Interest
+
+[Function: SI Calc]
+
+;; Definition Block
+
+	Parameter	: P			: Amount
+	Parameter	: R			: Number
+	Parameter	: T			: Number
+	Returns		: Amount
+
+	Variable	: Interest	: Amount
+
+;; Procedural Block
+
+	01 : SET	: Interest	: (##P * ##R * ##T) / 100
+	02 : RETURN	: ##Interest
+
+;; End-of-File

@@ -1,0 +1,171 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+ 
+/*
+Objective(s) -
+-	This code demonstrates the usage of Aggregate UDF
+-	Company Vehicle Details is stored in Object Company which is being popped up as 
+	a Table in Sales Invoice
+
+Last Modification -
+-	Altered on 09-11-2009
+*/
+
+;; Report to accept vehicle details
+
+[Report: Company Vehicles]
+
+    Form 	   	: Company Vehicles
+	Object		: Company
+
+[Form: Company Vehicles]
+	
+	Parts       : Company Vehicles Title, Company Vehicles
+	Background  : Light Lily Yellow
+
+[Part: Company Vehicles Title]
+
+	Lines  	 	: Company Vehicles Title
+	Border  	: Column Titles
+
+    [Line: Company Vehicles Title]
+	
+        Use     : Company Vehicles
+	    Local   : Field : Default                   : Style : Small Bold
+	    Local   : Field : Default                   : Skip  : Yes
+	    Local   : Field : Default                   : Type  : String
+		Local   : Field : Default                   : Delete: Storage
+		Local   : Field : Default                   : Lines : 2
+		Local   : Field : CMP VBrand                : Set as: "Brand"
+		Local   : Field : CMP VVehicle Number	    : Set as: "Number"
+		Local   : Field : CMP VYear of Mfg	        : Set as: "Year of Mfg"
+		Local   : Field : CMP VPurchase Cost	    : Set as: "Purchase Cost"
+		Local   : Field : CMP VType of Vehicle	    : Set as: "Type"
+        Local   : Field : CMP VCurrently in Service : Set as: "In Service?"
+		Local   : Field : CMP VSold On date	        : Set as: "Sold On"
+		Local   : Field : CMP VSold for	            : Set as: "For "
+		Local   : Field : Default                   : Delete: Inactive
+
+[Part: Company Vehicles]
+
+	Line        : Company Vehicles
+	Repeat      : Company Vehicles : Company Vehicles
+	Scroll      : Vertical
+	CommonBorder: Yes
+	BreakOn     : $$IsEmpty:$VBrand
+
+    [Line: Company Vehicles]
+    
+		Field       : CMP VBrand, CMP VVehicle Number
+		Right Field : CMP VYear of Mfg,CMP VPurchase Cost
+        Right Field : CMP VType of Vehicle, CMP VCurrently in Service
+		Right Field : CMP VSold On date, CMP VSold for
+		Local       : Field : Default   : Style : Small Bold
+
+	    [Field: CMP VBrand]
+	    
+			Use     : Short Name Field 
+			Storage : VBrand
+			Border  : Thin Left
+
+	    [Field : CMP VVehicle Number]
+	    
+			use     : Name Field
+			Storage : VVehicleNumber
+			Border  : Thin Left
+			Inactive: $$IsEmpty:$VBrand
+
+	    [Field: CMP VYear of Mfg]
+		
+			Use     : Number Field 
+			Storage : VyearOfMfg
+			Border  : Thin Left
+			Inactive: $$IsEmpty:$VBrand
+			Format  : $$LocaleString:"No Comma"
+			
+	    [Field: CMP VPurchase Cost]
+	    
+			use     : Amount Field
+			Storage : VPurchaseCost
+			Border  : Thin Left
+			Inactive: $$IsEmpty:$VBrand
+
+	    [Field: CMP VType of Vehicle]
+	    
+			Use     : Short name Field
+			Storage : VTypeOfVehicle
+			Border  : Thin Left
+			Inactive: $$IsEmpty:$VBrand
+
+	    [Field: CMP VCurrently in Service]
+	    
+			Use     : Logical Field
+			Storage : VCurrentlyInService
+			Border  : Thin Left
+			Inactive: $$IsEmpty:$VBrand
+			Width   : 7
+
+	    [Field: CMP VSold On date]
+	    
+			Use 	: Short Date Field
+			Storage : VSoldOnDate
+			Border  : Thin Left
+			InActive: $VCurrentlyInService or $$IsEmpty:$VBrand
+
+	    [Field : CMP VSold for]
+	    
+			Use     : Amount Field
+			Storage : VSoldFor
+			Border  : Thin Left
+			Inactive: $VCurrentlyInService or $$IsEmpty:$VBrand
+
+[System: UDF]
+
+	Company Vehicles 	    : Aggregate : 9000
+	VVehicle Number		    : String    : 9001
+	VBrand			    	: String    : 9002
+	VYear of Mfg		    : Number    : 9001
+	VPurchase Cost		    : Amount    : 9001
+	VType of Vehicle	    : String    : 9003
+	VCurrently in Service	: Logical   : 9001
+	VSold On date		    : Date      : 9001
+	VSold for		    	: Amount    : 9002
+
+[Collection: CMP Vehicles]  
+
+	Type 	: Company Vehicles : Company
+	Childof : ##SVCurrentCompany
+	Format 	: $VVehicleNumber, 20
+	Format 	: $VBrand, 10
+	Filter 	: InServiceFormula
+	Title 	: "Company Vehicles"
+
+[System: Formula]
+
+	InServiceFormula : $VCurrentlyinService
+
+[#Part: EI DelNoteInfo]
+
+	Add : Option    : Veh EI DelNoteInfo    : @@IsSales
+
+    [!Part: Veh EI DelNoteInfo]
+
+		Add     : Line  : EI Vehicles Det
+		Height  : 4
+
+        [Line: EI Vehicles Det]
+        
+			Field : Medium Prompt, EI Vehicles Det
+			Local : Field   : Medium Prompt : Set as    : "Vehicle : " 
+
+	        [Field: EI Vehicles Det]
+	        
+				Use         : Short Name Field
+				Table       : CMP Vehicles, Not Applicable
+				Show Table  : Always 
+			    Storage     : VCHVehicle 
+
+[System: UDF]
+
+	VCHVehicle  : String    : 9010
+
+;; End-of-File

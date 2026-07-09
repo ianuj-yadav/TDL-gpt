@@ -1,0 +1,25 @@
+---
+title: Petrol Pump Functions
+type: sample_code
+objects: Function
+source: Petrol Pump Functions.txt
+---
+
+# Petrol Pump Functions
+
+## Source Code
+
+```tdl
+[Function:CreateTankObject]
+	Parameter	: PetrolTankName	: String	
+	Parameter	: PetrolTankParent	: String	
+	Parameter	: PetrolTankUnit	: String	
+	Objects		: Company				: ##PetrolTankName
+	10		: New Object	: Company			: ##PetrolTankName	: True
+;	10		: New Object	: Tanks			: #TankName	: True
+	20		: Set Value		: CmpTankName		: ##PetrolTankName
+	30 		: Set Value		: TankParent	: ##PetrolTankParent
+	40		: Set Value		: TankUnits		: ##PetrolTankUnit
+	;41		: Log			: $TankUnits+$TankParent+$TankName
+	50		: Set Target	: ..
+```

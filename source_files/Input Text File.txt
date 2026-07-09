@@ -1,0 +1,499 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the usage of Procedural File IO
+-	This code imports the Stock Item Data i.e., Name, Group and Units from either
+	Excel or Text using File IO capability and subsequently displays an error report
+	as well as opens a logged file on request
+
+Capabilities Used -
+-	List/Compound Variables
+- 	User Defined Functions
+-	Collections with Variables as its Data Source
+-	File IO (Read/Write) Capability
+
+Last Modification -
+-	Created on 13-08-2009
+
+Dependencies -
+-	Supporting files 'Import Config.txt' & 'Import Error Report.txt'
+-	Data files 'Text' &/or 'Excel' - 'ListofStockItems.Txt' & 'ListofStockItems.xls'
+*/
+
+/*
+[Function: Import Terms]
+
+	Variable		: Row			: Number	: 1
+	Variable		: Temp Var		: String
+	Variable		: Last Status	: String
+	Variable		: Counter		: Number	: 1
+
+	Variable		: Item Columns
+	List Variable	: TSPL Item Details, Item Import Status
+
+	00	: QUERY BOX	: "Import Stock Items"		: Yes	: No
+	10	: IF	: $$LastResult
+	20	: 	IF	: ##TSPLSmpSICSource = "Excel"
+	30	: 		OPEN FILE: @@TSPLSmpTotFilePath	: Excel	: READ
+	40	: 	ELSE	: 
+	50	: 		OPEN FILE: @@TSPLSmpTotFilePath	: Text	: READ
+	60	: 	ENDIF
+
+	70	:	SET		 : ItemColumns.ItemName	: @@TSPLSMPItemNameColIdx
+	80	:	SET		 : ItemColumns.ItemGrp	: @@TSPLSMPItemGrpColIdx
+	90	:	SET		 : ItemColumns.ItemUOM	: @@TSPLSMPItemUOMColIdx
+
+	100	: 	IF	: ##TSPLSmpSICSource = "Excel"
+	110	:		SET		: Row	: if ##TSPLSmpSICIncHeader then 2 else 1
+
+;; Reading from Excel File and updating to List
+	120	:		WHILE	: NOT $$IsEmpty:($$FileReadCell:##Row:##ItemColumns.ItemName)
+	130	:			LIST ADD EX	: TSPL Item Details
+	140	: 			SET			: TSPLItemDetails[$$LoopIndex].ItemName	: $$FileReadCell:##Row:##ItemColumns.ItemName
+	150	: 			SET			: TSPLItemDetails[$$LoopIndex].ItemGrp	: $$FileReadCell:##Row:##ItemColumns.ItemGrp
+	160	: 			SET			: TSPLItemDetails[$$LoopIndex].ItemUOM	: $$FileReadCell:##Row:##ItemColumns.ItemUOM
+	170	: 			INCREMENT	: Row
+	180	:		END WHILE
+
+	190	: 	ELSE: 
+
+;; Reading from Text File and updating to List
+	200	: 		SET		: Counter	: 1
+	210	: 		WHILE	: NOT $$FileIsEOF
+	220	:			SET		: Temp Var		: $$FileRead
+	230	:			IF		: NOT $$IsEmpty:##TempVar AND (NOT ##TSPLSmpSICIncHeader OR (##TSPLSmpSICIncHeader AND $$LoopIndex > 1))
+	240	:				LIST ADD EX	: TSPL Item Details
+	250	: 				SET			: TSPLItemDetails[##Counter].ItemName	: $$TSPLSmpSICExtractDet:##TempVar:##ItemColumns.ItemName
+	260	: 				SET			: TSPLItemDetails[##Counter].ItemGrp	: $$TSPLSmpSICExtractDet:##TempVar:##ItemColumns.ItemGrp
+	270	: 				SET			: TSPLItemDetails[##Counter].ItemUOM	: $$TSPLSmpSICExtractDet:##TempVar:##ItemColumns.ItemUOM
+	280	:				INCREMENT	: Counter
+	290	:			ENDIF
+	300	: 		END WHILE
+
+	310	:	ENDIF
+	320	: 	CLOSE FILE
+
+	330	: 	IF	: ##TSPLSmpSICOpenLogFile
+	340	:		OPEN FILE		: @@TSPLSmpErrorFilePath	: Text	: WRITE	: ASCII
+	350	:		TRUNCATE FILE
+	360	:	ENDIF
+
+	370	: 	SET		: Counter	: 1
+
+;; Creating Stock Items from List of Compound Variable
+	380	: 	WALK COLLECTION	: TSPL Smp Imp StockItem Summ
+	390	:		SET		: Last Status	: ""
+
+	391	: 		IF	: $$IsRemoteCompany
+	392	:			CALL	: TSPL Smp Fetch Objects
+	393	:		ENDIF
+
+	400	:		IF		: $$IsEmpty:$Name:StockItem:$SICStockItem
+	410	:			NEW OBJECT		: Stock Item
+	420	:			SET VALUE		: Name	: $SICStockItem
+
+	430	:			IF	: NOT $$IsEmpty:$Name:StockGroup:$SICStockGroup
+	431	:				LOG			: "Group Allocation"
+	440	:				SET VALUE	: Parent	: $SICStockGroup
+	450	:			ELSE:
+	460	:				SET			: LastStatus: "Group " + $SICStockGroup + " does not exist"
+	470	:			ENDIF
+
+	480	:			IF	: NOT $$IsEmpty:$Symbol:Unit:$SICStockUOM
+	490	:				SET VALUE	: Base Units	: $SICStockUOM
+	500	:			ELSE:
+	510	:				SET			: LastStatus	: "Unit " + $SICStockUOM + " does not exist"
+	520	:			ENDIF
+	530	:			IF	: $$IsEmpty:##LastStatus
+	540	:				SAVE TARGET
+	550	:				SET			: Last Status	: "Imported Successfully"
+	560	:			ENDIF
+	570	:		ENDIF
+	575	:		IF	: $$IsEmpty:##LastStatus
+	576	:			SET		: Last Status	: "Item already exists"
+	577	:		ENDIF
+;; Writing Import Status to the LOG File if LOG File is to be displayed at the end
+	580	: 		IF	: ##TSPLSmpSICOpenLogFile
+	590	:			WRITE FILE LINE	: $SICStockItem + ##TSPLSmpSICTextSep + ##LastStatus
+	600	:		ENDIF
+
+;; Updating List of Compound Variables is Status is to be displayed in a Report
+	610	: 		IF	: ##TSPLSmpSICDisplayReport
+	620	:			LIST ADD EX		: ItemImportStatus
+	630	:			SET				: ItemImportStatus[##Counter].ItemName	: $SICStockItem
+	640	:			SET				: ItemImportStatus[##Counter].Status	: ##LastStatus
+	650	:			INCREMENT		: Counter
+	660	:		ENDIF
+
+	670	: 	END WALK
+;;	680	:	CLOSE TARGET FILE
+
+;; Display Error Report from the List of Compound Variables 'ItemImportStatus'
+	690	: 	IF	: ##TSPLSmpSICDisplayReport
+	700	: 		DISPLAY			: TSPL Smp SIC Error Report
+	710	: 	ENDIF
+
+;; Open the LOG File
+	720	: 	IF	: ##TSPLSmpSICOpenLogFile
+	730	: 		EXEC COMMAND	: @@TSPLSmpErrorFilePath
+	740	: 	ENDIF
+	750	: ENDIF
+
+[Collection: TSPL Smp Imp StockItem]	;; Collection using List of Compound Variable
+
+	Data Source			: Variable			: TSPLItemDetails
+
+[Collection: TSPL Smp Imp StockItem Summ]
+
+	Source Collection	: TSPLSmpImpStockItem
+	By					: SICStockItem		: $ItemName
+	By					: SICStockGroup		: $ItemGrp
+	By					: SICStockUOM		: $ItemUOM
+	Filter				: TSPL Smp NonEmpty Item
+	Client Only			: Yes
+
+[System: Formula]
+
+	TSPL Smp NonEmpty Item	: NOT $$IsEmpty:$SICStockItem
+
+	TSPL Smp Folder Path	: if $$TSPLSMPEndsWithSlash:##TSPLSmpSICDirPath then ##TSPLSmpSICDirPath else ##TSPLSmpSICDirPath + "\"
+	TSPL Smp File Name		: ##TSPLSmpSICFilePath
+	TSPL Smp File Ext 		: if $$TSPLSMPSymbolExistsinFileName:##TSPLSmpSICFileExt then ##TSPLSmpSICFileExt else "." + ##TSPLSmpSICFileExt
+
+	TSPL Smp TotFilePath	: @@TSPLSmpFolderPath + @@TSPLSmpFileName + @@TSPLSmpFileExt
+
+	TSPL Smp ItemNameColIdx	: if $$Number:##TSPLSmpSICItemName = 0 then $$FileGetColumnIdx:##TSPLSmpSICItemName else ##TSPLSmpSICItemName
+	TSPL Smp ItemGrpColIdx	: if $$Number:##TSPLSmpSICItemGroup = 0 then $$FileGetColumnIdx:##TSPLSmpSICItemGroup else ##TSPLSmpSICItemGroup
+	TSPL Smp ItemUOMColIdx	: if $$Number:##TSPLSmpSICItemUOM = 0 then $$FileGetColumnIdx:##TSPLSmpSICItemUOM else ##TSPLSmpSICItemUOM
+
+	TSPL SMP Error File Path: @@TSPLSmpFolderPath + @@TSPLSmpFileName + ".LOG"
+
+;; Functions
+
+[Function: TSPL Smp Fetch Objects]
+
+	Fetch Object: Stock Item	: $SICStockItem	: $Name
+	Fetch Object: Stock Group	: $SICStockGroup: $Name
+	Fetch Object: Unit			: $SICStockUOM	: $Symbol
+
+	00	: LOG	: "Objects fetched for Item - " + $SICStockItem
+
+[Function: TSPL Smp SIC Extract Det]
+
+	Parameter	: pValue	: String
+	Parameter	: pIndex	: Number
+
+	Variable	: Counter	: Number	: 1
+
+	00	: FOR TOKEN	: TokenVar	: ##pValue	: ##TSPLSmpSICTextSep
+	10	:	IF	: ##Counter = ##pIndex
+	20	:		RETURN	: ##TokenVar
+	30	:	ENDIF
+	40	:	INCREMENT	: Counter
+	50	: END FOR
+
+;; Compound Variable Declaration
+
+[Variable: Item Columns]
+
+	Variable	: Item Name, Item Grp, Item UOM		: Number
+
+[Variable: TSPL Item Details]
+
+	Variable	: Item Name, Item Grp, Item UOM		: String
+
+[Variable: Item Import Status]
+
+	Variable	: Item Name, Status					: String
+
+
+
+
+;; End-of-File
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+[Report: TSPL Smp Import Config]	;; Report Definition invoking Import of Stock Items
+
+	Form		: TSPL Smp Import Config
+	Title		: $$LocaleString:"Import Configuration"
+
+[Form: TSPL Smp Import Config]
+
+    Parts       : TSPL Smp Import Config Driver Info, TSPL Smp Import Config Column Info, TSPL Smp Import Config Other Info
+    Full Width  : No
+    Space Right : 2
+    Space Left  : 2
+    No confirm  : Yes
+    Option      : Small Size Form
+    Background  : @@SV_CMPCONFIG
+
+	On: Form Accept	: Yes	: Form Accept
+	On: Form Accept	: Yes	: Call		: TSPL Smp Import Stock Items
+
+[Part: TSPL Smp Import Config Driver Info]
+
+	Lines 		: Form SubTitle, TSPL Smp SIC Source, TSPL Smp SIC DirInfo, TSPL Smp SIC FileInfo, TSPL Smp SIC FileExtension, TSPL Smp SIC SheetInfo
+	Local: Field: Form SubTitle	: Info 		: $$LocaleString:"File Information"
+	Local: Line	: Form SubTitle	: Space Top	: 1
+	Local: Field: Name Field	: Width		: 25% Page
+
+	[Line: TSPL Smp SIC Source]
+
+		Fields		: Medium Prompt, Name Field
+		Local: Field: Medium Prompt	: Set As	: "Import Source :"
+		Local: Field: Name Field	: Modifies	: TSPL Smp SIC Source	: Yes
+		Local: Field: Name Field	: Variable	: TSPL Smp SIC Source
+		Local: Field: Name Field	: Table		: TSPL Smp SIC Source
+		Local: Field: Name Field	: Show Table: On First Key 
+
+		[Table: TSPL Smp SIC Source]
+
+			List Name	: "Text", "Excel"
+			Title		: "Source"
+
+	[Line: TSPL Smp SIC DirInfo]
+
+		Fields		: Medium Prompt, Name Field
+		Local: Field: Medium Prompt	: Set As	: "Location of File:"
+		Local: Field: Name Field	: Modifies	: TSPL Smp SIC DirPath	: Yes
+		Local: Field: Name Field	: Variable	: TSPL Smp SIC DirPath
+		Local: Field: Name Field	: Max		: 120
+
+	[Line: TSPL Smp SIC FileInfo]
+
+		Use			: TSPL Smp SIC DirInfo
+		Local: Field: Medium Prompt	: Set As	: "File Name:"
+		Local: Field: Medium Prompt	: Indent	: 1
+		Local: Field: Name Field	: Modifies	: TSPL Smp SIC FilePath 	: Yes
+		Local: Field: Name Field	: Variable	: TSPL Smp SIC FilePath
+		Local: Field: Name Field	: Control	: TSPL Smp NoExt: $$TSPLSmpSymbolExistsinFileName:$$Value
+
+	[Line: TSPL Smp SIC FileExtension]
+
+		Use			: TSPL Smp SIC DirInfo
+		Local: Field: Medium Prompt	: Set As	: "File Extension:"
+		Local: Field: Medium Prompt	: Indent	: 1
+		Local: Field: Name Field	: Modifies	: TSPL Smp SIC FileExt 	: Yes
+		Local: Field: Name Field	: Variable	: TSPL Smp SIC FileExt
+		Local: Field: Name Field	: Set As	: if (##TSPLSmpSICSource = "Excel" AND NOT ##TSPLSmpSICFileExt CONTAINS "xls") then "xls" else if (##TSPLSmpSICSource = "Text" AND ##TSPLSmpSICFileExt CONTAINS "xls") then "txt" else ##TSPLSmpSICFileExt
+		Local: Field: Name Field	: Set Always: Yes
+		Local: Field: Name Field	: Case		: Normal
+
+	[Line: TSPL Smp SIC SheetInfo]
+
+		Use			: TSPL Smp SIC DirInfo
+
+		Local: Field: Default		: Inactive	: NOT ##TSPLSmpSICSource = "Excel"
+
+		Local: Field: Medium Prompt	: Set As	: "Sheet Name (Excel):"
+		Local: Field: Name Field	: Set As	: if $$IsEmpty:$$Value then "Stock Items" else ##TSPLSmpSICTableName
+		Local: Field: Name Field	: Modifies	: TSPL Smp SIC TableName : Yes
+		Local: Field: Name Field	: Variable	: TSPL Smp SIC TableName
+
+[Part: TSPL Smp Import Config Column Info]
+
+	Lines 		: Form SubTitle, TSPL Smp SIC Inc Header, TSPL Smp SIC Item Name, TSPL Smp SIC Item Group, TSPL Smp SIC Item UOM, TSPL Smp SIC Text Sep
+	Local: Field: Form SubTitle 	: Info 		: $$LocaleString:"Column for the following (A, B, C or 1, 2, 3)"
+	Local: Line	: Form SubTitle		: Space Top	: 1
+	Local: Field: Name Field		: Set Always: Yes
+
+	[Line: TSPL Smp SIC Inc Header]
+
+		Use			: TSPL Smp SIC DirInfo
+		Local: Field: Medium Prompt	: Set As	: "Includes Header Info :"
+		Local: Field: Name Field	: Modifies	: TSPL Smp SIC IncHeader	: Yes
+		Local: Field: Name Field	: Variable	: TSPL Smp SIC IncHeader
+		Local: Field: Name Field	: Width		: @@LogicalWidth
+		Local: Field: Name Field	: Table		: YesNoTable
+
+	[Line: TSPL Smp SIC Item Name]
+
+		Use			: TSPL Smp SIC DirInfo
+		Local: Field: Medium Prompt	: Set As	: "Stock Item Name :"
+		Local: Field: Name Field	: Modifies	: TSPL Smp SIC ItemName : Yes
+		Local: Field: Name Field	: Variable	: TSPL Smp SIC ItemName
+		Local: Field: Name Field	: Set As	: if ##TSPLSmpSICSource = "Text" AND $$Number:##TSPLSmpSICItemName = 0 then "1" else ##TSPLSmpSICItemName
+
+		Option		: TSPL Smp SIC Item Name Max
+
+		[!Line: TSPL Smp SIC Item Name Max]
+
+			Local: Field: Name Field	: Maximum	: 1
+			Local: Field: Name Field	: Width		: 2
+
+	[Line: TSPL Smp SIC Item Group]
+
+		Use			: TSPL Smp SIC Item Name
+		Local: Field: Medium Prompt	: Set As	: "Under Group :"
+		Local: Field: Name Field	: Modifies	: TSPL Smp SIC ItemGroup 	: Yes
+		Local: Field: Name Field	: Variable	: TSPL Smp SIC ItemGroup
+		Local: Field: Name Field	: Set As	: if ##TSPLSmpSICSource = "Text" AND $$Number:##TSPLSmpSICItemGroup = 0 then "2" else ##TSPLSmpSICItemGroup
+		Local: Field: Name Field	: Control	: Duplicate Entry	: $$Value = ##TSPLSmpSICItemName
+
+		Option		: TSPL Smp SIC Item Name Max
+
+	[Line: TSPL Smp SIC Item UOM]
+
+		Use			: TSPL Smp SIC Item Name
+		Local: Field: Medium Prompt	: Set As	: "Units of Measure :"
+		Local: Field: Name Field	: Modifies	: TSPL Smp SIC ItemUOM 	: Yes
+		Local: Field: Name Field	: Variable	: TSPL Smp SIC ItemUOM
+		Local: Field: Name Field	: Set As	: if ##TSPLSmpSICSource = "Text" AND $$Number:##TSPLSmpSICItemUOM = 0 then "3" else ##TSPLSmpSICItemUOM
+		Local: Field: Name Field	: Control	: Duplicate Entry	: $$Value = ##TSPLSmpSICItemName OR $$Value = ##TSPLSmpSICItemGroup
+
+		Option		: TSPL Smp SIC Item Name Max
+
+	[Line: TSPL Smp SIC Text Sep]
+
+		Use			: TSPL Smp SIC Item Name
+
+		Local: Field: Default		: Inactive	: NOT ##TSPLSmpSICSource = "Text"
+
+		Local: Field: Medium Prompt	: Set As	: "Text Separator Character :"
+		Local: Field: Name Field	: Modifies	: TSPL Smp SIC TextSep	: Yes
+		Local: Field: Name Field	: Variable	: TSPL Smp SIC TextSep
+		Local: Field: Name Field	: Set As	: if ##TSPLSmpSICSource = "Text" then ##TSPLSmpSICTextSep else ""
+
+[Part: TSPL Smp Import Config Other Info]
+
+	Lines 		: Form SubTitle, TSPL Smp SIC Display Report, TSPL Smp SIC Open Log File
+	Local: Field: Form SubTitle : Info 		: $$LocaleString:"Other Information"
+	Local: Line	: Form SubTitle	: Space Top	: 1
+
+	[Line: TSPL Smp SIC Display Report]
+
+		Use			: TSPL Smp SIC Dir Info
+		Local: Field: Medium Prompt	: Set As	: "Display Error Report, if any :"
+		Local: Field: Name Field	: Modifies	: TSPL Smp SIC DisplayReport : Yes
+		Local: Field: Name Field	: Variable	: TSPL Smp SIC DisplayReport
+		Local: Field: Name Field	: Table		: YesNoTable
+		Local: Field: Name Field	: Width		: @@LogicalWidth
+
+	[Line: TSPL Smp SIC Open Log File]
+
+		Use			: TSPL Smp SIC Display Report
+		Local: Field: Medium Prompt	: Set As	: "Open Log File Error, if any :"
+		Local: Field: Name Field	: Modifies	: TSPL Smp SIC Open Log File	: Yes
+		Local: Field: Name Field	: Variable	: TSPL Smp SIC Open Log File
+		Local: Field: Name Field	: Table		: YesNoTable
+		Local: Field: Name Field	: Width		: @@LogicalWidth
+
+;; Function Definition
+
+[Function: TSPL Smp SymbolExistsinFileName]
+
+	Parameter	: pValue	: String
+	Parameter	: pSymbol	: String	: "."
+
+	Variable	: TempVar	: String
+
+	00	: FOR RANGE	: IteratorVar	: Number	: ($$StringLength:##pValue)	: 0	: 1
+	10	: 	SET		: TempVar		: $$StringPart:##pValue:##IteratorVar:1
+	20	:	IF		: $$ExactMatch:##TempVar:##pSymbol
+	30	:		RETURN	: True
+	40	:	ENDIF
+	50	: END FOR
+
+[Function: TSPL Smp EndsWithSlash]
+
+	Parameter	: pValue	: String
+
+	Variable	: TempNo	: Number
+	Variable	: TempVar	: String
+
+	00	: SET	: TempNo	: $$StringLength:##pValue - 1
+	10	: SET	: TempVar	: $$StringPart:##pValue:##TempNo:1
+	20	: IF	: ##TempVar = "\"
+	30	:	RETURN	: True
+	40	: ELSE	: 
+	50	: 	RETURN	: False
+	60	: ENDIF
+
+;; Variable and Formulae
+
+[System: Formula]
+
+	TSPL Smp NoExt		: "Please do not enter \n File Extension"
+
+[System: Variable]
+
+	TSPL Smp SICSource			: "Excel"
+	TSPL Smp SICDirPath			: "C:\Tally.ERP9\FileIOData"
+	TSPL Smp SICFilePath		: "ListofStockItems"
+	TSPL Smp SICFileExt			: ".xls"
+	TSPL Smp SICTableName		: "Stock Items"
+
+	TSPL Smp SICIncHeader		: Yes
+	TSPL Smp SICItemName		: "A"
+	TSPL Smp SICItemGroup		: "B"
+	TSPL Smp SICItemUOM			: "C"
+	TSPL Smp SICTextSep			: ","
+
+	TSPL Smp SICDisplayReport	: Yes
+	TSPL Smp SICOpen Log File	: No
+
+[Variable: TSPL Smp SIC Source]
+
+	Type		: String
+	Persistent	: Yes
+
+[Variable: TSPL Smp SIC DirPath]
+
+	Type		: String
+	Persistent	: Yes
+
+[Variable: TSPL Smp SIC FilePath]
+
+	Type		: String
+	Persistent	: Yes
+
+[Variable: TSPL Smp SIC FileExt]
+
+	Type		: String
+	Persistent	: Yes
+
+[Variable: TSPL Smp SIC TableName]
+
+	Type		: String
+	Persistent	: Yes
+
+
+[Variable: TSPL Smp SIC IncHeader]
+
+	Type		: String
+	Persistent	: Yes
+
+[Variable: TSPL Smp SIC ItemName]
+
+	Type		: String
+	Persistent	: Yes
+
+[Variable: TSPL Smp SIC ItemGroup]
+
+	Type		: String
+	Persistent	: Yes
+
+[Variable: TSPL Smp SIC ItemUOM]
+
+	Type		: String
+	Persistent	: Yes
+
+[Variable: TSPL Smp SIC TextSep]
+
+	Type		: String
+	Persistent	: Yes
+
+
+[Variable: TSPL Smp SIC DisplayReport]
+
+	Type		: Logical
+	Persistent	: Yes
+
+[Variable: TSPL Smp SIC OpenLogFile]
+
+	Type		: Logical
+	Persistent	: Yes
+
+;; End-of-File
+*/

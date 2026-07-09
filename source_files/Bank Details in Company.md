@@ -1,0 +1,139 @@
+---
+title: Bank Details in Company
+type: sample_code
+objects: Line, Field, Collection
+source: Bank Details in Company.txt
+---
+
+# Bank Details in Company
+
+## Source Code
+
+```tdl
+[#Part: Company PeriodDetails]	
+	Add: Lines:Bank Details Tirlok,Bank Name Tirlok, Bank Ifsc Tirlok,Bank Branch Tirlok
+	
+[System:UDF]
+	BankNameMe:String:2010
+	BankIfscMe:String:2011
+	BankBranchMe:String:2012
+	[Line:Bank Details Tirlok]
+		Space Top:1
+		Field:Bank Details Tirlok Field
+		[Field:Bank Details Tirlok Field]
+			Set as:"Bank Details"
+			Style:Tirlok Bank Style
+			Skip:Yes
+			
+
+	[Line:Bank Name Tirlok]
+		Space Top:0.1
+		Field:long Prompt,Bank Name Tirlok Field
+		Local:Field:long Prompt:Set as:"Bank Name : "
+		[Field:Bank Name Tirlok Field]
+			Width:3 inch
+			Use:Name Field
+			Show Table:Always
+			Table:BankList
+			Storage:BankNameMe
+			
+[Collection:BankList]
+	Title:$$LocaleString:"Bank Names"
+	List Name:"Allahabad Bank"
+    List Name:"Andhra Bank"
+    List Name:"Axis Bank"
+    List Name:"Bank of Bahrain and Kuwait"
+    List Name:"Bank of Baroda - Corporate Banking"
+    List Name:"Bank of Baroda - Retail Banking"
+    List Name:"Bank of India"
+    List Name:"Bank of Maharashtra"
+    List Name:"Canara Bank"
+    List Name:"Central Bank of India"
+    List Name:"City Union Bank"
+	List Name:"Corporation Bank"
+    List Name:"Deutsche Bank"
+    List Name:"Development Credit Bank"
+    List Name:"Dhanlaxmi Bank"
+    List Name:"Federal Bank"
+    List Name:"ICICI Bank"
+    List Name:"IDBI Bank"
+    List Name:"Indian Bank"
+    List Name:"Indian Overseas Bank"
+    List Name:"IndusInd Bank"
+    List Name:"ING Vysya Bank"
+    List Name:"Jammu and Kashmir Bank"
+    List Name:"Karnataka Bank Ltd"
+    List Name:"Karur Vysya Bank"
+    List Name:"Kotak Bank"
+    List Name:"Laxmi Vilas Bank"
+    List Name:"Oriental Bank of Commerce"
+    List Name:"Punjab National Bank - Corporate Banking"
+    List Name:"Punjab National Bank - Retail Banking"
+    List Name:"Punjab & Sind Bank"
+    List Name:"Shamrao Vitthal Co-operative Bank"
+    List Name:"South Indian Bank"
+    List Name:"State Bank of Bikaner & Jaipur"
+    List Name:"State Bank of Hyderabad"
+    List Name:"State Bank of India"
+    List Name:"State Bank of Mysore"
+    List Name:"State Bank of Patiala"
+    List Name:"State Bank of Travancore"
+    List Name:"Syndicate Bank"
+    List Name:"Tamilnad Mercantile Bank Ltd."
+    List Name:"UCO Bank"
+    List Name:"Union Bank of India"
+    List Name:"United Bank of India"
+    List Name:"Vijaya Bank"
+    List Name:"Yes Bank Ltd"
+			
+	[Line:Bank Ifsc Tirlok]
+		Space Top:0.1
+		Field:long Prompt,Bank Ifsc Tirlok Field
+		Local:Field:long Prompt:Set as:"Bank Ifsc Code : "
+		[Field:Bank Ifsc Tirlok Field]
+			Storage:BankIfscMe
+			Use			: Name Field
+			Case		: Upper Case
+			ASCIIOnly	: Yes
+			Width		: @@MediumWidth + 5
+			Max			: 11
+
+	[Line:Bank Branch Tirlok]
+		Space Top:0.1
+		Field:long Prompt,Bank Branch Tirlok Field
+		Local:Field:long Prompt:Set as:"Bank Branch Name : "
+		[Field:Bank Branch Tirlok Field]
+			Width:3 inch
+			Use:Name Field
+			Show Table:Never
+			Storage:BankBranchMe
+			
+
+	
+[Style:Tirlok Bank Style]
+	Height:12
+	Bold:Yes
+	
+/*
+	Line	:  LED Provide Details Title1,LED Provide Bank Details1
+
+	Local	: Line	: LED Provide Details Title1 	: Space Top : 0.2
+	Local	: Field	: LED Provide Details Title1		: Set as	: $$LocaleString:"Banking Details"
+	Local	: Field	: LED Provide Details Title1		: Inactive	: @@IsGatewayOfCurrAssetGrp OR @@LedgerBelongsToBankGroup
+
+	[Line: LED Provide Details Title1]
+
+		Field			: LED Provide Details Title1
+		Invisible		: NOT ##LEDPartyBankDetails
+
+	[Line: LED Provide Bank Details1]
+		
+		Fields			: Long Prompt, LED Provide Bank Details1
+		Space Top		: 0.25
+		Space Bottom	: 0.25
+        Local       	: Field : Long Prompt	: Set as	: $$LocaleString:"Provide bank details:"
+		Local			: Field	: Default		: Inactive	: @@IsGatewayOfCurrAssetGrp OR @@LedgerBelongsToBankGroup
+		Local       	: Field : Long Prompt 	: Width		: @@LedPromptWidth
+*/
+
+```

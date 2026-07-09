@@ -1,0 +1,38 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This program demonstrates the usage of Indent Attributes
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Indent Attribute]
+
+	Form	: Indent Attribute
+	
+[Form: Indent Attribute]
+
+	Parts	: Indent Attribute
+	
+[Part: Indent Attribute]
+
+	Lines	: Indent Line
+	
+	[Line: Indent Line]
+
+		Fields	: Indent Field1, IndentField2
+
+		[Field: Indent Field1]
+
+			Info	: "This is Field 1"
+			Width	: 30 mms
+
+		[Field: Indent Field2]
+
+			Info	: "This Field is indented by 2 mms"
+			Width	: 45 mms
+			Indent	: 2 mms		;; This field will be indented by 2 mms
+
+;; End-Of-File

@@ -1,0 +1,82 @@
+;; 1. Add GST Calculator to Gateway of Tally
+[#Menu: Gateway of Tally]
+    Add : Item : Before : Quit : GST Calculator : Display : CUST_GSTCalculatorReport
+
+;; 2. Report Definition
+[Report: CUST_GSTCalculatorReport]
+    Form : CUST_GSTCalculatorForm
+    Variable : CUST_BaseAmtVar, CUST_GSTRateVar
+    ;; Set defaults
+    Set : CUST_BaseAmtVar : 0
+    Set : CUST_GSTRateVar : 0
+
+;; 3. Form Definition
+[Form: CUST_GSTCalculatorForm]
+    Part : CUST_GSTCalculatorPart
+    Width : 35% Screen
+    Height : 25% Screen
+
+[Part: CUST_GSTCalculatorPart]
+    Lines : CUST_BaseAmountLine, CUST_GSTRateLine, CUST_GSTAmountLine, CUST_TotalAmountLine
+
+[Line: CUST_BaseAmountLine]
+    Fields : CUST_BaseAmountPrompt, CUST_BaseAmountField
+
+[Line: CUST_GSTRateLine]
+    Fields : CUST_GSTRatePrompt, CUST_GSTRateField
+
+[Line: CUST_GSTAmountLine]
+    Fields : CUST_GSTAmountPrompt, CUST_GSTAmountField
+
+[Line: CUST_TotalAmountLine]
+    Fields : CUST_TotalAmountPrompt, CUST_TotalAmountField
+
+;; 4. Prompt Fields
+[Field: CUST_BaseAmountPrompt]
+    Use : Medium Prompt
+    Set As : "Base Amount :"
+
+[Field: CUST_GSTRatePrompt]
+    Use : Medium Prompt
+    Set As : "GST Rate (%) :"
+
+[Field: CUST_GSTAmountPrompt]
+    Use : Medium Prompt
+    Set As : "GST Amount :"
+
+[Field: CUST_TotalAmountPrompt]
+    Use : Medium Prompt
+    Set As : "Total Amount :"
+
+;; 5. Input Fields
+[Field: CUST_BaseAmountField]
+    Use : Number Field
+    Variable : CUST_BaseAmtVar
+
+[Field: CUST_GSTRateField]
+    Use : Number Field
+    Variable : CUST_GSTRateVar
+
+;; 6. Calculated Fields (Using '#' to grab live screen values instantly)
+[Field: CUST_GSTAmountField]
+    Use : Number Field
+    Set As : (#CUST_BaseAmountField * #CUST_GSTRateField) / 100
+    Set Always : Yes
+    Skip : Yes
+
+[Field: CUST_TotalAmountField]
+    Use : Number Field
+    Set As : #CUST_BaseAmountField + #CUST_GSTAmountField
+    Set Always : Yes
+    Skip : Yes
+
+;; 7. Variable Declarations
+[Variable: CUST_BaseAmtVar]
+    Type : Number
+
+[Variable: CUST_GSTRateVar]
+    Type : Number
+	
+
+[#Field: DSP VchAccount]
+	Background		: red

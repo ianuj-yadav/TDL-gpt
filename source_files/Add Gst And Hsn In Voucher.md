@@ -1,0 +1,227 @@
+---
+title: Add Gst And Hsn In Voucher
+type: sample_code
+objects: Field
+source: Add Gst And Hsn In Voucher.txt
+---
+
+# Add Gst And Hsn In Voucher
+
+## Source Code
+
+```tdl
+[#Line : EI ColumnOne]
+
+ Option  : Global EI ColumnOne      
+
+
+
+      [!Line: Global EI ColumnOne]
+    
+
+ Add    : Right Fields : At Beginning    : IAHSNcodeT, IAMVAT , IAMCGST ,IAMSGST 
+
+ [Field : IAHSNCodeT]
+
+ Info    : "HSN/SAC Code"
+
+ Align    : Centre
+
+ Width    : 15
+
+ Style    : Small bold
+
+ COLOR   : BLUE
+
+ background : yellow
+
+
+
+ [Field : IAMVAT]
+
+ Info    : "IGST%"
+
+ Align    : Centre
+
+ Width    : @@NumberWidth
+
+ Style    : Small bold
+
+ COLOR   : RED
+
+ background : yellow
+
+
+
+ [Field : IAMCGST]
+
+ Info    : "CGST%"
+
+ Align    : Centre
+
+ Width    : @@NumberWidth
+
+ Style    : Small bold
+
+ COLOR   : BLUE
+
+ background : yellow
+
+ [Field : IAMSGST]
+
+ Info    : "SGST%"
+
+ Align    : Centre
+
+ Width    : @@NumberWidth
+
+ Style    : Small bold
+
+ COLOR   : RED
+
+ background : yellow
+
+
+
+[#Line : EI InvInfo] 
+
+ Option  : Global EI InvInfo   
+
+
+
+[#Line : CI InvInfo] 
+
+ Option  : Global EI InvInfo 
+
+
+
+ [!Line: Global EI InvInfo]
+
+ Add    : Right Fields : At Beginning : IAHSNCode, IAMVA ,IAMCGS , IAMSGS 
+
+
+
+ [Field : IAHSNCode]
+
+ Use    : Short Name Field
+
+ Set As    : $GSTHSNCode:StockItem:$StockItemName
+
+ Align    : Centre
+
+ Border  : Thin Left Right
+
+ Width    : 15
+
+ Skip    : YES
+
+ COLOR   : BLUE
+
+ background : YELLOW
+
+ border : thin box
+
+ [Field : IAMVA]
+
+ Use    : Number Field
+
+ Set As    : $GSTIGSTRate:StockItem:$StockItemName
+
+ Format    : "NoZero, Percentage"
+
+ Align    : Centre
+
+ Border  : Thin Left Right
+
+ Skip    : YES
+
+ COLOR   : RED
+
+ background : YELLOW
+
+ border : thin box
+
+ [Field : IAMCGS]
+
+ Use    : Number Field
+
+ Set As    : $GSTCGSTRate:StockItem:$StockItemName
+
+ Format    : "NoZero, Percentage"
+
+ Align    : Centre
+
+ Border  : Thin Left Right
+
+ Skip    : YES
+
+ COLOR   : BLUE
+
+ background : YELLOW
+
+ border : thin box
+
+ [Field : IAMSGS]
+
+ Use    : Number Field
+
+ Set As    : $GSTSGSTRate:StockItem:$StockItemName
+
+ Format    : "NoZero, Percentage"
+
+ Align    : Centre
+
+ Border  : Thin Left Right
+
+ Skip    : YES
+
+ COLOR  : RED
+
+ background : YELLOW
+
+ border : thin box
+
+
+
+;;=====HSN-SAC CODE IN VOUCHER ENTRY
+
+
+
+[#Collection: List of Stock Items]
+
+
+
+    Use         : Alias Collection
+
+    Title       : $$LocaleString:"List of Stock Items"    
+
+    Type        : Stock Item
+
+    Fetch       : Name
+
+    Report      : Stock Item
+
+    Variable    : SStockItem
+
+    Trigger     : SStockItem
+
+    IsODBCTable : Yes
+
+    ;;Unique    : $StockItemName
+
+ 
+
+Add   :Format :$GSTIGSTRate
+
+ Fetch:GSTIGSTRate
+
+
+
+Add   :Format :$GSTHSNCode
+
+ Fetch:GSTHSNCode
+
+
+
+;;End of the list
+```

@@ -1,0 +1,469 @@
+{
+  "encryption": [
+      {
+          "name": "0",
+          "value": "vgr",
+          "asciival": 48
+      },
+      {
+          "name": "1",
+          "value": "yxw",
+          "asciival": 49
+      },
+      {
+          "name": "2",
+          "value": "plq",
+          "asciival": 50
+      },
+      {
+          "name": "3",
+          "value": "ojc",
+          "asciival": 51
+      },
+      {
+          "name": "4",
+          "value": "rmy",
+          "asciival": 52
+      },
+      {
+          "name": "5",
+          "value": "kug",
+          "asciival": 53
+      },
+      {
+          "name": "6",
+          "value": "zvk",
+          "asciival": 54
+      },
+      {
+          "name": "7",
+          "value": "sdw",
+          "asciival": 55
+      },
+      {
+          "name": "8",
+          "value": "qxz",
+          "asciival": 56
+      },
+      {
+          "name": "9",
+          "value": "byd",
+          "asciival": 57
+      },
+      {
+          "name": "a",
+          "value": "wsd",
+          "asciival": 97
+      },
+      {
+          "name": "b",
+          "value": "ndl",
+          "asciival": 98
+      },
+      {
+          "name": "c",
+          "value": "aop",
+          "asciival": 99
+      },
+      {
+          "name": "d",
+          "value": "zmn",
+          "asciival": 100
+      },
+      {
+          "name": "e",
+          "value": "bfl",
+          "asciival": 101
+      },
+      {
+          "name": "f",
+          "value": "oju",
+          "asciival": 102
+      },
+      {
+          "name": "g",
+          "value": "rqs",
+          "asciival": 103
+      },
+      {
+          "name": "h",
+          "value": "kzt",
+          "asciival": 104
+      },
+      {
+          "name": "i",
+          "value": "bpg",
+          "asciival": 105
+      },
+      {
+          "name": "j",
+          "value": "yhu",
+          "asciival": 106
+      },
+      {
+          "name": "k",
+          "value": "mws",
+          "asciival": 107
+      },
+      {
+          "name": "l",
+          "value": "tgj",
+          "asciival": 108
+      },
+      {
+          "name": "m",
+          "value": "pqn",
+          "asciival": 109
+      },
+      {
+          "name": "n",
+          "value": "oik",
+          "asciival": 110
+      },
+      {
+          "name": "o",
+          "value": "hsv",
+          "asciival": 111
+      },
+      {
+          "name": "p",
+          "value": "ajc",
+          "asciival": 112
+      },
+      {
+          "name": "q",
+          "value": "rxl",
+          "asciival": 113
+      },
+      {
+          "name": "r",
+          "value": "ytz",
+          "asciival": 114
+      },
+      {
+          "name": "s",
+          "value": "cvb",
+          "asciival": 115
+      },
+      {
+          "name": "t",
+          "value": "wfg",
+          "asciival": 116
+      },
+      {
+          "name": "u",
+          "value": "skj",
+          "asciival": 117
+      },
+      {
+          "name": "v",
+          "value": "gce",
+          "asciival": 118
+      },
+      {
+          "name": "w",
+          "value": "dtn",
+          "asciival": 119
+      },
+      {
+          "name": "x",
+          "value": "qao",
+          "asciival": 120
+      },
+      {
+          "name": "y",
+          "value": "wej",
+          "asciival": 121
+      },
+      {
+          "name": "z",
+          "value": "lhp",
+          "asciival": 122
+      },
+      {
+          "name": "A",
+          "value": "wjh",
+          "asciival": 65
+      },
+      {
+          "name": "B",
+          "value": "kqx",
+          "asciival": 66
+      },
+      {
+          "name": "C",
+          "value": "lio",
+          "asciival": 67
+      },
+      {
+          "name": "D",
+          "value": "htd",
+          "asciival": 68
+      },
+      {
+          "name": "E",
+          "value": "fvl",
+          "asciival": 69
+      },
+      {
+          "name": "F",
+          "value": "xzg",
+          "asciival": 70
+      },
+      {
+          "name": "G",
+          "value": "pqr",
+          "asciival": 71
+      },
+      {
+          "name": "H",
+          "value": "mts",
+          "asciival": 72
+      },
+      {
+          "name": "I",
+          "value": "nbw",
+          "asciival": 73
+      },
+      {
+          "name": "J",
+          "value": "aeo",
+          "asciival": 74
+      },
+      {
+          "name": "K",
+          "value": "ugl",
+          "asciival": 75
+      },
+      {
+          "name": "L",
+          "value": "htm",
+          "asciival": 76
+      },
+      {
+          "name": "M",
+          "value": "zrs",
+          "asciival": 77
+      },
+      {
+          "name": "N",
+          "value": "dyv",
+          "asciival": 78
+      },
+      {
+          "name": "O",
+          "value": "qpa",
+          "asciival": 79
+      },
+      {
+          "name": "P",
+          "value": "ekl",
+          "asciival": 80
+      },
+      {
+          "name": "Q",
+          "value": "vyh",
+          "asciival": 81
+      },
+      {
+          "name": "R",
+          "value": "cgo",
+          "asciival": 82
+      },
+      {
+          "name": "S",
+          "value": "ufm",
+          "asciival": 83
+      },
+      {
+          "name": "T",
+          "value": "hbd",
+          "asciival": 84
+      },
+      {
+          "name": "U",
+          "value": "wzx",
+          "asciival": 85
+      },
+      {
+          "name": "V",
+          "value": "aqb",
+          "asciival": 86
+      },
+      {
+          "name": "W",
+          "value": "xpl",
+          "asciival": 87
+      },
+      {
+          "name": "X",
+          "value": "rno",
+          "asciival": 88
+      },
+      {
+          "name": "Y",
+          "value": "smq",
+          "asciival": 89
+      },
+      {
+          "name": "Z",
+          "value": "gje",
+          "asciival": 90
+      },
+      {
+          "name": ".",
+          "value": "vln",
+          "asciival": 46
+      },
+      {
+          "name": "!",
+          "value": "mrg",
+          "asciival": 33
+      },
+      {
+          "name": "\"",
+          "value": "nht",
+          "asciival": 34
+      },
+      {
+          "name": "#",
+          "value": "xyb",
+          "asciival": 35
+      },
+      {
+          "name": "$",
+          "value": "zcs",
+          "asciival": 36
+      },
+      {
+          "name": "%",
+          "value": "pdy",
+          "asciival": 37
+      },
+      {
+          "name": "&",
+          "value": "lvq",
+          "asciival": 38
+      },
+      {
+          "name": "'",
+          "value": "eih",
+          "asciival": 39
+      },
+      {
+          "name": "(",
+          "value": "tqv",
+          "asciival": 40
+      },
+      {
+          "name": ")",
+          "value": "gfr",
+          "asciival": 41
+      },
+      {
+          "name": "*",
+          "value": "kdu",
+          "asciival": 42
+      },
+      {
+          "name": "+",
+          "value": "ynp",
+          "asciival": 43
+      },
+      {
+          "name": ",",
+          "value": "cqz",
+          "asciival": 44
+      },
+      {
+          "name": "-",
+          "value": "zjp",
+          "asciival": 45
+      },
+      {
+          "name": "/",
+          "value": "qfc",
+          "asciival": 47
+      },
+      {
+          "name": ":",
+          "value": "wzo",
+          "asciival": 58
+      },
+      {
+          "name": ";",
+          "value": "abx",
+          "asciival": 59
+      },
+      {
+          "name": "<",
+          "value": "zrd",
+          "asciival": 60
+      },
+      {
+          "name": "=",
+          "value": "pqn",
+          "asciival": 61
+      },
+      {
+          "name": ">",
+          "value": "jhl",
+          "asciival": 62
+      },
+      {
+          "name": "?",
+          "value": "orx",
+          "asciival": 63
+      },
+      {
+          "name": "@",
+          "value": "axz",
+          "asciival": 64
+      },
+      {
+          "name": "[",
+          "value": "wqj",
+          "asciival": 91
+      },
+      {
+          "name": "\\",
+          "value": "trv",
+          "asciival": 92
+      },
+      {
+          "name": "]",
+          "value": "fls",
+          "asciival": 93
+      },
+      {
+          "name": "^",
+          "value": "jmc",
+          "asciival": 94
+      },
+      {
+          "name": "_",
+          "value": "tsq",
+          "asciival": 95
+      },
+      {
+          "name": "{",
+          "value": "lmk",
+          "asciival": 123
+      },
+      {
+          "name": "|",
+          "value": "yxb",
+          "asciival": 124
+      },
+      {
+          "name": "}",
+          "value": "ojd",
+          "asciival": 125
+      },
+      {
+          "name": "~",
+          "value": "lnf",
+          "asciival": 126
+      }
+  ]
+}

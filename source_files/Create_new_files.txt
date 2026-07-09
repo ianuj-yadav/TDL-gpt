@@ -1,0 +1,52 @@
+[#Menu:Gateway of Tally]
+	Add		: Item	: Before : @@locQuit : "Encryption" : Alter	: EncryptionForm
+	
+[Report:EncryptionForm]
+	Form		: EncryptionForm
+	
+[Form:EncryptionForm]
+	Parts	: Form SubTitle, EncryptionForm
+	Height	: 100% Page
+	Width	: 80% Page
+	;On		: Form Accept	: Yes	: Call	: FileCreation:#NewString:#NewEnc
+[Part:EncryptionForm]
+	Width	: 80% Page
+	Lines	: NewString, NewEnc, EncryptedString
+	[Line:NewString]
+		
+		Field		: Long Prompt, NewString
+		Local		: Field		: Long Prompt		: Info	: $$LocaleString:"Enter String:"
+		
+		[Field:NewString]
+			Use			: Name Field
+			Width       : 80
+			
+
+	[Line:NewEnc]
+		
+		Field		: Long Prompt, NewEnc
+		Local		: Field		: Long Prompt		: Info	: $$LocaleString:"Enter :"
+		
+		[Field:NewEnc]
+			Use			: Name Field
+			Width       : 20
+			
+
+	[Line:EncryptedString]
+		Height		: 2
+		Field		: Long Prompt, EncryptedString
+		Local		: Field		: Long Prompt		: Info	: $$LocaleString:" String:"
+		
+		[Field:EncryptedString]
+			Set as		: $$EncryptStr:($$localestring:#NewString):($$LocaleString:#NewEnc)
+			;Set as		: $$EncryptStr:"This is sample string for testing.":'123456asdf'
+			Set Always	: Yes
+			Lines		: 0
+			
+;[Function:FileCreation]
+;	Parameter		: NewString		: String
+;	Parameter		: NewEnc		: String
+;	Variable		: EncStr		: String
+;	10	: Set		: EncStr		: $$EncryptStr:##NewString:##NewEnc
+;	100	: Return	: ##EncStr
+			

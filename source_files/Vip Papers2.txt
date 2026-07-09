@@ -1,0 +1,561 @@
+[#Part: Company F11 Other Features]
+	Local	: Part	: Cfg PartContent		: Add			: Line	: Amt2Decimals
+	
+	[Line:Amt2Decimals]
+		Field		: MediumPrompt, Amt2Decimals
+		Local	: Field	: Medium Prompt	: Info	: $$LocaleString:"Show amount in Two Decimal Places"
+		Local	: Field	: Medium Prompt	: Width	: @@CfgFieldSpace + 6
+		Local	: Field	: Medium Prompt	: Background		: Yellow
+		[Field:Amt2Decimals]
+			Use			: Logical Field
+			;Table		: YesNoTable
+			Storage     	: IsAmtTwoDecimals
+			Background		: Yellow
+
+
+
+[#Field:VCHValue]
+	Format	: If $IsAmtTwoDecimals:Company:##SVCurrentCompany then "Decimal:2" Else ""
+	
+[#Field:EIVAlueSubTotal]
+	Format	: If $IsAmtTwoDecimals:Company:##SVCurrentCompany then "Decimal:2" Else ""
+	
+[#Field:EIVAlueTotal]
+	Format	: If $IsAmtTwoDecimals:Company:##SVCurrentCompany then "Decimal:2" Else ""
+	
+[#Field:VCHBatchValue]
+	Format	: If $IsAmtTwoDecimals:Company:##SVCurrentCompany then "Decimal:2" Else ""
+	
+[#Field:Amount Forex Field]
+	Format	: If $IsAmtTwoDecimals:Company:##SVCurrentCompany then "Decimal:2" Else ""
+	
+[#Field:AmountField]
+	Format	: If $IsAmtTwoDecimals:Company:##SVCurrentCompany then "Decimal:2" Else ""
+	
+[#Field:EIAccAllocAmt]
+	Format	: If $IsAmtTwoDecimals:Company:##SVCurrentCompany then "Decimal:2" Else ""
+	
+[#Field: EXPINV Total]
+	Format	: If $IsAmtTwoDecimals:Company:##SVCurrentCompany then "Decimal:2" Else ""
+
+[#Field: EXPINVAmount]
+	Format	: If $IsAmtTwoDecimals:Company:##SVCurrentCompany then "Decimal:2" Else ""
+
+[#Field: EXPINVAccAmount]
+	Format	: If $IsAmtTwoDecimals:Company:##SVCurrentCompany then "Decimal:2" Else ""
+
+[#Field: EXPINV SATotalCur]
+				
+    Format	: If $IsAmtTwoDecimals:Company:##SVCurrentCompany then "ShowBaseSymbol,Decimal:2" Else ""
+	
+[#Field: EXPINV PartyOutstanding]
+	Format	: If $IsAmtTwoDecimals:Company:##SVCurrentCompany then "Decimal:2" Else ""
+	
+
+
+[#Line: GST VCHGSTInvPrintTotal]
+	Local	: Field	: Default					: Type	    : Amount
+		
+
+	
+[#Field:EIVAlue]
+	Format	: If $IsAmtTwoDecimals:Company:##SVCurrentCompany then "Decimal:2" Else ""
+	
+	Delete:Set By Condition	: @@IsGCCCountriesVATOn AND NOT ##SVAcctsInvoice AND $$IsInventoryOn AND ($$IsSysNameEqual:Excise:($VATDealerNature:Ledger:$LedgerName)) : @VATGccDiscount
+
+	Delete:Set By Condition	: @@IsGCCCountriesVATOn AND @@IsGCCDiscountLedgers	: @GVATDiscount
+
+	Delete:Set By Condition	: $IsInvoice AND NOT ##SVAcctsInvoice AND $$IsInventoryOn AND @@IsGCCDiscountLedgers 	: -@VATDiscount
+	
+	Delete:Set By Condition	: @IsVATOnWorksContractTaxCls AND NOT (@@IsRBIndianVAT OR @@IsRBVATSupportedCountries) 	: @EIVATWorksContractRoundedVal
+
+	Delete:Set By Condition	: ((@@IsIndianServiceTax AND @@IsSTTaxenabledDate_Vch) AND ($$IsSysNameEqual:ServiceTax:($TaxType:Ledger:$LedgerName)))	: #EISTLedTotal 
+
+	Delete:Set By Condition	: (@@IsIndianServiceTax AND @@IsSTTaxenabledDate_Vch) AND @@IsSBCTaxTypeLedger 			: #EISTSBCLedTotal
+	
+	Delete:Set By Condition	: (@@IsIndianServiceTax AND @@IsSTTaxenabledDate_Vch) AND @@IsKKCTaxTypeLedger 			: #EISTKKCLedTotal
+
+	Delete:Set By Condition	: @@IsInvRoundOffApplLed    : @InvRoundOffVal
+
+	Delete:Set By Condition	: (@@AsRounding) 	: If $$IsFieldEdited Then $$Value Else If @OnPrevTotalVal = (#EIVchTotal - $Amount) Then $$Value Else (@RoundedPrevTotal - @OnPrevTotalVal)
+		
+	Delete:Set By Condition	: ((@@IsIndian OR @@IsMalaysia) AND @@TaxLedgerHasService)	: @TaxBillAmt
+	
+	Delete:Set By Condition	: (@@IsIndian AND @@TaxLedgerHasTCS AND @@TCSInvoices) : @TCSCollAmt 
+	
+	Delete:Set By Condition	: @@TDSInVoucher : @TDSDedAmt 
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Set By Condition	: @@IsDiscount 	: @@DiscountValue
+;Background			: If @@IsDiscount Then "red" Else "green"
+;MRPRateSetVal	: If $$IsEnd:$StockItemName Then "" Else  @@Inv_GSTMRPRateInEdit
+;Skip			: If @@IsDiscount Then Yes Else  No
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Add:Set By Condition	: @@IsGCCCountriesVATOn AND NOT ##SVAcctsInvoice AND $$IsInventoryOn AND ($$IsSysNameEqual:Excise:($VATDealerNature:Ledger:$LedgerName)) : @VATGccDiscount
+
+	Add:Set By Condition	: @@IsGCCCountriesVATOn AND @@IsGCCDiscountLedgers	: @GVATDiscount
+
+	Add:Set By Condition	: $IsInvoice AND NOT ##SVAcctsInvoice AND $$IsInventoryOn AND @@IsGCCDiscountLedgers 	: -@VATDiscount
+	
+	Add:Set By Condition	: @IsVATOnWorksContractTaxCls AND NOT (@@IsRBIndianVAT OR @@IsRBVATSupportedCountries) 	: @EIVATWorksContractRoundedVal
+
+	Add:Set By Condition	: ((@@IsIndianServiceTax AND @@IsSTTaxenabledDate_Vch) AND ($$IsSysNameEqual:ServiceTax:($TaxType:Ledger:$LedgerName)))	: #EISTLedTotal 
+
+	Add:Set By Condition	: (@@IsIndianServiceTax AND @@IsSTTaxenabledDate_Vch) AND @@IsSBCTaxTypeLedger 			: #EISTSBCLedTotal
+	
+	Add:Set By Condition	: (@@IsIndianServiceTax AND @@IsSTTaxenabledDate_Vch) AND @@IsKKCTaxTypeLedger 			: #EISTKKCLedTotal
+
+	Add:Set By Condition	: @@IsInvRoundOffApplLed    : @InvRoundOffVal
+
+	Add:Set By Condition	: (@@AsRounding) 	: If $$IsFieldEdited Then $$Value Else If @OnPrevTotalVal = (#EIVchTotal - $Amount) Then $$Value Else (@RoundedPrevTotal - @OnPrevTotalVal)
+		
+	Add:Set By Condition	: ((@@IsIndian OR @@IsMalaysia) AND @@TaxLedgerHasService)	: @TaxBillAmt
+	
+	Add:Set By Condition	: (@@IsIndian AND @@TaxLedgerHasTCS AND @@TCSInvoices) : @TCSCollAmt 
+	
+	Add:Set By Condition	: @@TDSInVoucher : @TDSDedAmt 
+	
+[#Field:EiaccRate]
+	;Skip			: If @@IsDiscount Then Yes Else  No
+[System:Formula]
+	IsDiscount		: ($$IsEqual:($VATDealerNature:Ledger:$LedgerName):"Discount")
+	DiscountValue	: $$AllInclValues - $$AllAmounts;
+	CurrentVoucher	: $Parent = "Duties & Taxes"
+	
+[System:UDF]
+	IsAmtTwoDecimals		: Logical		: 13001
+[Function:AllInclValues]
+	Variable:TestVar:String:"ID:"+$$LocaleString:$MasterId
+	Variable	: AllInclValue		: Number	: 0
+	200		: Walk Collection	: InventoryEntries
+	;250		: Log		: $$LocaleString:##AllInclValue+"BeforeAllInclValues"
+	300		: Set 		: AllInclValue		: (##AllInclValue + ($InclusiveTaxValue*$BilledQty));($MRPRate*$BilledQty))
+	;350		: Log		: $$LocaleString:##AllInclValue;+$StockItemName
+	400		: End Walk
+
+	; 710		: Log		: $$AsAmount:($$Round:##AllInclValue:1)
+	800		: Return	: $$AsAmount:($$Round:##AllInclValue:1)
+	;900		: Log		: ##AllInclValue
+	
+[Function:AllAmounts]
+	Variable	: AllAmounts		: Number	: 0
+	;200		: Walk Collection	: InventoryEntries
+	;250		: Log		: $$LocaleString:##AllAmounts+"BeforeAllAmounts"
+	300		: Set 		: AllAmounts		: ##AllAmounts+$$Number:($$CollAmtTotal:InventoryEntries:$Amount)
+	;350		: Log		: $$LocaleString:##AllAmounts;+$StockItemName
+	;400		: End Walk
+	500		: Walk Collection	: LedgerEntries
+	510		: If	: Not $LedgerName=$PartyLedgerName 
+	520		: If	: NOT @@IsDiscount;Not "DiscountRounding"=$LedgerName 
+	530		: If	: Not $$IsEmpty:$LedgerName
+	;550		: Log		: $$LocaleString:##AllAmounts+"Before Ledger"+$LedgerName
+	;600		: Set 		: AllAmounts		: ##AllAmounts+$$Number:($$CollAmtTotal:AllLedgerEntries:$Amount)
+	600		: Set 		: AllAmounts		: ##AllAmounts+$$Number:$Amount
+	;650		: Log		: $$LocaleString:($$CollAmtTotal:LedgerEntries:$Amount)+"hello"
+	660		: End If
+	670		: End If
+	680		: End If
+	700		: End Walk
+	800		: Return	: $$AsAmount:($$Round:##AllAmounts)
+	
+[#Field:VchBatcH Rate]
+	;; If Billed Qty is 0 then set rate is zero
+	
+	Delete:Set by Condition	: ($BilledQty = 0)	: 0
+	
+	Delete:Set by Condition	: (@TaxationEnabled AND (@@InvoiceInCreate OR NOT $$IsEmpty:$InclusiveTaxValue) AND (@@STKInclTax OR ##ICFGInclTax) AND @@SalesInvoiceMode)  AND (NOT $$IsEmpty:$$Number:$InclusiveTaxValue) AND NOT (($Amount != 0) AND ($Amount != @@CalcedAmt)) : $$InclusiveTaxValue:@@ExItemRate:@@STItemRate:@@VATItemRate:@@TCSItemRate:@@GSTItemRate:@@GSTItemQtyRate:@@ExItemMRPDutyValue:@@VATItemMRPDutyValue:@@ExItemQuantum
+
+	Delete:Set by Condition	: ($$Line > 1) : $Rate
+
+	Delete:Set by Condition	: $$Line = 1 AND ($Amount != 0) AND ($Amount != @@CalcedAmt) AND NOT ($$IsValidPriceLevel:$PriceLevel): @CalcRate
+	
+	;;	If batch rate table is not empty then set batch table rate  to set batch rate field.
+	Delete:Set by Condition	: (($$Line = 1) AND NOT $$IsEmpty:@TableRate) AND ($$IsEmpty:$Rate AND NOT $$IsFieldEdited)						: @TableRate
+
+	;;If Item Doesnot belong to price level and in create/duplicate mode then pick standard rate of Item
+	Delete:Set by Condition	: (($$IsValidPriceLevel:$PriceLevel) AND $$IsEmpty:@@PriceLevelRate AND ##ICFGStkNonPriceListItem) :(If (NOT $$InCreateMode AND NOT $$InAlterMode) Then $$Value Else If $$Isstartupvalue Then $$Value Else if ($Amount != 0) AND ($Amount != @@CalcedAmt) Then @NrmlCalcRate Else If (NOT $$IsFieldEdited) Then @CurrStaRate Else $$Value)
+
+    ;; If Valid price level and Billed qty is altered then it will pick from price list	
+	Delete:Set by Condition    : @IsBilledQtyEdited : @StdRate
+
+	;;If valid Price level and amount is nonzero 
+	Delete:Set by Condition	: (($$IsValidPriceLevel:$PriceLevel) AND ($Amount != 0) AND ($Amount != @@CalcedAmt)) : If $$IsEmpty:$$Value Then @CalcRate Else If $$IsFieldEdited:VCHBatchValue Then  @@NrmlAmount / $BilledQty Else $$Value
+
+	;;If Valid price level and Value is not empty then retain the rate 
+	Delete:Set by Condition    : ($$IsValidPriceLevel:$PriceLevel) AND (NOT $$IsEmpty:$$Value) : $$Value
+
+	Delete:Set by Condition	: ($$IsValidPriceLevel:$PriceLevel) AND ($$Isempty:$$Value) AND ($Discount!=0 OR @@GetDist = 0) : @NrmlStdRate
+
+	;;If  calculated amount is non zero and amount is edited then set the batch rate Amount/qty
+	Delete:Set by Condition	: ($Amount != 0) AND ($Amount != @@CalcedAmt) : @CalcRate
+
+	;; In creation  of stock journal voucher type and if field is not edited set residual rate of item to batch rate
+	Delete:Set by Condition	: (@@IsStockJrnl AND NOT $$IsFieldEdited AND $$InCreateMode AND $$IsEmpty:$Rate)  : $$BaseValue:@ByResidualRate
+
+	;;In Altermode if billed qty is edited in stock lournal voucher then set residual rate of item to batch rate else 
+	;;if vouher is in ward voucher then set the standard cost of item to batch rate else if vouchertype is outward voucher type and 
+	;;price level is valid then get the rate from  price levels else set standard price of the item to batch rate.
+	Delete:Set by Condition	: $$InAlterMode 	: @AlterModeVal 
+
+	;; If field is edited then set entered value
+	Delete:Set by Condition	: $$IsFieldEdited 	: $$Value
+	
+	;; In duplicate mode, value to be refereshed if the tracking or order number field is changed and rate field is not edited manually 
+	Delete:Set by Condition	: $$InDuplicateMode	: @DuplicateModeVal
+	
+	;; If Tracking field edited and the field selected the tracking number or Order field edited and Order number selected then Rate field should set the Tracking or Order rate.
+	Delete:Set by Condition	: (($$IsFieldEdited:VCHBATCHTrack AND $$TableObj:VCHBATCHTrack:$$IsTrack) OR ($$IsFieldEdited:VCHBATCHOrder AND $$TableObj:VCHBATCHOrder:$$IsOrder)): @TableRate
+	
+	;;If rate is empty and batch rate table also empty and if amount field is non zero and amount edited then set the batch rate Amount/qty else set $$Value
+	Delete:Set by Condition	: ($$IsEmpty:$Rate AND ($$IsEmpty:$$TableObj:VCHBATCHTrack:$$IsTrack OR NOT $$TableObj:VCHBATCHTrack:$$IsTrack) AND ($$IsEmpty:$$TableObj:VCHBATCHOrder:$$IsOrder OR NOT $$TableObj:VCHBATCHOrder:$$IsOrder)) : @NrmlStdRate
+
+	;; If Rate is empty without enabling tracking number and order then the normal standard rate should be set.
+	Delete:Set by Condition	: ($$IsEmpty:$Rate AND (NOT $$IsTrackingOn) AND (NOT $$IsSalesOrdersOn) AND (NOT $$IsPurcOrdersOn)) : @NrmlStdRate
+
+	Delete:Set by Condition	: YES   			: $Rate
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	;Set By Condition	: @IsFieldEditedMrp	: 10;$$InclusiveTaxValue:@@ExItemRate:@@STItemRate:@@VATItemRate:@@TCSItemRate:@@GSTItemRate:@@GSTItemQtyRate:@@ExItemMRPDutyValue:@@VATItemMRPDutyValue:@@ExItemQuantum
+;	Set as	: if @IsFieldEditedMrp then $InclusiveTaxValue/$IGSTRate
+Set By Condition	: ##ICFGInclTax :($InclusiveTaxValue*100)/(100+$IGSTRate)
+	;Background	: If  @IsFieldEditedMrp then "Red" Else "Green"
+	IsFieldEditedMrp		: Not $$IsEmpty:$InclusiveTaxValue ;$$IsFieldEdited:VchRateIncl;
+	Set Always		: Yes
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	;; If Billed Qty is 0 then set rate is zero
+	Add:Set by Condition	: ($BilledQty = 0)	: 0
+	
+	Add:Set by Condition	: (@TaxationEnabled AND (@@InvoiceInCreate OR NOT $$IsEmpty:$InclusiveTaxValue) AND (@@STKInclTax OR ##ICFGInclTax) AND @@SalesInvoiceMode)  AND (NOT $$IsEmpty:$$Number:$InclusiveTaxValue) AND NOT (($Amount != 0) AND ($Amount != @@CalcedAmt)) : $$InclusiveTaxValue:@@ExItemRate:@@STItemRate:@@VATItemRate:@@TCSItemRate:@@GSTItemRate:@@GSTItemQtyRate:@@ExItemMRPDutyValue:@@VATItemMRPDutyValue:@@ExItemQuantum
+
+	Add:Set by Condition	: ($$Line > 1) : $Rate
+
+	Add:Set by Condition	: $$Line = 1 AND ($Amount != 0) AND ($Amount != @@CalcedAmt) AND NOT ($$IsValidPriceLevel:$PriceLevel): @CalcRate
+	
+	;;	If batch rate table is not empty then set batch table rate  to set batch rate field.
+	Add:Set by Condition	: (($$Line = 1) AND NOT $$IsEmpty:@TableRate) AND ($$IsEmpty:$Rate AND NOT $$IsFieldEdited)						: @TableRate
+
+	;;If Item Doesnot belong to price level and in create/duplicate mode then pick standard rate of Item
+	Add:Set by Condition	: (($$IsValidPriceLevel:$PriceLevel) AND $$IsEmpty:@@PriceLevelRate AND ##ICFGStkNonPriceListItem) :(If (NOT $$InCreateMode AND NOT $$InAlterMode) Then $$Value Else If $$Isstartupvalue Then $$Value Else if ($Amount != 0) AND ($Amount != @@CalcedAmt) Then @NrmlCalcRate Else If (NOT $$IsFieldEdited) Then @CurrStaRate Else $$Value)
+
+    ;; If Valid price level and Billed qty is altered then it will pick from price list	
+	add:Set by Condition    : @IsBilledQtyEdited : @StdRate
+
+	;;If valid Price level and amount is nonzero 
+	Add:Set by Condition	: (($$IsValidPriceLevel:$PriceLevel) AND ($Amount != 0) AND ($Amount != @@CalcedAmt)) : If $$IsEmpty:$$Value Then @CalcRate Else If $$IsFieldEdited:VCHBatchValue Then  @@NrmlAmount / $BilledQty Else $$Value
+
+	;;If Valid price level and Value is not empty then retain the rate 
+	add:Set by Condition    : ($$IsValidPriceLevel:$PriceLevel) AND (NOT $$IsEmpty:$$Value) : $$Value
+
+	Add:Set by Condition	: ($$IsValidPriceLevel:$PriceLevel) AND ($$Isempty:$$Value) AND ($Discount!=0 OR @@GetDist = 0) : @NrmlStdRate
+
+	;;If  calculated amount is non zero and amount is edited then set the batch rate Amount/qty
+	Add:Set by Condition	: ($Amount != 0) AND ($Amount != @@CalcedAmt) : @CalcRate
+
+	;; In creation  of stock journal voucher type and if field is not edited set residual rate of item to batch rate
+	Add:Set by Condition	: (@@IsStockJrnl AND NOT $$IsFieldEdited AND $$InCreateMode AND $$IsEmpty:$Rate)  : $$BaseValue:@ByResidualRate
+
+	;;In Altermode if billed qty is edited in stock lournal voucher then set residual rate of item to batch rate else 
+	;;if vouher is in ward voucher then set the standard cost of item to batch rate else if vouchertype is outward voucher type and 
+	;;price level is valid then get the rate from  price levels else set standard price of the item to batch rate.
+	Add:Set by Condition	: $$InAlterMode 	: @AlterModeVal 
+
+	;; If field is edited then set entered value
+	Add:Set by Condition	: $$IsFieldEdited 	: $$Value
+	
+	;; In duplicate mode, value to be refereshed if the tracking or order number field is changed and rate field is not edited manually 
+	Add:Set by Condition	: $$InDuplicateMode	: @DuplicateModeVal
+	
+	;; If Tracking field edited and the field selected the tracking number or Order field edited and Order number selected then Rate field should set the Tracking or Order rate.
+	Add:Set by Condition	: (($$IsFieldEdited:VCHBATCHTrack AND $$TableObj:VCHBATCHTrack:$$IsTrack) OR ($$IsFieldEdited:VCHBATCHOrder AND $$TableObj:VCHBATCHOrder:$$IsOrder)): @TableRate
+	
+	;;If rate is empty and batch rate table also empty and if amount field is non zero and amount edited then set the batch rate Amount/qty else set $$Value
+	Add:Set by Condition	: ($$IsEmpty:$Rate AND ($$IsEmpty:$$TableObj:VCHBATCHTrack:$$IsTrack OR NOT $$TableObj:VCHBATCHTrack:$$IsTrack) AND ($$IsEmpty:$$TableObj:VCHBATCHOrder:$$IsOrder OR NOT $$TableObj:VCHBATCHOrder:$$IsOrder)) : @NrmlStdRate
+
+	;; If Rate is empty without enabling tracking number and order then the normal standard rate should be set.
+	Add:Set by Condition	: ($$IsEmpty:$Rate AND (NOT $$IsTrackingOn) AND (NOT $$IsSalesOrdersOn) AND (NOT $$IsPurcOrdersOn)) : @NrmlStdRate
+
+	Add:Set by Condition	: YES   			: $Rate
+	
+
+[#Field: VCH RateIncl]
+	;Format	: If $IsAmtTwoDecimals:Company:##SVCurrentCompany then "Decimal:2" Else ""
+	Delete	: Set By Condition	: $$InAlterMode AND ((@@STKInclTax OR ##ICFGInclTax) AND $$IsEmpty:$Rate AND $$IsEmpty:$InclVATRate) : ""
+	Delete	: Set By Condition	: $$InAlterMode AND (NOT $$IsEmpty:$Amount AND NOT $$IsEmpty:$Rate AND (@@STKInclTax OR ##ICFGInclTax) AND (@LocInclusiveRate!=$Rate)) : $$AlterInclusiveTaxValue:@@ExItemRate:@@STItemRate:@@VATItemRate:@@TCSItemRate:@@GSTItemRate:@@GSTItemQtyRate:@@ExItemMRPDutyValue:@@VATItemMRPDutyValue:@@ExItemQuantum
+	Set By Condition	: ##ICFGInclTax	: ($BatchRate*(100+$IGSTRate))/100
+	Add	: Set By Condition	: $$InAlterMode AND ((@@STKInclTax OR ##ICFGInclTax) AND $$IsEmpty:$Rate AND $$IsEmpty:$InclVATRate) : ""
+	Add	: Set By Condition	: $$InAlterMode AND (NOT $$IsEmpty:$Amount AND NOT $$IsEmpty:$Rate AND (@@STKInclTax OR ##ICFGInclTax) AND (@LocInclusiveRate!=$Rate)) : $$AlterInclusiveTaxValue:@@ExItemRate:@@STItemRate:@@VATItemRate:@@TCSItemRate:@@GSTItemRate:@@GSTItemQtyRate:@@ExItemMRPDutyValue:@@VATItemMRPDutyValue:@@ExItemQuantum
+	
+	
+	
+/*
+
+;	
+; [#Part: EXPINV SignOff]
+;	 Print BG	: Green
+;	 
+;[#Part: EXPINV Totals]
+;	Print BG	: Yellow
+;	
+;  [#Part: EXPINV PageBreak]
+;	  Print BG		: yellow
+;	  
+;[#Part: WithServiceTaxValue]
+;	Print BG	: Blue
+;	
+;[#Part: EXPINV BankDetails]
+;	Print BG	: Blue
+;	
+[#Part: VCH GST AnalysisDetailsActual]
+	;Horizontal Align	: Left
+	;Vertical Align		: Right
+	;Print BG			: Red
+	;Local		: Field		: Amount Field		: Print BG	: Red
+	
+
+[#Line: GST VCHGSTInvPrintTotal]
+	
+	
+    [#Line: VCH GST POsAnlysis Total]
+		
+[#Line: VCH GST POsAnlysisDet]
+		
+		
+	[#Part: GSTSTKALL Details]
+		;Print BG	: Red
+		
+
+[#Field: VCHGSTInvPrint TaxValue]
+	Format	: "Decimal:2"
+	;Print BG	: Red
+
+[#Field: VCHGSTInvPrint IGSTAmt]
+				Format	: "Decimal:2"
+	;Print BG	: Green
+
+[#Field: VCHGSTInvPrint CGSTAmt]
+				Format	: "Decimal:2"
+	
+
+[#Field: VCHGSTInvPrint SGSTAmt]
+				Format	: "Decimal:2"
+	;Print BG	: Red
+
+[#Field: VCHGSTInvPrint CessAmt]
+				Format	: "Decimal:2"
+	;Print BG	: Red
+
+[#Field: VCHGSTInvPrint CessQtyAmt]
+				Format	: "Decimal:2"
+	;Print BG	: Red
+
+[#Field: VCHGSTInvPrint TotalTaxAmt]
+				Format	: "Decimal:2"
+	;Print BG	: Yellow
+
+[#Field: VCHGSTInvPrint TaxValueInExport]
+				Format	: "Decimal:2"
+	;Print BG	: Green
+
+	
+[#Line:GST VCHGSTInvPrintBody]
+	;Border		: Thick Box
+			
+		
+			
+*/
+
+
+[#Line: GST VCHGSTInvPrintBody]
+	;Border			: Totals
+[#Form:ComprehensiveInvoice]
+[#Part: VCH GST AnalysisDetailsActual]
+	;Print BG	: red
+
+
+
+
+
+
+/*
+[#Field:VchRate]
+	Format		: "Decimal:3"
+[#Field:VchBatchRate]
+	Use         : Rate Price Field
+	Format      : "Symbol,Forex,decimal:3"
+		
+	Delete:Set by Condition	: ($BilledQty = 0)	: 0
+	
+	Delete:Set By Condition	: (@TaxationEnabled AND (@@InvoiceInCreate OR NOT $$IsEmpty:$InclusiveTaxValue) AND (@@STKInclTax OR ##ICFGInclTax) AND @@SalesInvoiceMode)  AND (NOT $$IsEmpty:$$Number:$InclusiveTaxValue) AND NOT (($Amount != 0) AND ($Amount != @@CalcedAmt)) : $$InclusiveTaxValue:@@ExItemRate:@@STItemRate:@@VATItemRate:@@TCSItemRate:@@GSTItemRate:@@GSTItemQtyRate:@@ExItemMRPDutyValue:@@VATItemMRPDutyValue:@@ExItemQuantum
+
+	Delete:Set by Condition	: ($$Line > 1) : $Rate
+
+	Delete:Set by Condition	: $$Line = 1 AND ($Amount != 0) AND ($Amount != @@CalcedAmt) AND NOT ($$IsValidPriceLevel:$PriceLevel): @CalcRate
+	
+	;;	If batch rate table is not empty then set batch table rate  to set batch rate field.
+	Delete:Set by Condition	: (($$Line = 1) AND NOT $$IsEmpty:@TableRate) AND ($$IsEmpty:$Rate AND NOT $$IsFieldEdited)						: @TableRate
+
+	;;If Item Doesnot belong to price level and in create/duplicate mode then pick standard rate of Item
+	Delete:Set by Condition	: (($$IsValidPriceLevel:$PriceLevel) AND $$IsEmpty:@@PriceLevelRate AND ##ICFGStkNonPriceListItem) :(If (NOT $$InCreateMode AND NOT $$InAlterMode) Then $$Value Else If $$Isstartupvalue Then $$Value Else if ($Amount != 0) AND ($Amount != @@CalcedAmt) Then @NrmlCalcRate Else If (NOT $$IsFieldEdited) Then @CurrStaRate Else $$Value)
+
+    ;; If Valid price level and Billed qty is altered then it will pick from price list	
+	Delete:Set by Condition    : @IsBilledQtyEdited : @StdRate
+
+	;;If valid Price level and amount is nonzero 
+	Delete:Set by Condition	: (($$IsValidPriceLevel:$PriceLevel) AND ($Amount != 0) AND ($Amount != @@CalcedAmt)) : If $$IsEmpty:$$Value Then @CalcRate Else If $$IsFieldEdited:VCHBatchValue Then  @@NrmlAmount / $BilledQty Else $$Value
+
+	;;If Valid price level and Value is not empty then retain the rate 
+	Delete:Set by Condition    : ($$IsValidPriceLevel:$PriceLevel) AND (NOT $$IsEmpty:$$Value) : $$Value
+
+	Delete:Set by Condition	: ($$IsValidPriceLevel:$PriceLevel) AND ($$Isempty:$$Value) AND ($Discount!=0 OR @@GetDist = 0) : @NrmlStdRate
+
+	;;If  calculated amount is non zero and amount is edited then set the batch rate Amount/qty
+	Delete:Set by Condition	: ($Amount != 0) AND ($Amount != @@CalcedAmt) : @CalcRate
+
+	;; In creation  of stock journal voucher type and if field is not edited set residual rate of item to batch rate
+	Delete:Set by Condition	: (@@IsStockJrnl AND NOT $$IsFieldEdited AND $$InCreateMode AND $$IsEmpty:$Rate)  : $$BaseValue:@ByResidualRate
+
+	;;In Altermode if billed qty is edited in stock lournal voucher then set residual rate of item to batch rate else 
+	;;if vouher is in ward voucher then set the standard cost of item to batch rate else if vouchertype is outward voucher type and 
+	;;price level is valid then get the rate from  price levels else set standard price of the item to batch rate.
+	Delete:Set by Condition	: $$InAlterMode 	: @AlterModeVal 
+
+	;; If field is edited then set entered value
+	Delete:Set by Condition	: $$IsFieldEdited 	: $$Value
+	
+	;; In duplicate mode, value to be refereshed if the tracking or order number field is changed and rate field is not edited manually 
+	Delete:Set By Condition	: $$InDuplicateMode	: @DuplicateModeVal
+	
+	;; If Tracking field edited and the field selected the tracking number or Order field edited and Order number selected then Rate field should set the Tracking or Order rate.
+	Delete:Set By Condition	: (($$IsFieldEdited:VCHBATCHTrack AND $$TableObj:VCHBATCHTrack:$$IsTrack) OR ($$IsFieldEdited:VCHBATCHOrder AND $$TableObj:VCHBATCHOrder:$$IsOrder)): @TableRate
+	
+	;;If rate is empty and batch rate table also empty and if amount field is non zero and amount edited then set the batch rate Amount/qty else set $$Value
+	Delete:Set by Condition	: ($$IsEmpty:$Rate AND ($$IsEmpty:$$TableObj:VCHBATCHTrack:$$IsTrack OR NOT $$TableObj:VCHBATCHTrack:$$IsTrack) AND ($$IsEmpty:$$TableObj:VCHBATCHOrder:$$IsOrder OR NOT $$TableObj:VCHBATCHOrder:$$IsOrder)) : @NrmlStdRate
+
+	;; If Rate is empty without enabling tracking number and order then the normal standard rate should be set.
+	Delete:Set by Condition	: ($$IsEmpty:$Rate AND (NOT $$IsTrackingOn) AND (NOT $$IsSalesOrdersOn) AND (NOT $$IsPurcOrdersOn)) : @NrmlStdRate
+
+	Delete:Set by Condition	: YES   			: $Rate
+	
+
+
+Add		: Set By Condition	: ##IsFieldAltered	: ($$Number:$InclusiveTaxValue)/@IGSTRate;$$AsAmount:$$String:(($InclusiveTaxValue)/@IGSTRate)
+Format	: "decimal:3"
+	Set Always	: Yes
+	IGSTRate	: (100+($$Number:$IGSTRate))/100
+	Background	: If  ##IsFieldAltered Then "red" Else "Yellow"
+
+
+		Add:Set by Condition	: ($BilledQty = 0)	: 0
+	
+	Add:Set By Condition	: (@TaxationEnabled AND (@@InvoiceInCreate OR NOT $$IsEmpty:$InclusiveTaxValue) AND (@@STKInclTax OR ##ICFGInclTax) AND @@SalesInvoiceMode)  AND (NOT $$IsEmpty:$$Number:$InclusiveTaxValue) AND NOT (($Amount != 0) AND ($Amount != @@CalcedAmt)) : $$InclusiveTaxValue:@@ExItemRate:@@STItemRate:@@VATItemRate:@@TCSItemRate:@@GSTItemRate:@@GSTItemQtyRate:@@ExItemMRPDutyValue:@@VATItemMRPDutyValue:@@ExItemQuantum
+
+	Add:Set by Condition	: ($$Line > 1) : $Rate
+
+	Add:Set by Condition	: $$Line = 1 AND ($Amount != 0) AND ($Amount != @@CalcedAmt) AND NOT ($$IsValidPriceLevel:$PriceLevel): @CalcRate
+	
+	;;	If batch rate table is not empty then set batch table rate  to set batch rate field.
+	Add:Set by Condition	: (($$Line = 1) AND NOT $$IsEmpty:@TableRate) AND ($$IsEmpty:$Rate AND NOT $$IsFieldEdited)						: @TableRate
+
+	;;If Item Doesnot belong to price level and in create/duplicate mode then pick standard rate of Item
+	Add:Set by Condition	: (($$IsValidPriceLevel:$PriceLevel) AND $$IsEmpty:@@PriceLevelRate AND ##ICFGStkNonPriceListItem) :(If (NOT $$InCreateMode AND NOT $$InAlterMode) Then $$Value Else If $$Isstartupvalue Then $$Value Else if ($Amount != 0) AND ($Amount != @@CalcedAmt) Then @NrmlCalcRate Else If (NOT $$IsFieldEdited) Then @CurrStaRate Else $$Value)
+
+    ;; If Valid price level and Billed qty is altered then it will pick from price list	
+	Add:Set by Condition    : @IsBilledQtyEdited : @StdRate
+
+	;;If valid Price level and amount is nonzero 
+	Add:Set by Condition	: (($$IsValidPriceLevel:$PriceLevel) AND ($Amount != 0) AND ($Amount != @@CalcedAmt)) : If $$IsEmpty:$$Value Then @CalcRate Else If $$IsFieldEdited:VCHBatchValue Then  @@NrmlAmount / $BilledQty Else $$Value
+
+	;;If Valid price level and Value is not empty then retain the rate 
+	Add:Set by Condition    : ($$IsValidPriceLevel:$PriceLevel) AND (NOT $$IsEmpty:$$Value) : $$Value
+
+	Add:Set by Condition	: ($$IsValidPriceLevel:$PriceLevel) AND ($$Isempty:$$Value) AND ($Discount!=0 OR @@GetDist = 0) : @NrmlStdRate
+
+	;;If  calculated amount is non zero and amount is edited then set the batch rate Amount/qty
+	Add:Set by Condition	: ($Amount != 0) AND ($Amount != @@CalcedAmt) : @CalcRate
+
+	;; In creation  of stock journal voucher type and if field is not edited set residual rate of item to batch rate
+	Add:Set by Condition	: (@@IsStockJrnl AND NOT $$IsFieldEdited AND $$InCreateMode AND $$IsEmpty:$Rate)  : $$BaseValue:@ByResidualRate
+
+	;;In Altermode if billed qty is edited in stock lournal voucher then set residual rate of item to batch rate else 
+	;;if vouher is in ward voucher then set the standard cost of item to batch rate else if vouchertype is outward voucher type and 
+	;;price level is valid then get the rate from  price levels else set standard price of the item to batch rate.
+	Add:Set by Condition	: $$InAlterMode 	: @AlterModeVal 
+
+	;; If field is edited then set entered value
+	Add:Set by Condition	: $$IsFieldEdited 	: $$Value
+	
+	;; In duplicate mode, value to be refereshed if the tracking or order number field is changed and rate field is not edited manually 
+	Add:Set By Condition	: $$InDuplicateMode	: @DuplicateModeVal
+	
+	;; If Tracking field edited and the field selected the tracking number or Order field edited and Order number selected then Rate field should set the Tracking or Order rate.
+	Add:Set By Condition	: (($$IsFieldEdited:VCHBATCHTrack AND $$TableObj:VCHBATCHTrack:$$IsTrack) OR ($$IsFieldEdited:VCHBATCHOrder AND $$TableObj:VCHBATCHOrder:$$IsOrder)): @TableRate
+	
+	;;If rate is empty and batch rate table also empty and if amount field is non zero and amount edited then set the batch rate Amount/qty else set $$Value
+	Add:Set by Condition	: ($$IsEmpty:$Rate AND ($$IsEmpty:$$TableObj:VCHBATCHTrack:$$IsTrack OR NOT $$TableObj:VCHBATCHTrack:$$IsTrack) AND ($$IsEmpty:$$TableObj:VCHBATCHOrder:$$IsOrder OR NOT $$TableObj:VCHBATCHOrder:$$IsOrder)) : @NrmlStdRate
+
+	;; If Rate is empty without enabling tracking number and order then the normal standard rate should be set.
+	Add:Set by Condition	: ($$IsEmpty:$Rate AND (NOT $$IsTrackingOn) AND (NOT $$IsSalesOrdersOn) AND (NOT $$IsPurcOrdersOn)) : @NrmlStdRate
+
+	Add:Set by Condition	: YES   			: $Rate
+	
+;;Item Additional Details Adding in Challan Voucher End
+
+[#Field:VchInclTax]
+
+
+
+;[#Field:VchBatchValue]
+;	Background	: Red
+;	;;Inclusive Tax Rate Field is altered then Recalculate
+;	Delete	: Set By Condition	: @@IsGSTOnAppl AND $IsInclTaxRateFieldEdited	: @@CalcedAmt
+;
+;	Delete	: Set By Condition	: @@NoBaseUnits 							: $$Value
+;	Delete	: Set By Condition	: ($$IsEmpty:$$Value)						: @@CalcedAmt
+;	Delete	: Set By Condition	: ($$IsEmpty:#VCHBatchRate)					: @@CalcedAmt
+;	Delete	: Set By Condition	: ##IsFieldAltered							: @@CalcedAmt
+;	Delete	: Set By Condition	: $$IsEdited AND @IsDefaultValue			: $$Value	
+;	Delete	: Set as				: @@CalcedAmt
+;
+;    Delete	: Set always  		: Yes
+;    Delete	: Inactive    		: (@@BatchAllocBreak) OR ((@@IsGodownTransfer AND NOT @@HasBatchWise AND $$IsEmpty:#VCHBATCHBilledQty)) OR @@JobOrderBreak
+;	Delete	: Sub Form    		: VCHCURRENCY Rate 		: @@NoBaseUnits OR $$IsEmpty:$BilledQty AND @@HasMultiCurrency
+;    Delete	: Sub Form			: ADDLCOST Allocation 	: @HasAddlCost
+;    Delete	: Skip On     		: @CanSkipValue
+;
+;	Delete	: On	: Accept		: (@@IsStockJrnl) AND ($$Line = 1) AND ($BatchRate != @@NrmlAmount / $BilledQty)	: Call	: VCH AlterBatchRate:$$Value
+;	Delete	: On	: Accept		: (NOT $$IsEmpty:$StockItemName AND (##ICFGInclTax OR @@STKInclTax))	: Call	: VATUpdateBatchInclRate
+;	Delete	: On	: Accept		: Yes	: Field Accept
+;	
+;	HasAddlCost			: If (@@IsJobOrderVouchers OR @@IsJobMaterialVchs) Then No Else @@UseAddlCost AND (NOT $$IsExploded:EXPLAddlDetails AND (NOT $$IsEmptyCollection:AdditionalDetails OR @@VchAddlAmount))
+;		
+;	CanSkipValue		: If @@IsJobMaterialVchs Then $$IsEmpty:$BilledQty Else NOT @@IsExciseSupplementaryInv AND ( If @@IsJobOrderVouchers Then $$IsEmpty:#VCHBatchOrderDue Else +
+;						(@@WithPriceLevels AND (NOT @@DoEditAll AND $$IsValidPriceLevel:$PriceLevel AND @@StdVchFldSkipCond)))
+;
+;;Below formulas are introduce to resolve the turncate problem, if any of below fields values are getting change then re-calculation will happen
+;IsDefaultValue	 	: ((NOT $$IsFieldEdited:VCHBATCHOrder) AND (NOT $$IsFieldEdited:VchBatchTrack) +
+;					  AND (NOT $$IsFieldEdited:VCHBATCHRateUnits) AND (NOT $$IsFieldEdited:VchBatchBilledQty) +
+;					  AND (NOT $$IsFieldEdited:VCHBATCHRate) AND (NOT $$IsFieldEdited:VCHBATCHDiscount) +
+;					  AND (NOT $$IsFieldEdited:VCHBATCHName) AND (NOT $$IsFieldEdited:VCHBATCHGodown) +
+;					  AND (NOT ##IsExchangeRateEdited))
+;					  
+;    Delete	: Switch				: VCHBATCH Value	: VCHBATCH DNCENVATAvailing Value	: @@IsDebitNote AND @@IsCENVATAvailing        
+;
+;	;;case: Excise supplementary Invoice
+;	Delete	: Switch				: VCHBATCH Value	: VCHBATCH SuppleInv Value 			: @@IsExciseSupplementaryInv
+
+
+
+
+[#Menu:gateway of Tally]
+	Add		: Button	: Decimal
+	
+[Button:Decimal]
+	Key		: ctrl+9
+	Action	: Call	: 	decimal3
+[Function:decimal3]
+	;Variable:TestVar:String:"ID:"+$$LocaleString:$MasterId
+	
+	;100		: Set	: Fnumber	: ##Number1/##Number2
+	200		: Log		: $$MulDivAmt:3000:20:1;
+	;300		: return	: ##Fnumber
+	
+*/

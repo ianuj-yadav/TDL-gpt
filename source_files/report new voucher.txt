@@ -1,0 +1,2 @@
+[#Menu:Default]
+	ToolBar Button:HotelVoucher

@@ -1,0 +1,69 @@
+---
+title: T22 How to Create Collection OR Table or List
+type: sample_code
+objects: Report, Form, Part, Line, Collection
+source: T22 How to Create Collection OR Table or List.txt
+---
+
+# T22 How to Create Collection OR Table or List
+
+## Source Code
+
+```tdl
+
+; Hello friend welcome to youtube channel today we going to learn how to create list or table in tally 
+; if you are new in channel subscribe channel and click bell notification
+; in tally so many object are there we create table in objects
+; 1.Company object
+ ;; Account Info
+    ;; Group
+	   ;; Ledgers
+		;; Etc
+	   
+ ;; Inventory
+	;; Stock group
+	  ;; Stock Item 
+	  ;; Etc
+	  
+;; today we discuss How to Make collection or list or Table in Group objects
+
+;; First we create one file and attch to tally
+
+;; we start coding 
+
+[#Menu: GatewayofTally]
+	
+	Add: Item: At Beginning: group Collection or list or Table : Alter	:	AGSGroupList
+	
+[Report: AGSGroupList]
+	
+	Title: "Table Group"
+	Form: AGSGroupList
+	
+[Form: AGSGroupList]
+	
+	Height	: 50% Screen
+	Width	: 50% Screen
+	Part	: AGSGroupList
+	
+[Part: AGSGroupList]
+	
+	Line	:	AGSGroupList
+	
+[Line: AGSGroupList]
+	
+	Field	:	MediumPrompt,NameField
+	Local	:	Field: MediumPrompt : Set as	:	"Group Table Or List"
+	Local	:	Field:	NameField :	Table: AGSGroupList
+	
+[Collection: AGSGroupList]
+	
+	Title	:	"list of Groups"
+	Type	:	Group
+	Format	:	$Name,20
+	Format	:	$ClosingBalance
+	
+; Here display only list of groups next we add closing balance
+	
+
+```

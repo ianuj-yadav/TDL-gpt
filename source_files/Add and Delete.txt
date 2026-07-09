@@ -1,0 +1,27 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This program demonstrates the usage of Modifiers 'Use', 'Add' and 'Delete'.
+-	Position specifers, 'At Beginning' and 'At End' are used to denote the position where
+	the current Item need to be displayed.
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Menu: Attribute Modifiers]
+	
+	Use		: Gateway of Tally
+	Key Item: Quarterly Report
+	Add 	: Key Item: At Beginning	        : Bank Payment Vouchers
+	Add 	: Key Item: At End		            : Yearly Report
+	Delete	: Key Item: TDL - The Development Language
+	Delete 	: Key Item: @@locDisplay
+
+/*
+Menu Attribute Modifiers inherits all Items and Buttons from Gateway of Tally Menu and 
+Adds some Item and deletes some Item.
+*/
+
+;; End-of-File

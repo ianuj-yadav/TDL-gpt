@@ -1,0 +1,250 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the alteration of Invoice Printing format
+-	Default Invoice Format is overridden with a New Format
+
+Last modification -
+-	Altered on 09-11-2009
+*/
+
+[#Form: Comprehensive Invoice]
+
+	Option: Global Invoice    : @@IsSales AND ##InvVarC1
+
+[#Form: Simple Printed Invoice]
+
+	Option: Global Invoice    : @@IsSales AND ##InvVarC1
+
+[!Form : Global Invoice]
+
+	Delete  	: Parts
+	Delete	    : Bottom Parts
+	Delete	    : PageBreak
+	Space Bottom: 0
+	Space Left	: 0.25 inch
+	Space Right	: 0
+	Add         : Parts	        : Global Invoice Top Part
+	Add         : Parts	        : Global Invoice Body Part
+	Add         : Bottom Parts  : Global Invoice Bottom Part
+
+    [Part: Global Invoice Top Part]
+
+		Lines       : Global CmpName, Global VCHDate, Global PartyName, Global PartyAdd1, +
+                		Global ColumnTitles
+		Repeat      : Global PartyAdd1  : PartyAddress
+
+        [Line: Global CmpName]
+
+			Fields		: Global CmpName
+
+            [Field: Global CmpName]
+
+				Use 		: Name Field
+				Set as  	: @@CMPMailNAme
+				FullWidth	: Yes
+				Align		: Centre
+
+        [Line: Global VCHDate]
+
+			Fields		: Short Prompt, Global VCHDate
+			Right Fields: Simple Prompt, Global VCHNo
+			Local: Field: Short Prompt  : Set as    : "Voucher Date : "
+			Local: Field: Simple Prompt : Set as    : "Voucher No : "
+
+            [Field: Global VCHDate]
+
+				Use 		: Short Date Field
+				Set as  	: $Date
+
+            [Field: Global VCHNo]
+
+				Use 		: Short Name Field
+				Set as  	: $VoucherNumber
+
+        [Line: Global PartyName]
+
+			Fields		: Short Prompt, Global PartyName
+			Local: Field: Short Prompt : Set as     : "Party Name: "
+
+            [Field: Global PartyName]
+
+				Use 		: Name Field
+				Set as  	: $PartyLedgerName
+
+        [Line: Global PartyAdd1]
+
+			Fields		: Global PartyAdd1
+
+            [Field: Global PartyAdd1]
+
+				Use 		: Name Field
+				Set as	    : $Address
+				Indent	    : 10
+
+        [Line: Global Column Titles]
+
+			Use         : IE Details
+			Local: Field: Default 	    : Lines     : 2
+			Local: Field: Default 	    : Type      : String
+			Local: Field: Default 	    : Style     : Normal Bold
+			Local: Field: IE SrNo 	    : Set as    : "Sr No"
+			Local: Field: IE SiName     : Set as    : "Name"
+			Local: Field: IE Qty    	: Set as    : "Billed Qty"
+			Local: Field: IE Rate 	    : Set as    : "Rate"
+			Local: Field: IE Discount   : Set as    : "Disc Amt"
+			Local: Field: IE Amount     : Set as    : "Amount"
+			Border      : Column Titles
+
+    [Part: Global Invoice Body Part]
+
+		Parts 		: IE Details, LE Details
+		Vertical 	: Yes
+		Scroll 		: Vertical 
+		Common Border: Yes
+
+        [Part: IE Details]
+
+			Lines 		: IE Details
+			Repeat 		: IE Details : Inventory Entries
+			Total 		: IE Qty, IE Discount, IE Amount
+
+            [Line: IE Details]
+
+				Fields		: IE SrNo, IE SiName
+				Right Fields: IE Qty, IE Rate, IE Discount, IE Amount
+				Explode 	: Item Desc     : $$NumItems:UserDescription > 0
+
+                [Part: Item Desc]
+
+					Lines 		: Item Desc 
+					Repeat  	: Item Desc     : UserDescription
+
+                    [Line: Item Desc]
+
+						Fields  	: Item Desc
+
+                        [Field: Item Desc]
+
+							Use 		: Name Field
+							Width 	    : 40
+							Indent 	    : 8
+							Set as	    : $UserDescription
+							Style 	    : Normal Italic
+
+                [Field: IE SrNo]
+
+					Use 		: Short Name Field
+					Set as  	: $$Line
+					Border 	    : Thin Left
+					Width 	    : 4
+						
+                [Field: IE SIName]
+
+					Use 		: Name Field
+					Set as  	: $StockItemName
+					Border 	    : Thin Left
+					FullWIdth 	: Yes
+
+                [Field: IE Qty]
+
+					Use 		: Number Field
+					Set as  	: $BilledQty
+					Border 	    : Thin Left
+					Format 	    : "NoSymbol"
+					Align   	: Right
+
+                [Field: IE Rate]
+
+					Use 		: Rate Price Field
+					Set as  	: $Rate
+					Border 	    : Thin Left
+					
+                [Field: IE Discount]
+
+					Use 		: Amount Forex Field
+					Set as  	: $$AsAmount:$Discount
+					Border 	    : Thin Left
+
+                [Field: IE Amount]
+
+					Use 		: Amount Field
+					Set as  	: $Amount
+					Border 	    : Thin Left Right
+					Format 	    : "NoComma, NoZero"
+
+    [Part: LE Details]
+
+		Lines 		: LE Details 
+		Repeat  	: LE Details    : Ledger Entries
+		Scroll 	    : Vertical
+			
+        [Line: LE Details]
+
+			Use 		: IE Details
+			Local: Field: IE SrNo       : Set as    : ""
+			Local: Field: IE SiName     : Set as    : $LedgerName
+			Local: Field: IE Qty	    : Set as    : ""
+			Local: Field: IE Rate   	: Set as    : $$String:$RateOfInvoiceTax + "%"
+			Local: Field: IE Amount     : Set as    : $Amount
+			Local: Field: IE SiName     : Align     : Right
+			Local: Field: IE Qty	    : Format    : "NoZero"
+			Local: Field: IE Rate		: Inactive 	: $RateOfInvoiceTax = 0
+			Local: Field: IE Rate		: Type 		: String
+			Remove if	: $LedgerName = $PartyLedgerName
+
+;; Empty attribute is used to avoid printing of party ledger name in the invoice
+
+    [Part: Global Invoice Bottom Part]
+
+		Lines : Global Total Line, Global AmtInWords, Global ForCmp, Global AuthSign
+
+        [Line: Global Total Line]
+
+			Use         : IE Details
+			Local: Field: Default 	    : Style     : Normal  Bold
+			Local: Field: IE SrNo		: Set as    : ""
+			Local: Field: IE SiName     : Set as    : "Totals"
+			Local: Field: IE Qty		: Set as    : $$Total:IEQty
+			Local: Field: IE Rate		: Set as    : ""
+			Local: Field: IE Discount	: Set as    : $$Total:IEDiscount
+			Local: Field: IE Amount 	: Set as    : $$Total:IEAmount
+			Border      : Totals
+
+        [Line: Global AmtInWords]
+
+			Fields      : Short Prompt, Global AmtInWords
+			Local: Field: Short Prompt  : Set as    : "Amount in words : "
+
+            [Field: Global AmtInWords]
+
+				Use 		: Name Field
+				Set as  	: $$InWords:$Amount + " Only"
+				FullWidth 	: Yes
+				Style 	    : Small
+
+        [Line: Global ForCmp]
+
+			Right Fields: Global ForCmp
+
+            [Field: Global ForCmp]
+
+				Use 		: Name Field
+				Set as  	: "For " + @@CMPMailNAme
+				Align		: Right
+				Width		: 0
+
+        [Line: Global AuthSign]
+
+			Right Fields: Global AuthSign
+			Space Top 	: 2
+
+            [Field: Global AuthSign]
+
+				Use 		: Name Field
+				Set as  	: "Authorised Signatory"
+				Width 	    : 0
+				Align 	    : Right
+				
+;; End-of-File

@@ -1,0 +1,95 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This Code demonstrates the usage of TypeCasting Functions "DateRange" 
+-	This Code which auto creates Vouchers within Collections demonstrates the 
+	'Set Value' Enhancement.  Now the Target Method need not be specified if
+	both Source and Target Object Method Names are the same
+
+Last Modification -
+-	Altered on 09-11-2009
+
+Dependencies -
+-	To check the working of this code,
+	i)   Create 2 Ledgers "Test Party" and "Sales"
+	ii)	 Create an Item "Item 1"
+	iii) Alter the Voucher Type "Sales" to have Manual Voucher Numbering
+*/
+
+[Function: Set Value Enhanced]
+
+	10	: SET FILE LOG ON
+
+	20	: WALK COLLECTION	: Vouchers of My Objects
+	30  :   SET             : SVViewName 	: $$SysName:InvVchView
+	40	: 	NEW OBJECT		: Voucher
+	50	: 	LOG TARGET 		: TgtObj.txt
+;; Since the Methods Date, VoucherTypeName, VoucherNumber and 
+;; Reference are same in the target object, Target object need
+;; not be specified.
+	60	: 	SET			: SVVoucherType		: "Sales"
+	70	: 	SET VALUE	: Date
+	80	: 	SET VALUE	: VoucherTypeName
+	85	: 	LOG			: $VoucherTypeName
+	90	: 	SET VALUE	: VoucherNumber
+	100	: 	SET VALUE	: PartyLedgerName	: "Test Party"
+	110	: 	SET VALUE	: IsInvoice			: Yes
+	120	: 	SET VALUE	: Reference
+
+	130	: 	INSERT COLLECTION OBJECT		: LEDGERENTRIES
+	140	: 	SET VALUE	: LedgerName		: "Test Party"
+	150	: 	SET VALUE	: IsDeemedPositive	: Yes
+	160	: 	SET VALUE	: Amount			: $$AsAmount:"1000" * -1
+	170	: 	SET TARGET	: ..
+
+	180	: 	INSERT COLLECTION OBJECT		: INVENTORYENTRIES
+	190	: 		SET VALUE	: StockItemName		: "Item 1"
+	200	: 		SET VALUE	: IsDeemedPositive	: No
+	210	: 		SET VALUE	: ActualQty			: ($$TgtObject:($$AsQty:"-10"))
+	220	: 		SET VALUE	: BilledQty			: ($$TgtObject:($$AsQty:"-10"))
+	230	: 		SET VALUE	: Rate				: ($$TgtObject:($$AsRate:"100"))
+	240	: 		SET VALUE	: Amount			: $$AsAmount:"1000"
+
+	250	: 		INSERT COLLECTION OBJECT		: BATCHALLOCATIONS
+	260	: 			SET VALUE	: GodownName		: "Main Location"
+	270	: 			SET VALUE	: BatchName			: "Test"
+	280	: 			SET VALUE	: ActualQty			: ($$TgtObject:($$AsQty:"-10"))
+	290	: 			SET VALUE	: BilledQty			: ($$TgtObject:($$AsQty:"-10"))
+	300	: 			SET VALUE	: Rate				: ($$TgtObject:($$AsRate:"100"))
+	310	: 			SET VALUE	: Amount			: $$AsAmount:"1000"
+	320	: 		SET TARGET	: ..
+
+	330	: 		INSERT COLLECTION OBJECT		: ACCOUNTING ALLOCATIONS
+	340	: 			SET VALUE	: LedgerName		: "Sales"
+	350	: 			SET VALUE	: IsDeemedPositive	: No
+	360	: 			SET VALUE	: Amount			: $$AsAmount:"1000"
+	370	: 		SET TARGET	: ...
+
+	380	:   SET VALUE   : PersistedView 	: ##SVViewName 
+	390	: 	CREATE TARGET
+	400	: END WALK
+	410	: MSGBOX			: "Status" 			: "Created 2 Sales \n Voucher(s) !!"
+	;420	: Exec Command		: TgtObj.txt
+	430	: SET FILE LOG OFF
+	440	: RETURN
+
+[Collection: Vouchers of My Objects]
+
+	Object			: Sales1, Sales2
+
+[Object: Sales1]
+
+	Date			: $$Date:"01-04-2010"
+	Voucher Number	: "Sale/101/2010-11"
+	VoucherTypeName	: "Sales"
+	Reference		: "Sales Test1"
+
+[Object: Sales2]
+
+	Date			: $$Date:"02-04-2010"
+	Voucher Number	: "Sale/102/2010-11"
+	VoucherTypeName	: "Sales"
+	Reference		: "Sales Test2"
+
+;; End-of-File

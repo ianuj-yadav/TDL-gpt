@@ -1,0 +1,62 @@
+---
+title: Report by Collection Line Level
+type: sample_code
+objects: Report, Form, Part, Line, Field
+source: Report by Collection Line Level.txt
+---
+
+# Report by Collection Line Level
+
+## Source Code
+
+```tdl
+[#Menu:Gateway of Tally]
+	Item:Table Report:Alter:TableReport1
+[Report:TableReport1]
+	Form:TableForm1
+	[Form:TableForm1]
+		Part:TablePart1
+		Width:100% screen
+		Height:100% screen
+		[Part:TablePart1]
+			Line:RepeatTitles,LedgerDetailsLine
+			Repeat:LedgerDetailsLine:MyColl1
+			[Line:RepeatTitles]
+				Field:SerialNumber,NameField11,NameField12,AddressField1,DateField1
+				/*
+				Local:Field:NameField1:Info:"Ledger Name"
+				Local:Field:NameField2:Info:"Group Name"
+				*/
+				[Field:SerialNumber]
+					Use:Name Field
+					Set as:"Sr. No."
+				[Field:NameField11]
+					Use:Name Field
+					Set as:"Ledger Name"
+				[Field:NameField12]
+					Use:Name Field
+					Set as:"Group Name"
+				[Field:AddressField1]
+					Use:Name Field
+					Set as:"Address"
+				[Field:DateField1]
+					Use:Name Field
+					Set as:"Address"
+			[Line:LedgerDetailsLine]
+				Field: LedgerSrNo,LedgerNameP,LedgerParentP,LedgerAddressP,LedgerAlteredOnP
+				[Field:LedgerSrNo]
+					Use:Name Field
+					Set as:$$line
+				[Field:LedgerNameP]
+					Use:Name Field
+					Set as:$Name
+				[Field:LedgerParentP]
+					Use:Name Field
+					Set as:$Parent
+				[Field:LedgerAddressP]
+					Use:Name Field
+					Set as:$Address
+				[Field:LedgerAlteredOnP]
+					Use:Full Uni Date Field
+					Set as:$AlteredOn
+```

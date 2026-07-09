@@ -1,0 +1,76 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This code demonstrates the usage of Field Acting as Variables
+- 	The Variable value keeps changing when the user displays the report and
+	scrolls over lines. The variable value will always assume the current line's
+	Field Value.  This helps for viewing drill down reports and tracking user's
+	choice.  The subsequent report uses the current field acting as variable value
+	to display the report.
+-	Variables are by default, Volatile in nature.
+-	Volatile Variables are variables of Report Scope. Different Reports can have 
+	multiple instances of the same variable with an initial value from any source
+	i.e., Previous Report, the variable value declared within System Variable 
+	Definition or default value specified in Variable.
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: FAAV Report]
+
+	Form		: FAAV Report
+	Variable	: FAAV Group Name	: String
+	
+[Form: FAAV Report]
+
+	Parts		: FAAV Report
+
+[Part: FAAV Report]
+
+	Lines		: FAAV TB Title, FAAV TB Details
+	Repeat		: FAAV TB Details	: FAAV TB Collection
+	Scroll		: Vertical
+	CommonBorder: Yes
+
+	[Line: FAAV TB Title]
+
+		Use		: FAAV TB Details
+		Local	: Field		: Default			: Type		: String
+		Local	: Field		: Default			: Align		: Center
+
+		Local	: Field		: FAAV TB Name		: Set As	: "Name"
+		Local	: Field		: FAAV TB Closing	: Set As	: "Closing Balance"
+		Border	: Thin Top Bottom
+
+	[Line: FAAV TB Details]
+
+		Fields		: FAAV TB Name
+		Right Fields: FAAV TB Closing
+
+		[Field: FAAV TB Name]
+
+			Use			: Name Field
+			Set As		: $Name
+			
+			Option		: FAAV TB Grp	: $$IsGroup
+			
+			[!Field: FAAV TB Grp]
+				
+				Variable	: FAAVGroupName
+				Display		: FAAV Report
+
+		[Field: FAAV TB Closing]
+
+			Use			: Amount Forex Field
+			Set As		: $ClosingBalance
+			Border		: Thin Left
+
+[Collection: FAAV TB Collection]
+
+	Type		: Group
+	Child Of	: #FAAVGroupName
+	Fetch		: Name, ClosingBalance ;; Required for fetching values for remoting 2.0
+
+;; End-of-File

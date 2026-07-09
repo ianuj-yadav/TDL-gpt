@@ -1,0 +1,345 @@
+---
+title: Agent List
+type: sample_code
+objects: Report, Form, Part, Line, Field, Collection
+source: Agent List.txt
+---
+
+# Agent List
+
+## Source Code
+
+```tdl
+[Report:Agent List]
+	Title	: "Agent List"
+	
+	Form	: Agent List
+	
+[Form:Agent List]
+	Part	: Agent List
+	
+[Part:Agent List]
+	Line	: Agent List
+	Repeat	: Agent List	: AgentList
+	Scroll	: Vertical
+	
+	[Line:Agent List]
+		Field	:/*Serial NumberAgent,*/ Medium Prompt, AgentCommission
+		
+;		[Field:Serial NumberAgent]
+;			Set as	: @@CurrentSerialNumber
+;			Storage	: SRNumberAgent
+;			Type	: Number
+			
+		Local	: Field	: Medium Prompt	: Set as	: $Name
+;		[Field:AgentName]
+;			Set as:$Name
+;			wid
+			
+		[Field:AgentCommission]
+			Set as	: $Commission
+			Type	: Number
+			Format	: "Percentage"
+			
+
+
+[System	:UDF]
+	SRNumberAgent:Number:1234
+[System : Formulae]
+LastSerialNumber : $$CollectionField:$SRNumberAgent:mad:@LastItem:AgentList ;; your collection name
+CurrentSerialNumber: $$Number:mad:@LastSerialNumber + 1
+
+[Collection: HPCollection] ;; your collection
+	Type : Voucher
+			
+
+
+[Collection:AgentList]
+	;Objects:Agent1, Agent2, Agent3, Agent4, Agent5, Agent6, Agent7, Agent8, Agent9, Agent10, Agent11, Agent12, Agent13, Agent14, Agent15, Agent16, Agent17, Agent18, Agent19, Agent20, Agent21, Agent22, Agent23, Agent24, Agent25, Agent26, Agent27, Agent28, Agent29, Agent30, Agent31, Agent32, Agent33, Agent34, Agent35, Agent36, Agent37, Agent38, Agent39, Agent40, Agent41, Agent42, Agent43, Agent44, Agent45, Agent46, Agent47, Agent48, Agent49, Agent50, Agent51, Agent52, Agent53, Agent54, Agent55, Agent56, Agent57
+	Objects	: Agent1, +
+Agent2, +
+Agent3, +
+Agent4, +
+Agent5, +
+Agent6, +
+Agent7, +
+Agent8, +
+Agent9, +
+Agent10, +
+Agent11, +
+Agent12, +
+Agent13, +
+Agent14, +
+Agent15, +
+Agent16, +
+Agent17, +
+Agent18, +
+Agent19, +
+Agent20, +
+Agent21, +
+Agent22, +
+Agent23, +
+Agent24, +
+Agent25, +
+Agent26, +
+Agent27, +
+Agent28, +
+Agent29, +
+Agent30, +
+Agent31, +
+Agent32, +
+Agent33, +
+Agent34, +
+Agent35, +
+Agent36, +
+Agent37, +
+Agent38, +
+Agent39, +
+Agent40, +
+Agent41, +
+Agent42, +
+Agent43, +
+Agent44, +
+Agent45, +
+Agent46, +
+Agent47, +
+Agent48, +
+Agent49, +
+Agent50, +
+Agent51, +
+Agent52, +
+Agent53, +
+Agent54, +
+Agent55, +
+Agent56, +
+Agent57
+
+[Object: Agent1]
+    Name    : "Henry Moore"
+    Commission : 15
+
+[Object: Agent2]
+    Name    : "Emma Jones"
+    Commission : 19
+
+[Object: Agent3]
+    Name    : "Charlie Taylor"
+    Commission : 11
+
+[Object: Agent4]
+    Name    : "David Johnson"
+    Commission : 5
+
+[Object: Agent5]
+    Name    : "Alice Davis"
+    Commission : 19
+
+[Object: Agent6]
+    Name    : "Henry Miller"
+    Commission : 15
+
+[Object: Agent7]
+    Name    : "Jack Davis"
+    Commission : 18
+
+[Object: Agent8]
+    Name    : "Charlie Smith"
+    Commission : 12
+
+[Object: Agent9]
+    Name    : "Bob Wilson"
+    Commission : 6
+
+[Object: Agent10]
+    Name    : "Emma Williams"
+    Commission : 15
+
+[Object: Agent11]
+    Name    : "David Smith"
+    Commission : 10
+
+[Object: Agent12]
+    Name    : "Jack Wilson"
+    Commission : 16
+
+[Object: Agent13]
+    Name    : "Grace Davis"
+    Commission : 16
+
+[Object: Agent14]
+    Name    : "Bob Moore"
+    Commission : 20
+
+[Object: Agent15]
+    Name    : "Ivy Johnson"
+    Commission : 16
+
+[Object: Agent16]
+    Name    : "Grace Williams"
+    Commission : 9
+
+[Object: Agent17]
+    Name    : "Ivy Davis"
+    Commission : 20
+
+[Object: Agent18]
+    Name    : "Frank Wilson"
+    Commission : 11
+
+[Object: Agent19]
+    Name    : "Frank Miller"
+    Commission : 16
+
+[Object: Agent20]
+    Name    : "Frank Williams"
+    Commission : 12
+
+[Object: Agent21]
+    Name    : "Jack Johnson"
+    Commission : 17
+
+[Object: Agent22]
+    Name    : "Charlie Brown"
+    Commission : 6
+
+[Object: Agent23]
+    Name    : "Emma Miller"
+    Commission : 19
+
+[Object: Agent24]
+    Name    : "Henry Wilson"
+    Commission : 17
+
+[Object: Agent25]
+    Name    : "David Williams"
+    Commission : 8
+
+[Object: Agent26]
+    Name    : "Ivy Brown"
+    Commission : 6
+
+[Object: Agent27]
+    Name    : "David Moore"
+    Commission : 18
+
+[Object: Agent28]
+    Name    : "Henry Brown"
+    Commission : 7
+
+[Object: Agent29]
+    Name    : "Henry Taylor"
+    Commission : 17
+
+[Object: Agent30]
+    Name    : "Henry Jones"
+    Commission : 8
+
+[Object: Agent31]
+    Name    : "Alice Miller"
+    Commission : 9
+
+[Object: Agent32]
+    Name    : "Jack Smith"
+    Commission : 20
+
+[Object: Agent33]
+    Name    : "Emma Taylor"
+    Commission : 20
+
+[Object: Agent34]
+    Name    : "David Miller"
+    Commission : 10
+
+[Object: Agent35]
+    Name    : "Grace Jones"
+    Commission : 8
+
+[Object: Agent36]
+    Name    : "Jack Jones"
+    Commission : 5
+
+[Object: Agent37]
+    Name    : "Ivy Miller"
+    Commission : 6
+
+[Object: Agent38]
+    Name    : "Emma Davis"
+    Commission : 6
+
+[Object: Agent39]
+    Name    : "Frank Johnson"
+    Commission : 17
+
+[Object: Agent40]
+    Name    : "Emma Moore"
+    Commission : 6
+
+[Object: Agent41]
+    Name    : "Bob Johnson"
+    Commission : 11
+
+[Object: Agent42]
+    Name    : "Charlie Johnson"
+    Commission : 16
+
+[Object: Agent43]
+    Name    : "Henry Wilson"
+    Commission : 18
+
+[Object: Agent44]
+    Name    : "Ivy Brown"
+    Commission : 9
+
+[Object: Agent45]
+    Name    : "Frank Davis"
+    Commission : 9
+
+[Object: Agent46]
+    Name    : "Jack Miller"
+    Commission : 20
+
+[Object: Agent47]
+    Name    : "Grace Wilson"
+    Commission : 14
+
+[Object: Agent48]
+    Name    : "Charlie Smith"
+    Commission : 20
+
+[Object: Agent49]
+    Name    : "David Johnson"
+    Commission : 18
+
+[Object: Agent50]
+    Name    : "Jack Taylor"
+    Commission : 10
+
+[Object: Agent51]
+    Name    : "Emma Smith"
+    Commission : 10
+
+[Object: Agent52]
+    Name    : "Bob Moore"
+    Commission : 15
+
+[Object: Agent53]
+    Name    : "Emma Williams"
+    Commission : 8
+
+[Object: Agent54]
+    Name    : "David Moore"
+    Commission : 15
+
+[Object: Agent55]
+    Name    : "Frank Wilson"
+    Commission : 5
+
+[Object: Agent56]
+    Name    : "David Smith"
+    Commission : 11
+
+[Object: Agent57]
+    Name    : "Charlie Johnson"
+    Commission : 16
+	
+```

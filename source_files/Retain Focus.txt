@@ -1,0 +1,118 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This program demonstrates the usage and purpose of 'Retain Focus' Attribute at Part 
+	Definition
+
+Syntax -
+-	Retain Focus : <Logical Formula>
+
+Last modification – 
+-	Altered on 07/11/2009
+
+Dependencies -
+-	Company data consisting of Groups, Ledgers & Stock Items
+*/
+
+[Report: Retain Focus Sample]
+
+	Form	: Retain Focus Sample
+	Variable: Retain Focus
+	Title	: "Sample demonstrating Retain Focus"
+	Set		: Retain Focus	: Yes
+	
+[Form: Retain Focus Sample]
+
+	Parts	: FormSubTitle, Retain Focus Sample
+	Buttons	: Print Button, Retain Focus Button
+	Height	: 100% Screen
+	Width	: 100% Screen
+	Local	: Field	: Form Sub Title	: Set As	: "Retain Focus Attribute at Part Level has been enabled by setting it to Yes.  Please click on the F5 Button to disable it"
+	Local	: Field	: Form Sub Title	: Style		: Normal Italic
+
+[Part: Retain Focus Sample]
+
+	Parts	: Led Details, Stk Details, Group Details
+
+	[Part: Led Details]
+
+		Lines			: Led Title, Led Info
+		Repeat			: Led Info	: Ledger
+		Scroll			: Vertical
+		Common Borders	: Yes
+		Option			: RetainFocus LedDet: ##RetainFocus
+
+		[!Part: RetainFocus LedDet]
+
+			Retain Focus	: Yes
+
+;; Retain Focus Attribute for Part is set to Yes provided the variable RetainFocus is Yes, the value of
+;; which is altered by the user on pressing F5 Button
+
+		[Line: Led Title]
+
+			Use		: Led Info
+			Local	: Field	: Default	: Align		: Center
+			Local	: Field	: Default	: Style		: Normal Bold
+
+			Local	: Field	: LName		: Set as	: "Ledger Name"
+			Local	: Field	: LParent	: Set as	: "Parent"
+			Border	: Thin Top Bottom
+
+		[Line: Led Info]
+
+			Fields	: LName, LParent
+			Local	: Field	: Default	: Style		: Normal
+
+			[Field: LName]
+
+				Use		: Name Field
+				Set as	: $Name
+
+			[Field: LParent]
+
+				Use		: Name Field
+				Set as	: $Parent
+				Border	: Thin Left
+
+	[Part: Stk Details]
+
+		Use		: Led Details
+		Repeat	: Led Info	: Stock Items
+		Local	: Line		: Led Title	: Local	: Field	: LName	: Set as	: "Stock Item"
+		Border	: Double Left
+
+	[Part: Group Details]
+
+		Use		: Led Details
+		Repeat	: Led Info	: Group Collection
+		Local	: Line		: Led Title	: Local	: Field	: LName	: Set as	: "Group"
+		Border	: Double Left
+
+[Collection: Stock Items]
+
+	Type	: Stock Item
+	Fetch 	: Name, Parent 
+	
+[Collection	: Group Collection]
+	
+	Use		: Group
+	Fetch	: Parent
+
+;; Button Definition
+
+[Button: Retain Focus Button]
+
+	Key		: F5
+	Action	: Set	: Retain Focus	: NOT ##RetainFocus
+	Title	: if ##RetainFocus then "No Focus" else "Focus"
+
+;; Variable Definition
+
+[Variable: Retain Focus]
+
+	Type	: Logical
+	Default	: No
+
+;; End-of-File

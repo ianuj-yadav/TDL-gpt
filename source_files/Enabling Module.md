@@ -1,0 +1,47 @@
+---
+title: Enabling Module
+type: sample_code
+objects: Line, Field
+source: Enabling Module.txt
+---
+
+# Enabling Module
+
+## Source Code
+
+```tdl
+[#Part: Company F11 Other Features]
+	
+	Local	: Part	: Cfg PartContent		:Add			: Lines	: CMP EnableAgent
+	[Line: CMP EnableAgent]
+
+		Use			: Cmp Ops More Config	
+		Fields		: Medium Prompt, CMP EnableAgent
+		Space Top	: 0.6
+		Local  		: Field : Medium Prompt : Info    		: $$LocaleString:"Enable Agent Module :"
+		Local  		: Field : Medium Prompt : Background	: Yellow
+	
+		[Field:CMP EnableAgent]
+			Type		: Logical
+			Storage		: IsAgentModuleEnabled
+			Width		: 3
+			Max			: 3
+			Table		: YesNoTable
+			Show Table	: On Error
+			Key			: LogicalToggle		
+			Style		: Normal Bold
+			Sub Form	: AgentNameCreation	: $$Value=Yes  ;; This would be a name of report.
+							;; Sub Form attribute is always open in alter mode.
+							
+			Background	: Yellow
+	
+			
+
+
+[System:UDF]
+	IsAgentModuleEnabled	: Logical	: 20001
+	
+
+
+ 
+```

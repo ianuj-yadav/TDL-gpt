@@ -1,0 +1,52 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/* 
+Demo TDLs for TDL Language Components
+*/
+
+[Menu: TDL Language Components]
+
+	Indent		: "Definitions and Attributes"
+	Item 		: Blank
+	Key Item 	: Welcome to TDL	: W : Display 	: First TDL Report
+	Key Item 	: Set As Vs Info	: A : Display 	: Sample Setasinfo
+	Key Item 	: Menu				: M : Menu		: Quarterly Menu
+	Key Item	: SetByCondition	: B : Display	: Sample SetbyCondition
+	Key Item	: Default Line		: D : Display	: Default Line Sample
+	Key Item	: Full Screen		: F : Display	: Full Screen Sample
+	Key Item	: Retain Focus		: R : Display	: Retain Focus Sample
+	Key Item	: Sync				: S : Display	: Sync Attribute Sample
+	Item 		: Blank
+
+	Indent		: "Attribute Modifiers"
+	Item 		: Blank
+	Key Item 	: Add and Delete 	: D : Menu 		: Attribute Modifiers
+	Key Item	: Local				: L : Display	: LReport
+	Key Item 	: Option 			: T : Display	: Option within Field
+	Key Item 	: Switch 			: I : Display	: Switch within Form
+	Item 		: Blank
+
+	Indent		: "Other Components"
+	Item 		: Blank
+	Key Item 	: Formula 			: M : Alter 	: Usage of Formula
+	Key Item 	: Functions			: F : Alter 	: Usage of Function
+	Item 		: Blank
+
+[Include: Welcome to TDL.txt]
+[Include: Set as Vs Info.txt]
+[Include: Sub Menu.txt]
+[Include: SetByCondition.txt]
+[Include: Default Line.txt]
+[Include: Full Screen.txt]
+[Include: Retain Focus.txt]
+[Include: Sync.txt]
+
+[Include: Add and Delete.txt]
+[Include: Local.txt]
+[Include: Option.txt]
+[Include: Switch.txt]
+
+[Include: Formula.txt]
+[Include: Functions.txt]
+
+;; End-of-File

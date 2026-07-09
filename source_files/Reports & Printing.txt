@@ -1,0 +1,50 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Demo TDLs for Reports and Printing
+*/
+
+[Menu: Reports and Printing]
+
+	Indent		: "Basic Report Design"
+	Key	Item	: Blank
+	Key Item	: Simple Trial Balance						: S : Display			: Simple Trial balance
+	Key Item	: Group Trial Balance						: T : Display			: My Trial Balance
+	Key Item	: Exploded Trial Balance					: E : Display			: My TB Report
+	Key Item	: Drill Down Trial Balance					: D : Display			: DD Trial Balance
+	Key	Item	: Blank
+
+	Indent		: "Columnar Reports"
+	Key	Item	: Blank
+	Key Item	: Multi Column Trial Balance				: M : Display			: MulCol Trial Balance
+	Key Item	: Auto Column Trial Balance					: A : Display			: AutoCol Trial Balance
+	Key Item	: Automatic Auto Column Trial Balance		: U : Display			: AutoAutoCol Trial Balance
+	Key	Item	: Blank
+
+	Indent		: "Reports using Page Break"
+	Key	Item	: Blank
+	Key Item	: Trial Balance - Form Page Break			: F : Display			: Form Pgbk Trial Balance Report
+	Key Item	: Trial Balance - Part Page Break			: P : Display			: Part Pgbk Trial Balance Report
+	Key	Item	: Blank
+
+	Indent		: Advanced Print related Actions
+	Key	Item	: Blank
+	Key Item	: Print Action - Ledgers					: L : Print Collection	: Ledger Vouchers
+	Key Item	: Print Report Action - Payslip				: O : Display			: Employee List
+	Key	Item	: Blank
+
+[Include: Trial Balance.txt]
+[Include: Trial Balance Groups.txt]
+[Include: Trial Balance Exploded.txt]
+[Include: Trial Balance Drill down.txt]
+
+[Include: Multi Column Trial Balance.txt]
+[Include: Auto Column Trial Balance.txt]
+[Include: Automatic Auto Column Trial Balance.txt]
+
+[Include: Form Page Break.txt]
+[Include: Part Page Break.txt]
+
+[Include: Print Report Action.txt]
+
+;; End-of-File

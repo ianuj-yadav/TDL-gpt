@@ -1,0 +1,51 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code displays the effect of function call in a remote environment
+
+Last modification -
+-	Altered on 09-11-2009
+*/
+
+[Report: Remote Function Call]
+
+	Form	: Remote Function Call
+
+[Form: Remote Function Call]
+
+	Parts	: Remote Function Call
+
+[Part: Remote Function Call]
+
+	Lines	: Total Ledgers, Total Groups, Total Stock Items, Total Stock Groups
+
+;; Each Remote Function Call triggers one request at the Server end.
+
+	[Line: Total Ledgers]
+
+		Fields	: Medium Prompt, Total Ledgers
+		Local	: Field	: Medium Prompt	: Set as	: "Total Ledgers :"
+		Local	: Field	: Total Ledgers	: Set as	: $$NumLedgers
+
+	[Line: Total Groups]
+
+		Use		: Total Ledgers
+		Local	: Field	: Medium Prompt	: Set as	: "Total Groups :"
+		Local	: Field	: Total Ledgers	: Set as	: $$NumGroups
+
+	[Line: Total Stock Items]
+
+		Use		: Total Ledgers
+		Local	: Field	: Medium Prompt	: Set as	: "Total Stock Items :"
+		Local	: Field	: Total Ledgers	: Set as	: $$NumStockItems
+
+	[Line: Total Stock Groups]
+
+		Use		: Total Ledgers
+		Local	: Field	: Medium Prompt	: Set as	: "Total Stock Groups"
+		Local	: Field	: Total Ledgers	: Set as	: $$NumStockGroups
+
+		[Field: Total Ledgers]
+
+;; End-of-File

@@ -1,0 +1,51 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Demo TDLs for Variables and Buttons
+*/
+
+[Menu: Variables and Buttons]
+
+	Indent	: "Scope"
+	Item	: Blank
+
+	Key Item: Report Scope					: R	: Display 	: Report Scope
+	Key Item: System Scope					: S	: Display 	: System Scope
+	Key Item: System Scope Persistent		: P	: Display 	: System Scope Persistent
+	Key Item: Function Scope				: F	: CALL		: Simple Var in Func
+	Key Item: Field Acting as Variable		: A	: Display 	: FAAV Report
+	Key Item: Variable with Button			: B : Display	: Variable with Button
+
+	Item	: Blank
+
+	Indent	: "Types"
+	Item	: Blank
+
+	Key Item: Simple Variables				: I	: Display 	: Report Scope
+	Key Item: Repeat Variables				: E	: Display 	: Multi Col TB
+	Key Item: Static Variables (Functions)	: T	: CALL		: Static Var in Func
+	Item	: Blank
+	
+	Button	: TSPL Smp Restart App
+	
+[Button: TSPL Smp Restart App]
+	
+	Key		: F6
+	Action	: Restart Application
+	Title	: "Restart App"
+
+;; Scope related
+[Include: ReportVar.txt]
+[Include: SystemVar.txt]
+[Include: SystemVarPersistent.txt]
+[Include: Simple Var.txt]
+[Include: Field Acting as Variable.txt]
+[Include: Variable with Button.txt]
+
+;; Type related
+[Include: RepeatVar.txt]
+
+;; Function related
+[Include: Static Var.txt]
+
+;; End-of-File

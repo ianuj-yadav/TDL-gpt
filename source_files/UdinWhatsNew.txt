@@ -1,0 +1,73 @@
+[Report:UdinWhatsNew]
+	Form			: UdinWhatsNew
+	
+[Form:UdinWhatsNew]
+	Height		: 100% Page
+	Width		: 100% Page
+	Part		: UdinWhatsNew
+[Part:UdinWhatsNew]
+	Line		: UdinWhatsNewTitle, UdinWhatsNew
+	Repeat		: UdinWhatsNew		: UdinWhatsNew
+	Border		: Thin Bottom
+	Scroll		: Vertical
+	Common Borders		: Yes
+	
+	[Line:UdinWhatsNewTitle]
+		Use		: UdinWhatsNew
+		Local	: Field	: Default	: Style		: Normal Bold
+		Local	: Field	: Default	: Type		: String
+		Local	: Field	: Default	: Color		: Black
+		Local	: Field	: UdinWhatsNewDate		: Info	: $$LocaleString:"Date"
+		Local	: Field	: UdinWhatsNewLink		: Info	: $$LocaleString:"Link"
+		Local	: Field	: UdinWhatsNewIsNew		: Info	: $$LocaleString:"Is New"
+		
+
+	[Line:UdinWhatsNew]
+		
+		Field			: UdinWhatsNewDate, UdinWhatsNewLink, UdinWhatsNewIsNew
+		Border			: Thin Bottom
+		Key   			: WhatsNewOpen
+			
+		[Field: UdinWhatsNewDate]
+			Set as			: $date
+			Border			: Thin Right
+			Width			: 15
+			Set Always		: Yes
+
+		[Field: UdinWhatsNewLink]
+			Set as			: $url_name
+			Full Width		: Yes
+			Set Always		: Yes
+			Color 			: Blue
+			
+		
+		[Field: UdinWhatsNewIsNew]
+			Set as			: $is_new
+			Set Always		: Yes
+			Color 			: Smalt Blue
+			Border			: Thin Left
+			Width			: 6
+		
+			
+		
+		
+	[Key: WhatsNewOpen]
+		Key     	: Enter
+		Action Ex	: Set Var1	: Set			: UdinWhatsNewLink		: $link
+		ActionEx	: VchRpt	: Browse Url	: ##UdinWhatsNewLink
+
+
+[Collection:UdinWhatsNew]
+	Data Source     	: HTTP JSON			: @@WorkingUrl+"udinwhatsnew"
+	;Data Source 		: File JSON 		: "E:\tirlok\tdl files\Gold Rate\transactions api.json" 	; File Path/Name
+	JSON Object Path	: whats_new		: 1				; Main object path
+	Client Only			: Yes	
+	
+
+[Variable:UdinWhatsNewLink]
+	Type		: String
+	Persistent		: Yes
+
+[System: Variable]
+	UdinWhatsNewLink		: ''
+	

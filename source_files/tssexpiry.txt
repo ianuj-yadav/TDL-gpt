@@ -1,0 +1,442 @@
+[#Menu:Gateway of tally]
+	Add		: Item	: "Display" 	: Alter	: TallyTSS
+	Add		: Button		: ActionTss
+	
+[Button:ActionTss]
+	Title		: "Tss Url"
+	Key		: Ctrl+K
+	Action	: WhatsApp:8818040756:Yes
+	
+	
+[Variable:URLString]
+	Type		: String
+	
+[System:Variable]
+	URLString		: "http://localhost/"+$$LocaleString:($$LicenseInfo:SerialNumber)
+	
+
+[Report:TallyTSS]
+	Form		: TallyTSS
+	
+[Form:TallyTSS]
+	Part		: TallyTSS
+	
+[Part:TallyTSS]
+	Line		: TallyTSS1,TallyTSS2,TallyTSS3,TallyTSS4,TallyTSS5,TallyTSS6,TallyTSS7
+	
+[Line:TallyTSS1]
+	Field		: MediumPrompt, TallyTSS1
+	Local		: Field	: Medium Prompt		: Info:"Tss Expired -@@ReleaseTNSExpired"
+	Local		: Field	: Medium Prompt		: Width	: 50% Page
+	[Field:TallyTSS1]
+		Use			: Name Field
+		Skip		: Yes
+		Width		: 50% Page
+		Set as		: @@ReleaseTNSExpired
+	
+[Line:TallyTSS2]
+	Field		: MediumPrompt, TallyTSS2
+	Local		: Field	: Medium Prompt		: Info:"Tss Expiry Date - $$Date:$$TNSubscValidTillInDateFormat"
+	Local		: Field	: Medium Prompt		: Width	: 50% Page
+	[Field:TallyTSS2]
+		Use			: Name Field
+		Skip		: Yes
+		Width		: 50% Page
+		Set as		: $$Date:$$TNSubscValidTillInDateFormat
+		
+[Line:TallyTSS3]
+	Field		: MediumPrompt, TallyTSS3
+	Local		: Field	: Medium Prompt		: Info:"Tss Expired-$$IsTNSubscExpired"
+	Local		: Field	: Medium Prompt		: Width	: 50% Page
+	[Field:TallyTSS3]
+		Use			: Name Field
+		Skip		: Yes
+		Width		: 50% Page
+		Set as		: $$IsTNSubscExpired
+		
+
+[Line:TallyTSS4]
+	Field		: MediumPrompt, TallyTSS4
+	Local		: Field	: Medium Prompt		: Info:"Tss Expired-$$TNSubscInfo:IsTallyNetSubscExpired"
+	Local		: Field	: Medium Prompt		: Width	: 50% Page
+	[Field:TallyTSS4]
+		Use			: Name Field
+		Skip		: Yes
+		Width		: 50% Page
+		Set as		: $$TNSubscInfo:IsTallyNetSubscExpired
+		
+[Line:TallyTSS5]
+	Field		: MediumPrompt, TallyTSS5
+	Local		: Field	: Medium Prompt		: Info:"Tss Expired-$$TNSubscInfo:IsTallyNetSubscExpired"
+	Local		: Field	: Medium Prompt		: Width	: 50% Page
+	[Field:TallyTSS5]
+		Use			: Name Field
+		Skip		: No
+		Width		: 50% Page
+		Line		: 8
+		Set as		: @str 
+		str			: @hello + @Lic + @exp + @expDt 
+		hello		: "Hello Sir your Serial No. "
+		Lic			: $$LocaleString:($$LicenseInfo:SerialNumber)
+		exp			: " is expiring on Date "
+		expDt		: $$LocaleString:($$Date:$$TNSubscValidTillInDateFormat)
+		Max			: 255
+[Line:TallyTSS6]
+	Field		: MediumPrompt, TallyTSS6
+	Local		: Field	: Medium Prompt		: Info:"Tss Expired-$$TNSubscInfo:IsTallyNetSubscExpired"
+	Local		: Field	: Medium Prompt		: Width	: 50% Page
+	[Field:TallyTSS6]
+		Use			: Name Field
+		Skip		: No
+		Width		: 50% Page
+		Line		: 8
+		Set as		: $$EncryptStr:#TallyTSS5:123456
+		Set Always	: Yes
+		
+	
+[Line:TallyTSS7]
+	Field		: MediumPrompt, TallyTSS7,Hyperlink Company
+	Local		: Field	: Medium Prompt		: Info:"Tss Expired-$$TNSubscInfo:IsTallyNetSubscExpired"
+	Local		: Field	: Medium Prompt		: Width	: 50% Page
+	[Field:TallyTSS7]
+		Use			: Name Field
+		Skip		: No
+		Width		: 50% Page
+		Set as		: $$DecryptStr:($$LocaleString:#TallyTSS6):123456
+		Set Always	: Yes
+		Line		: 8
+	
+
+
+[Key : Execute Hyperlink]
+Key : Left Click
+Action : Browse URL : “www.tallysolutions.com”
+ [Field : Hyperlink Company]
+Color : Blue Border : Thin Bottom
+
+Key : Execute Hyperlink
+Set as : "Tally Solutions Pvt. Ltd"
+Local : Key : Execute Hyperlink : Action : Browse URL: "http://www.tally.co.in"
+
+/*
+
+[Field: XMLReq Version]
+
+    XMLTag 		: "VERSION"
+    Set as 		: "1"
+
+[Field: XMLReq TallyRequest]
+
+	XMLTag 		: "TALLYREQUEST"
+	Set as 		: "Export"
+
+[Field: XMLReq Type]
+
+	XMLTag 		: "TYPE"
+	Set as 		: "DATA"
+
+[Field: XMLReq ID]
+
+	XMLTag 		: "ID"
+	Set as 		: "NameofRequest"
+
+[Field: XMLReq Token]
+
+	XMLTag		: "Token"
+	Set as		: $$MessageToken:Server
+
+[Field: XMLReq SessionID]
+ 
+	XMLTag  	: "SESSIONID"
+	Set as  	: $$SessionID:Server
+
+[Field: CreateTallyNETUser TallyRequest]
+	
+	Set as : "Import"
+    XMLTag : "TALLYREQUEST"
+
+[Field: CreateTallyNETUser ID]
+	
+	Set as : "CREATETALLYNETUSER"  
+	XMLTag : "ID"
+
+[Field:CreateTallyNETUser  ReqVersion]
+	
+	Set as : "2"
+	XMLTag : "REQVERSION"
+	
+[Field: UserList TallyNETID]
+	
+	Set as : $UserEmail
+	XMLTag : TALLYNETID
+
+[Field: UserList AccID]
+	
+	Set as : ##BrSelectedAccountID
+	XMLTag : ACCOUNTID
+
+[Field: UserList AccountInternalID]
+
+	Set as : ##BrSelectedAccountInternalID
+	XMLTag : ACCOUNTINTERNALID
+
+[Field: UserList AdminFlag]
+	
+	Set as : "0"
+	XMLTag : ADMINFLAG
+
+[Field: UserList TallyNETFlag]
+	
+	Set as : "1"
+	XMLTag : TALLYNETFLAG
+
+[Field: UserList SiteInternalId]
+	
+	Set as : ##BrSelectedSiteInternalID
+	XMLTag : SITEINTERNALID
+
+[Field: UserList ByUserID]
+	
+	Set as : ##BrSelectedUserInternalID
+	XMLTag : BYUSERID
+	
+[Field: ValidateTallyNETID TallyRequest]
+
+	Set as	: "Import"
+	XMLTag	: "TALLYREQUEST"
+	
+[Field: ValidateTallyNETID ID]
+
+	Set as	: "VALIDATETALLYNETID"  
+	XMLTag	: "ID"
+
+[Field:ValidateTallyNETID ReqVersion]
+
+	Set as	: "2"
+	XMLTag	: "REQVERSION"
+
+[Field:SpecificAdminidbrowser]
+
+	Set as	: $AdminEmailId:Company:##CMPForConnectedOps
+	XMLTag	: "TALLYNETID"
+
+[Field: TNetTally UserName]
+			
+	Set as 		: $Name
+	XMLTag		: "TALLYNETID"
+	
+[Field: TNet CompanyConnectName]
+    
+    Set as  	: $CompanyConnectName
+	XMLTag  	: "COMPANYCONNECTNAME"
+
+[Field: TNet CompanyGuid]
+    
+    Set as  	: $CompanyGUID
+	XMLTag  	: "COMPANYGUID"
+
+[Field: TNet CompanyNumber]
+    
+    Set as  	: $CompanyNumber
+	XMLTag  	: "COMPANYNUMBER"
+	
+[Field: TNet CompanyDataDir]
+    
+    Set as  	: $CompanyDataDir
+	XMLTag  	: "COMPANYDATADIR"
+
+[Field: TNet CompanyContactPerson]
+ 
+    Set as  	: $ContactPerson
+	XMLTag  	: "COMPANYCONTACTPERSON"
+
+[Field: TNet CompanyContactNumber]
+    
+    Set as  	: $ContactNumber
+	XMLTag  	: "COMPANYCONTACTNUMBER"
+
+[Field: TNet AdminRemoteUsrName]
+			
+	Set as 		: $AdminEmailId
+	XMLTag		: "NAME"
+	
+[Field: TNet AdminAllowBrowserAccess]
+	
+	Set as 		: If NOT $DenyConnectCompanyToBPS Then 1 Else 0
+	;;Set as 		: If NOT $DenyConnectCompanyToBPS:Company:##SVCurrentCompany Then 1 Else 0
+	XMLTag		: "ALLOWBROWSERACCESS"
+    
+[Field: TNet AdminAllowRemoteAccess]
+	
+	Set as 		: 0
+	XMLTag		: "ALLOWREMOTEACCESS"
+    
+[Field: TNet AdminRemoteUserIsCA]
+	
+	Set as 		: 0
+	XMLTag		: "ISCA"
+    
+[Field: TNet AdminCanUserConnect]
+		
+	XMLTag		: "ALLOWEDTOCONNECT"
+	Set as 		: 0
+	
+[Field:CurrentAdminidbrowser]
+
+	Set as   : $AdminEmailId:Company:##SVCurrentCompany
+	XMLTag	 : "TALLYNETID"
+
+[Field: SiteDetailsRequestID]
+	
+	XMLTag : "ID"
+	Set as : "GETSITELISTDETAILS" 
+
+[Field: AccInternalID]
+	
+	XMLTag : "ACCOUNTINTERNALID"
+	Set as : ##BrSelectedAccountInternalID
+
+[Field: ConnectSuccessMessageTitle]
+            
+	Use     	: Narration Field
+	Set As  	: @@SuccessMsg1
+	Color   	: @@SV_FIELD2
+	Style       : Normal Bold
+
+	Border      : Thin Bottom
+	Skip    	: Yes
+	Delete		: Width
+	Case    	: Normal
+
+	Full Width	: Yes
+	Align		: Center
+
+[Field: ConnectSuccessMessageBody1]
+
+	Use     	: Narration Field
+	Set As  	: @@SuccessMsg2
+	Color   	: @@SV_FIELD2
+	Skip    	: Yes
+	Delete		: Width
+	Case    	: Normal
+	Style		: Normal
+	Full Width	: Yes
+	Align		: Center
+	
+[Field: UserAddedSuccessMessageTitle]
+            
+	Use     	: Narration Field
+	Set As  	: @@UserAddedSuccessMsgTitle
+	Color   	: @@SV_FIELD2
+	Style       : Normal Bold
+
+	Border      : Thin Bottom
+	Skip    	: Yes
+	Delete		: Width
+	Case    	: Normal
+   
+	Full Width	: Yes
+	Align		: Center
+
+[Field: UserAddedSuccessMessageBody]
+
+	Use     	: Narration Field
+	Set As  	: @@SuccessMsg2
+	Color   	: @@SV_FIELD2
+	Skip    	: Yes
+	Delete		: Width
+	Case    	: Normal
+	Style		: Normal
+	Full Width	: Yes
+	Align		: Center
+
+[Field: PressEnter]
+
+	Use     	: Name Field
+	Set As  	: $$LocaleString:"(Press Enter to continue)"
+	Color   	: @@SV_FIELD2
+	Skip    	: Yes
+	Case    	: Normal
+	Style		: Normal
+	Full Width	: Yes
+	Align		: Center
+
+[Field: ConnectToBPS CompanyConnectName]
+    
+    Set as  	: $ConnectName
+	XMLTag  	: "COMPANYCONNECTNAME"
+
+[Field: TNet TallySerialNumber]
+
+    Set as  	: $$LicenseInfo:SerialNumber
+	XMLTag  	: "SVSERIALNUMBER"
+
+[Field: TNet TallySiteID]
+	
+	Set as  	: $$LicenseInfo:SiteInternalid
+	XMLTag  	: "SVSITEINTERNALID"
+
+[Field: TNet TallySiteName]
+	
+	Set as  	: $$LicenseInfo:SiteId
+	XMLTag  	: "SVSITENAME"
+
+[Field: TNet TallyAccountID]
+	
+	Set as  	: $$LicenseInfo:AccountInternalId
+	XMLTag  	: "SVACCOUNTINTERNALID"
+
+[Field: TNet TallyAccountName]
+
+	Set as  	: $$LicenseInfo:AccountId
+	XMLTag  	: "SVACCOUNTID"
+
+[Field: TNet IsAutoConnect]
+	
+	Set as  	: "0"
+	XMLTag  	: "SVISAUTOCONNECT"
+
+[Field : TNet TallyMajVer]
+	
+	Set as  	: $$ProdInfo:ProdMajorVersion
+	XMLTag  	: "SVMAJORVER"
+	
+[Field : TNet TallyMinVer]
+	
+	Set as  	: $$ProdInfo:ProdMinorVersion
+	XMLTag  	: "SVMINORVER"
+	
+[Field : TNet TallyMajRel]
+	
+	Set as  	: $$ProdInfo:ProdMajorRelease
+	XMLTag  	: "SVMAJORREL"
+	
+[Field : TNet TallyMinRel]
+	
+	Set as  	: $$ProdInfo:ProdMinorRelease
+	XMLTag  	: "SVMINORREL"
+	
+[Field : TNet TallyBuildNum]
+	
+	Set as  	: $$ProdInfo:ProdBuildNumber
+	XMLTag  	: "SVBUILDNUM"
+
+[Field: ConnectToBPS TallyRequest]
+    
+    Set as      : "Import"
+	XMLTag      : "TALLYREQUEST"
+
+[Field: ConnectToBPS ID]
+	    
+	Set as 		: "SYNCCOMPANYDETAILS"  
+	XMLTag 		: "ID"
+
+[Field: TNet SpecificCmpDisconnect]
+    
+	Set as  	: ##CmpConnectNameForOps
+	XMLTag  	: COMPANYCONNECTNAME
+
+;; End of File
+
+*/
+

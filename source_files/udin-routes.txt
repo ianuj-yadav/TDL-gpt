@@ -1,0 +1,46 @@
+
+[#Menu: Default]
+	Add			: Toolbar Button	:Before:HelpButton:  UDIN Button
+[#Form:Default]
+	Add			: Toolbar Button	:Before:HelpButton:  UDIN Button
+	
+[#Form:Daybook]
+	Add			: Toolbar Button	:Before:HelpButton:  UDIN Button
+[#Menu:Main Menu]
+	Add			: Toolbar Button	:Before:HelpButton:  UDIN Button
+	
+
+[#Form:Voucher]
+
+[Key: UDIN Button]
+
+	Key			: Alt + U
+    Title   	: $$LocaleString:"UDIN"
+	Action		: PopUpMenu	: Print UDINMenu
+	Width		:  7.3% Screen
+	Key Vertical Align	: Centre
+	Inactive	: ##EnableUDIN AND NOT @@IsInternetActive;
+	;Inactive	: NOT @@IsInternetActive
+	Focus BG	: Blue
+	;Image		: UDIN Button
+	[Menu: Print UDINMenu]
+
+	Indent			: UDIN
+	
+	Key Item    	: UDIN Login     		: L : Browse Url			: @@WorkingUrl+"udinlogin"
+	Key Item    	: UDIN Verify     		: V : Browse Url			: @@WorkingUrl+"udinverify"
+	Key Item    	: FAQs on UDIN     		: F : Browse Url			: @@WorkingUrl+"udinfaqs"
+	Key Item    	: Raise Grievance  		: G : Browse Url			: @@WorkingUrl+"raisegrievance"
+	Key Item    	: Raise Status  		: S : Browse Url			: @@WorkingUrl+"grievancestatus"
+	Key Item    	: UDIN Directorate 		: I : Browse Url			: @@WorkingUrl+"udindirectorate"
+	Key Item    	: UDIN Announcements 	: E : Display				: UdinAnnouncements;@@WorkingUrl+"udinannouncements"
+	Key Item    	: UDIN Whats New	 	: W : Display				: UdinWhatsNew;@@WorkingUrl+"udinannouncements"
+	Item			: BLANK
+	Indent			: UDIN Publications
+	;Key Item    	: UDIN Publications	 	: U : Display				: UdinPublications;@@WorkingUrl+"udinannouncements"
+	
+	Control			: @@locIndentReports		: NOT ##EnableUDIN
+[Resource : UDIN Button]
+Source : E:\tirlok\tdl files\logo2.jpg
+;Resource : <NameOfResource> [:<DLL/EXE Name with path>]
+Resource Type : Jpeg

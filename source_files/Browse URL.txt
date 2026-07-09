@@ -1,0 +1,99 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the usage of Action 'Browse URL Ex'
+-	Browse URL Ex Key Action can be used to open web browser with any URL Formula
+
+Syntax -
+-	Action : Browse URL Ex: <URL Formula> [: '<Multiple Parameters separated by space>']
+
+
+Last Modification -
+-	Altered on 09-11-2009
+*/
+
+[Button: Run Batch File Exec Command Ex]
+
+	Title 	: $$LocaleString:"Run Batch File"
+	Key    	: ALT + N
+	Action	: Call	: Browse URL And Display Msg
+
+[Function: Browse URL And Display Msg]
+	
+	De1	: Delete File	: "Browse URL Test.bat"
+	De2 : Delete File	: "Statusfile.txt"
+	00	: Open File		: "Browse URL Test.bat" : Text	: Write	: ASCII
+	10	: Write File 	: 'Echo "Completed Successfully" >> Statusfile.txt'
+	20	: Close Target File
+	
+	;; Action Exec Command Ex runs the Batch File
+	
+	50	: Exec CommandEx: "Browse URL Test.bat"
+	60	: Display		: CheckFileExistence
+
+
+	;; Report to display the success/ failure message
+	
+[Report: CheckFileExistence]	
+	
+	Title	: "File Existence Check"
+	Form	: CheckFileExistence
+	
+[Form: CheckFileExistence]
+	
+	Part : CheckFileExistence
+
+[Part: CheckFileExistence]
+		
+	Line : CheckFileExistence
+		
+	[Line: CheckFileExistence]
+			
+		Field: CheckFileExistence
+			
+		[Field: CheckFileExistence]
+		
+			Use		: Name Field
+			Width	: 30% Page
+			Color 	: Blue
+			Align	: Center
+			Set as 	: If $$IsFileExists:"Statusfile.txt" then "The File Exists" else "The File does not exist"	
+
+[Report: BrowseURL]
+
+	Form	: BrowseURL
+
+[Form: BrowseURL]
+
+	Parts	: BrowseURL
+	Button	: Run Batch File Exec Command Ex
+
+[Part: BrowseURL]
+
+	Lines	: Note, BrowseURL
+	Local	: Line	: Note	: Local	: Field	: Name Field: Set As	: "(Please click on Button 'Register Yourself' to Register your Tally or Click on the below hyperlink 'Tally Solutions Pvt. Ltd' to visit the Tally Website)"
+	Local	: Line	: Note	: Local	: Field	: Name Field: Width		: 30% Page
+	Local	: Line	: Note	: Local	: Field	: Name Field: Lines		: 0
+	Local	: Line	: Note	: Local	: Field	: Name Field: Align		: Center
+	Local	: Line	: Note	: Local	: Field	: Name Field: Style		: Normal Italic
+
+	[Line: BrowseURL]
+
+		Fields	: BrowseURL
+
+		[Field: BrowseURL]
+		
+			Use		: Name Field
+			Width	: 30% Page
+		    Color 	: Blue
+			Align	: Center
+		    Key 	: Smp Hyperlink Browse URL
+		    Set as 	: "Tally Solutions Pvt. Ltd"
+
+[Key: Smp Hyperlink Browse URL]
+
+	Key 	: Left Click
+	Action	: Browse URL 	: "www.tallysolutions.com"
+
+;; End-of-Code

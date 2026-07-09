@@ -1,0 +1,2148 @@
+[#Field:dspvchtype]
+Delete:Set as
+add:Set as      : if NOT $$IsVoucher then "" else  if NOT $$InPixelMode then @@AdditionalName else $vouchertypename;$Name:VoucherType:$VoucherTypeName
+
+
+
+[Variable : HCR_IsVouchers]
+Type	: Logical
+
+[System	: Variable]
+HCR_IsVouchers	: No
+
+[#Report	: Voucher]
+Add	: Variable : HCR_IsVouchers, HCR_HasMultiCompanies
+Set	: HCR_IsVouchers	: Yes
+Set	: HCR_HasMultiCompanies	: No
+
+[#System:formula]
+IsPaymentVch	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isPaymentVch_x Else $$IsPayment:$VoucherTypeName
+IsJournalVch 	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isJournalVch_x Else $$IsJournal:$VoucherTypeName
+IsContraVch	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isContraVch_x Else $$IsContra:$VoucherTypeName
+IsPurchaseVch  	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isPurchaseVch_x Else  $$IsPurchase:$VoucherTypeName
+IsSalesVch	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isSalesVch_x Else  $$IsSales:$VoucherTypeName
+IsDebitNoteVch 	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isDebitNoteVch_x Else  $$IsDebitNote:$VoucherTypeName
+IsMemoVch	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isMemoVch_x Else $$IsMemo:$VoucherTypeName
+IsRevJrnlVch	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isRevJrnlVch_x Else $$IsRevJrnl:$VoucherTypeName 
+IsJobOrderOutVch	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isJobOrderOutVch_x Else $$IsJobOrderOut:$VoucherTypeName
+IsJobOrderInVch 	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isJobOrderInVch_x Else $$IsJobOrderIn:$VoucherTypeName
+IsJobMaterialIssueVch	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isJobMaterialissueVch_x Else $$IsJobMaterialIssue:$VoucherTypeName
+IsJobMaterialReceiveVch	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isJobMaterialReceiveVch_x Else $$IsJobMaterialReceive:$VoucherTypeName
+IsSalesOrderVch	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isSalesOrderVch_x Else $$IsSalesOrder:$VoucherTypeName
+IsPurcOrderVch 	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isPurcOrderVch_x Else $$IsPurcOrder:$VoucherTypeName 
+IsIndentVoucherVch  	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isIndentVoucherVch_x Else $$IsIndentVoucher:$VoucherTypeName  
+IsPayrollVch	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isPayrollVch_x Else $$IsPayroll:$VoucherTypeName
+IsAttendanceVch	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isAttendanceVch_x Else $$IsAttendance:$VoucherTypeName
+IsStockJrnlVch	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isStockJrnlVch_x Else $$IsStockJrnl:$VoucherTypeName 
+IsPhysStockVch 	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isPhysStockVch_x Else $$IsPhysStock:$VoucherTypeName  
+IsDelNoteVch   	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isDelNoteVch_x Else $$IsDelNote:$VoucherTypeName   
+IsRcptNoteVch  	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isRcptNoteVch_x Else $$IsRcptNote:$VoucherTypeName  
+IsRejInVch  	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isRejInVch_x Else $$IsRejIn:$VoucherTypeName  
+IsRejOutVch	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isRejOutVch_x Else  $$IsRejOut:$VoucherTypeName
+AsMfgJrnlVch	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $AsMfgJrnlVch_x Else $AsMfgJrnl:VoucherType:$VoucherTypeName
+IsInventoryVch	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $isInventoryVch_x Else $$IsInventoryVch:$VoucherTypeName
+UseForPOSInvoice	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $UseForPOSInvoice_x Else $UseForPOSInvoice:VoucherType:$VoucherTypeName
+UseforExcise	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $UseforExc$ise_x Else $UseForExcise:Vouchertype:$VoucherTypeName
+AdditionalName	:	If not ##HCR_IsVouchers and ##HCR_HasMultiCompanies  Then $AdditionalName_x Else $AdditionalName:VoucherType:$VoucherTypeName
+
+
+[#Object:voucher]
+
+	
+	IsPaymentVch_x	: $$IsPayment:$VoucherTypeName
+    IsJournalVch_x 		: $$IsJournal:$VoucherTypeName    
+	IsContraVch_x			: $$IsContra:$VoucherTypeName
+    IsPurchaseVch_x      	: $$IsPurchase:$VoucherTypeName
+    IsSalesVch_x         	: $$IsSales:$VoucherTypeName    
+    IsDebitNoteVch_x     	: $$IsDebitNote:$VoucherTypeName    
+    IsMemoVch_x			: $$IsMemo:$VoucherTypeName	
+	IsRevJrnlVch_x		: $$IsRevJrnl:$VoucherTypeName
+    IsJobOrderOutVch_x    : $$IsJobOrderOut:$VoucherTypeName
+    IsJobOrderInVch_x     : $$IsJobOrderIn:$VoucherTypeName	
+	IsJobMaterialIssueVch_x	: $$IsJobMaterialIssue:$VoucherTypeName
+	IsJobMaterialReceiveVch_x: $$IsJobMaterialReceive:$VoucherTypeName
+    IsSalesOrderVch_x    	: $$IsSalesOrder:$VoucherTypeName
+    IsPurcOrderVch_x     	: $$IsPurcOrder:$VoucherTypeName
+    IsIndentVoucherVch_x  : $$IsIndentVoucher:$VoucherTypeName
+	IsPayrollVch_x		: $$IsPayroll:$VoucherTypeName
+	IsAttendanceVch_x	    : $$IsAttendance:$VoucherTypeName
+	IsStockJrnlVch_x 		: $$IsStockJrnl:$VoucherTypeName
+    IsPhysStockVch_x      : $$IsPhysStock:$VoucherTypeName
+    IsDelNoteVch_x       	: $$IsDelNote:$VoucherTypeName
+    IsRcptNoteVch_x      	: $$IsRcptNote:$VoucherTypeName
+    IsRejInVch_x          : $$IsRejIn:$VoucherTypeName
+    IsRejOutVch_x         : $$IsRejOut:$VoucherTypeName
+    AsMfgJrnlVch_x        : $AsMfgJrnl:VoucherType:$VoucherTypeName
+    IsInventoryVch_x		: $$IsInventoryVch:$VoucherTypeName
+	UseForPOSInvoice_x	: $UseForPOSInvoice:VoucherType:$VoucherTypeName
+    UseforExcise_x		: $UseForExcise:Vouchertype:$VoucherTypeName
+    AdditionalName_x		: $AdditionalName:VoucherType:$VoucherTypeName
+
+
+;;=================================
+
+[Collection: Company Collection2]
+
+	Type   	: Company
+	Fetch   : Name
+	Filter:HCR_NotGroupCompany
+
+[System	: Formula]
+HCR_NotGroupCompany	: $$IsSimpleCompany:$Name
+
+
+;;========================================================For Specific Voucher Register================
+
+
+
+[#Collection: Specific Vouchers of Company]
+Add	: Option	: HCR_SpecificVouchersofCompany : ##HCR_HasMultiCompanies
+
+[!Collection : HCR_SpecificVouchersofCompany]
+Delete	: Source Collection   : SRC Specific Vouchers of Company
+	Collection:abcdef_SpecificVouchersofCompany:Company Collection2
+
+
+[Collection : abcdef_SpecificVouchersofCompany]
+	Source Collection	: SRC Specific Vouchers of Company
+	;; Parm Var is added to refresh the collection on switching from extract mode to Voucher Summary
+	Parm Var	: pvExtractMode		: Logical	: ##ExtractMode
+   
+	Fetch       : Date, VoucherNumber, Reference, VoucherTypeName, SortPosition, Narration, PartyLedgerName, PartyName, BasicBuyerName, IsEditLogPresent, IsAuditedVchModified
+	Fetch		: IsOptional, IsPostDated, MasterID, IsCancelled, IsDeleted
+	Fetch		: AllLedgerEntries.IsDeemedPositive ;;For POS Transaction Value
+	Fetch		: AllLedgerEntries.HasBankAllocations, AllInventoryEntries.BatchAllocations.OrderNo
+	Fetch		: AllLedgerEntries.LedgerAlias
+	
+	;Fetching Tracking number value support displaying vouchertypes having tracking number when range filter is set in daybook
+	Fetch		: AllInventoryEntries.BatchAllocations.TrackingNumber
+
+	Fetch:allLedgerEntries.*
+	fetch:	IsPaymentVch_x
+fetch:	IsJournalVch_x 
+fetch:	IsContraVch_x
+fetch:	IsPurchaseVch_x  
+fetch:	IsSalesVch_x 
+fetch:	IsDebitNoteVch_x 
+fetch:	IsMemoVch_x
+fetch:	IsRevJrnlVch_x
+fetch:	IsJobOrderOutVch_x
+fetch:	IsJobOrderInVch_x 
+fetch:	IsJobMaterialIssueVch_x
+fetch:	IsJobMaterialReceiveVch_x
+fetch:	IsSalesOrderVch_x
+fetch:	IsPurcOrderVch_x 
+fetch:	IsIndentVoucherVch_x  
+fetch:	IsPayrollVch_x
+fetch:	IsAttendanceVch_x
+fetch:	IsStockJrnlVch_x 
+fetch:	IsPhysStockVch_x  
+fetch:	IsDelNoteVch_x   
+fetch:	IsRcptNoteVch_x  
+fetch:	IsRejInVch_x  
+fetch:	IsRejOutVch_x 
+fetch:	AsMfgJrnlVch_x
+fetch:	IsInventoryVch_x
+fetch:	UseForPOSInvoice_x
+fetch:	UseforExcise_x
+fetch:	AdditionalName_x
+	Compute:OwnerCompany:$$LoopCollObj:$name
+    Compute     : DBFirstInvExp             			: @@DBFirstInvExplodable
+    Compute     : DBFirstCostExp            			: @@DBFirstHasLedgerCC
+    Compute     : DBFirstBillExp            			: @@DBFirstHasBillWise
+    Compute     : DBFirstBankExp            			: $AllLedgerEntries[1].HasBankAllocations
+
+	Compute		: ItemLevelOrder						: $AllInventoryEntries[1].BatchAllocations[1].OrderNo 
+
+	;; The Below 3 computes are added to ensure that, appropriate Method Names and its Default values are available in the Collection definition before its been locally modified in Report definition
+	Compute		: TNetSAAuditStatus						: ""
+    Compute		: TNetSAAuditNote						: ""
+    Compute		: ManualSampling						: ""
+
+	Sort        : @@Default                 			: $Date, $SortPosition, $VoucherTypeName
+	Sort        : @@InSequenceOfEntry       			: $Date
+	Sort        : @@VchNumberIncr           			: $VoucherNumber, $Date, $SortPosition, $VoucherTypeName
+	Sort        : @@VchNumberDecr           			: -$VoucherNumber, $Date, $SortPosition, $VoucherTypeName
+	Sort		: @@VchNoNumericIncr					: $$Number:$VoucherNumber
+	Sort		: @@VchNoNumericDecr					: -$$Number:$VoucherNumber
+
+	Option		: StkJrnl Vouchers of Company			: $$IsStockJrnl:##VoucherTypeName
+	Option		: NRM Vouchers of Company				: NOT $$IsStockJrnl:##VoucherTypeName
+
+	Option		: Profit Vouchers of Company			: ##DSPShowGP
+	Option		: Daybook TallyAudit					: ($IsTallyAuditOn:Company:##SVCurrentCompany) AND ##ShowCreatedBy
+	Option		: MTI Registers							: ##VchOfMaterialTranserIn OR ##VchOfMTIUsedByJWAsIn OR @@IsJobMaterialIssueVch
+	Option		: Specific Vouchers of Company Supple	: ##DBKShowSupplementary
+
+
+
+
+
+
+;;========================================================For Filtered Voucher Register================
+[#Collection: Filtered Vouchers of Company]
+Add	: Option	: HCR_FilteredVouchersofCompany : ##HCR_HasMultiCompanies
+
+[!Collection : HCR_FilteredVouchersofCompany]
+Delete	: Source Collection   : SRC Filtered Vouchers of Company
+	Collection:abcdef_FilteredVouchersofCompany:Company Collection2
+
+
+[Collection : abcdef_FilteredVouchersofCompany]
+
+	Source Collection	: SRC Filtered Vouchers of Company
+	;; Parm Var is added to refresh the collection on switching from extract mode to Voucher Summary
+	Parm Var	: pvExtractMode		: Logical	: ##ExtractMode
+	
+    Fetch       : Date, VoucherNumber, Reference, VoucherTypeName, SortPosition, Narration, PartyLedgerName, PartyName, BasicBuyerName, IsEditLogPresent, IsAuditedVchModified
+	Fetch		: IsOptional, IsPostDated, MasterID, IsCancelled, IsDeleted
+	Fetch		: AllLedgerEntries.IsDeemedPositive ;;For POS Transaction Value
+	Fetch		: AllLedgerEntries.HasBankAllocations, AllInventoryEntries.BatchAllocations.OrderNo
+	
+	;Fetching Tracking number value support displaying vouchertypes having tracking number when range filter is set in daybook
+	Fetch		: AllInventoryEntries.BatchAllocations.TrackingNumber
+	Fetch:allLedgerEntries.*
+	fetch:	IsPaymentVch_x
+fetch:	IsJournalVch_x 
+fetch:	IsContraVch_x
+fetch:	IsPurchaseVch_x  
+fetch:	IsSalesVch_x 
+fetch:	IsDebitNoteVch_x 
+fetch:	IsMemoVch_x
+fetch:	IsRevJrnlVch_x
+fetch:	IsJobOrderOutVch_x
+fetch:	IsJobOrderInVch_x 
+fetch:	IsJobMaterialIssueVch_x
+fetch:	IsJobMaterialReceiveVch_x
+fetch:	IsSalesOrderVch_x
+fetch:	IsPurcOrderVch_x 
+fetch:	IsIndentVoucherVch_x  
+fetch:	IsPayrollVch_x
+fetch:	IsAttendanceVch_x
+fetch:	IsStockJrnlVch_x 
+fetch:	IsPhysStockVch_x  
+fetch:	IsDelNoteVch_x   
+fetch:	IsRcptNoteVch_x  
+fetch:	IsRejInVch_x  
+fetch:	IsRejOutVch_x 
+fetch:	AsMfgJrnlVch_x
+fetch:	IsInventoryVch_x
+fetch:	UseForPOSInvoice_x
+fetch:	UseforExcise_x
+fetch:	AdditionalName_x
+	Compute:OwnerCompany:$$LoopCollObj:$name
+    Compute     : DBFirstInvExp             			: @@DBFirstInvExplodable
+    Compute     : DBFirstCostExp            			: @@DBFirstHasLedgerCC
+    Compute     : DBFirstBillExp            			: @@DBFirstHasBillWise
+    Compute     : DBFirstBankExp            			: $AllLedgerEntries[1].HasBankAllocations
+	
+	Compute		: ItemLevelOrder						: $AllInventoryEntries[1].BatchAllocations[1].OrderNo 
+
+	;; The Below 3 computes are added to ensure that, appropriate Method Names and its Default values are available in the Collection definition before its been locally modified in Report definition
+	Compute		: TNetSAAuditStatus						: ""
+    Compute		: TNetSAAuditNote						: ""
+    Compute		: ManualSampling						: ""
+
+	Sort        : @@Default                 			: $Date, $SortPosition, $VoucherTypeName
+	Sort        : @@InSequenceOfEntry       			: $Date
+	Sort        : @@VchNumberIncr           			: $VoucherNumber, $Date, $SortPosition, $VoucherTypeName
+	Sort        : @@VchNumberDecr           			: -$VoucherNumber, $Date, $SortPosition, $VoucherTypeName
+	Sort		: @@VchNoNumericIncr					: $$Number:$VoucherNumber
+	Sort		: @@VchNoNumericDecr					: -$$Number:$VoucherNumber
+
+	Option		: StkJrnl Vouchers of Company			: $$IsStockJrnl:##VoucherTypeName
+	Option		: NRM Vouchers of Company				: NOT $$IsStockJrnl:##VoucherTypeName
+	
+	Option      : Filtered Vouchers of Company Browser  : $$InMobileBrowserExport
+
+	Option		: Profit Vouchers of Company			: ##DSPShowGP
+	Option		: Daybook TallyAudit					: ($IsTallyAuditOn:Company:##SVCurrentCompany) AND ##ShowCreatedBy
+	Option		: MTI Registers							: ##VchOfMaterialTranserIn OR ##VchOfMTIUsedByJWAsIn OR @@IsJobMaterialIssueVch
+
+
+;;;===============================================
+[System:formulae]
+	issimplecompany22:$$IsSimpleCompany:$name
+
+;;========================================================For Day Book================
+
+[#Collection: DaybookVouchersofCompany]
+Add	: Option	: HCR_DaybookVouchersofCompany : ##HCR_HasMultiCompanies
+
+[!Collection : HCR_DaybookVouchersofCompany]
+Delete	: Source Collection   : DBVoucher SRC
+	Collection:abcdef_DaybookVouchersofCompany:Company Collection2
+
+[Collection:abcdef_DaybookVouchersofCompany]
+	
+Source Collection   : DBVoucher SRC
+
+	Fetch		: Date, VoucherNumber, VoucherTypeName, SortPosition, MasterID, IsCancelled, IsInvoice, BuyerName
+	Fetch		: IsOptional, IsDeleted, Narration, IsEditLogPresent, IsAuditedVchModified
+	Fetch		: AllLedgerEntries.HasBankAllocations, AllInventoryEntries.ItemDSPName, AllLedgerEntries.InventoryAllocations.ItemDSPName
+	Fetch:allLedgerEntries.*
+	fetch:	IsPaymentVch_x
+fetch:	IsJournalVch_x 
+fetch:	IsContraVch_x
+fetch:	IsPurchaseVch_x  
+fetch:	IsSalesVch_x 
+fetch:	IsDebitNoteVch_x 
+fetch:	IsMemoVch_x
+fetch:	IsRevJrnlVch_x
+fetch:	IsJobOrderOutVch_x
+fetch:	IsJobOrderInVch_x 
+fetch:	IsJobMaterialIssueVch_x
+fetch:	IsJobMaterialReceiveVch_x
+fetch:	IsSalesOrderVch_x
+fetch:	IsPurcOrderVch_x 
+fetch:	IsIndentVoucherVch_x  
+fetch:	IsPayrollVch_x
+fetch:	IsAttendanceVch_x
+fetch:	IsStockJrnlVch_x 
+fetch:	IsPhysStockVch_x  
+fetch:	IsDelNoteVch_x   
+fetch:	IsRcptNoteVch_x  
+fetch:	IsRejInVch_x  
+fetch:	IsRejOutVch_x 
+fetch:	AsMfgJrnlVch_x
+fetch:	IsInventoryVch_x
+fetch:	UseForPOSInvoice_x
+fetch:	UseforExcise_x
+fetch:	AdditionalName_x
+
+	Fetch		: AllInventoryEntries.BasicUserDescription, AllLedgerEntries.InventoryAllocations.BasicUserDescription		;; to fetch the item additional description.
+	
+	Compute		: DSPNameStyle				: ##DSPNameStyle
+    
+	Compute     : DaybookAmount             : $$GetDBAmt;2:$Vouchertypename
+	Compute     : FirstLedger               : $$GetDSPName:##DSPNameStyle:@@IsVchInvVch:@@IsPOSAttdVch:@@IsJobMaterialTransferInVch
+	
+	Compute Var	: vDaybookActualQty			: Quantity	: if @@IsJobMaterialReceiveVch Then $InventoryEntriesIn[1].ActualQty Else +
+														  if @@IsJobMaterialIssueVch Then $InventoryEntriesOut[1].ActualQty Else +
+														  If @@IsVchInvVch Then $InventoryEntries[1].ActualQty Else $$AsQty:0
+												
+    Compute     : DaybookActualQty          : ##vDaybookActualQty
+	Compute:OwnerCompany:$$LoopCollObj:$name
+    Compute     : DBFirstInvExp             : @@DBFirstInvExplodable
+    Compute     : DBFirstCostExp            : @@DBFirstHasLedgerCC
+    Compute     : DBFirstBillExp            : @@DBFirstHasBillWise
+    Compute     : DBFirstBankExp            : $AllLedgerEntries[1].HasBankAllocations
+
+	;; The Below 3 computes are added to ensure that, appropriate Method Names and its Default values are available in the Collection definition before its been locally modified in Report definition
+	Compute		: TNetSAAuditStatus			: ""
+    Compute		: TNetSAAuditNote			: ""
+    Compute		: ManualSampling			: ""
+
+	Sort        : @@Default                 : $Date, $SortPosition, $VoucherTypeName
+	Sort        : @@InSequenceOfEntry       : $Date
+	Sort        : @@SortAlphaIncr           : @@FirstAccName, $Date
+	Sort        : @@SortAlphaDecr           : -@@FirstAccName, $Date
+	Sort        : @@AmountWiseIncr          : $$Abs:@@FirstAccAmt, $Date
+	Sort        : @@AmountWiseDecr          : -$$Abs:@@FirstAccAmt, $Date
+	Sort        : @@CurrencyIncr            : @@FirstAccCurrency, $Date
+	Sort        : @@CurrencyDecr            : -@@FirstAccCurrency, $Date
+    Sort        : @@VchNumberIncr           : $VoucherNumber, $Date, $SortPosition, $VoucherTypeName
+    Sort        : @@VchNumberDecr           : -$VoucherNumber, $Date, $SortPosition, $VoucherTypeName
+	Sort		: @@VchNoNumericIncr		: $$Number:$VoucherNumber
+	Sort		: @@VchNoNumericDecr		: -$$Number:$VoucherNumber
+
+	Option		: Daybook TallyAudit		: ($IsTallyAuditOn:Company:##SVCurrentCompany) AND ##ShowCreatedBy
+
+	Option		: Daybook ExplodeColl		: ##DBFilterVar OR (##ExplodeFlag) OR (NOT ##IsMultiPage AND $$InPrintMode)
+
+	Option		: Specific Vouchers of Company Supple	: ##DBKShowSupplementary
+	Option		: Daybook Vouchers of Company Browser 	: $$InMobileBrowserExport
+
+;;;==========================================
+
+[Collection: HCR_CmpNamesCollection]
+
+	Type   	: Company
+	Fetch   	: Name
+	Filter	: HCR_NotGroupCompany
+
+
+
+[Variable	: HCR_HasMultiCompanies]
+Type	: Logical
+
+[Button	: HCR_ShowMultiCompanies]
+Title	: If not ##HCR_HasMultiCompanies then "Show Multi Companies" else "Show Current Company"
+Key	: Ctrl+W
+Action	: Set	: HCR_HasMultiCompanies : not ##HCR_HasMultiCompanies
+
+[!Collection : HCR_MCompanyOptionForColl]
+	Compute : Owner Company	: $$LoopCollObj:$Name
+
+
+;;===========================For Voucher Register=================
+
+[#Report: Voucher Register]
+Add	: Variable	: HCR_HasMultiCompanies
+Set	: HCR_HasMultiCompanies	: Not ##HCR_HasMultiCompanies
+
+
+;;============================For Day Book=====================
+
+[#Report: Day Book]
+Add	: Variable	: HCR_HasMultiCompanies
+Set	: HCR_HasMultiCompanies	: Not ##HCR_HasMultiCompanies
+;Add	: Variable : HCR_IsVouchers
+;Set	: HCR_IsVouchers	: No
+
+[#Form	: Day Book]
+Add	: Button	: HCR_ShowMultiCompanies
+
+
+
+;;============================For Ledger Opening Balance=====================
+
+[#Field: Ledger Name]
+Delete	: Table      ;; : List of ExtractLedgers, Create Master
+Add	: Table	: HCR_List of Ledgers, Create Master
+
+[#Collection: Monthly Ledger Extract Server]
+    Use         : HCR_List of Ledgers
+
+[#Collection: Monthly Ledger]
+    Use         : HCR_List of Ledgers
+
+
+
+
+
+
+[#Object : Ledger]
+FirstPartiesAlias	 		:  $$CollectionField:$Name:2:Name ;;;LanguageName
+
+[#Collection: List of ExtractLedgers Server]
+;Delete	: Use
+Use	: HCR_List of Ledgers
+
+
+[#Collection: List of ExtractLedgers Remote]
+	;Delete	: Source Collection	: List of Ledgers
+	Add	: Source Collection : HCR_List of Ledgers
+    
+
+
+
+[Collection: HCR_List of Ledgers]
+Title	: "List Of Ledgers"
+	Collection:abcdef_ListofLedgers:Company Collection2
+Format	: $$Name, 35
+Format	: $FirstPartiesAlias, 15
+
+
+[Collection : abcdef_ListofLedgers]
+
+    Use         : Alias Collection
+    Type        : Ledger
+    Title       : $$LocaleString:"List of Ledgers"
+    Report      : Ledger
+    Variable    : SLedger
+    Trigger     : SLedger
+    IsODBCTable : Yes
+	Fetch	: Name, FirstPartiesAlias
+
+    Fetch		: Name, Language Name
+	Compute:OwnerCompany:$$LoopCollObj:$Name
+
+[Collection : HCR_LedCollSRC]
+Type	: Ledger
+Fetch	: Name
+Filter	: HCR_OnlyRelatedLedger
+
+[System	: Formula]
+HCR_OnlyRelatedLedger	: $Name = ##LedgerName
+HCR_MCmp_LOp		: $$CollAmtTotal:HCR_Multiple_CompanyLedgerColl:$LOpBal ;;$OpeningBalance:HCR_LedColl:$Name
+HCR_MCmp_LedgerOpBal	: $$FromValue:$$ParentPeriodFrom:$$ToValue:@@DSPFromDateLessOne:$HCR_MCmp_LOp
+HCR_NotDeemedPositive	: not $IsDeemedPositive
+
+[Collection : HCR_LedColl]
+Source Collection : HCR_LedCollSRC
+By	: LName	: $Name
+Compute : Owner Company	: $$LoopCollObj:$Name
+Aggr Compute	: LOpBal	: Sum	: $OpeningBalance
+
+
+[Collection: HCR_Multiple_CompanyLedgerColl]
+	
+	Collection 	: HCR_LedColl	: HCR_CmpNamesCollection
+	Fetch	: *.*
+
+
+[#System : Formula]
+LedOpening			        : If ##HCR_HasMultiCompanies and $$IsDr:@@HCR_MCmp_LedgerOpBal then $$SignedAmount:@@HCR_MCmp_LedgerOpBal:$HCR_NotDeemedPositive Else + 
+					If ##HCR_HasMultiCompanies and not $$IsDr:@@HCR_MCmp_LedgerOpBal then $$SignedAmount:@@HCR_MCmp_LedgerOpBal:$IsDeemedPositive Else + 
+		if NOT ##DSPWithOpening then $$AsAmount:0 else +
+                                if NOT $$IsEmpty:$$ParentPeriodFrom AND $$ParentPeriodFrom < @@DSPFromDate then +
+                                If $$IsRemoteCompany:##SVCurrentCompany Then +
+                                $$CollectionField:$LedOpeningBalance:1:RemoteLedOpVal Else +
+                                $LedOpeningBalance:Ledger:#LedgerName else $TBalOpening:Ledger:#LedgerName
+     
+
+;;============================For Ledger Vouchers=====================
+
+
+[#Collection: Vouchers of Ledger]
+Add	: Option	: HCR_VouchersofLedger : ##HCR_HasMultiCompanies
+
+[!Collection : HCR_VouchersofLedger]
+Delete	: Source Collection   : SRC Ledger Vouchers Coll
+	Collection:abcdef_VouchersofLedger:Company Collection2
+
+
+[Collection : abcdef_VouchersofLedger]
+	Source Collection	: SRC Ledger Vouchers Coll
+
+	Use			: Ledger Vouchers Coll
+	Fetch		: IsPostDated
+
+	Fetch:allLedgerEntries.*
+	fetch:	IsPaymentVch_x
+fetch:	IsJournalVch_x 
+fetch:	IsContraVch_x
+fetch:	IsPurchaseVch_x  
+fetch:	IsSalesVch_x 
+fetch:	IsDebitNoteVch_x 
+fetch:	IsMemoVch_x
+fetch:	IsRevJrnlVch_x
+fetch:	IsJobOrderOutVch_x
+fetch:	IsJobOrderInVch_x 
+fetch:	IsJobMaterialIssueVch_x
+fetch:	IsJobMaterialReceiveVch_x
+fetch:	IsSalesOrderVch_x
+fetch:	IsPurcOrderVch_x 
+fetch:	IsIndentVoucherVch_x  
+fetch:	IsPayrollVch_x
+fetch:	IsAttendanceVch_x
+fetch:	IsStockJrnlVch_x 
+fetch:	IsPhysStockVch_x  
+fetch:	IsDelNoteVch_x   
+fetch:	IsRcptNoteVch_x  
+fetch:	IsRejInVch_x  
+fetch:	IsRejOutVch_x 
+fetch:	AsMfgJrnlVch_x
+fetch:	IsInventoryVch_x
+fetch:	UseForPOSInvoice_x
+fetch:	UseforExcise_x
+fetch:	AdditionalName_x
+	Compute:OwnerCompany:$$LoopCollObj:$name
+
+	;; The Below 3 computes are added to ensure that, appropriate Method Names and its Default values are available in the Collection definition before its been locally modified in Report definition
+	Compute		: TNetSAAuditStatus	: ""
+	Compute		: TNetSAAuditNote	: ""
+	Compute		: ManualSampling	: ""
+	
+	Option		: Vouchers of Ledger Browser : $$InMobileBrowserExport
+	
+	Sort		: @@Default         : -$TBSort,$IsForexLine, $Date
+	Sort    	: @@SortAlphaIncr   : -$TBSort,$FirstContraAccount, $IsForexLine, $Date
+	Sort    	: @@SortAlphaDecr   : -$TBSort,-$FirstContraAccount, $IsForexLine, $Date
+	Sort    	: @@AmountWiseIncr	: -$TBSort,$$Abs:$TotalLedVchAmt, $IsForexLine, $Date
+	Sort    	: @@AmountWiseDecr  : -$TBSort,-$$Abs:$TotalLedVchAmt, $IsForexLine, $Date
+	Sort    	: @@CurrencyIncr    : -$TBSort,$$Currency:$TotalLedVchAmt, $IsForexLine, $Date
+	Sort		: @@CurrencyDecr    : -$TBSort,-$$Currency:$TotalLedVchAmt, $IsForexLine, $Date
+
+
+
+
+[#Report: Ledger Vouchers]
+Add	: Variable	: HCR_HasMultiCompanies
+Set	: HCR_HasMultiCompanies	: Not ##HCR_HasMultiCompanies
+
+[#Form: Ledger Vouchers]
+Add	: Button	: HCR_ShowMultiCompanies
+
+
+
+
+[#Part: LV Body]
+Add	: Option	: HCR_LVBody : ##HCR_HasMultiCompanies
+
+[!Part	: HCR_LVBody]
+Repeat          : DSP VchDetail : HCR_VouchersofLedger
+
+
+
+;;===========
+[#Form: Columnar Ledger]
+Add	: Option	: HCR_Columnar Ledger : ##HCR_HasMultiCompanies
+
+[!Form	: HCR_Columnar Ledger]
+Local       : Part : DB Columnar : Repeat : DSP ColVchDetail : HCR_Columnar Vouchers of Ledgers
+
+[#Collection: Columnar Vouchers of Ledgers]
+Add	: Option	: HCR_MCompanyOptionForColl : ##HCR_HasMultiCompanies
+	Fetch:allLedgerEntries.*
+	fetch:	IsPaymentVch_x
+fetch:	IsJournalVch_x 
+fetch:	IsContraVch_x
+fetch:	IsPurchaseVch_x  
+fetch:	IsSalesVch_x 
+fetch:	IsDebitNoteVch_x 
+fetch:	IsMemoVch_x
+fetch:	IsRevJrnlVch_x
+fetch:	IsJobOrderOutVch_x
+fetch:	IsJobOrderInVch_x 
+fetch:	IsJobMaterialIssueVch_x
+fetch:	IsJobMaterialReceiveVch_x
+fetch:	IsSalesOrderVch_x
+fetch:	IsPurcOrderVch_x 
+fetch:	IsIndentVoucherVch_x  
+fetch:	IsPayrollVch_x
+fetch:	IsAttendanceVch_x
+fetch:	IsStockJrnlVch_x 
+fetch:	IsPhysStockVch_x  
+fetch:	IsDelNoteVch_x   
+fetch:	IsRcptNoteVch_x  
+fetch:	IsRejInVch_x  
+fetch:	IsRejOutVch_x 
+fetch:	AsMfgJrnlVch_x
+fetch:	IsInventoryVch_x
+fetch:	UseForPOSInvoice_x
+fetch:	UseforExcise_x
+fetch:	AdditionalName_x
+
+[Collection: HCR_Columnar Vouchers of Ledgers]
+	
+	Collection 	: Columnar Vouchers of Ledgers	: HCR_CmpNamesCollection
+	Fetch	: *.*
+	Fetch	: AllLedgerEntries.*
+	Fetch	: AllInventoryEntries.*
+	Fetch	: AllLedgerEntries.InventoryAllocations.*
+
+
+	Parm Var	: pvLedgerAlias					: String	: If $$IsEmpty:##DSPNameStyle OR $$IsSysNameEqual:NameOnly:##DSPNameStyle Then "" Else $OnlyAlias:Ledger:##LedgerName
+	Parm Var	: pvLedgerName					: String	: $$FuncDSPAccName:##LedgerName:##pvLedgerAlias
+	
+	Fetch   	: Date, VoucherTypeName, VoucherNumber, Narration, MasterID, PartyLedgerName, PartyName, IsEditLogPresent, IsAuditedVchModified
+	Fetch   	: IsOptional, IsPostDated, IsCancelled, IsDeleted, Reference
+	Fetch		: SerialNumber, SerialMaster
+	
+	Fetch  		: AllLedgerEntries.LedgerName, AllLedgerEntries.LedgerAlias, AllLedgerEntries.IsPartyLedger, AllLedgerEntries.Amount ;;for Auto Columnar Register to get Ledgers to be repeated
+	Fetch		: AllLedgerEntries.Narration 							   ;;to get the narration in condensed mode.
+
+	Option		: Columnar Exploded Vouchers	: ##DBFilterVar OR ##ExplodeFlag OR (NOT ##IsMultiPage AND $$InPrintMode)
+	Option		: Profit Vouchers of Company	: ##DSPShowGP
+	
+	ComputeVar 	: FilterPartyName 				: String 	: @@FilterPartyName
+	Compute Var	: FilterPartyAlias				: String	: If $$IsEmpty:##DSPNameStyle OR $$IsSysNameEqual:NameOnly:##DSPNameStyle Then "" Else @@FilterPartyAlias
+	ComputeVar 	: DSPPartyLedger  				: String 	: (If NOT $$IsEmpty:##FilterPartyName then $$FuncDSPAccName:##FilterPartyName:##FilterPartyAlias else "")
+	
+	Compute		: ColBuyersSalesTaxno			: If $$IsEmpty:$BasicBuyersSalesTaxno Then $$GetPartyVATTIN:$PartyLedgerName Else $BasicBuyersSalesTaxno
+	Compute		: ColConsExciseRegnNo			: If $$IsEmpty:$TraderConsExciseRegnNo Then $ExciseRegNo:Ledger:$PartyLedgerName Else $TraderConsExciseRegnNo
+	Compute		: TBSort				        : 1
+	Compute		: DSP NameStyle					: ##DSPNameStyle
+	Compute 	: DSPPartyLedger				: ##DSPPartyLedger 
+	Compute		: IsSameLedgerandParty			: (##pvLedgerName=##DSPPartyLedger)
+	Compute   	: DSPPartyLedPos          		: @@FilterPartyNamePos
+	Compute		: TotalLedVchAmt				: If $$InPrintMode Then $$OrigVchLedTotal:#LedgerName Else $$OrigVchLedTotal:##LedgerName
+	
+	Compute		: TotalLedDrVchAmt    			: $$OrigVchLedDrTotal:#LedgerName
+	Compute		: TotalLedCrVchAmt    			: $$OrigVchLedCrTotal:#LedgerName
+
+	;; The Below 3 computes are added to ensure that, appropriate Method Names and its Default values are available in the Collection definition before its been locally modified in Report definition
+    Compute		: TNetSAAuditStatus				: ""
+    Compute		: TNetSAAuditNote				: ""
+    Compute		: ManualSampling				: ""
+
+	Compute     : VchReferenceDate      : @@ReferenceDate
+
+	Filter		: DrCrExtractFilter
+	Filter		: IsForexTransactionCol		;; Filter Added Explicitly for forex transactions
+
+	Option		: COLREGWithQty					: ##COLREGWithQty
+	Option		: COLREGWithAmount				: ##COLREGWithAmount
+	Option		: COLREGWithGSTIN				: ##COLREGWithGSTIN
+	Option		: ColRegWithSTNo				: ##COLREGWithSTNo
+	Option		: DBCServiceTaxNo				: ##COLREGWithServiceTaxNo
+	Option		: COLREGWithAddl				: ##COLREGWithAddl
+	Option		: Daybook TallyAudit			: ($IsTallyAuditOn:Company:##SVCurrentCompany) AND ##ShowCreatedBy
+	Option		: Columnar RangeFilter			: ##DBFilterVar
+	Option		: COLREGWithExciseRegNo			: ##COLREGWithExciseRegNo
+	Option		: COLREGWithPANNo				: ##COLREGWithPANNo
+	Option		: COLREGWithCSTNo				: ##COLREGWithCSTNo
+	Option		: COLREGWithLBTNo				: ##COLREGWithLBTRegNo
+	Option		: COLREGWithPartyAddress		: ##COLREGWithPartyAddress
+	Option		: COLREGWithGSTShippingNoDate	: ##COLREGWithGSTShippingNoDate
+	Option		: COLREGWithGSTPortCode			: ##COLREGWithGSTPortCode
+	Option		: COLREGWitheCommPartyCSTNo		: ##COLREGWitheCommOperatorGSTIN
+	Option		: ELTypeofVouchersColl			: @@IsEditLogEnabled
+
+	Sort		: @@Default         			: -$TBSort, $Date
+	Sort    	: @@SortAlphaIncr   			: -$TBSort,$DSPPartyLedger, $Date
+	Sort    	: @@SortAlphaDecr   			: -$TBSort,-$DSPPartyLedger, $Date
+	Sort    	: @@CurrencyIncr    			: -$TBSort,$$Currency:$TotalLedVchAmt, $Date
+	Sort		: @@CurrencyDecr    			: -$TBSort,-$$Currency:$TotalLedVchAmt, $Date
+	Sort    	: @@AmountWiseIncr				: $$Abs:$TotalLedVchAmt, $Date
+	Sort    	: @@AmountWiseDecr 			 	: -$$Abs:$TotalLedVchAmt, $Date
+
+
+;;;=================================================
+
+
+
+
+
+
+;;;====================For Outstandings Reports==========================
+
+[!Collection : HCR_MCompanyOptionForBillColl]
+	Compute : Owner Company	: $$LoopCollObj:$Name
+	Fetch	: *.*
+	Fetch	: BillDate, Name, OpeningBalance, ClosingBalance
+	Fetch	: AllLedgerEntries.*
+	Fetch	: AllInventoryEntries.*
+	Fetch	: AllLedgerEntries.InventoryAllocations.*
+	;Delete	: Filter	: BillsOfGroupName
+
+[#System	: Formula]
+BillsOfGroupName	: If ##HCR_HasMultiCompanies then If not $$IsSysNameEqual:AllItems:#GroupName Then $$IsGrpOfGrp:$ParentGroupName:#GroupName else $Name = $Name Else $$IsLedOfGrp:$Parent:#GroupName
+
+
+[#Collection: Company Receivables]
+Add	: Option	: HCR_MCompanyOptionForBillColl : ##HCR_HasMultiCompanies
+
+[#Collection: Company Payables]
+Add	: Option	: HCR_MCompanyOptionForBillColl : ##HCR_HasMultiCompanies
+
+[#Collection: Ledger Bills]
+Add	: Option	: HCR_MCompanyOptionForBillColl : ##HCR_HasMultiCompanies
+
+[#Collection: Group Bills]
+;Add	: Option	: HCR_MCompanyOptionForBillColl : ##HCR_HasMultiCompanies
+
+[#Collection: All Ledger Bills]
+Add	: Option	: HCR_MCompanyOptionForBillColl : ##HCR_HasMultiCompanies
+
+
+
+[#Collection: Company LedgerReceivables]
+Add	: Option	: HCR_MCompanyOptionForBillColl : ##HCR_HasMultiCompanies
+
+[#Collection: Company LedgerPayables]
+Add	: Option	: HCR_MCompanyOptionForBillColl : ##HCR_HasMultiCompanies
+
+[#Collection: LedgerwiseBills]
+Add	: Option	: HCR_MCompanyOptionForBillColl : ##HCR_HasMultiCompanies
+
+;;======================
+
+[#Report: Group Outstandings]
+Add	: Variable	: HCR_HasMultiCompanies
+Set	: HCR_HasMultiCompanies	: ##HCR_HasMultiCompanies
+
+[#Form: Group Outstandings]
+Add	: Button	: HCR_ShowMultiCompanies
+
+
+;;=============================================
+
+[#Report: Ledger Outstandings]
+Add	: Variable	: HCR_HasMultiCompanies
+Set	: HCR_HasMultiCompanies	: ##HCR_HasMultiCompanies
+
+[#Form: Ledger Outstandings]
+Add	: Button	: HCR_ShowMultiCompanies
+
+[#Report: Bills Receivable]
+Add	: Variable	: HCR_HasMultiCompanies
+Set	: HCR_HasMultiCompanies	: ##HCR_HasMultiCompanies
+
+[#Report: Bills Payable]
+Add	: Variable	: HCR_HasMultiCompanies
+Set	: HCR_HasMultiCompanies	: ##HCR_HasMultiCompanies
+
+[#Form: Bills Outstanding]
+Add	: Button	: HCR_ShowMultiCompanies
+
+
+;;=======================================For Outstandings =Company Name In Bill Details=======================================
+
+
+[#Line: BILL OpBalLine]
+Add	: Option	: HCR_BOpLines : ##HCR_HasMultiCompanies
+
+[#Line: BILL ForexLine]
+;Add	: Fields	: HCR_M_CmpNameBillVch
+
+[#Line: BILL Vouchers] ;;;
+Add	: Fields	: HCR_M_CmpNameBillVch
+
+[#Line: BILL OpOnAccLine]
+;Add	: Option	: HCR_BOpLines : ##HCR_HasMultiCompanies
+
+[!Line	: HCR_BOpLines]
+Add	: Fields	: HCR_M_CmpNameOpName
+
+[#Line: MBILL OpOnAccLine]
+;Add	: Option	: HCR_BOpLines : ##HCR_HasMultiCompanies
+
+[#Field : BILLVCH Ledger]
+Add	: Option	: HCR_BILLVCHLedger : ##HCR_HasMultiCompanies
+
+[!Field : HCR_BILLVCHLedger]
+;;Invisible : No
+Set As	: If ##IsBillWiseReport and ##IsLedgerReport then #LedgerName Else $$ReqObject:$PartyName
+
+[Field	: HCR_M_CmpNameOpName]
+	Use		: Name Field
+	Set as	: $OwnerCompany ;;;;If ((not $$IsEmpty:#M_Cmp_Led_DrAmt) and (not $$IsEmpty:#M_Cmp_Led_DrAmt1)) or ((not $$IsEmpty:#M_Cmp_Led_CrAmt) and (not $$IsEmpty:#M_Cmp_Led_CrAmt1)) then ##SvCurrentCompany else $HCR_M_CmpName
+	Variable	: SvCurrentCompany
+	Alter    : HCR_M_Cmp_OpLedVoucherss
+	Invisible	: Yes
+	Width	: 30
+	;Invisible	: not ##HCR_HasMultiCompanies
+	;Inactive	: not ##HCR_HasMultiCompanies
+	
+	[Report: HCR_M_Cmp_OpLedVoucherss]
+	Use	: Ledger
+	Object	: Ledger : ##SLedger ;;$$ReqObject:$Parent ;;##LedgerName ;;SLedger ;;#BILLVCHLedger
+	Form	: Ledger
+
+
+[Field	: HCR_M_CmpNameBillVch]
+	Use		: Name Field
+	Set as	: $$Owner:$OwnerCompany ;;If ((not $$IsEmpty:#M_Cmp_Led_DrAmt) and (not $$IsEmpty:#M_Cmp_Led_DrAmt1)) or ((not $$IsEmpty:#M_Cmp_Led_CrAmt) and (not $$IsEmpty:#M_Cmp_Led_CrAmt1)) then ##SvCurrentCompany else $HCR_M_CmpName
+	;;Width	: 10
+	Variable	: SvCurrentCompany
+	;Modifies : SVCurrentCompany
+	Alter    : HCR_M_Cmp_BillsLedVoucherss
+	Invisible	: Yes
+	Fixed	: Yes
+	;Variable : vVoucherID
+	Width	: 30
+	;Invisible	: not ##HCR_HasMultiCompanies ;;;Yes ;;;not ##HCR_HasMultiCompanies
+	;Inactive	: not ##HCR_HasMultiCompanies
+	
+	[Report: HCR_M_Cmp_BillsLedVoucherss]
+
+	<basegroup:voucher>
+	
+	Use	: Voucher
+	Object	: Voucher : #M_Cmp_Led_MSTId
+	Form	: Voucher
+
+
+
+
+[#Line: BILLCol1]
+Local       : Field : HCR_OutStandingCMPName : Info : $$LocaleString:"Company Name"
+
+[#Line: BILLCol2]
+Local       : Field : HCR_OutStandingCMPName : Info : $$LocaleString:" "
+
+
+[#Line: BILL Detail]
+
+[#Field: BILLFixed]
+Add : Fields : After : BillRef : HCR_OutStandingCMPName
+Local       : Field : HCR_OutStandingCMPName : Set as: $OwnerCompany
+
+	[#Line: GRPLedBILL Title]
+			Local       : Field : BILLFixed : Local	: Field: HCR_OutStandingCMPName : Set as: " " 
+			
+	[#Line: GRPLedBILL Total]
+		Local       : Field : BILLFixed : Local	: Field: HCR_OutStandingCMPName : Set as: " "
+
+
+
+
+	[Field	:  HCR_OutStandingCMPName]
+		Use	: Name Field
+		Set As	: $$Owner:$OwnerCompany
+		Width	: 30
+		Invisible	: not ##HCR_HasMultiCompanies
+		;Inactive	: not @@ISSalesmanNameOn_CMP
+		;Invisible	: Not @@ISSalesmanNameOn_CMP
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;==============================
+
+[#Part: GRPBILL Body]
+Add	: Option	: HCR_GRPBILL Body : ##HCR_HasMultiCompanies
+
+[!Part	: HCR_GRPBILL Body]
+Repeat      : BILL Detail : HCR_MULTICOMP_CMPParties ;;HCR_Group Bills
+;Local	: Part	: Bill Vouchers : Local	: Line	: Bill Vouchers : Local	: Field : HCR_M_CmpNameBillVch	: Set As	: $OwnerCompany
+Local	: Part	: BILL Vouchers : Local	: Line	: BILL Vouchers	: Local	: Field : BILLVCH Amount	: Set As	: $MULTICOMPAllocBillsTotal
+
+[Collection : HCR_Group Bills]
+	Collection 	: Group Bills	: HCR_CmpNamesCollection
+	Fetch	: *.*
+
+	Fetch	: LedgerEntries.*
+	Fetch	: AllLedgerEntries.*
+	Fetch	: AllInventoryEntries.*
+	Fetch	: AllLedgerEntries.InventoryAllocations.*
+
+	;ParmVar				: pvParent			: String	: $Parent
+
+	Filter  			: BillsOfGroupName, DueBillsFilter, AgeFilter, BillTypeFilter
+
+	;Compute Var			: vLedgerAlias		: String	: If $$IsEmpty:##DSPNameStyle OR $$IsSysNameEqual:NameOnly:##DSPNameStyle Then "" Else $OnlyAlias:Ledger:$Parent
+	Compute				: Name				: $$Name
+	Compute				: PartyName			: $$FuncDSPAccName:$Parent:##vLedgerAlias   ;;$DSPAccName:Ledger:$Parent
+	Compute				: DSPNameStyle		: ##DSPNameStyle  
+	Compute				: CreditPeriod		: @@CreditPeriod
+
+	Switch	  			: RemoteBills		: RemoteBills	: $$IsRemoteCompany
+
+	Sort    			: @@Default         : $BillDate, $Parent
+	Sort    			: @@DateIncr 		: $BillDate, $Parent
+	Sort    			: @@DateDecr		: -$BillDate, -$Parent
+	Sort    			: @@PartyIncr		: $Parent, $BillDate
+	Sort    			: @@PartyDecr 		: -$Parent, -$BillDate
+	Sort    			: @@RefNoIncr		: $$Name, $BillDate
+	Sort    			: @@RefNoDecr		: -$$Name, -$BillDate
+	Sort    			: @@AmtIncr			: $$Abs:$ClosingBalance, $BillDate
+	Sort    			: @@AmtDecr			: -$$Abs:$ClosingBalance, -$BillDate
+	Sort    			: @@DueDateIncr		: @@CreditPeriod, $BillDate
+	Sort    			: @@DueDateDecr		: -@@CreditPeriod, -$BillDate
+	Sort    			: @@CurrencyIncr 	: $$Currency:$OpeningBalance
+	Sort    			: @@CurrencyDecr	: -$$Currency:$OpeningBalance
+
+;;================
+
+[#Part: GRPLedBILL Body]
+Add	: Option	: HCR_GRPLedBILL Body : ##HCR_HasMultiCompanies
+
+[!Part	: HCR_GRPLedBILL Body]
+Repeat		: GRPLedBILL BodyTitle	: HCR_MULTICOMP_CMPPartiesMain ;;HCR_LedgerwiseBills
+
+[#Part: BillsLedgerwiseReceivables]
+Add	: Option	: HCR_BillsLedgerwiseReceivables : ##HCR_HasMultiCompanies
+
+;[#Part: BillsLedgerwiseGrp]
+;Add	: Option	: HCR_BillsLedgerwiseReceivables : ##HCR_HasMultiCompanies
+
+[#Part: BillsLedgerwisePayables]
+Add	: Option	: HCR_BillsLedgerwiseReceivables : ##HCR_HasMultiCompanies
+
+[!Part	: HCR_BillsLedgerwiseReceivables]
+Repeat	: BILL Detail		: HCR_Group LedgerBills ;;HCR_MULTICOMP_CMPPartiesMain
+
+	[#Line: GRPLedBILL Title]
+
+[Collection: HCR_MULTICOMP_CMPPartiesMain]
+Source Collection : HCR_MULTICOMP_CMPParties
+By	: PartyName	: $Parent
+By	: PartyNameGrp	: $ParentGroupName
+;By	: CMPName	: $OwnerCompany
+Sort	: @@Default	: $PartyName
+	Aggr Compute: OpeningBalance	: Sum	: $OpeningBalance
+	Aggr Compute: ClosingBalance	: Sum	: $ClosingBalance
+	Aggr Compute: ForexClosing		: Sum	: $ForexClosing
+	Aggr Compute: PDCAmt		: Sum	: $$AmountSubtract:$FinalBalance:$ClosingBalance
+	Aggr Compute: FinalBalance		: Sum	: $FinalBalance
+
+	Search Key	: $PartyName
+	ColumnVar	: AgeFrom, AgeTo
+
+	Keep Source	: ().
+	
+	Aggr Compute: NotBaseCurrCount	: Sum	: If @@IsPartyBaseCurrency Then 0 Else 1
+	Filter		: HCR_GrpNameFltr
+
+;;$$IsLedOfGrp:$Parent:#GroupName
+;;$$IsGrpOfGrp:$PartyNameGrp:$HCR_GrpNameMultiCM
+
+[System	: Formula]
+HCR_GrpNameFltr	: If not $$IsSysNameEqual:AllItems:#GroupName Then $$IsGrpOfGrp:$PartyNameGrp:#GroupName Else If not ##IsGrpBillReport and ##ShowReceivables then $IsReceivable Else + 
+If not ##IsGrpBillReport and NOT ##ShowReceivables then $IsPayable Else $PartyName = $PartyName ;;;$PartyNameGrp = "Sundry Debtors" ;;;$$IsGrpOfGrp:$PartyNameGrp:$HCR_GrpNameMultiCMP  ;;;$Parent:$PartyNameGrp = "Sundry Debtors" ;;$Parent:Ledger:$Parent = $$ReqObject:#GroupName ;;"Sundry Debtors" ;;$$IsLedOfGrp:$PartyName:$$GroupSundryDebtors ;;$HCR_GrpNameMultiCMP
+HCR_GrpNameMultiCMP	: $$ReqObject:#GroupName ;;;"Sundry Debtors" ;;$$ReqObject:#GroupName
+
+[#Object : Ledger]
+HCR_LParentsName	: $Parent ;;:Ledger:$Name
+
+[Collection: HCR_MULTICOMP_CMPParties]
+
+	Collection	: HCR_MULTICOMP_CMPPartiesColl	: HCR_CompanyCollection
+	;Fetch		: Name, Parent, ParentGroupName, BillDate, OpeningBalance, ClosingBalance, CreditPeriod
+	;;Filter		: HCR_GrpNameFltr
+
+[Collection: HCR_MULTICOMP_CMPPartiesColl]
+	Type		: Bills
+	;Child Of		: $$ReqObject:#GroupName
+	Fetch		: Name, Parent, ParentGroupName, BillDate, OpeningBalance, ClosingBalance, CreditPeriod
+
+	Fetch		: LedgerEntries.MasterID, LedgerEntries.IsVCHOfStockJrnl
+	Fetch		: LedgerEntries.Date, LedgerEntries.CurLangVoucherTypeName
+	Fetch		: LedgerEntries.VoucherNumber, LedgerEntries.LedgerEntries.BillAllocations.Amount
+	Fetch		: LedgerEntries.MULTICOMPAllocBillsTotal ;; All methods need to be fetched at Bill Level
+	Fetch		: LedgerEntries.HasInventory, LedgerEntries.InventoryEntries.BilledQty, LedgerEntries.InventoryEntries.StockItemName
+	Fetch		: LedgerEntries.InventoryEntries.Rate
+
+	Compute				: OwnerCompany	: $$LoopCollObj:$Name
+	Compute				: PartyName	: $Parent
+	;Filter  			: HCR_GrpNameFltr ;;DueBillsFilter, AgeFilter, BillTypeFilter ;;;HCR_GrpNameFltr ;;DueBillsFilter, AgeFilter, BillTypeFilter ;;;BillsOfGroupName, BillTypeFilter ;;DueBillsFilter, AgeFilter, BillTypeFilter
+
+
+
+[Collection	: HCR_LedgerwiseBills]
+	Collection 	: LedgerwiseBills	: HCR_CmpNamesCollection
+
+;;========================Groupwise Ledger Outstanding Exploded Part========================
+
+[#Collection: Group LedgerBills]
+;Add	: Option	: HCR_MCompanyGroupLedgerBills : ##HCR_HasMultiCompanies
+
+
+
+[Collection : HCR_Group LedgerBills]
+Collection	: HCR_MULTICOMPLedgerBills	: HCR_CompanyCollection ;;;	: HCR_CmpNamesCollection
+	Sort				: @@Default         : $$Date:$BillDate, $Name, $OwnerCompany
+	Sort				: @@DateIncr        : $BillDate
+	Sort				: @@DateDecr        : -$BillDate
+	Sort				: @@RefNoIncr		: $$Name, $BillDate
+	Sort				: @@RefNoDecr 		: -$$Name, $BillDate
+	Sort				: @@AmtIncr			: $$Abs:$ClosingBalance, $BillDate
+	Sort				: @@AmtDecr 		: -$$Abs:$ClosingBalance, $BillDate
+	Sort				: @@DueDateIncr		: @@CreditPeriod, $BillDate
+	Sort				: @@DueDateDecr		: -@@CreditPeriod, $BillDate
+	Sort				: @@CurrencyIncr	: $$Currency:$OpeningBalance
+	Sort				: @@CurrencyDecr	: -$$Currency:$OpeningBalance
+
+[Collection: HCR_MULTICOMPLedgerBills]
+	ParmVar : pvParent			: String	: If $$IsEmpty:$Parent Then #LedgerName Else $Parent
+	Type		: Bills
+	Child Of		: $$ReqObject:$PartyName ;;;##pvParent ;;$$ReqObject:$PartyName ;;##pvParent
+	Filter		: HCR_EmptyBillsFilter, DueBillsFilter, AgeFilter, BillTypeFilter ;;, EmptyBillsFilter ;;AgeFilter, BillTypeFilter, EmptyBillsFilter ;;;DueBillsFilter, AgeFilter, BillTypeFilter, EmptyBillsFilter
+
+	Fetch		: BillDate, Parent, OpeningBalance, ClosingBalance, BillCreditPeriod, ClearedOn
+	Fetch		: LedgerEntries.MasterID, LedgerEntries.IsVCHOfStockJrnl
+	Fetch		: LedgerEntries.Date, LedgerEntries.CurLangVoucherTypeName
+	Fetch		: LedgerEntries.VoucherNumber, LedgerEntries.LedgerEntries.BillAllocations.Amount
+	Fetch		: LedgerEntries.MULTICOMPAllocBillsTotal ;; All methods need to be fetched at Bill Level
+	Fetch		: LedgerEntries.HasInventory, LedgerEntries.InventoryEntries.BilledQty, LedgerEntries.InventoryEntries.StockItemName
+	Fetch		: LedgerEntries.InventoryEntries.Rate
+	
+
+
+
+	Compute Var			: vLedgerAlias		: String	: If $$IsEmpty:##DSPNameStyle OR $$IsSysNameEqual:NameOnly:##DSPNameStyle Then "" Else $OnlyAlias:Ledger:##pvParent
+
+	Compute				: Name				: $$Name
+	Compute				: OwnerCompany	: $$LoopCollObj:$Name
+	Compute				: PartyName			: $$FuncDSPAccName:$Parent:##vLedgerAlias   ;;$DSPAccName:Ledger:$Parent
+	Compute				: DSPNameStyle		: ##DSPNameStyle  
+	Compute				: CreditPeriod		: @@CreditPeriod
+
+
+	Switch	  			: RemoteBills		: RemoteBills	: $$IsRemoteCompany
+
+	Sort				: @@Default         : $$Date:$BillDate, $Name, $OwnerCompany
+	Sort				: @@DateIncr        : $BillDate
+	Sort				: @@DateDecr        : -$BillDate
+	Sort				: @@RefNoIncr		: $$Name, $BillDate
+	Sort				: @@RefNoDecr 		: -$$Name, $BillDate
+	Sort				: @@AmtIncr			: $$Abs:$ClosingBalance, $BillDate
+	Sort				: @@AmtDecr 		: -$$Abs:$ClosingBalance, $BillDate
+	Sort				: @@DueDateIncr		: @@CreditPeriod, $BillDate
+	Sort				: @@DueDateDecr		: -@@CreditPeriod, $BillDate
+	Sort				: @@CurrencyIncr	: $$Currency:$OpeningBalance
+	Sort				: @@CurrencyDecr	: -$$Currency:$OpeningBalance
+	
+	Option		: LedgerwiseBillsInNewPages	: @@NotInDisplayMode
+
+
+
+
+[System	: Formula]
+	HCR_EmptyBillsFilter	: $Parent = $$ReqObject:$PartyName
+	HCR_OwnerPartyName	: $$ReqObject:$PartyName
+
+
+[#Part: BillsLedgerwiseGrp]
+Add	: Option	: HCR_BillsLedgerwiseGrp : ##HCR_HasMultiCompanies
+
+[!Part	: HCR_BillsLedgerwiseGrp]
+Repeat	: BILL Detail		: HCR_Group LedgerBills
+Local	: Part	: BILL Vouchers : Local	: Line	: BILL Vouchers	: Local	: Field : BILLVCH Amount	: Set As	: $MULTICOMPAllocBillsTotal
+Add	: Option	: OTLSBILL DetailOnAcc : Not $$IsEmpty:$$CollAmtTotal:OTLS_OpBalLedCollmain:$LOnAccClBal  ;;;$OTLSLedBILLOnClAccValue ;;;OTLSLedBILLFinalOnAccount
+
+
+[Collection : OTLS_OpBalLedCollmain]
+Collection : OTLS_OpBalLedCollSrcMain : Company Collection2
+
+[Collection : OTLS_OpBalLedCollSrcMain]
+Type	: Ledger
+Fetch	: Name
+Filter	: OTLS_OnlyRelatedLedgerMain
+Compute : Owner Company	: $$LoopCollObj:$Name
+Compute	: LOnAccountValue : $OnAccountValue:Ledger:$Name
+Compute	: LOnAccClBal	: $ClosingOnAcctValue:Ledger:$Name
+
+[System	: Formula]
+OTLS_OnlyRelatedLedgerMain	: If ##IsBillWiseReport and ##IsLedgerReport then $Name = #LedgerName Else $Name = $$ReqObject:$PartyName ;;$HCR_OwnerPartyName
+
+;;=========================On Account Entries Part=============================
+
+	[!Part	: OTLSBILL DetailOnAcc]
+	Add : Lines : Before : GRPLedBILL Total : OTLSBILL DetailOnAcc
+
+	[Line	: OTLSBILL DetailOnAcc]
+	       	Use         : BillDetail
+        Delete      : Empty
+        Delete      : NextPage
+        Delete      : Explode
+        Local       : Style		: Default       : Italics	: Yes
+        Local       : Field 	: BILLDate      : Set as    : @@DSPToDate
+        Local       : Field 	: BILLRef       : Set as    : $$LocaleString:"On Account"
+        Local       : Field 	: BILLRef       : Cells	: 2
+        Local       : Field 	: BILLParty       : Set as    : $PartyName
+        Local       : Field 	: BILLParty       : Invisible	: Yes
+        Local       : Field 	: BILLIsAdvance : Set as    : ""
+        Local       : Field 	: BILLOp        : Set as    : $$CollAmtTotal:OTLS_OpBalLedColl:$LOnAccountValue
+        Local       : Field 	: BILLCl        : Set as    : If ($$NumSets = 1) OR ($$Column = 1) OR (##AgeFrom < 0) Then $$CollAmtTotal:OTLS_OpBalLedColl:$LOnAccountValue  Else 0
+        Local       : Field	: BILLDue       : Set as    : ""
+        Local       : Field 	: BILLOverDue   : Set as    : ""
+        Local       : Field 	: BILLPDC       : Set as    : $$AmountSubtract:#BILLFinal:#BILLCl
+        Local       : Field 	: BILLFinal     : Set as    : $$CollAmtTotal:OTLS_OpBalLedColl:$LOnAccClBal
+
+		Space Top	: If $$IsSiblingExploded Then @@ExplodedSpace Else 0
+		Add         : Next Page	: NOT $$DoExplosionsFit
+
+	Add	: Explode	: OTLSLedOnAcc Vouchers : ##HCR_HasMultiCompanies ;;($$KeyExplode OR ##ExplodeFlag)
+
+
+
+[Collection : OTLS_OpBalLedColl]
+Collection : OTLS_OpBalLedCollSrc : Company Collection2
+
+
+[Collection : OTLS_OpBalLedCollSrc]
+Type	: Ledger
+Fetch	: Name
+Filter	: OTLS_OnlyRelatedLedger
+Compute : Owner Company	: $$LoopCollObj:$Name
+Compute	: LOnAccountValue : $OnAccountValue:Ledger:$Name
+Compute	: LOnAccClBal	: $ClosingOnAcctValue:Ledger:$Name
+
+
+[System	: Formula]
+OTLS_OnlyRelatedLedger	: $Name = $OnAccvchPartyNames
+
+
+;;======================================Explode ONACCOUNT VOUCHERS PART========================================================
+
+	[Part	: OTLSLedOnAcc Vouchers]
+	Line    : OTLSLedOnAccOpeningBal, OTLSLedOnAcc Vouchers
+    	Repeat  : OTLSLedOnAcc Vouchers : OTLS_OnAccountVoucherss ;;;OTLSLedOnAccount Vouchers
+	Option  : Small Size Part
+
+;;======================================ONACCOUNT Opening Balance Line======================================================
+
+        [Line: OTLSLedOnAccOpeningBal]
+
+            Fields : OTLSPrtyLedger, OTLSVchType, OTLSVchNo, OTLSVchDate, OTLSVchAmt, HCR_M_CmpNameOnAccVch
+           ; Option      : AlterOnEnter
+	    Local	: Field	: Default	: Style	: Small Italic
+
+            Local       : Field : OTLSVchType	: Set as : "Op.Bal."
+            Local       : Field : OTLSVchNo     : Set as : "On Account"
+       ; Local       : Field 	: BILLParty       : Invisible	: Yes
+            Local       : Field : OTLSVchDate   : Set as : $BooksFrom:Company:##SVCurrentCompany - 1
+            Local       : Field : OTLSVchAmt    : Set as : $OTLS_OpeningOnAccount ;;$$CollAmtTotal:OTLS_OpBalLedColl:$LOnAccountValue
+
+[Field	: OTLSPrtyLedger]
+Use	: Name Field
+Set As	: $OnAccvchPartyNames
+;Alter	: Ledger
+Invisible	: Yes
+    	
+
+;;=============================================On Account Vouchers Details===================================================
+	[Line	: OTLSLedOnAcc Vouchers]
+		Fields : OTLSVchMSTId, OTLSVchType, OTLSVchNo, OTLSVchDate, OTLSVchAmt, HCR_M_CmpNameOnAccVch
+		Local	: Field	: Default	: Style	: Small Italic
+		Option    	: AlterOnEnter
+
+
+
+[Field	: HCR_M_CmpNameOnAccVch]
+	Use		: Name Field
+	Set as	: $OnAccOwnerCompany
+	Variable	: SvCurrentCompany
+	Alter    : Voucher
+	Invisible	: No ;;Yes
+	Fixed	: Yes
+	Width	: 30
+	Invisible	: not ##HCR_HasMultiCompanies
+	Inactive	: not ##HCR_HasMultiCompanies
+
+		[Field : OTLSVchMSTId]
+			Use	: Name Field
+			Set As	: "ID:" + $$String:$MasterId
+			Invisible	: Yes
+
+		[Field : OTLSVchType]
+			Set As : $VoucherTypeName
+			Width  : @@ShortDateWidth
+
+
+		[Field : OTLSVchNo]
+			Set As : $VoucherNumber
+			Width  : 6
+
+		[Field : OTLSVchDate]
+			Set As : $Date
+			Width  : @@ShortDateWidth
+
+		[Field : OTLSVchAmt]
+			Use     		: Amount Field
+			Type    		: Amount
+			Set as 			: $OnAccountTotal ;;@AllocBillsTotal
+			Format  		: "DrCr," + ##ShowForex
+			Width   		: If NOT $$InPixelMode Then @@AmountWidth Else If ##IsBillWiseReport Then @@AmountWidth - 1 Else @@NumberWidth + 3
+			
+[#Object : Voucher]
+HCR_LedBillAmount 			: $$GetVchBillAmt:($$Owner:$Name):$HCR_OwnerPartyName:No
+
+[Collection : OTLS_OnAccountVoucherss]
+Collection : OTLSLed OnAccount VouchersSRC : Company Collection2
+Add	: Option	: OTLSLed_FinalWithClearOnAcc	: ##ShowPDC
+
+[!Collection : OTLSLed_FinalWithClearOnAcc]
+Delete	: Collection
+Add	: Collection : OTLSLed OnAccountFinalWithClearedVouchersSRC : Company Collection2
+
+
+[System	: Formula]
+OnAccvchPartyNames	: $$ReqObject:#BillParty
+
+[Collection: OTLSLed OnAccount VouchersSRC]
+
+	Type				: On Account Vouchers
+	Child of				: $$ReqObject:#BillParty ;;;;$HCR_OwnerPartyName
+	Fetch				: MasterId, Date, VoucherNumber, VoucherTypeName
+	Fetch				: LedgerEntries.AuditEntries.*
+	Fetch				: InvoiceOrderList.*, InventoryEntries.BatchAllocations.*
+
+
+	Fetch:allLedgerEntries.*
+	Fetch:allInventoryEntries.*
+	Fetch:	IsPaymentVch_x
+	Fetch:	IsJournalVch_x 
+	Fetch:	IsContraVch_x
+	Fetch:	IsPurchaseVch_x  
+	Fetch:	IsSalesVch_x 
+	Fetch:	IsDebitNoteVch_x 
+	Fetch:	IsMemoVch_x
+	Fetch:	IsRevJrnlVch_x
+	Fetch:	IsJobOrderOutVch_x
+	Fetch:	IsJobOrderInVch_x 
+	Fetch:	IsJobMaterialIssueVch_x
+	Fetch:	IsJobMaterialReceiveVch_x
+	Fetch:	IsSalesOrderVch_x
+	Fetch:	IsPurcOrderVch_x 
+	Fetch:	IsIndentVoucherVch_x  
+	Fetch:	IsPayrollVch_x
+	Fetch:	IsAttendanceVch_x
+	Fetch:	IsStockJrnlVch_x 
+	Fetch:	IsPhysStockVch_x  
+	Fetch:	IsDelNoteVch_x   
+	Fetch:	IsRcptNoteVch_x  
+	Fetch:	IsRejInVch_x  
+	Fetch:	IsRejOutVch_x 
+	Fetch:	AsMfgJrnlVch_x
+	Fetch:	IsInventoryVch_x
+	Fetch:	UseForPOSInvoice_x
+	Fetch:	UseforExcise_x
+	Fetch:	AdditionalName_x
+	;; OnAccountTotal refers to Ledger Entries. When an Item Invoice is passed, it has to refer to AllLedgerEntries.
+	;; In order to change the course to AllLedgerEntries, the following compute is given.
+	;; Due to the above mentioned change, Inventory Explosion will not happen. 
+	;; In order to change the course of Inventory Entries to AllInventoryEntries the 3rd Compute is given.
+
+	Compute 			: OnAccOwner Company	: $$LoopCollObj:$Name
+	Compute				: AllLedEntOnAccountTotal		: $.AllLedgerEntries[1].Amount   
+	Compute				: OnAccountTotal			: $$OnAccountTotal:$OnAccvchPartyNames ;;;$OTLSOwnerPartyName
+	Compute				: ItemQty 			: $.AllInventoryEntries[1].BilledQty
+
+
+
+[Collection: OTLSLed OnAccountFinalWithClearedVouchersSRC]
+
+	Type				: On Account Vouchers
+	Child of				: $$ReqObject:#BillParty ;;;;$HCR_OwnerPartyName
+	Cleared     : Yes
+
+	Fetch				: MasterId, Date, VoucherNumber, VoucherTypeName
+	Fetch				: LedgerEntries.AuditEntries.*
+	Fetch				: InvoiceOrderList.*, InventoryEntries.BatchAllocations.*
+
+
+	Fetch:allLedgerEntries.*
+	Fetch:allInventoryEntries.*
+	fetch:	IsPaymentVch_x
+	fetch:	IsJournalVch_x 
+	fetch:	IsContraVch_x
+	fetch:	IsPurchaseVch_x  
+	fetch:	IsSalesVch_x 
+	fetch:	IsDebitNoteVch_x 
+	fetch:	IsMemoVch_x
+	fetch:	IsRevJrnlVch_x
+	fetch:	IsJobOrderOutVch_x
+	fetch:	IsJobOrderInVch_x 
+	fetch:	IsJobMaterialIssueVch_x
+	fetch:	IsJobMaterialReceiveVch_x
+	fetch:	IsSalesOrderVch_x
+	fetch:	IsPurcOrderVch_x 
+	fetch:	IsIndentVoucherVch_x  
+	fetch:	IsPayrollVch_x
+	fetch:	IsAttendanceVch_x
+	fetch:	IsStockJrnlVch_x 
+	fetch:	IsPhysStockVch_x  
+	fetch:	IsDelNoteVch_x   
+	fetch:	IsRcptNoteVch_x  
+	fetch:	IsRejInVch_x  
+	fetch:	IsRejOutVch_x 
+	fetch:	AsMfgJrnlVch_x
+	fetch:	IsInventoryVch_x
+	fetch:	UseForPOSInvoice_x
+	fetch:	UseforExcise_x
+	fetch:	AdditionalName_x
+	;; OnAccountTotal refers to Ledger Entries. When an Item Invoice is passed, it has to refer to AllLedgerEntries.
+	;; In order to change the course to AllLedgerEntries, the following compute is given.
+	;; Due to the above mentioned change, Inventory Explosion will not happen. 
+	;; In order to change the course of Inventory Entries to AllInventoryEntries the 3rd Compute is given.
+
+	Compute 			: OnAccOwner Company	: $$LoopCollObj:$Name
+	Compute				: AllLedEntOnAccountTotal		: $.AllLedgerEntries[1].Amount   
+	Compute				: OnAccountTotal			: $$OnAccountTotal:$OnAccvchPartyNames ;;;$OTLSOwnerPartyName
+	Compute				: ItemQty 			: $.AllInventoryEntries[1].BilledQty
+
+
+
+
+
+
+[System : Formula]
+	OTLSOwnerPartyName 			: $$Owner:$PartyName
+	OTLSLedOnAccByVouchers     		: $$CollAmtTotal:OTLS_OnAccountVoucherss:$OnAccountTotal
+	OTLSLedOnAccountOpAmt			: $$AmountSubtract:$OTLSLedBILLFinalOnAccount:$OTLSLedOnAccByVouchers
+
+	OTLS_OpeningOnAccount			: $$AmountSubtract:$OTLSLedBILLFinalOnAccount:$OTLSLedOnAccByVouchers
+
+
+
+[System	: Formula]
+	OTLSLedBILLFinalOnAccount	: $$CollAmtTotal:OTLS_OpBalLedColl:$LOnAccClBal
+	OTLSLedBILLOnClAccValue		: $ClosingOnAcctValue:Ledger:$HCR_OwnerPartyName ;;$OnAccountValue:Ledger:$HCR_OwnerPartyName ;;;$ClosingOnAcctValue:Ledger:$HCR_OwnerPartyName
+;;======================================================================================================================
+
+
+
+;;===================Billes Receivable Ledger By Bills Details==============================================
+
+;;[#Part: BillsLedgerwiseReceivables]
+;Add	: Option	: HCR_BillsLedgerwiseReceivables : ##HCR_HasMultiCompanies
+
+;[!Part	: HCR_BillsLedgerwiseReceivables]
+;Repeat	: BILL Detail		: HCR_CompanyLedgerReceivables
+
+[Collection	: HCR_CompanyLedgerReceivables]
+	Collection 	: CompanyLedgerReceivables	: HCR_CmpNamesCollection
+	Fetch	: *.*
+	Fetch	: LedgerEntries.*
+	Fetch	: AllLedgerEntries.*
+	Fetch	: AllInventoryEntries.*
+	Fetch	: AllLedgerEntries.InventoryAllocations.*
+
+	ParmVar		: pvParent				: String	: If $$IsEmpty:$Parent Then #LedgerName Else $Parent
+
+	Compute Var	: vLedgerAlias			: String	: If $$IsEmpty:##DSPNameStyle OR $$IsSysNameEqual:NameOnly:##DSPNameStyle Then "" Else $OnlyAlias:Ledger:##pvParent
+
+	Compute		: PartyName				: $$FuncDSPAccName:$Parent:##vLedgerAlias
+	Compute		: DSPNameStyle			: ##DSPNameStyle
+	
+	Switch		: RemoteCmpReceivables	: RemoteCmpReceivables : $$IsRemoteCompany ;; Temporary solution to improve performance in server
+	Compute		: GrpName				: ##GroupName ;; Dummy Compute to send the Variable to the Client side.
+	
+    Filter  	: IsReceivable, DueBillsFilter, AgeFilter, BillsOfGroupName
+	
+	Sort		: @@Default        		: $BillDate
+	Sort		: @@DateIncr        	: $BillDate
+	Sort		: @@DateDecr        	: -$BillDate
+	Sort		: @@RefNoIncr			: $$Name, $BillDate
+	Sort		: @@RefNoDecr 			: -$$Name, $BillDate
+	Sort		: @@AmtIncr				: $$Abs:$ClosingBalance, $BillDate
+	Sort		: @@AmtDecr 			: -$$Abs:$ClosingBalance, $BillDate
+	Sort		: @@DueDateIncr			: @@CreditPeriod, $BillDate
+	Sort		: @@DueDateDecr			: -@@CreditPeriod, $BillDate
+	Sort		: @@CurrencyIncr		: $$Currency:$OpeningBalance
+	Sort		: @@CurrencyDecr		: -$$Currency:$OpeningBalance
+
+	ColumnVar	: AgeFrom, AgeTo
+	
+	Option		: LedgerwiseBillsInNewPages	: @@NotInDisplayMode
+
+;;=========================
+
+[#Part: BillsLedgerwisePayables]
+;Add	: Option	: HCR_BillsLedgerwisePayables : ##HCR_HasMultiCompanies
+
+[!Part	: HCR_BillsLedgerwisePayables]
+Repeat	: BILL Detail		: HCR_CompanyLedgerPayables
+
+[Collection : HCR_CompanyLedgerPayables]
+	Collection 	: CompanyLedgerPayables	: HCR_CmpNamesCollection
+	Fetch	: *.*
+	Fetch	: LedgerEntries.*
+	Fetch	: AllLedgerEntries.*
+	Fetch	: AllInventoryEntries.*
+	Fetch	: AllLedgerEntries.InventoryAllocations.*
+
+	ParmVar		: pvParent				: String	: If $$IsEmpty:$Parent Then #LedgerName Else $Parent
+
+	Compute Var	: vLedgerAlias			: String	: If $$IsEmpty:##DSPNameStyle OR $$IsSysNameEqual:NameOnly:##DSPNameStyle Then "" Else $OnlyAlias:Ledger:##pvParent
+
+	Compute		: PartyName				: $$FuncDSPAccName:$Parent:##vLedgerAlias
+	Compute		: DSPNameStyle			: ##DSPNameStyle
+	
+	Switch		: RemoteCmpPayables 	: RemoteCmpPayables		: $$IsRemoteCompany ;; Temporary solution to improve performance in server
+	Compute		: GrpName				: ##GroupName ;; Dummy Compute to send the Variable to the Client side.
+	
+    Filter  	: IsPayable, DueBillsFilter, AgeFilter, BillsOfGroupName
+	
+	Sort		: @@Default        		: $BillDate
+	Sort		: @@DateIncr        	: $BillDate
+	Sort		: @@DateDecr        	: -$BillDate
+	Sort		: @@RefNoIncr			: $$Name, $BillDate
+	Sort		: @@RefNoDecr 			: -$$Name, $BillDate
+	Sort		: @@AmtIncr				: $$Abs:$ClosingBalance, $BillDate
+	Sort		: @@AmtDecr 			: -$$Abs:$ClosingBalance, $BillDate
+	Sort		: @@DueDateIncr			: @@CreditPeriod, $BillDate
+	Sort		: @@DueDateDecr			: -@@CreditPeriod, $BillDate
+	Sort		: @@CurrencyIncr		: $$Currency:$OpeningBalance
+	Sort		: @@CurrencyDecr		: -$$Currency:$OpeningBalance
+
+	ColumnVar	: AgeFrom, AgeTo
+	
+	Option		: LedgerwiseBillsInNewPages	: @@NotInDisplayMode
+
+;;=======================
+
+
+
+;;==========================
+
+[#Part: LB AllBills]
+Add	: Option	: HCR_LB AllBills : ##HCR_HasMultiCompanies
+
+[!Part	: HCR_LB AllBills]
+Repeat	: BILL Detail	: HCR_All Ledger Bills
+
+[Collection	: HCR_All Ledger Bills]
+	Collection 	: All Ledger Bills	: HCR_CmpNamesCollection
+	Fetch	: *.*
+	Fetch	: LedgerEntries.*
+	Fetch	: AllLedgerEntries.*
+	Fetch	: AllInventoryEntries.*
+	Fetch	: AllLedgerEntries.InventoryAllocations.*
+
+
+    Cleared    	 		: Yes
+    Filter      		: DueBillsFilter, AgeFilter
+
+	Compute				: Name				: $$Name
+
+	Switch	  			: RemoteBills		: RemoteBills	: $$IsRemoteCompany
+	ParmVAR				: pvsParentName		: String	: #LedgerName
+
+    Sort        		: @@Default         : $BillDate
+    Sort        		: @@DateIncr		: $BillDate
+    Sort        		: @@DateDecr		: -$Date
+    Sort        		: @@RefNoIncr		: $$Name
+    Sort        		: @@RefNoDecr		: -$$Name
+    Sort        		: @@AmtIncr			: $$Abs:$ClosingBalance
+    Sort        		: @@AmtDecr			: -$$Abs:$ClosingBalance
+    Sort        		: @@DueDateIncr		: @@CreditPeriod, $BillDate
+    Sort        		: @@DueDateDecr		: -@@CreditPeriod, -$BillDate
+    Sort    			: @@CurrencyIncr  	: $$Currency:$OpeningBalance
+    Sort    			: @@CurrencyDecr	: -$$Currency:$OpeningBalance
+
+;;============================
+
+[#Part: LEDBILL Body]
+Add	: Option	: HCR_LEDBILL Body : ##HCR_HasMultiCompanies
+;Delete	: Option	: BILL OnAccDetail
+;Add	: Option	: OTLSBILL DetailOnAcc : not $$IsEmpty:#LedgerName ;;Yes ;;Not $$IsEmpty:$$CollAmtTotal:OTLS_OpBalLedCollmain:$LOnAccClBal 
+
+[!Part	: HCR_LEDBILL Body]
+Repeat		: BILL Detail		: HCR_Ledger Bills
+;Delete	: Option  : BILL OnAccDetail
+;Add	: Option	: OTLSBILL DetailOnAcc : not $$IsEmpty:#LedgerName ;;Not $$IsEmpty:$$CollAmtTotal:OTLS_OpBalLedCollmain:$LOnAccClBal  ;;;Yes ;;@@HasOnAccount ;;Not $$IsEmpty:$$CollAmtTotal:OTLS_OpBalLedCollmain:$LOnAccClBal 
+
+[#Line	: BILLOnAccDetail]
+Add	: Option	: HCR_BILLOnAccDetail : ##HCR_HasMultiCompanies
+
+[!Line	: HCR_BILLOnAccDetail]
+
+	       	Use         : BillDetail
+        Delete      : Empty
+        Delete      : NextPage
+        Delete      : Explode
+        Local       : Style		: Default       : Italics	: Yes
+        Local       : Field 	: BILLDate      : Set as    : @@DSPToDate
+        Local       : Field 	: BILLRef       : Set as    : $$LocaleString:"On Account"
+        Local       : Field 	: BILLRef       : Cells	: 2
+        Local       : Field 	: BILLParty       : Set as    : #LedgerName
+        Local       : Field 	: BILLParty       : Invisible	: Yes
+        Local       : Field 	: BILLIsAdvance : Set as    : ""
+        Local       : Field 	: BILLOp        : Set as    : $$CollAmtTotal:OTLS_OpBalLedColl:$LOnAccountValue
+        Local       : Field 	: BILLCl        : Set as    : If ($$NumSets = 1) OR ($$Column = 1) OR (##AgeFrom < 0) Then $$CollAmtTotal:OTLS_OpBalLedColl:$LOnAccountValue  Else 0
+        Local       : Field	: BILLDue       : Set as    : ""
+        Local       : Field 	: BILLOverDue   : Set as    : ""
+        Local       : Field 	: BILLPDC       : Set as    : $$AmountSubtract:#BILLFinal:#BILLCl
+        Local       : Field 	: BILLFinal     : Set as    : $$CollAmtTotal:OTLS_OpBalLedColl:$LOnAccClBal
+
+		Space Top	: If $$IsSiblingExploded Then @@ExplodedSpace Else 0
+		Add         : Next Page	: NOT $$DoExplosionsFit
+
+	Add	: Explode	: OTLSLedOnAcc Vouchers : ##HCR_HasMultiCompanies ;;($$KeyExplode OR ##ExplodeFlag)
+
+
+[Collection : HCR_Ledger Bills]
+	Collection 	: Ledger Bills	: HCR_CmpNamesCollection
+	Fetch	: *.*
+	Fetch	: LedgerEntries.*
+	Fetch	: AllLedgerEntries.*
+	Fetch	: AllInventoryEntries.*
+	Fetch	: AllLedgerEntries.InventoryAllocations.*
+
+Parm Var : ClearLists 	  : Logical : $$ClearLedVchBillAmt
+
+	Compute				: Name				: $$Name	
+	;Compute				: IsIntForLastDayIncl	: $IsInterestInclLastDay:Ledger:##pvsParentName		;--Interest Calculation
+	Switch	  			: RemoteBills		: RemoteBills	: $$IsRemoteCompany
+	
+    Sort        		: @@Default			: $BillDate
+    Sort        		: @@DateIncr		: $BillDate
+    Sort        		: @@DateDecr		: -$Date
+    Sort        		: @@RefNoIncr		: $$Name
+    Sort        		: @@RefNoDecr		: -$$Name
+    Sort        		: @@AmtIncr 		: $$Abs:$ClosingBalance
+    Sort        		: @@AmtDecr			: -$$Abs:$ClosingBalance
+    Sort        		: @@DueDateIncr		: @@CreditPeriod, $BillDate
+    Sort        		: @@DueDateDecr		: -@@CreditPeriod, -$BillDate
+    Sort    			: @@CurrencyIncr	: $$Currency:$OpeningBalance
+    Sort    			: @@CurrencyDecr	: -$$Currency:$OpeningBalance	
+	ParmVAR				: pvsParentName		: String	: #LedgerName
+
+	Compute				: IsExcludeEndDay	: $InterestExclDayOfDeduction:Ledger:##pvsParentName
+	Compute				: IsIntForLastDayIncl	: $InterestExclDayOfAddition:Ledger:##pvsParentName
+	
+	Option				: BrPayableReceivable   : $$InMobileBrowserExport
+	Option				: BrLedForexExplode     : $$InMobileBrowserExport 
+;;=========================
+
+[#Part: BILLRECV Body]
+Add	: Option	: HCR_BILLRECV Body : ##HCR_HasMultiCompanies
+
+[!Part	: HCR_BILLRECV Body]
+Repeat  	: BILLDetail    : HCR_CompanyReceivables
+
+[Collection : HCR_CompanyReceivables]
+	Collection 	: CompanyReceivables	: HCR_CmpNamesCollection
+
+
+
+;;============================
+
+[#Part: BILLPAYA Body]
+Add	: Option	: HCR_BILLPAYA Body : ##HCR_HasMultiCompanies
+
+[!Part	: HCR_BILLPAYA Body]
+Repeat  : BILLDetail    : HCR_CompanyPayables
+
+[Collection : HCR_CompanyPayables]
+	Collection 	: CompanyPayables	: HCR_CmpNamesCollection
+	Fetch	: *.*
+	Fetch	: AllLedgerEntries.*
+	Fetch	: AllInventoryEntries.*
+	Fetch	: AllLedgerEntries.InventoryAllocations.*
+
+	Compute Var	: vLedgerAlias			: String	: If $$IsEmpty:##DSPNameStyle OR $$IsSysNameEqual:NameOnly:##DSPNameStyle Then "" Else $OnlyAlias:Ledger:$Parent
+
+	Compute		: PartyName				: $$FuncDSPAccName:$Parent:##vLedgerAlias
+	Compute		: DSPNameStyle			: ##DSPNameStyle
+	
+	Switch		: RemoteCmpPayables 	: RemoteCmpPayables		: $$IsRemoteCompany ;; Temporary solution to improve performance in server
+	Compute		: GrpName				: ##GroupName ;; Dummy Compute to send the Variable to the Client side.
+	
+    Filter  	: IsPayable, DueBillsFilter, AgeFilter, BillsOfGroupName
+	
+    Sort    	: @@Default             : $BillDate, $Parent
+    Sort    	: @@DateIncr            : $BillDate, $Parent
+    Sort    	: @@DateDecr            : -$BillDate, -$Parent
+    Sort    	: @@PartyIncr           : $Parent, $BillDate
+    Sort    	: @@PartyDecr           : -$Parent, -$BillDate
+    Sort    	: @@RefNoIncr           : $$Name, $BillDate
+    Sort    	: @@RefNoDecr           : -$$Name, -$BillDate
+    Sort    	: @@AmtIncr             : $$Abs:$ClosingBalance, $BillDate
+    Sort    	: @@AmtDecr             : -$$Abs:$ClosingBalance, -$BillDate
+    Sort    	: @@DueDateIncr         : @@CreditPeriod, $BillDate
+    Sort    	: @@DueDateDecr         : -@@CreditPeriod, -$BillDate
+    Sort    	: @@CurrencyIncr        : $$Currency:$OpeningBalance
+    Sort    	: @@CurrencyDecr        : -$$Currency:$OpeningBalance
+
+	ColumnVar	: AgeFrom, AgeTo
+
+	Option      : BrPayableReceivable	: $$InMobileBrowserExport
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;==========================Columnar Report Title Line======================
+
+[#Line : DSP ColVchTitle]
+Add : Fields : After : DBC VchNo : HCR_M_CmpName
+
+Local : Field : Default : Style : Small Italic
+Local : Field : HCR_M_CmpName 	: Set As : "Company Name"
+Local : Field : HCR_M_CmpName	: Border	: Thin Left
+
+
+
+
+
+
+;;==========================Columnar Main Line======================
+
+[#Line : DSP ColVchDetail]
+Add : Field : After : DBC VchNo: HCR_M_CmpName
+
+
+
+
+;;==========================Columnar Total Line======================
+
+[#Line : DSP ColVchTotal]
+Add : Field : After : DBC VchNo : HCR_M_CmpName
+
+Local : Field : HCR_M_CmpName	: Set As : " "
+
+
+
+
+
+
+;;;===============================================In Day Book, Ledger Vouchers, Group Vouchers==========================================================================
+
+
+[#Line : DSP VchAccTitles] ;;; For Ledger Vouchers and Group Vouchers
+Add : Right Fields : Before : DSP VchTypeTitle : HCR_M_CmpName
+;;Add : Left Fields : At End : HCR_M_CmpName
+Local : Field : HCR_M_CmpName 	: Info : "Company Name"
+Local : Field : HCR_M_CmpNameDate	: Info : "Ref. Date"
+
+[#Line : DBTitle1] ;;=================For Day Book, Voucher Registers
+Add : Right Fields : Before : DSP VchTypeTitle : HCR_M_CmpName
+;;Add : Left Fields : At End : HCR_M_CmpName
+Local : Field : HCR_M_CmpName 	: Info : "Company Name"
+Local : Field : HCR_M_CmpNameDate	: Info : " "
+
+[#Line : DBTitle2] ;;=================For Day Book, Voucher Registers
+Add : Right Fields : Before : DSP VchTypeTitle : HCR_M_CmpName
+;;Add : Left Fields : At End : HCR_M_CmpName
+Local : Field : HCR_M_CmpName 	: Info : " "
+Local : Field : HCR_M_CmpNameDate	: Info : "Ref. Date"
+
+[#Line: DSP VchDetail];;=================For Day Book, Voucher Registers, Ledger Vouchers and Group Vouchers
+Add	: Option	: HCR_DSP VchDetailLine : ##HCR_HasMultiCompanies
+
+[!Line	: HCR_DSP VchDetailLine]
+Add : Right Fields : Before : DSP VchType : HCR_M_CmpName
+;;Add : Left Fields : After : DSP VchLedAccount : HCR_M_CmpName
+
+;[#Line: DSP VchDBExpl]
+;Add : Fields : At End : HCR_M_CmpName
+;;Right Fields : Before : DSP VchType : HCR_M_CmpName
+
+;[#Line: DSP VchExplosion]
+;Add : Fields : At End : HCR_M_CmpName
+
+;;================================================Total Part and Lines
+
+[#Part: NRM DBBody] ;;;===============For Add Total Line in Day Book
+Option  : DB WithTotals 	: NOT ##TallyAudit AND ($$IsSysName:$VoucherTypeName)
+
+
+[#Line: DSP VchTotalValue] ;;;===============For Day Book And Voucher Registers
+Local			: Field	: Simple Field	: Cells	: @@DBYKExcelTotalVal+1
+
+[#Line: DSP VchOpBal] ;;;;For Ledger Vouchers and Group Vouchers
+Local           : Field : Info Field 		: Info : "sssss" ;;;Cells 	: 5 ;;8 ;;@@COL_FLD_LedOpBalCells+2
+
+
+;;=====================In Print Mode and Export Mode (Ledger And Group Vouchers Total Line)
+
+
+[#Line: LV OpeningBalance] ;;;;For Ledger Vouchers and Group Vouchers
+Local           : Field : DSP VchLedAccount : Set as    : $$LocaleString:"Opening Balance"
+Local           : Field : DSP VchLedAccount : Cells	: @@COL_FLD_LedVouchersOpBalCells+1
+
+
+[#Line: LV ClosingBalance] ;;;;For Ledger Vouchers and Group Vouchers
+
+	[#Line: LV FCOne]  ;;;;For Ledger Vouchers and Group Vouchers
+	Local			: Field	: LV SubDrTotal	: Cells	: @@COL_FLD_LedVouchersClBalCells+1
+
+	[#Line: LV FCTwo]  ;;;;For Ledger Vouchers and Group Vouchers
+	Local			: Field	: LV SubDrTotal	: Cells	: @@COL_FLD_LedVouchersClBalCellsTwo+1
+
+
+	[#Line: LVFCThree]  ;;;;For Ledger Vouchers and Group Vouchers
+	Local			: Field	: LV SubDrTotal	: Cells	: @@COL_FLD_LedVouchersClBalCellsThree+1
+
+
+
+
+
+
+;;;;;;==========================================Width Setup For LedgerName In All Voucher Report
+
+[#Field: DSP VchAcctTitle]
+Width	: 35
+
+[#Field : DSP VchAccount]
+Width	: 35
+
+[#Field	: DSP VchLedAccount]
+Width	: 35
+
+[#Field : DSPVchExplAccount]
+Width	: 35
+
+
+[System	: Formula]
+COL_FLD_LedOpBalCells			: If ##DBBillExplodeFlag Then @@NumDateTitleCells + 1 Else @@NumDateTitleCells
+COL_FLD_LedVouchersOpBalCells		: If ##IsLedgerReport Then If ##DBBillExplodeFlag Then 3 + @@VchNumCells Else 2 + @@VchNumCells Else 1
+COL_FLD_LedVouchersClBalCells		: If ##DBBillExplodeFlag Then 6 + @@VchNumCells Else  5 + @@VchNumCells
+COL_FLD_LedVouchersClBalCellsTwo		: If ##DBBillExplodeFlag Then 3 + @@VchNumCells Else  2 + @@VchNumCells
+COL_FLD_LedVouchersClBalCellsThree	: If ##DBBillExplodeFlag Then 6 + @@VchNumCells Else 5 + @@VchNumCells
+;;======================================================
+
+
+
+[Field	: HCR_M_CmpName]
+	Use		: Name Field
+	Set as	: $OwnerCompany ;;If ((not $$IsEmpty:#M_Cmp_Led_DrAmt) and (not $$IsEmpty:#M_Cmp_Led_DrAmt1)) or ((not $$IsEmpty:#M_Cmp_Led_CrAmt) and (not $$IsEmpty:#M_Cmp_Led_CrAmt1)) then ##SvCurrentCompany else $HCR_M_CmpName
+	;;Width	: 10
+	Variable	: SvCurrentCompany
+	;Modifies : SVCurrentCompany
+	Alter    : HCR_M_Cmp_LedVoucherss
+	Invisible	: No ;;Yes
+	Fixed	: Yes
+	;Variable : vVoucherID
+	Width	: 30
+	Invisible	: not ##HCR_HasMultiCompanies
+	
+	[Report: HCR_M_Cmp_LedVoucherss]
+
+	<basegroup:voucher>
+	
+	Use	: Voucher
+	Object	: Voucher : #M_Cmp_Led_MSTId
+	Form	: Voucher
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;;;;=========================Multi Company Outstanding Report====================
+
+[#Field : BillDate]
+Width	: 12
+Align	: Left
+
+[#Field : BILLVCH Date]
+Width	: 12
+Align	: Left
+
+[#Field : BillInvQty]
+Width	: 12
+Align	: Left
+
+
+[#Field : BillRef]
+Width	: 20
+
+[Collection: HCR_CompanyCollection]
+
+	Type   	: Company
+	Fetch   : Name
+	Filter	: HCR_NotGroupCompany
+
+[Button	: HCR_ShowOvrdues]
+Title	: If Not ##ShowOverdueOfBill Then "Show Overdue Days" else "Hide Overdue Days"
+Key	: F5
+Action	: Set	: ShowOverdueOfBill : Not ##ShowOverdueOfBill
+
+[#Menu: Outstandings]
+Add	: Item	: Multi Company Outstandings : Display	: MultiCmpOutstandingRep
+
+[Report: MultiCmpOutstandingRep]
+
+	Title		: $$LocaleString:"Company Wise Outstanding Report For Ledgers"
+	Variables	: SV CurrentCompany, SV FromDate,SV ToDate, ExplodeFlag, ShowOverdueOfBill, ShowDaysByBillDate,ShowReminders
+    Form		: MultiCmpOutstandingForm
+	Set	: ShowOverdueOfBill : Not ##ShowOverdueOfBill	
+	Set	: ShowDaysByBillDate : No
+	Set	: ShowReminders : No
+	Set	: SvFromDate : ##SvFromDate
+	Set	: SvToDate : @@DSPToDate
+	
+[Form: MultiCmpOutstandingForm]
+
+	Background  : @@SV_UNYELLOW
+	Add	: Button : F2Change Period, ExplodeFlag ;;, HCR_ShowOvrdues
+    Parts       : LEDBILL Column, MULTICOMP LEDBILLBody
+Local	: Field	: BillParty	: Invisible	: Yes
+Local	: Field	: HCR_OutStandingCMPName	: Invisible	: Yes
+
+Local	: Part	: LEDBILL Column	: Local	: Line	: BILL Column : Local	: Line	: BILLCol1	: Add : Left Fields : After	: BILLFixed : MULTICOMP BillCompanyName
+Local	: Part	: LEDBILL Column	: Local	: Line	: BILL Column : Local	: Line	: BILLCol2	: Add : Left Fields : After	: BILLFixed : MULTICOMP BillCompanyName
+
+Local	: Part	: LEDBILL Column	: Local	: Line	: BILL Column : Local	: Line	: BILLCol1	: Local	: Field : MULTICOMP BillCompanyName : Set As : "Company"
+Local	: Part	: LEDBILL Column	: Local	: Line	: BILL Column : Local	: Line	: BILLCol2	: Local	: Field : MULTICOMP BillCompanyName : Set As : "Name"
+
+[Part: MULTICOMP LEDBILL Body]
+
+	Line		: MULTICOMP CompanyName
+    Repeat		: MULTICOMP CompanyName	: MULTICOMP_CMPPartiesMain ;;HCR_CompanyCollection ;; For displaying company name
+    Scroll    	: Vertical
+
+;;===================================================================
+
+[Collection: MULTICOMP_CMPPartiesMain]
+Source Collection : MULTICOMP_CMPParties
+By	: M_Party	: $Parent
+;Compute		: MainCompanyName	: $$LoopCollObj:$Name
+Sort	: @@Default	: $M_Party
+
+
+[Collection: MULTICOMP_CMPParties]
+
+	Collection	: MULTICOMP_CMPPartiesColl	: HCR_CompanyCollection
+
+[Collection: MULTICOMP_CMPPartiesColl]
+
+	Type		: Bills
+	Fetch		: Name, Parent
+	;;Cleared	: Yes
+
+
+
+;;;================================================================
+	[Line: MULTICOMP CompanyName]
+
+		Left Field		: MULTICOMP CompanyName
+		Space Top		: 1% Screen
+		Space Bottom	: 1% Screen
+		
+;; Exploding Bill Details always
+		Explode			: MULTICOMP LEDBILL Details : Yes ;;##ExplodeFlag or $$KeyExplode
+
+[Field: MULTICOMP CompanyName]
+
+	Use			: ShortNameField
+	Set As		: $M_Party
+	Full Width	: No
+	Width		: 60
+	Border      : Thin Bottom
+	Skip		: Yes
+	Fixed		: Yes
+	;;Variable		: LedgerName
+
+;; Bringing the Bill Details for as many company objects present
+		[Part: MULTICOMP LEDBILL Details]
+
+			Lines	: MULTICOMP LEDBILL Detail, MULTICOMP BILL Total
+			Repeat	: MULTICOMP LEDBILL Detail	: MULTICOMP CompwiseLedBills
+			Scroll  : Vertical
+			Total	: BillOp, BILLCl
+
+			
+			[Line: MULTICOMP LEDBILL Detail]
+
+				Left Fields	: BILLFixed, MULTICOMP BillCompanyName, BILLOp, BILLCl
+				Repeat      : BILLCl
+
+				Local		: Field	: BillParty	: Set As: $Parent
+						
+				Space Top   : If $$IsSiblingExploded Then @@ExplodedSpace Else 0
+				Next Page   : NOT $$DoExplosionsFit OR ($$LineNumber = $$LastLineNumber AND NOT $$IsNextSibling)
+				Option      : ExplodeOnEnter
+				;;Local	: Field	: HCR_OutStandingCMPName	: Set As	: $BillCompanyName
+
+
+				Explode     : MULTICOMP BILL Vouchers	: $$InPixelMode AND ($$KeyExplode OR ##ExplodeFlag)
+			
+;; For bringing the Due Dates	
+				Option      : BILL WithDates    		: $$NumSets = 1 AND NOT ##ShowInterest AND NOT ##IsForexReport AND NOT ##ShowPDC
+				
+;; ------------------------------------------------------------------------------------
+
+;; Total Line - Bringing Companywise Total
+
+			[Line: MULTICOMP BILL Total]
+
+				Use			: MULTICOMP LEDBILL Detail
+
+				Local		: Field	: BILLRef	: Set As	: $$LocaleString:"Total"
+				Local		: Field	: BILLRef	: Style		: Normal Bold
+				Local		: Field	: BillOp	: Set As	: $$SubTotal:BillOp
+				Local		: Field	: BillOp	: Border	: SubTotals
+				Local		: Field	: BILLCl	: Set As	: $$SubTotal:BillCl
+				Local		: Field	: BILLCl	: Border	: SubTotals
+				Empty If 	: $$IsEmptyCollection:MULTICOMPCompwiseLedBills
+				Border	: Flush Totals
+
+;; ------------------------------------------------------------------------------------
+
+;; To bring the Voucher Details
+
+[Part: MULTICOMP BILL Vouchers]
+
+	Line    : MultiCOMP BILL Vouchers
+	Repeat  : MultiCOMP BILL Vouchers		: Ledger Entries
+	Option  : Small Size Part
+	Local   : Style	: Default	: Bold    	: No
+	Local   : Style : Default 	: Italics	: Yes
+	Local   : Line  : Default 	: Keys    	: Form Insert Voucher, Form Append Voucher, Form Duplicate Voucher
+
+
+	[Line: MultiCOMP BILL Vouchers]
+
+		Fields      : MULTICOMP BillCompanyName, DSP VchMasterID, BILLVCH Date, BILLVCH Type, TSPL Smp BILL IsTDS, BILLVCH Number, BILLVCH Amount
+		Local		: Field	: BILLVCH Amount: Set As	: $MULTICOMPAllocBillsTotal ;; Method written at Voucher Level
+		Indent      : If ##IsBillWiseReport Then (@@ShortDateWidth + 2) Else (@@ShortDateWidth + 1)
+		Option    	: AlterOnEnter			: $$IsVoucher AND (NOT $$IsRemoteCompany)
+		Explode     : BILL InvDetails   	: (##ExplodeFlag or $$KeyExplode) or $$InPixelMode AND (##BillWithQty OR @@Explodable) AND $HasInventory
+		Local	: Field	: MULTICOMP BillCompanyName	: Invisible	: Yes
+		Local	: Field	: MULTICOMP BillCompanyName	: Set As	: $$Owner:$BillCompanyName
+
+
+		[Field: TSPL Smp BILLIsTDS]
+
+            Use         : Simple Field
+            Set as      : If @IsBillTDSRef Then ("("+$$LocaleString:"TDS"+")") else ""
+            IsBillTDSRef: $$FilterValue:$IsBillTDSRef:AllLedgerEntries:First:BillParentLedger
+            BillLedName : $$Owner:$Parent
+            Style       : Small Italic
+            Width       : 7
+            Invisible   : NOT $$InPixelMode
+;; ------------------------------------------------------------------------------------
+;; Fields
+;; ------------------------------------------------------------------------------------
+
+;; Company Name Fields
+
+;; To bring the Company Name at the Main Line
+;; Used in Ledger Bills Collection for filtering the Bills related to a particular company
+ 
+
+
+[Field: MULTICOMP BillCompanyName]
+
+	Use			: NameField
+	Set As		: $BillCompanyName ;;$$Owner:$BillCompanyName
+	Variable	: SVCurrentCompany
+	Modifies	: SVCurrentCompany
+    	Invisible	: No ;;Yes
+
+;; ------------------------------------------------------------------------------------
+;; Collections
+;; ------------------------------------------------------------------------------------
+/* 
+ -	HCR_CompanyCollection to bring the Company Name
+ -	Collection for fetching LedgerwiseBill Detail
+ -  MULTICOMP Ledger Bills provides the Bill Details
+ -	HCR_CompanyCollection povides the loop-collection for each object of which MULTICOMP Ledger Bills is gathered
+*/
+[Collection: MULTICOMP CompwiseLedBills]
+
+	Collection	: MULTICOMP Ledger Bills	: HCR_CompanyCollection
+Sort        : @@Default		: $$Date:$BillDate, $$Name, $BillCompanyName
+Sort        : @@DateIncr		: $BillDate
+Sort        : @@DateDecr		: -$BillDate
+Sort        : @@RefNoIncr		: $$Name
+Sort        : @@RefNoDecr		: -$$Name
+Sort        : @@AmtIncr 		: $$Abs:$ClosingBalance
+Sort        : @@AmtDecr		: -$$Abs:$ClosingBalance
+Sort        : @@DueDateIncr		: @@CreditPeriod, $BillDate
+Sort        : @@DueDateDecr		: -@@CreditPeriod, -$BillDate
+Sort    	: @@CurrencyIncr		: $$Currency:$OpeningBalance
+Sort    	: @@CurrencyDecr	: -$$Currency:$OpeningBalance
+
+[Collection: MULTICOMP Ledger Bills]
+
+	Type		: Bills
+	Child Of		: $$ReqObject:$M_Party ;;##LedgerName ;;$$ReqObject:#MULTICOMPCompanyName ;;#LedgerName
+	Filter		: EmptyBillsFilter ;;AgeFilter, BillTypeFilter, EmptyBillsFilter ;;;DueBillsFilter, AgeFilter, BillTypeFilter, EmptyBillsFilter
+
+	Fetch		: BillDate, Parent, OpeningBalance, ClosingBalance, BillCreditPeriod, ClearedOn
+	Fetch		: LedgerEntries.MasterID, LedgerEntries.IsVCHOfStockJrnl
+	Fetch		: LedgerEntries.Date, LedgerEntries.CurLangVoucherTypeName
+	Fetch		: LedgerEntries.VoucherNumber, LedgerEntries.LedgerEntries.BillAllocations.Amount
+	Fetch		: LedgerEntries.MULTICOMPAllocBillsTotal ;; All methods need to be fetched at Bill Level
+	Fetch		: LedgerEntries.HasInventory, LedgerEntries.InventoryEntries.BilledQty, LedgerEntries.InventoryEntries.StockItemName
+	Fetch		: LedgerEntries.InventoryEntries.Rate
+	
+	Compute		: Name				: $$Name
+	Compute		: BillCompanyName	: $$LoopCollObj:$Name
+
+Sort        : @@Default		: $$Date:$BillDate, $$Name, $BillCompanyName
+Sort        : @@DateIncr		: $BillDate
+Sort        : @@DateDecr		: -$BillDate
+Sort        : @@RefNoIncr		: $$Name
+Sort        : @@RefNoDecr		: -$$Name
+Sort        : @@AmtIncr 		: $$Abs:$ClosingBalance
+Sort        : @@AmtDecr		: -$$Abs:$ClosingBalance
+Sort        : @@DueDateIncr		: @@CreditPeriod, $BillDate
+Sort        : @@DueDateDecr		: -@@CreditPeriod, -$BillDate
+Sort    	: @@CurrencyIncr		: $$Currency:$OpeningBalance
+Sort    	: @@CurrencyDecr	: -$$Currency:$OpeningBalance
+
+;; To bring the Bill's Total Amount at Voucher Level
+
+[Collection: MULTICOMP BillAllocTotal]
+
+	Source Collection	: Default
+	Walk 				: Ledger Entries, Bill Allocations
+	By					: LedBillName	: $Name
+	Aggr Compute		: BillAmount	: SUM	: $Amount
+	Search Key			: $LedBillName
+
+[#Object: Voucher]
+
+	MULTICOMP AllocBillsTotal	: $$CollectionFieldByKey:$BillAmount:@@MULTICOMPBillName:MULTICOMPBillAllocTotal
+
+;; ------------------------------------------------------------------------------------
+;; System Formulas
+;; ------------------------------------------------------------------------------------
+
+[System: Formula]
+
+;; For emptying bills that do not belong to a particular company
+
+	EmptyBillsFilter	: $Parent = $$ReqObject:$M_Party ;;$$LoopCollObj:$Name = #MULTICOMPCompanyName
+	MULTICOMP BillName	: $$Owner:$Name
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

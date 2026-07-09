@@ -1,0 +1,107 @@
+---
+title: Show all vouchers of Ledger In Sales Voucher
+type: sample_code
+objects: Report, Form, Part, Line, Field, Collection
+source: Show all vouchers of Ledger In Sales Voucher.txt
+---
+
+# Show all vouchers of Ledger In Sales Voucher
+
+## Source Code
+
+```tdl
+;[#Menu:Gateway of Tally]
+;	Add		: Item		: Show Ledger Vouchers		: Display		: ShowLedgerVouchers
+;	
+[Report:ShowLedgerVouchers]
+	Form		: ShowLedgerVouchers
+	
+[Form:ShowLedgerVouchers]
+	Part		: ShowLedgerVouchers
+	Width		: 50% Page
+	Height		: 90% Page
+	
+[Part:ShowLedgerVouchers]
+	Line		: ShowLedgerVouchersHeader, ShowLedgerVouchersTitle, ShowLedgerVouchersDetail
+	Bottom Line	: ShowLedgerTotal
+	Repeat		: ShowLedgerVouchersDetail		: LedgerVchDetails
+	Scroll		: Vertical
+	Total		: ShowLedgerVouchersDetailAmount
+	[Line:ShowLedgerVouchersHeader]
+		Field		: ShowLedgerVouchersHeader
+		[Field:ShowLedgerVouchersHeader]
+			Use			: Name Field
+			Skip		: Yes
+			Set as		: "Ledger Details"
+			Full Width	: Yes
+			Border		: Totals
+			Align		: Center
+
+	[Line:ShowLedgerVouchersTitle]
+		Use			: ShowLedgerVouchersDetail
+		Border		: Thin Bottom
+		Local		: Field		: Default		: Style		: Normal Bold
+		Local		: Field		: Default		: Type		: String
+		;Local		: Field		: Default		: Align		: Center
+		
+		Local		: Field		: ShowLedgerVouchersDetailName		: Info	: $$LocaleString:"Ledger Name"
+		Local		: Field		: ShowLedgerVouchersDetailVchType	: Info	: $$LocaleString:"Voucher Type"
+		Local		: Field		: ShowLedgerVouchersDetailDate		: Info	: $$LocaleString:"Date"
+		Local		: Field		: ShowLedgerVouchersDetailAmount	: Info	: $$LocaleString:"Amount"
+			
+
+	[Line:ShowLedgerVouchersDetail]
+		Field		: ShowLedgerVouchersDetailName, ShowLedgerVouchersDetailVchType, ShowLedgerVouchersDetailDate, 
+		Right Field	: ShowLedgerVouchersDetailAmount
+		
+		[Field:ShowLedgerVouchersDetailName]
+			Use			: Name Field
+			Skip		: Yes
+			Set as		: $LedgerName
+			
+			
+		[Field:ShowLedgerVouchersDetailVchType]
+			Use			: Name Field
+			Skip		: Yes
+			Set as		: $VoucherTypeName
+			
+			
+		[Field:ShowLedgerVouchersDetailDate]
+			Use			: Date Field
+			Skip		: Yes
+			Set as		: $Date
+			
+			
+		[Field:ShowLedgerVouchersDetailAmount]
+			Use			: Amount Field
+			Skip		: Yes
+			Set as		: $Amount
+			Format		: "DRCR"
+			Width		: 20
+			
+	[Line:ShowLedgerTotal]
+		Use			: ShowLedgerVouchersDetail
+		Border		: Totals
+		
+		Local		: Field		: ShowLedgerVouchersDetailName		: Info		: $$LocaleString:""
+		Local		: Field		: ShowLedgerVouchersDetailVchType	: Info		: $$LocaleString:""
+		Local		: Field		: ShowLedgerVouchersDetailDate		: Info		: $$LocaleString:""
+		Local		: Field		: ShowLedgerVouchersDetailAmount	: Set as	: $$Total:ShowLedgerVouchersDetailAmount
+
+[Collection:LedgerVchDetails]
+	Type		: Vouchers
+	Child Of	: $$BaseOwner:#EiConsignee
+	Filter		: LedgerDetailsFilter
+	
+[System:Formulae]
+	LedgerDetailsFilter	: $LedgerName = $$BaseOwner:#EiConsignee
+	
+
+[#Field:EIConsignee]
+	Key		: ShowPreviousVchDetails
+	
+[Key:ShowPreviousVchDetails]
+	Key		: Alt+H
+	Action	: Display	: ShowLedgerVouchers
+	
+```

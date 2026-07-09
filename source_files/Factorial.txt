@@ -1,0 +1,67 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the concept of User Defined Functions with a Factorial
+	function
+
+Last Modification -
+-	Altered on 09-11-2009
+
+Dependencies -
+-	Supporting files 'Simple Interest.txt' & 'Exponential.txt'
+*/
+
+[Report: Factorial Calculator]
+
+	Use		: Exponential Calculator
+	Local	: Field	: Default			: Type		: Number
+	Local	: Field	: Default			: Format	: "NoZero, Comma"
+
+	Local	: Form	: Interest Calc		: Local		: Field	: Form SubTitle	: Info		: "Factorial Calculator"
+
+	Local	: Line	: Interest Principal: Local		: Field	: Medium Prompt	: Info		: "Factorial of (x) :"
+	Local	: Field	: Interest Principal: Control	: NumberLessThan17		: ($$Value < 1 OR $$Value > 16)
+	Local	: Line	: Interest Rate		: Invisible	: Yes
+	Local	: Line	: Interest NoOfYrs	: Invisible	: Yes
+
+	Local	: Line	: Interest Result	: Local		: Field	: Medium Prompt	: Info		: "Result (!):"
+	Local	: Line	: Interest Result	: Local		: Field	: Default		: Inactive	: $$IsEmpty:#InterestPrincipal
+	Local	: Field	: Interest Result	: Set As	: if #InterestPrincipal > 16 then 0 else $$FactorialOf:#InterestPrincipal
+
+;; Function to calculate Factorial of a Number
+
+[Function: FactorialOf]
+
+;; Definition Block
+
+	Parameter 	: InputNumber 	: Number
+	Returns	  	: Number
+
+	Variable  	: Counter 		: Number
+	Variable  	: Factorial 	: Number
+	
+;; Procedural Block
+
+	01 : SET 	: Counter 		: 1
+ 	02 : SET 	: Factorial		: 1
+	03 : SET LOG OFF
+
+    04 : WHILE 	: ##Counter <= ##InputNumber
+	05 : 	SET	: Factorial 	: ##Factorial * ##Counter
+	06 :    LOG : ##Factorial
+
+	07 :    IF  : ##Counter > 3
+	08 :    	SET LOG ON
+    09 : 	END IF
+
+	10 : 	INCREMENT	: Counter
+	11 : END WHILE
+
+	12 : RETURN : ##Factorial
+
+[System: Formula]
+
+	NumberLessThan17	: "Please enter Numbers \n between 1 to 16"
+
+;; End-of-File

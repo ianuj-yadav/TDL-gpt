@@ -1,0 +1,33 @@
+---
+title: menu assignment
+type: sample_code
+objects: Menu
+source: menu assignment.txt
+---
+
+# menu assignment
+
+## Source Code
+
+```tdl
+[#Menu:Gateway of Tally]
+	Item:Final Accounts:Menu:FinalAc
+[Menu:FinalAc]
+	Indent:"Accounts"
+	Item:Balance Sheet:Display:Balance Sheet
+	Item:Prfit and loss:Display:Profit and Loss
+	Item:Blank
+	Indent:"Indivisual"
+	Item:PanCardCopy:Browse Url:"D:\tdl files\pan.jpg"
+	Item:IdCardCopy:Browse Url:"D:\tdl files\id.jpg"
+	Item:Company Docs:Menu:CompanyDocs
+	[Menu:CompanyDocs]
+		Item:ITR:Menu:ITR
+		Item:Sites:Menu:Sites
+		[Menu:ITR]
+			Item:Stock18-19:Display:Stocksummary
+			Item:Ledger19-20:Display:Ledger
+		[Menu:Sites]
+			Item:EwayBill:Browse Url:"https://www.ewaybillgst.gov.in/login.aspx/"
+			Item:Gst:Browse Url:"https://services.gst.gov.in/services/login"
+```

@@ -1,0 +1,139 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This code demonstrates the usage of Filter Attribute within Collection
+- 	Collection Attribute 'Filter' depends on the Type Attribute specification.	All the methods 
+	of the Objects within Current collection can be used to Filter the list of objects.  For 
+	Example, ledgers having Closing Balance greater than 1000.
+-	This code displays all the ledgers under the Group Sundry Debtors including the ones under 
+	the Sub Groups within Sundry Debtors filtered for Name containing 'Ltd'.
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: CAF Ledger List]
+
+	Form        : CAF Ledger Form
+	Title       : "Company Ledger List"
+
+[Form: CAF Ledger Form]
+
+	Use         : DSP Template
+	Part        : CAF Ledger Part
+	Height      : 100% screen
+	Width       : 100% screen
+	Background  : Grey
+	
+[Part: CAF Ledger Part]
+
+	Lines       : CAF Ledger Title, CAF Ledger Line
+	Repeat      : CAF Ledger Line		: CAF My Ledgers
+	CommonBorder: Yes
+	Scroll      : Vertical
+
+    [Line: CAF Ledger Title]
+
+		Use     : CAF Ledger Line
+		Local	: Field	: Default			: Type		: String
+		Local	: Field	: Default 			: Align		: Centre
+		Local	: Field	: Default 			: Style		: Normal Bold
+		
+		Local	: Field	: CAF Led No        : Set as    : "Sl. No"
+		Local	: Field	: CAF Led Name	    : Set as    : "Ledger Name"
+		Local	: Field	: CAF Led address 	: Set as    : "Address"
+		Local	: Field	: CAF Led States  	: Set as 	: "State"
+		Local	: Field	: CAF Led Pin 		: Set as   	: "PinCode"
+		Local	: Field	: CAF Led Cont	    : Set as 	: "Contact Person"
+		Local	: Field	: CAF Led Tel 		: Set as 	: "Telephone"
+		Local	: Field	: CAF Led Faxno 	: Set as 	: "Fax"
+		Local	: Field	: CAF Led emailadd	: Set as 	: "Email"
+		Local	: Field	: CAF Led CB		: Set as 	: "Closing Balance"
+		Border  : Thin Top Bottom
+
+    [Line: CAF Ledger Line]
+
+		Fields      : CAF Led No, CAF Led Name,CAF Led Address,CAF Led States,CAF Led Pin, CAF Led Cont, CAF Led Tel, CAF Led Faxno, CAF Led emailadd, CAF Led CB
+		Repeat      : CAF Led CB
+		Option      : AlterOnEnter
+	
+        [Field: CAF Led No]
+
+			Set as      : $$Line
+			Width       : 3
+			Align       : Centre
+			Border      : Thin Right
+			Alter       : Ledger
+			    
+        [Field: CAF Led Name]
+
+			Use         : Name Field
+			Set as      : $Name
+			Border      : Thin Right
+						
+        [Field: CAF LedAddress]
+
+			Set as      : $STPartyFullAdd
+			Width       : 30
+			Border      : Thin Right
+
+        [Field: CAF Led States]
+
+			Set as      : $StateName
+			Width       : 10
+			Border      : Thin Right
+
+        [Field: CAF Led Pin]
+
+			Set as      : $PinCode
+			Width       : 10
+			Border      : Thin Right
+
+        [Field: CAF Led Cont]
+
+			Set as      : $LedgerContact
+			Width       : 10
+            Border      : Thin Right
+
+        [Field: CAF Led Tel]
+
+			Set as      : $LedgerPhone
+			Width 	    : 10
+            Border      : Thin Right
+
+        [Field: CAF Led FaxNo]
+
+			Set as      : $LedgerFax
+			Width       : 10
+			Border      : Thin Right
+
+        [Field: CAF Led EmailAdd]
+
+			Set as      : $Email
+			Width   	: 20
+			Border      : Thin Right
+
+        [Field: CAF Led CB]
+
+            Use         : Amount Forex Field
+			Set as      : $ClosingBalance
+
+[Collection: CAF My Ledgers]
+
+    Type		: Ledger
+	Child of	: $$GroupSundryDebtors
+	Belongs to	: Yes
+	Filter		: CAF Ledger Filter
+;; 'Filter' Attribute requires a system formula name as its value by default, hence 
+;; it does not require a Symbol Prefix '@@'.  'Filter' filters the objects matching
+;; the condition specified in System Formula.  All the Methods of the Objects are
+;; available for checking in the filter condition.
+	Fetch	: Name, STPartyFullAdd, StateName, Pincode, LedgerContact, LedgerPhone, LedgerFax, Email, ClosingBalance
+;; Fetch attribute required for remoting 2.0
+
+[System: Formula]
+
+	CAF Ledger Filter : $Name CONTAINS "Ltd"
+
+;; End-of-File

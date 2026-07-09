@@ -1,0 +1,578 @@
+---
+title: tirlok invoice
+type: sample_code
+objects: Part, Line, Field
+source: tirlok invoice.txt
+---
+
+# tirlok invoice
+
+## Source Code
+
+```tdl
+[#Form: Comprehensive Invoice]
+
+	Option: Global Invoice    : @@IsSales  OR @@IsPurchase
+
+[#Form: Simple Printed Invoice]
+
+	Option: Global Invoice    : @@IsSales   OR @@IsPurchase
+
+[!Form : Global Invoice]
+
+	Delete  	: Parts
+	Delete	    : Bottom Parts
+	Delete	    : PageBreak
+	Space Top:3
+ 	Space Right	: 3
+	
+	add:Parts		: STD Invoice Top, GI OpPgBrk, Global Invoice Body
+	add:Bottom Parts: Global Invoice Bottom Tirlok
+
+	add:Page Break	: GI ClPgBrk, GI OpPgBrk
+
+[Part: GI ClPgBrk]
+
+	Lines		: GI ClPgBrk
+
+	[Line: GI ClPgBrk]
+
+		Fields		: Simple Field
+		Local: Field: Simple Field	: Set As	: "Continued..."
+		Local: Field: Simple Field	: FullWidth	: Yes
+		Local: Field: Simple Field	: Align		: Right
+		Border		: Full Thin Top
+
+[Part: GI OpPgBrk]
+
+	Parts		: Performa Invoice,Global Invoice Top/*, Global Invoice Add	*/, GI Inventory Title
+	Vertical	: Yes
+[Part: Performa Invoice]
+
+	Line			: Performa Invoice Line
+	
+	[Line:Performa Invoice Line]
+		Fields:Simple Field
+		Space Top	: 1
+		Local: Field: Simple Field	: Set As	: "PERFORMA INVOICE"
+		Local: Field: Simple Field	: Style		:Performa style
+		Local: Field: Simple Field	:Align:Center
+		Local: Field: Simple Field	: FullWidth	: Yes
+		Local: Field: Simple Field	: WideSpaced: Yes
+	
+[Part: Global Invoice Top]
+
+	Lines			: GI Cmp Name,GI Address Tirlok,GI Telephone Tirlok, GI Website Tirlok, Gi Email Tirlok, +
+	GI Invoice No Tirlok , GI Date Tirlok, GI Guest Name Tirlok, GI NO of Pax Tirlok,GI NO Blank
+	Space Bottom	: 1
+	Border			: Thin Cover
+
+	[Line: GI Cmp Name]
+
+		Fields		: Simple Field
+		Local: Field: Simple Field	: Set As	: @@CmpMailName
+		Local: Field: Simple Field	: Align		: Center
+		Local: Field: Simple Field	: FullWidth	: Yes
+		;;Local: Field: Simple Field	: WideSpaced: Yes
+		Local: Field: Simple Field	: Style		: Invoice Style
+		
+	[Line: GI Address Tirlok]
+		;;Border		: thin Box
+		Left Fields		: ADDress Tirlok
+		Right Fields:Simple Field
+		Local: Field: Simple Field	: Set As	: "-"+$PriorStateName:Company:@@CmpMailName
+		Local: Field: Simple Field	: align		: Left
+		Local: Field: Simple Field	: FullWidth	: Yes
+		Local: Field: Simple Field	: Style		: Invoice Style
+		;;Local: Field: Simple Field	: Border		: thin Box
+		[Field:ADDress Tirlok]
+			Set As	: $Address:Company:@@CmpMailName
+			Align:Right
+			Full Width:Yes
+			Style:Invoice Style
+		
+	[Line: GI Telephone Tirlok]
+		;;Border		: thin Box
+		Fields		: Simple Field
+		Local: Field: Simple Field	: Set As	:"TELEPHONE : " + $PhoneNumber:Company:@@CmpMailName
+		Local: Field: Simple Field	: Align		: Center
+		Local: Field: Simple Field	: FullWidth	: Yes
+		;;Local: Field: Simple Field	: WideSpaced: Yes
+		Local: Field: Simple Field	: Style		: Invoice Style	
+
+	[Line: GI Website Tirlok]
+		;;Border		: thin Box
+		Fields		: Simple Field
+		Local: Field: Simple Field	: Set As	: "Website : " + @@CmpWebsite
+		Local: Field: Simple Field	: Align		: Center
+		Local: Field: Simple Field	: FullWidth	: Yes
+		;;Local: Field: Simple Field	: WideSpaced: Yes
+		Local: Field: Simple Field	: Style		: Invoice Style
+
+	[Line: GI Email Tirlok]
+		Border		: thin Bottom
+		Fields		: Simple Field
+		Local: Field: Simple Field	: Set As	: @@CmpEmail
+		Local: Field: Simple Field	: Align		: Center
+		Local: Field: Simple Field	: FullWidth	: Yes
+		;;Local: Field: Simple Field	: WideSpaced: Yes
+		Local: Field: Simple Field	: Style		: Invoice Style
+
+
+/*
+	[Line: GI Title]
+
+		Use			: GI Cmp Name
+		Space Top	: 1
+		Local: Field: Simple Field	: Set As	: "INVOICE"
+		Local: Field: Simple Field	: Style		: Normal Bold
+		*/
+		;;-----------------------Invoice NUmber--------------------
+	[Line:GI Invoice No Tirlok]
+		Border		: thin Bottom
+		Fields		: Invoice No Name, Invoice no Number
+		[Field:Invoice No Name]
+			Set as:"INVOICE NO"
+			Style: Invoice Style
+			Width:3 inch
+		[Field:Invoice no Number]
+			Set as:$VoucherNumber
+			Style: Invoice Style
+			Width:2 inch
+		;; --------------------Invoice Date-------------------------	
+	[Line:GI Date Tirlok]
+		Border		: thin Bottom
+		Fields		: Invoice No Date, Invoice no DAte Number
+		[Field:Invoice No Date]
+			Set as:"DATE"
+			Style: Invoice Style
+			Width:3 inch
+		[Field:Invoice no DAte Number]
+			Set as:$Date
+			Style: Invoice Style
+			Width:2 inch
+		;;--------------------Invoice Guest Name---------------------
+	[Line:GI Guest Name Tirlok]
+		Border		: thin Bottom
+		Fields		: Invoice No Guest , Invoice no Guest Name
+		[Field:Invoice No Guest]
+			Set as:"GUEST NAME"
+			Style: Invoice Style
+			Width:3 inch
+		[Field:Invoice no Guest Name]
+			Set as:$PartyLedgerName
+			Style: Invoice Style
+			Width:2 inch
+		;; ------------------Invoice Number of Pax---------------------
+	[Line:GI NO of Pax Tirlok]
+		Border		: thin Bottom
+		Fields		: Invoice No Pax, Invoice no Pax Number
+		[Field:Invoice No Pax]
+			Set as:"NO OF PAX"
+			Style: Invoice Style
+			Width:3 inch
+		[Field:Invoice no Pax Number]
+			Set as:$VoucherNumber
+			Style: Invoice Style
+			Width:2 inch
+			
+		;; ------------------Invoice Blank---------------------
+	[Line:GI NO Blank]
+		Border		: thin Bottom
+		Fields		: Simple Field
+		Local: Field: Simple Field	: Set As	: " "
+		Local: Field: Simple Field	: Align		: Center
+		Local: Field: Simple Field	: FullWidth	: Yes
+		;;Local: Field: Simple Field	: WideSpaced: Yes
+		Local: Field: Simple Field	: Style		: Invoice Style
+		
+/*
+[Part: Global Invoice Add]
+
+	Parts		: Global Invoice BillAdd, Global Invoice ShipAdd
+	Right Parts	: Global Invoice InvDet
+	Space Top	: 1
+	Border		: Thin Left Right Bottom
+	Height		: 12% Page
+
+	[Part: Global Invoice BillAdd]
+
+		Lines		: Global Invoice BillAddTitle, Global Invoice BillName, Global Invoice BillAdd
+		Repeat		: Global Invoice BillAdd		: Address
+		Width		: 28% Page
+		
+		[Line: Global Invoice BillAddTitle]
+
+			Fields		: Name Field
+			Local: Field: Name Field	: Set as	: "Billing Name & Address"
+			Local: Field: Name Field	: Align		: Center
+
+		[Line: Global Invoice BillName]
+
+			Fields		: Name Field
+			Local: Field: Name Field	: Set as	: $PartyLedgerName
+
+		[Line: Global Invoice BillAdd]
+
+			Fields		: Name Field
+			Local: Field: Name Field	: Set as	: $Address
+			Local: Field: Name Field	: Style		: Normal
+
+	[Part: Global Invoice ShipAdd]
+
+		Use			: Global Invoice BillAdd
+		Repeat		: Global Invoice BillAdd		: BasicBuyerAddress
+		Delete		: Line	: Global Invoice BillName
+		Local 		: Line	: Global Invoice BillAddTitle 	:Local	: Field	: NameField : Set As	: "Shipping Address"
+		Local 		: Line	: Global Invoice BillAdd		: Local	: Field	: Name Field: Set As	: $BasicBuyerAddress
+
+	[Part: Global Invoice InvDet]
+
+		Lines	: Global Invoice InvNo, Global Invoice InvDt, Global Invoice InvTerms, Global Invoice DueDt, +
+					Global Invoice ShipDt, Global Invoice ShipVia
+
+		[Line: Global Invoice InvNo]
+
+			Fields	: Medium Prompt, Name Field
+			Local	: Field		: Medium Prompt	: Set as	: "Inv No"
+			Local	: Field		: Name Field	: Set as	: $VoucherNumber
+
+		[Line: Global Invoice InvDt]
+
+			Use		: Global Invoice InvNo
+			Local	: Field		: Medium Prompt	: Set as	: "Inv Dt"
+			Local	: Field		: Name Field	: Set as	: $Date
+
+		[Line: Global Invoice InvTerms]
+
+			Use		: Global Invoice InvNo
+			Local	: Field		: Medium Prompt	: Set as	: "Terms of Delivery"
+			Local	: Field		: Name Field	: Set as	: $BasicOrderTerms
+
+		[Line: Global Invoice DueDt]
+
+			Use		: Global Invoice InvNo
+			Local	: Field		: Medium Prompt	: Set as	: "Due Dt"
+			Local	: Field		: Name Field	: Set as	: $$String:@@DueDtCalc
+
+		[Line: Global Invoice ShipDt]
+
+			Use		: Global Invoice InvNo
+			Local	: Field		: Medium Prompt	: Set as	: "Shipped Dt"
+			Local	: Field		: Name Field	: Set as	: $BasicShippingDate
+
+		[Line: Global Invoice ShipVia]
+
+			Use		: Global Invoice InvNo
+			Local	: Field		: Medium Prompt	: Set as	: "Ship Via"
+			Local	: Field		: Name Field	: Set as	: $BasicShippedBy
+
+
+*/
+
+[Part: GI Inventory Title]
+
+	Lines	: GI Inventory Title
+	Border	: Thin Left Right
+
+	[Line: GI Inventory Title]
+
+		Use		: GI Inventory Details
+
+		Local	: Field	: Default		: Type	: String
+		Local	: Field	: Default		: Style	: Normal Bold
+
+		Local	: Field	: GI SI No		: Set as: "SI. No."
+		Local	: Field	: GI Item Name	: Set as: "Particulars"
+		Local	: Field	: GI Qty		: Set as: "Rooms"
+		Local	: Field	: GI Rate		: Set as: "Charges"
+		Local	: Field	: GI Rate		: Set as: "Exrt"
+		Local	: Field	: GI Amount		: Set as: "Amount"
+
+		Border	: Thick Bottom
+		SpaceTop: 0
+
+[Part: Global Invoice Body]
+
+	Lines			: GI Inventory Details
+	Repeat			: GI Inventory Details	: Inventory Entries
+	Scroll			: Vertical
+	Border			: Thin Left Right Bottom
+	Common Borders	: Yes
+
+	[Line: GI Inventory Details]
+
+		Fields		: GI SI No, GI Item Name
+		Right Fields: GI Qty, GI Rate, GI Amount
+
+		Space Top	: if $$Line = 1 then 1 else 0
+
+		[Field: GI SI No]
+
+			Use			: Number Field	
+			Set as		: $$Line
+			Border		: Thin Right
+
+		[Field: GI Item Name]
+
+			Use			: Name Field
+			Set as		: if NOT $$IsSysName:$StockItemName then @@InvItemName else ""
+			FullWidth	: Yes
+
+		[Field: GI Qty]
+
+			Use			: Qty Primary Field
+			Set as		: $BilledQty
+			Border		: Thin Left
+
+		[Field: GI Rate]
+
+			Use			: Rate Field
+			Border		: Thin Left
+			Set as		: $Rate
+
+		[Field: GI Amount]
+
+			Use			: Amount Forex Field
+			Border		: Thin Left
+			Set as		: $Amount
+
+[Part: Global Invoice Bottom Tirlok]
+	;Use				:  VCH GST AnalysisDetailsActual
+	
+
+
+
+	Lines			: GI Remark Line,GI Notice Line,GI Beneficiary Name,GI Bank Name Tirlok , GI Bank IFSC Tirlok, GI Bank Branch Tirlok
+	Space Bottom	: 1
+	Border			: Thin Box
+
+	[Line: GI Remark Line]
+		Space Top:1
+		Fields		: Simple Field
+		Local: Field: Simple Field	: Set As	: $$LocaleString:"REMARKS :"
+		Local: Field: Simple Field	: Align		: Left
+		Local: Field: Simple Field	: FullWidth	: Yes
+		;;Local: Field: Simple Field	: WideSpaced: Yes
+		;;Local: Field: Simple Field	: Style		: Invoice Style
+		
+	[Line: GI Notice Line]
+		Space Top:1
+		;;Border		: thin Box
+		Fields		:  Simple Field
+		Local: Field: Simple Field	: Set As	:$$LocaleString:"# Kindly Pay 25% in Below Bank Details for Confirmation of your Reservation."
+		Local: Field: Simple Field	: Align		: Left
+		Local: Field: Simple Field	: FullWidth	: Yes
+		;;Local: Field: Simple Field	: Style		: Invoice Style
+		;;Local: Field: Simple Field	: Border		: thin Box
+	
+
+	[Line: GI Beneficiary Name]
+		;;Border		: thin Box
+		Fields		: Simple Field,Beneficiary Name Me
+		Local: Field: Simple Field	: Set As	:$$LocaleString:"Beneficiary Name :"
+		Local: Field: Simple Field	: Width	:1.5 inch
+		;;Local: Field: Simple Field	: FullWidth	: Yes
+		;;Local: Field: Simple Field	: WideSpaced: Yes
+		;;Local: Field: Simple Field	: Style		: Invoice Style	
+		[Field:Beneficiary Name Me]
+			Set as:@@CmpMailName
+			
+
+	[Line: GI Bank Name Tirlok]
+		;;Border		: thin Box
+		Fields		: Simple Field,Bank Name Me
+		Local: Field: Simple Field	: Set As	:$$LocaleString:"Beneficiary Bank Name :"
+		Local: Field: Simple Field	: Width	:1.5 inch
+		;;Local: Field: Simple Field	: FullWidth	: Yes
+		;;Local: Field: Simple Field	: WideSpaced: Yes
+		;;Local: Field: Simple Field	: Style		: Invoice Style	
+		[Field:Bank Name Me]
+			Set as:$BankNameMe:Company:@@CmpMailName
+			
+
+	[Line: GI Bank IFSC Tirlok]
+		;;Border		: thin Box
+		Fields		: Simple Field,Bank IFSC Me
+		Local: Field: Simple Field	: Set As	:$$LocaleString:"IFSC Code :"
+		Local: Field: Simple Field	: Width	:1.5 inch
+		;;Local: Field: Simple Field	: FullWidth	: Yes
+		;;Local: Field: Simple Field	: WideSpaced: Yes
+		;;Local: Field: Simple Field	: Style		: Invoice Style	
+		[Field:Bank IFSC Me]
+			Set as:$BankIFSCMe:Company:@@CmpMailName
+			
+
+	[Line: GI Bank Branch Tirlok]
+		;;Border		: thin Box
+		Fields		: Simple Field,Bank Branch Me
+		Local: Field: Simple Field	: Set As	:$$LocaleString:"Branch :"
+		Local: Field: Simple Field	: Width	:1.5 inch
+		;;Local: Field: Simple Field	: FullWidth	: Yes
+		;;Local: Field: Simple Field	: WideSpaced: Yes
+		;;Local: Field: Simple Field	: Style		: Invoice Style	
+		[Field:Bank Branch Me]
+			Set as:$BankBranchMe:Company:@@CmpMailName
+			
+
+
+
+
+
+
+
+
+
+
+
+/*
+	[Line: GI Website Tirlok]
+		;;Border		: thin Box
+		Fields		: Simple Field
+		Local: Field: Simple Field	: Set As	: "Website : " + @@CmpWebsite
+		Local: Field: Simple Field	: Align		: Center
+		Local: Field: Simple Field	: FullWidth	: Yes
+		;;Local: Field: Simple Field	: WideSpaced: Yes
+		Local: Field: Simple Field	: Style		: Invoice Style
+
+	[Line: GI Email Tirlok]
+		Border		: thin Bottom
+		Fields		: Simple Field
+		Local: Field: Simple Field	: Set As	: @@CmpEmail
+		Local: Field: Simple Field	: Align		: Center
+		Local: Field: Simple Field	: FullWidth	: Yes
+		;;Local: Field: Simple Field	: WideSpaced: Yes
+		Local: Field: Simple Field	: Style		: Invoice Style
+
+
+	*/
+
+
+/*
+[Part: Global Invoice Bottom]
+
+	Parts	: GI Acc Det, GI Net Amt, GI Invoice Bottom
+	Vertical: Yes
+	Border	: Thin Left Right Bottom
+
+	[Part: GI Acc Det]
+
+		Lines			: GI Inventory Total, GI Acc Det
+		Repeat			: GI Acc Det	: Ledger Entries
+		Height			: 10% Page
+		Common Borders	: Yes
+
+		[Line: GI Inventory Total]
+
+			Right Fields: GI Rate, GI Amount
+			Local		: Field	: GI Rate		: Type	: String
+			Local		: Field	: GI Rate		: Delete: Border
+			Local		: Field	: GI Rate		: Width	: 20
+			Local		: Field	: GI Rate		: Set as: "Sub Total"
+			Local		: Field	: GI Amount		: Set as: $$CollAmtTotal:InventoryEntries:$Amount
+			Local		: Field	: GI Amount		: Style	: Normal Bold
+			Local		: Field	: GI Amount		: Border: Thin Left
+
+		[Line: GI Acc Det]
+
+			Use			: GI Inventory Total
+			Right Fields: GI Rate, GI Amount
+			Local		: Field	: GI Rate		: Set as: $LedgerName
+			Local		: Field	: GI Amount		: Set as: $Amount
+			Local		: Field	: GI Amount		: Style	: Normal
+			Local		: Field	: GI Amount		: Border: Thin Left
+
+	[Part: GI Net Amt]
+
+		Lines	: GI Inventory Total
+		Local	: Line	: GI Inventory Total	: Local	: Field	: GI Rate	: Set as: "Net Amount"
+		Local	: Line	: GI Inventory Total	: Local	: Field	: GI Amount	: Set as: $Amount
+		Border	: Thin Bottom
+
+
+	[Part: GI Invoice Bottom]
+
+		Parts	: GI Address, GI Other Details, GI Signatory
+	
+
+	[Part: GI Address]
+
+		Lines	: GI Address Title, GI Address
+		Repeat	: GI Address	: Company Address
+
+		[Line: GI Address Title]
+			Use		: GI Address
+			Local	: Field	: Name Field	: Style		: Normal Bold
+			Local	: Field	: Name Field	: Set as	: "Address"
+			Indent	: 1
+
+		[Line: GI Address]
+
+			Fields	: Name Field
+			Local	: Field	: Name Field	: Style		: Normal
+			Local	: Field	: Name Field	: Set as	: $Address
+
+	[Part: GI Other Details]
+
+		Lines	: GI Phone, GI Fax, GI Email, GI InvAmtWords
+
+
+		[Line: GI Phone]
+
+			Fields	: Medium Prompt, Simple Field
+			Local	: Field	: Medium Prompt	: Set as	: "Phone"
+			Local	: Field	: Simple Field	: Set as	: $PhoneNumber:Company:##SVCurrentCompany
+
+		[Line: GI Fax]
+
+			Fields	: Medium Prompt, Simple Field
+			Local	: Field	: Medium Prompt	: Set as	: "Fax"
+			Local	: Field	: Simple Field	: Set as	: $Fax:Company:##SVCurrentCompany
+
+		[Line: GI Email]
+
+			Fields	: Medium Prompt, Simple Field
+			Local	: Field	: Medium Prompt	: Set as	: "Email"
+			Local	: Field	: Simple Field	: Set as	: $Email:Company:##SVCurrentCompany
+		[Line:  GI InvAmtWords]
+
+			Fields	: Medium Prompt, Simple Field
+			Local	: Field	: Medium Prompt	: Set as	: "ToTal Amount In Words"
+			Local	: Field	: Simple Field	: Set as	: $$InWords:$Amount
+			
+
+
+	[Part: GI Signatory]
+
+		Bottom Line	: GI Signatory
+		Border		: Thin Left
+			
+		[Line: GI Signatory]
+
+			Field	: Name Field
+			Local	: Field	: Name Field	: Set as	: "for " + @@CmpMailName
+			Local	: Field	: Name Field	: Full width: Yes
+
+*/
+;; Style Definition
+
+[Style: Cmp Style]
+
+	Font Name	: "Arial"
+	Height		: 10
+[Style: Invoice Style]
+
+	Font Name	: "Arial"
+	Height		: 10
+	Bold		: Yes
+[Style: Performa Style]
+	Height		: 15
+	Font Name	: "Impact"
+
+[System: Formula]
+
+	DueDtCalc	: $Date + $$Number:$BasicDueDateofPymt
+
+;; End-of-File
+
+```

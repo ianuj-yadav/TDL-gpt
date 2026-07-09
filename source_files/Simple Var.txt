@@ -1,0 +1,64 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This code demonstrates the usage of Variable in Function Scope
+-	The Variable value is lost once we quit the Function
+-	The Variable is declared and value is set within Function and the same
+	is being accessed in a Report invoked from within this Function
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Function: Simple Var in Func]
+
+	Variable	: Simple Var	: String
+
+	01: SET		: Simple Var	: "Variable value set within Function"
+	02:	DISPLAY	: SimpleReport
+
+[Report: Simple Report]
+
+	Form	: Simple Report
+	Title	: "Function Scope"
+
+[Form: Simple Report]
+
+	Parts	: Simple Report
+
+[Part: Simple Report]
+
+	Lines	: Simple Report Info, Simple Report, Simple Report Var Value
+	Width	: 60% Page
+
+	[Line: Simple Report Info]
+
+		Fields	: Info Field
+		Local	: Field	: Info Field	: Info		: "Example - Simple Variables"
+		Local	: Field	: Info Field	: FullWidth	: Yes
+		Local	: Field	: Info Field	: Align		: Centre
+		Local	: Field	: Info Field	: Border	: Thin Bottom
+		Local	: Field	: Info Field	: Style		: Normal Italic
+
+	[Line: Simple Report]
+
+		Fields	: Simple Report
+		SpaceTop: 1
+
+		[Field: Simple Report]
+
+			Set As	: "Variable Simple Var is inherited from Function to the called Report."
+			Align	: Center
+			Lines	: 0
+			Width	: 60% Page
+
+	[Line: Simple Report Var Value]
+
+		Fields	: Simple Report
+		SpaceTop: 1
+		Local	: Field	: Simple Report	: Set As	: ##SimpleVar
+		Local	: Field	: Simple Report	: Style		: Large Bold
+		Local	: Field	: Simple Report	: Align		: Center
+
+;; End-of-File

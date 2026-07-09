@@ -1,0 +1,40 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the usage of Event On: Form Accept
+
+Syntax -
+-	On	: Form Accept	: <Logical Formula>	: <Action>	: <Action Parameters>
+-	On is an Attribute of Form which is currently built to execute only in alter, 
+	execute or create mode
+
+Last Modification -
+-	Altered on 23-01-2010
+*/
+
+[Report: On Form Accept HTTP Post]
+
+	Form	: On Form Accept HTTP Post
+
+[Form: On Form Accept HTTP Post]
+
+	Parts	: On Form Accept HTTP Post
+	On		: Form Accept : Yes	: HTTP Post : @@MyURL: ASCII: HTTP Post ReqRep : HTTP Post Failure Report  : HTTP Post Success Report
+
+[Part: On Form Accept HTTP Post]
+
+	Lines	: On Form Accept HTTP Post
+
+	[Line: On Form Accept HTTP Post]
+
+		Fields	: On Form Accept HTTP Post
+
+		[Field: On Form Accept HTTP Post]
+
+			Set As	: "Please accept this Form to check the behavior of On Form Accept Event"
+			ReadOnly: Yes
+			Align	: Center
+			Style	: Normal Italic
+
+;; End-of-File

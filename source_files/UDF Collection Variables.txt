@@ -1,0 +1,37 @@
+
+[Variable: EnableAutoBackup] 
+	Type		: Logical
+	Persistent	: Yes 
+[Variable: DestinationPath] 
+	Type		: String
+	Persistent	: Yes
+[Variable: AutoBackupPrompt]
+	Type		: Logical
+	Persistent	: Yes
+[Variable: CurrTime]
+	Type		: String
+	Persistent	: Yes
+[System: Variable]
+	EnableAutoBackup		: Yes
+	DestinationPath			: "T:\My Drive\Backup-tally" 
+	AutoBackupPrompt		: Yes
+	
+
+[System : Event]
+	BackupCompany     	: Load Company 	: TRUE 	: CALL 			: BackupStartFunction
+	;; Setting up timer event to call a function
+	GetMessage     		: TIMER 		: ##EnableAutoBackup 	: CALL 		: TBafterSleep
+	;; Starting the Timer when Tally Application Starts
+	Schedule Message 	: Load Company 	: TRUE 	: START TIMER 	: GetMessage          : 5
+	;; Adding Keys to Company Info
+
+[System:UDF]
+	IsAutoBackupDrive	: Logical	: 20001
+
+[Collection: BrowseUrl]
+
+	;Remote URL 		: "https://tallyatcloud.com/tallybackup/"+@@SrNo + @@EmailId + @@UserType  ;Give your Actual URL name
+	;Remote URL 		: "http://127.0.0.1:8000/tallybackup/"+@@SrNo + @@EmailId + @@UserType  ;Give your Actual URL name
+	Remote URL 		: "http://127.0.0.1:8000/tallybackup/"+@@NewEncUrl+"/" +@@EncryptionPassword  ;Give your Actual URL name
+	Client Only		: Yes
+	

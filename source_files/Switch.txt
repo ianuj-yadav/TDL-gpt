@@ -1,0 +1,77 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	The objective of this program is to demonstrate the usage of Switch Case
+-	The Background color of the Form is controlled depending on Variable value using Switch 
+	Case condition
+-	Switch Case terminates the search once a condition is satisfied Option continues to search 
+	all the options and then executes the ones satisfied sequentially
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Switch within Form]
+
+	Form 		: Switch within Form
+	Variable	: SWF Full Height
+	Set 		: SWF Full Height	: No
+	Title		: "Optional Definition using Switch Case"
+
+[Form: Switch within Form]
+
+	Parts		: Switch within Form
+	
+	Button 		: SWF Change Height		;; To attach Button to the current Form
+
+	Switch		: Case1	: SWF Small HelloWorld  : NOT ##SWFFullHeight
+	Switch		: Case1 : SWF Full HelloWorld 	: ##SWFFullHeight
+;; Switch checks for the conditions sequentially. If any matching conditions found,
+;; all the further switch statements grouped within the same label (Case 1 in this 
+;; case) are ignored.
+
+	[!Form: SWF Small HelloWorld]
+
+		Full Height 	: No
+		Background		: Red
+;; Optional Definition is prefixed with ! and since switch statements fall under
+;; Form Definition, it requires an Optional Form Definition.  The attributes under
+;; the above Optional Form 'Small HelloWorld' are set if the value of local variable 
+;; 'ChooseHeight' is set to No else the following Optional Form Definition 'Full 
+;; HelloWorld' will be executed.
+
+	[!Form: SWF Full HelloWorld]
+
+		Full Height 	: Yes
+		Background		: Green
+
+[Part: Switch within Form]
+
+	Bottom Lines	: Switch within Form
+
+	[Line: Switch within Form]
+
+		Fields	: Switch within Form
+
+		[Field: Switch within Form]
+
+			Set as	: "Hello TDL"
+
+[Button: SWF Change Height]			;; Button Definition
+;;The button F1 has been used in default code of TallyPrime
+
+	Key 	: F6
+	Title	: if NOT ##SWFFullHeight	then "Full Height" else "Reqd Height"
+	Action 	: Set	: SWF Full Height	: NOT ##SWFFullHeight
+;; Value of variable 'Full Height' is set to negation of its value
+;; which gives a toggle behaviour.  Everytime the user presses Key 'F1',
+;; the variable value 'Full Height' is set to opposite of its current
+;; value, i.e., if it is 'Yes', pressing F1 changes it to 'No' and vice
+;; versa
+
+[Variable: SWF Full Height]		;; Variable Definition
+
+	Type 	: Logical
+	
+;; End-of-File

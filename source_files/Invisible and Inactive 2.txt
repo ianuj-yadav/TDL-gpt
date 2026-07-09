@@ -1,0 +1,64 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This program illustrates the usage of Field Attributes 'Inactive' and 'Invisible'
+-	Company Address is being printed in both the parts; one using 'Inactive' attribute and other
+	using 'Invisible' attribute thereby clarifying the difference
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Invisible and Inactive 2]
+
+	Form 	: Invisible and Inactive 2
+
+[Form: Invisible and Inactive 2]
+
+	Parts 	: IAI Part 1, IAI Part 2
+
+[Part: IAI Part 1]
+
+	Parts 		: IAI Title, IAI Details
+	Border		: Thick Bottom
+	Vertical	: Yes
+
+	[Part: IAI Title]
+
+		Lines	: IAI Title
+
+		[Line: IAI Title]
+
+			Fields	: IAI Title
+
+			[Field: IAI Title]
+
+				Info	: "This is an example of Attribute 'Inactive' at Field"
+
+	[Part: IAI Details]
+
+		Lines 	: IAI Details
+		Repeat	: IAI Details	: Company Address
+		Scroll	: Vertical
+;; Part Attribute 'Repeat' and 'Scroll' will be discussed further in Objects and Collections
+
+		[Line: IAI Details]
+
+			Fields 	: Long Prompt, IAI Details
+			Local	: Field	: Long Prompt	: Set as	: "Company Address"
+			Local	: Field	: Long Prompt	: Style		: Normal Bold
+			Local	: Field	: Long Prompt	: Inactive	: $$Line > 1
+
+			[Field: IAI Details]
+
+				Set as 	: $Address
+
+[Part: IAI Part 2]
+
+	Use		: IAI Part 1
+	Local	: Field	: IAI Title 	: Info	: "This is an example of Attribute 'Invisible' at Field"
+	Local	: Line	: IAI Details	: Local	: Field	: Long Prompt	: Inactive	: No
+	Local	: Line	: IAI Details	: Local	: Field	: Long Prompt	: Invisible	: $$Line > 1
+
+;; End-of-File

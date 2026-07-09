@@ -1,0 +1,93 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the process of displaying monthly registers in a remote 
+	environment. In this code, only Sales Register is being displayed monthly.
+-	This requires Debit, Credit and Closing Methods to be computed within the 
+	Period Collection in remote environment which other was managed within Field
+	by associating respective Object at Field.
+
+Last modification -
+-	Altered on 09-11-2009
+*/
+
+[Report: Mth SR]
+
+	Use			: DSP Template
+	Form		: Mth SR
+	Variable	: VoucherTypeName, SVFromDate, SVToDate
+	Set			: VoucherTypeName	: $$VchTypeSales
+	Set			: DSPShowTrans		: Yes
+	Title		: $$LocaleString:"Monthly Sales Register"
+
+[Form: Mth SR]
+
+	Parts		: DSP AccTitles, DSP ColTitles, Mth SR
+	Bottom Parts: Mth SR Graph
+	Height		: 100% Screen
+	Width		: 100% Screen
+	Delete		: Button			: ExplodeFlag
+	Local		: Collection		: Period Collection	: ClientOnly	: No
+	
+[Part: Mth SR]
+
+	Lines		: Mth SR
+	Bottom Lines: DSP Totals
+	Repeat		: Mth SR	: Period Collection
+	Scroll		: Vertical
+	Total		: Mth SR Amt Dr, Mth SR Amt Cr, Mth SR Amt Nett
+
+	Local : Line: DSP Totals: Add	: Right Fields	: Mth SR Amt Dr, Mth SR Amt Cr, Mth SR Amt Nett
+	Local : Line: DSP Totals: Local	: Field			: Mth SR Amt Dr	: Set As	: $$Total:MthSRAmtDr
+	Local : Line: DSP Totals: Local	: Field			: Mth SR Amt Cr	: Set As	: $$Total:MthSRAmtCr
+
+	[Line: Mth SR]
+
+		Fields		: Mth SR Mth Name
+		Right Fields: Mth SR Amt Dr, Mth SR Amt Cr, Mth SR Amt Nett
+
+		[Field: Mth SR Mth Name]
+
+			Use			: Name Field
+			Set as      : $$FullMonthName:$$PeriodDateFrom
+			Style		: Small
+			Graph Label	: Yes
+			Quick Search: Yes
+
+		[Field: Mth SR Amt Dr]
+
+			Use			: Amount Forex Field
+			Set As		: $TBalDebits
+			Style		: Small Italic
+
+		[Field: Mth SR Amt Cr]
+
+			Use			: Mth SR Amt Dr
+			Set As		: $TBalCredits
+
+		[Field: Mth SR Amt Nett]
+
+			Use			: Amount Forex Field
+			Set As		: if $$Line = 1 then $TBalClosing else $TBalClosing + $$PrevLineField
+			Format		: "DrCr"
+			Style		: Small
+
+[Part: Mth SR Graph]
+
+	Use			: Mth SR
+	Graph Type	: Yes
+    Height		: 25% Screen
+    Local       : Field	: Mth SR Mth Name	: Set as 		: $$ShortMonthName:$$PeriodDateFrom
+	Local		: Field : Mth SR Amt Nett	: Graph Value	: Yes
+	Local		: Field : Mth SR Amt Nett	: Set As		: if $$IsDr:$$NettAmount:$TBalDebits:$TBalCredits then $$AsDrAmt:$$NettAmount:$TBalDebits:$TBalCredits else $$AsCrAmt:$$NettAmount:$TBalDebits:$TBalCredits
+
+;; The object association at Field level is replaced with Compute for Period Collection 
+
+[#Collection: Period Collection]
+
+	Compute		: TBalDebits	: $TBalDebits:VoucherType:#VoucherTypeName
+	Compute		: TBalCredits	: $TBalCredits:VoucherType:#VoucherTypeName
+	Compute		: TBalClosing	: $TBalClosing:VoucherType:#VoucherTypeName
+
+;; End-of-File

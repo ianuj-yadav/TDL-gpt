@@ -1,0 +1,137 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the usage of User Defined Functions in Objects
+-	The function creates the provisional vouchers based on the Input from the user 
+	(For e.g., Rent till 31st March, etc.) and opens report with the created entries
+
+Last Modification -
+-	Altered on 09-11-2009
+
+Dependencies -
+-	Supporting files 'Simple Interest.txt'
+*/
+
+[Report: Provisional Vouchers]
+
+;; Interface to accept user Input
+
+	Use		: Simple Interest Calculator
+
+	Local	: Form	: Interest Calc		: On: Form Accept	: Yes	: Call	: CreateProvVouchers:#InterestPrincipal:#InterestRate:#InterestNoOfYrs:#InterestResult:#AmountForexField
+	Local	: Form	: Interest Calc		: Local		: Field	: Form SubTitle	: Info		: "Provisional Voucher Details"
+	Local	: Form	: Interest Calc		: Height	: 30% Page
+	Local	: Form	: Interest Calc		: Width		: 50% Page
+
+	Local	: Field	: Medium Prompt		: Width		: 25
+
+	Local	: Part	: Interest Calc		: Add		: Lines	: ProvLedAmt
+
+	Local	: Line	: Interest Principal: Local		: Field	: Medium Prompt	: Info		: "Starting Date :"
+	Local	: Field	: Interest Principal: Type		: Date
+	Local	: Field	: Interest Principal: Case		: Title Case
+	Local	: Field	: Interest Principal: Width		: 50
+	Local	: Field	: Interest Principal: Align		: Left
+
+	Local	: Line	: Interest Rate		: Local		: Field	: Medium Prompt	: Info		: "No. of Instalments :"
+	Local	: Field	: Interest Rate		: Type		: Number
+	Local	: Field	: Interest Rate		: Format	: "No Zero, No Percentage, No Comma"
+	Local	: Field	: Interest Rate		: Width		: 50
+	Local	: Field	: Interest Rate		: Align		: Left
+
+	Local	: Line	: Interest NoOfYrs	: Local		: Field	: Medium Prompt	: Info		: "Cash/ Bank Ledger :"
+	Local	: Field	: Interest NoOfYrs	: Type		: String
+	Local	: Field	: Interest NoOfYrs	: Table		: Cash Ledgers Extract
+	Local	: Field	: Interest NoOfYrs	: Show Table: Always
+	Local	: Field	: Interest NoOfYrs	: Case		: Title Case
+	Local	: Field	: Interest NoOfYrs	: Width		: 50
+	Local	: Field	: Interest NoOfYrs	: Align		: Left
+
+	Local	: Line	: Interest Result	: Local		: Field	: Medium Prompt	: Info		: "Payee Ledger :"
+	Local	: Line	: Interest Result	: Local		: Field	: Default		: Inactive	: No
+	Local	: Field	: Interest Result	: Table		: Expense Ledgers Extract
+	Local	: Field	: Interest Result	: Show Table: Always
+	Local	: Field	: Interest Result	: Set As	: $$CollectionField:$Name:1:ExpenseLedgersExtract
+	Local	: Field	: Interest Result	: Case		: Title Case
+	Local	: Field	: Interest Result	: Type		: String
+	Local	: Field	: Interest Result	: Width		: 50
+	Local	: Field	: Interest Result 	: Align		: Left
+	Fetch Collection: Cash Ledgers Extract, Expense Ledgers Extract
+
+	[Line: ProvLedAmt]
+
+		Field	: Medium Prompt, Amount Forex Field
+
+		Local	: Field	: Medium Prompt	: Info		: "Enter Ledger Amount :"
+
+;; Report designed to open daybook with newly created entries 
+;; immediately after the execution of current function call
+
+[Report: Prov Entries in Daybook]
+
+	Use		: Daybook
+	Set		: VoucherTypeName	: "Payment"
+	Set		: SVFromDate		: $$FinYearBeg:##StartDate:$StartingFrom:Company:##SVCurrentCompany
+	Set		: SVToDate			: $$FinYearEnd:##StartDate:$StartingFrom:Company:##SVCurrentCompany
+
+	Local	: Collection		: Default	: Add	: Filter	: Prov Filter
+
+[System: Formula]
+
+	Prov Filter	: $Amount = ##InputAmt
+
+;; Function to create Provisional Vouchers automatically
+;; and display list of vouchers created instantaneously
+
+[Function: Create Prov Vouchers]
+
+;; Definition Block
+
+	Parameter 	: InputDate			: Date
+	Parameter 	: InputNoofEnt		: Number
+	Parameter 	: InputCBLed		: String
+	Parameter 	: InputOthLed		: String
+	Parameter 	: InputAmt			: Amount
+
+	Variable  	: Counter 			: Number
+	Variable	: VoucherTypeName	: String
+	Variable	: FamilyVoucherFlag	: Logical
+
+	Variable	: StartDate			: Date
+	Variable	: PostDatedFlag		: Logical
+
+;; Procedural Block
+
+	00 	: SET 	: Counter 	: ##InputNoofEnt
+	10	: SET	: StartDate	: ##InputDate  ;; Variable introduced to retain original date reqd for filtering in daybook
+
+	20	: WHILE : ##Counter >= 1
+	30  :   SET             : SVViewName 		: $$SysName:AcctgVchView
+	35  :   SET				: SV VoucherType    : $$VchTypePayment
+	40	: 	NEW OBJECT		: Voucher
+	50	: 	SET VALUE		: Date				: ##InputDate
+	60 	:	SET VALUE		: Is Post Dated		: if $LastVoucherDate:Company:##SVCurrentCompany < ##InputDate then "Yes" else "No"
+	70	: 	SET VALUE		: VoucherTypeName	: $$VchTypePayment
+
+	80	: 	INSERT COLLECTION OBJECT			: LedgerEntries
+	100	:	SET VALUE		: LedgerName		: ##InputOthLed
+	110	: 	SET VALUE		: Is Deemed Positive: "YES"
+	120	: 	SET VALUE		: Amount			: $$Negative:##InputAmt
+	130	: 	SET TARGET		: ..
+
+	140	: 	INSERT COLLECTION OBJECT			: LedgerEntries
+	150	: 	SET TARGET		: LedgerEntries
+	160	:	SET VALUE		: LedgerName		: ##InputCBLed
+	170	: 	SET VALUE		: Is Deemed Positive: "NO" 
+	180	: 	SET VALUE		: Amount			: ##InputAmt
+	190	: 	SET TARGET		: ..
+	200 :   SET VALUE       : PersistedView 	: ##SVViewName
+	210	: 	CREATE TARGET
+	220	: 	SET 			: InputDate			: $$NextMonth:##InputDate
+	230	: 	DECREMENT		: Counter
+	240	: END WHILE
+	250	: DISPLAY			: Prov Entries in Daybook
+	260	: RETURN
+
+;; End-of-File

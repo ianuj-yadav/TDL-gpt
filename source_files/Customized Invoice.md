@@ -1,0 +1,221 @@
+---
+title: Customized Invoice
+type: sample_code
+objects: Part, Line, Field
+source: Customized Invoice.txt
+---
+
+# Customized Invoice
+
+## Source Code
+
+```tdl
+[#Part: EXPINV SaleTopLeft]
+Height      : If ($$InExportMode OR $$InMailAction OR $$InUploadAction) AND ($$IsSysNameEqual:Excel:##SVExportFormat OR $$IsSysNameEqual:HTML:##SVExportFormat) THEN +
+							(10 + 10 + @WithOrderVch + @WithOrderTerms + @WithBuyer + @WithCountry)  ELSE +
+							(10 + 10 + @WithOrderVch + @WithOrderTerms + @WithBuyer + @WithCountry) % page
+	
+	Delete: Parts: EXPINV Company	
+	
+[#Form: Printed Invoice]
+Add:Parts:LWCMPDetails,LWTaxTitle,LearnwellEQR
+
+[Part:LWTaxTitle]
+Add:Line:LwTTLine
+Border:thin bottom
+Space Top:.5
+[Line:LwTTLine]
+Add:Field:LWTTF
+Border:Thin Top
+[Field:LWTTF]
+Set as:"Tax Invoice"
+Full Width:Yes
+Align:Centre
+Style:Invstyle
+[Style:Invstyle]
+Use: Normal Bold
+Height:15
+
+[Part:LWCMPDetails]
+Add:Parts:CMPLogo,CMPdtl,LWSCPay
+Space Bottom:.5
+Width:100% page
+[Part:CMPLOGO]
+Part :LearnWellLOGO
+Vertical : Yes
+[Part :LearnWellLOGO]
+Horizontal Alignment :Left
+Vertical : No
+Lines :LWLG
+Graph Type: ##SALogoPath
+Height : 12% page
+Width : 15% Page
+[Line :LWLG]
+Field :LWLGF
+[Field :LWLGF]
+Set As : ""
+
+[Part:CMPdtl]
+Lines:LWCMPName,LWCMPAdd
+Repeat:LWCMPAdd:CompanyAddress
+[Line:LWCMPName]
+Field:LWCMPName
+[Field:LWCMPName]
+Use:name field
+Set as:@@CMPMailNAme
+Full Width:Yes
+Align:Centre
+Style:Cmpstyle
+[Line:LWCMPAdd]
+Field:LWCMPAdd
+[Field:LWCMPAdd]
+Set as:$address
+Align:Center
+Full Width:Yes
+Style:ADDStyle
+[Style:Cmpstyle]
+Use: Normal Bold
+Height:20	 
+[Style:ADDStyle]
+Height:10
+Use:Normal  
+[#Part: EXPINV Signature]
+Delete:Border
+[#Part: EXPINV Column]
+Border:Thick Box
+Delete:Line:EXPINV Column2
+Local : Field : Default : Style :Normal Bold
+Local : Field : Default : Print FG :White
+Print BG:Black
+
+[#line : EXPINV invdetails]
+option:bg print:@@oddline
+[!line:bg print]
+local : field : default : print bg :Light grey
+[system:formulae]
+OddLine : $$IsOdd:$$Line
+
+;---------------------------------------------
+[#Part: EXPINV OpPageBreak]
+Delete: Parts:EXPINV Title
+Delete:Parts:EXPINV Leading
+Add:Parts:Before:EXPINV Column:LearnwellInvNo1,LearnwellInvNo
+
+[#Part : Expinv Rightsign]
+Delete : Bottom Parts
+Add:Bottom Part:EXPINV Signature
+                        
+[Part:LearnwellEQR]
+Add:Part:LWEInv1,LWEInvQR,LearnwellBankQR
+Border:Thin box
+Invisible: NOT ##SAGSTWithQRInfo OR $$IsEmpty:@@eInvoiceQRCValue OR NOT @@IsVchGSTeInvAppl
+[Part:LWEInv1]
+Line: LWExpinv IRN, LWExpinv AckNo, LWExpinv AckDate
+Local: Line	: LWExpinv AckNo		: Space top		: 0.10
+Local: Line	: LWExpinv AckDate	: Space top		: 0.10
+Space Top:.5
+[Line: LWExpinv IRN]
+Use	: LWeInv IRN Details Template
+Local: Field: Medium Prompt	: Set as	: $$LocaleString:"IRN"
+Local: Field: Name Field	: Set as	: @@GSTeInvIRN
+Local: Field: Name Field	: Width		: 30% Page
+Local: Field: Name Field	: Line		: 03
+[Line: LWExpinv AckNo]
+Use	: LWeInv IRN Details Template
+Local: Field: Medium Prompt	: Set as	: $$LocaleString:"Ack No."
+Local: Field: Name Field	: Set as	: If ##IseInvPSPrintAfterSave Then ##eInvPSAckNo Else $IRNAckNo
+[Line: LWExpinv AckDate]
+Use	: LWeInv IRN Details Template
+Space Bottom: 0.25
+Local: Field: Medium Prompt	: Set as	: $$LocaleString:"Ack Date"
+Local: Field: Name Field	: Set as	: If ##IseInvPSPrintAfterSave Then $$String:##eInvPSAckDate Else $$String:$IRNAckDate
+[Line: LWeInv IRN Details Template]
+Field: Medium Prompt, Name Field
+Local: Field: Medium Prompt	: Width		: 4			
+Local: Field: Medium Prompt	: Style		: Small
+Local: Field: Name Field	: Style		: Small Bold
+
+[Part:LWEInvQR]
+Part:LWeInvoice QRC Title2, LWeInvoice QRC Title
+Vertical: Yes
+[Part: LWeInvoice QRC Title]
+Line: LWeInvoice QRC Title
+[Line: LWeInvoice QRC Title]
+Field: LWeInvoice QRC Title
+Space Bottom: 0.5
+[Part: LWeInvoice QRC Title2]
+QRCode: @@eInvoiceQRCValue : Yes
+Line: LWeInvoice QRC Title2
+Width: 20% page
+Height: 10% Page
+[Line: LWeInvoice QRC Title2]
+Field: Info Field
+[Field: LWeInvoice QRC Title]
+Use	: Simple Field
+Set as: $$LocaleString:"e-Invoice"
+Style: Small Bold
+Width: Normal
+	
+[Part :LearnWellBankQR]
+Parts :EXPINV BankDetails,LearnWellQrP
+Border:Thin box
+Space Top:.5
+[Part :LearnWellQrP]
+Part :LearnWellQRCode
+Vertical : Yes
+[Part :LearnWellQRCode]
+Horizontal Alignment : Right
+Vertical : No
+Lines :LWQrL
+;QR code: ("upi://pay?pa=9131810293@ybl&pn=AshishKumarSingh&tn=Bill No. "+$$String:$voucherNumber) : True
+QR code: ("upi://pay?pa=8818040756@ybl&pn=TirlokChand&tn=Bill No. "+$$String:$voucherNumber) : True
+Height : 12% page
+Width : 15% Page
+[Line :LWQrL]
+Field :LWQrF
+[Field :LWQrF]
+Set As : ""
+
+[Part:LWSCPay]
+Part :LearnWellQRIn,qrtxt
+Vertical : Yes
+Invisible:NOT $$IsEmpty:@@eInvoiceQRCValue
+[Part :LearnWellQRIn]
+Lines :LWQrLn
+;QR code: ("upi://pay?pa=9131810293@ybl&pn=AshishKumarSingh&tn=Bill No."+$$String:$voucherNumber) : True
+QR code: ("upi://pay?pa=8818040756@ybl&pn=TirlokChand&tn=Bill No. "+$$String:$voucherNumber) : True
+Height : 8% page
+Width : 12% Page
+[Line :LWQrLn]
+Field :LWQrFn
+[Field :LWQrFn]
+Set As : ""
+[Part:qrtxt]
+Line:as
+[Line:as]
+Field:as
+[Field:as]
+Use:name field
+Set as:"Scan to Pay"
+
+[Part:LearnwellInvNo]
+Parts:EXPINV Consignee, EXPINV ConsigneeContact, EXPINV Buyer, EXPINV Contact
+Bottom Parts: EXPINV Country
+Vertical    : No
+Border:Thin box
+[Part:LearnwellInvNo1]
+Parts:LWBSLeft,LWBSMiddle,LWBSRight
+Vertical:Yes
+Border:thin box
+[Part:LWBSLeft]
+Parts       : EXPINV Number,EXPINV Date,EXPINV SupplierRef,EXPINV DelNote,EXPINV ShipDate
+Vertical    : No
+[Part:LWBSRight]
+Parts       : EXPINV DueDate, EXPINV OtherRef, +
+              JWInOutInv MotorVehicleNo, +
+			  EXPINV PlaceOfRcpt, EXPINV PortDischarge, JMInOutInv ProcessingDuration
+Vertical    : No
+[Part:LWBSMiddle]
+Parts: EXPINV OrderNumber, EXPINV OrderDate, EXPINV ShipDoc,EXPINV Destination,JWMTIn ChallanNo,EXPINV PreCarr, EXPINV Vessel, EXPINV PortLoading, JMInOutInv EmptyPart
+Border:thin box
+```

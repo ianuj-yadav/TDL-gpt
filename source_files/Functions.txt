@@ -1,0 +1,49 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	The objective of this program is to demonstrate the usage of Platform Functions
+-	This program accepts a date as an input from the user and gives week day on that date
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Usage of Function]
+
+	Form 	: Usage of Function
+	Title	: "Day for the Date"	
+;; Report Attribute 'Title' is used to give a different Report title when viewed.
+;; If unspecified, it displays Report Name as its default Title.
+
+[Form: Usage of Function]
+
+	Parts 	: Usage of Function
+
+[Part: Usage of Function]
+
+	Lines	: Input Date, Day of Week
+;; Line 'Input Date' is reused from the previous program to accept user input
+;; thereby optimizing the code.
+
+	[Line: Day of Week]
+
+		Fields: Long Prompt, Day of Week
+		Local : Field : Long Prompt : Info : "Your date falls on :"
+;; Without defining a new prompt field, default field 'Long Prompt' is used and
+;; the information is locally modified within the current line using the Field 
+;; Attribute 'Info'
+
+		[Field: Day of Week]
+
+			Use 		: Name Field
+;; 'Name Field' is a default field/ template used for having fields of Type String
+;; with Medium Width.  We also have 'Short Name Field' template which has a smaller
+;; Width
+
+			Set as		: If $$IsEmpty:#InputDate Then "" Else $$DayOfWeek:#InputDate
+;; 'DayOfWeek' Function accepts a parameter of Type Date and returns day of the week.
+
+			Set Always	: Yes
+
+;; End-of-File

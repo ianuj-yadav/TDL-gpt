@@ -1,0 +1,69 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Demo TDLs for User Defined Functions
+*/
+
+[Menu: User Defined Functions]
+
+	Indent		: "Basic Functions"
+	Item		: Blank
+	Key Item	: Simple Interest			: S : ALTER		: Simple Interest Calculator
+	Key Item	: Compound Interest			: C : ALTER		: Compound Interest Calculator
+	Key Item	: Exponential Calc			: E : ALTER		: Exponential Calculator
+	Key Item	: Factorial Calc			: F : ALTER		: Factorial Calculator
+	Key Item	: Palindrome 				: P : ALTER		: Palindrome
+	Key Item	: Calculator				: C : CALL		: Calculator
+	Item		: Blank
+
+	Indent		: "Object Manipulation Functions"
+	Item		: Blank
+	Key Item	: Alter Item Methods		: M : ALTER		: Item Method Alteration	: NOT $$IsEmpty:$$SelectedCmps
+	Key Item	: Grp & Led Creation		: L : ALTER		: Group and Ledger Creation	: NOT $$IsEmpty:$$SelectedCmps
+	Key Item	: Renaming Group 			: G : ALTER		: Group Renaming			: NOT $$IsEmpty:$$SelectedCmps
+	Key Item	: Duplicate Voucher 		: V : CALL		: Voucher Duplication		: NOT $$IsEmpty:$$SelectedCmps
+	Key Item	: Provisional Vouchers 		: U : ALTER		: Provisional Vouchers		: NOT $$IsEmpty:$$SelectedCmps
+	Item		: Blank
+
+	Indent		: "General Usage"
+	Item		: Blank
+	Key Item	: Auto Item Set 			: I : CREATE	: PurcVoucher				: NOT $$IsEmpty:$$SelectedCmps
+	Key Item	: Stock Position			: O : CALL		: Detailed Stock Summary	: NOT $$IsEmpty:$$SelectedCmps
+	Key Item	: Final Accts				: N : CALL		: Detailed Final Accounts	: NOT $$IsEmpty:$$SelectedCmps
+	Item		: Blank
+
+	Indent		: "Latest Enhancements"
+	Item		: Blank
+	Key Item	: DateRange					: A : Display	: UDF DateRange Report		: NOT $$IsEmpty:$$SelectedCmps
+	Key Item	: DateRange and TgtObject 	: G : CALL		: DateRange and TgtObject	: NOT $$IsEmpty:$$SelectedCmps
+	Key Item	: Enhanced Action Set Value	: N : CALL		: Set Value Enhanced		: NOT $$IsEmpty:$$SelectedCmps
+	Item		: Blank
+
+	Control		: Duplicate Voucher			: NOT $$IsRemoteCompany
+	Control		: DateRange and TgtObject	: NOT $$IsRemoteCompany
+	Control		: Enhanced Action Set Value	: NOT $$IsRemoteCompany
+
+;; Include Files
+
+[Include: Simple Interest.txt]
+[Include: Compound Interest.txt]
+[Include: Exponential.txt]
+[Include: Factorial.txt]
+[Include: Palindrome.txt]
+[Include: Calculator.txt]
+
+[Include: Item Method Alteration.txt]
+[Include: Group Ledger Creation.txt]
+[Include: Group Renaming.txt]
+[Include: Voucher Duplication.txt]
+[Include: Provisional Vouchers.txt]
+
+[Include: Auto Item Set.txt]
+[Include: Detailed Stock Summary.txt]
+[Include: Detailed Final Accounts.txt]
+
+[Include: UDFNewFunctionDateRange.txt]
+[Include: NewFunctionDateRangeTgtObject.txt]
+[Include: Action Set Value Enhanced.txt]
+
+;; End-of-File

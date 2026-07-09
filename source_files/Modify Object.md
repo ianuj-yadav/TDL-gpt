@@ -1,0 +1,67 @@
+---
+title: Modify Object
+type: sample_code
+objects: Report, Form, Part, Line, Field
+source: Modify Object.txt
+---
+
+# Modify Object
+
+## Source Code
+
+```tdl
+	
+[Report:LedgerModify]
+	Form		: LedgerModify
+	Object		: Ledger
+	
+[#Form:Default]
+	Add	: Button		: ModifyLedger
+[Form:LedgerModify]
+	Part		: LedgerModify
+	Width		: 50% Page
+	Height		: 50% Page
+	
+[Part:LedgerModify]
+	Line		: LedgerModify, LedgerNameModify, LedgerParentModify, LedgerClosingBalModify;, LedgerGstCreate
+	
+	[Line:LedgerModify]
+		Field	: LedgerModify
+		Space Bottom	: 2
+		[Field:LedgerModify]
+			Info		: "Modify Ledger"
+			Style		: Normal Bold
+			Align		: Center
+			Full Width	: Yes
+	
+	[Line:LedgerNameModify]
+		Field	: Long Prompt, LedgerNameModify
+		Local	: Field	: Long Prompt	: Info	: "Select Name of Ledger"
+		
+		[Field:LedgerNameModify]
+			Use		: NameField
+			Table	: Ledger
+			Show Table	: Always
+			
+	[Line:LedgerParentModify]
+		Field	: Long Prompt, LedgerParentModify
+		Local	: Field	: Long Prompt	: Info	: "Enter Group of Ledger"
+		
+		[Field:LedgerParentModify]
+			Use			: NameField
+			Table		: Group
+			Show Table	: Always
+			
+	[Line:LedgerClosingBalModify]
+		Field	: Long Prompt, LedgerClosingBalModify
+		Local	: Field	: Long Prompt	: Info	: "Closing Balance"
+		
+		[Field:LedgerClosingBalModify]
+			Use			: Amount Field
+			
+			
+
+
+			
+	
+```

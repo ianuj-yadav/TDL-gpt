@@ -1,0 +1,234 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+[#Menu: Configuration]	;; Altering Menu "Configuration" to add an Item
+
+	Add			: Key Item	: Before	: Quit	: Logo Mapping	: L : Alter	: LogoSelectionForm
+
+[Report: LogoSelectionForm]		;; Logo Mapping Report
+
+	Auto		: Yes
+	Form    	: CmpLogo
+	Title		: $$LocaleString:"Logo Character Mapping Configuration"
+
+[Form: CmpLogo]
+
+	Parts   	: Form SubTitle, CmpLogo
+	Full Height	: No
+	Full Width	: No
+	Space Right	: 1
+	Space Left	: 1
+	No Confirm	: Yes
+	Background	: @@SV_CMPCONFIG
+	Local		: Style	: Default			: Height		: @@SmallSize
+	Local		: Line	: Form Sub Title 	: Space Bottom	: 0.5
+	Local		: Field	: Form Sub Title 	: Info			: $$LocaleString:"Logo Character Mapping Configuration"
+	
+[Part: CmpLogo]
+
+	Lines		: LogoTitle, CmpLogoA, CmpLogoB, CmpLogoC, CmpLogoD, CmpLogoE
+	
+	[Line: LogoTitle]
+
+		Use			: CmpLogoB     
+		Local		: Field	: Default		: Type		: String
+		Local		: Field	: Default		: Align		: Center
+		Local		: Field	: Short Prompt	: Info		: "Character"
+		Local		: Field	: Name Field	: Info		: "Logo Description"
+		Border		: SubTotals
+
+	[Line: CmpLogoA]
+    
+		Use			: CmpLogoB
+		Local		: Field	: Short Prompt	: Info		: "A"
+		Local		: Field	: Name Field	: Modifies	: LogoNameA
+		Local		: Field	: Name Field	: Control	: DuplicateVal	: @@NoDuplicateA
+		Space Top	: 0.5
+	
+	[Line: CmpLogoB]
+    
+		Fields		: Short Prompt, Name Field
+		Local		: Field	: Short Prompt	: Align		: Centre
+		Local		: Field	: Short Prompt	: Style		: Normal Bold
+		Local		: Field	: Short Prompt	: Info		: "B"
+		Local		: Field : Name Field	: Modifies	: LogoNameB
+		Local		: Field : Name Field	: Control	: DuplicateVal			: @@NoDuplicateB
+
+	[Line: CmpLogoC]
+
+		Use         : CmpLogoB
+		Local		: Field : Short Prompt	: Info		: "C"
+		Local		: Field : Name Field	: Modifies	: LogoNameC
+		Local		: Field : Name Field	: Control	: DuplicateVal			: @@NoDuplicateC
+
+	[Line: CmpLogoD]
+    
+		Use         : CmpLogoB
+		Local		: Field : Short Prompt	: Info		: "D"
+		Local		: Field : Name Field	: Modifies	: LogoNameD
+		Local		: Field : Name Field	: Control	: DuplicateVal			: @@NoDuplicateD
+			
+	[Line: CmpLogoE]
+    
+		Use         : CmpLogoB
+		Local		: Field : Short Prompt	: Info		: "E"
+		Local		: Field : Name Field	: Modifies	: LogoNameE
+		Local		: Field : Name Field	: Control	: DuplicateVal			: @@NoDuplicateE
+			
+;;---------------------------------------------
+;; Defining UDFs, Global Formulae and Variables
+;;---------------------------------------------
+
+[System: UDF]
+
+	CompanyLogo 	: String    : 1000
+	CompanyLogoChar : String    : 1001
+
+[System: Formula]
+
+	DuplicateVal	: "Duplicate Names \n are not allowed"
+	NoDuplicateA	: $$Value = ##LogoNameB OR $$Value = ##LogoNameC OR $$Value = ##LogoNameD OR $$Value = ##LogoNameE
+	NoDuplicateB	: $$Value = ##LogoNameA OR $$Value = ##LogoNameC OR $$Value = ##LogoNameD OR $$Value = ##LogoNameE
+	NoDuplicateC	: $$Value = ##LogoNameA OR $$Value = ##LogoNameB OR $$Value = ##LogoNameD OR $$Value = ##LogoNameE
+	NoDuplicateD	: $$Value = ##LogoNameA OR $$Value = ##LogoNameB OR $$Value = ##LogoNameC OR $$Value = ##LogoNameE
+	NoDuplicateE	: $$Value = ##LogoNameA OR $$Value = ##LogoNameB OR $$Value = ##LogoNameC OR $$Value = ##LogoNameD
+
+[System: Variable]
+
+	LogoNameA	: ""
+ 	LogoNameB	: ""
+	LogoNameC	: ""
+ 	LogoNameD	: ""
+ 	LogoNameE	: ""
+
+    IsLogo 		: Yes
+
+[Variable: LogoNameA]	;; Variable to assign a name for the Character A
+
+	Type		: String
+	Persistent	: Yes
+
+[Variable: LogoNameB]	;; Variable to assign a name for the Character B
+
+	Type		: String
+	Persistent	: Yes
+
+[Variable: LogoNameC]	;; Variable to assign a name for the Character C
+
+	Type		: String
+	Persistent	: Yes
+
+[Variable: LogoNameD]	;; Variable to assign a name for the Character D
+
+	Type		: String
+	Persistent	: Yes
+
+[Variable: LogoNameE]	;; Variable to assign a name for the Character E
+
+	Type		: String
+	Persistent	: Yes
+
+[Variable: IsLogo]		;; Variable to check whether logo is to be printed or not
+
+    Type    	: Logical
+    Persistent	: Yes
+    
+;;-------------------------------------
+;; Collection for Displaying Logo Names
+;;-------------------------------------
+
+[Collection:   Logo Table]
+
+	List	: ##LogoNameA, ##LogoNameB, ##LogoNameC, ##LogoNameD, ##LogoNameE
+	Title   : "Logo Table"
+
+;;------------------------------------
+;; Modifying Company Alteration Screen
+;;------------------------------------
+
+[#Part: Basic Company]
+
+	Add : Lines : CMP Logos
+	
+	[Line: CMP Logos]
+
+		Fields  : Medium Prompt, CMP Logos, CMP LogoVal
+		Local	: Field : Medium Prompt : Set as : "Company Logo"
+
+		[Field: CMP Logos]
+
+			Use         : Name Field
+			Storage     : CompanyLogo
+			Table       : Logo Table, Not Applicable
+			Show Table 	: Always
+
+		[Field: CMP LogoVal]
+
+			Use         : Name Field
+			Skip		: Yes
+			Set Always	: Yes
+			Storage		: CompanyLogoChar
+			Set as		: if @LogoA then "A" else +
+						  if @LogoB then "B" else +
+						  if @LogoC then "C" else +
+						  if @LogoD then "D" else + 
+						  if @LogoE then "E" else ""
+
+			LogoA		: if #CMPLogos = ##LogoNameA then Yes else No
+			LogoB		: if #CMPLogos = ##LogoNameB then Yes else No
+			LogoC		: if #CMPLogos = ##LogoNameC then Yes else No
+			LogoD		: if #CMPLogos = ##LogoNameD then Yes else No
+			LogoE		: if #CMPLogos = ##LogoNameE then Yes else No
+			Invisible	: Yes
+
+;;---------------------------------------------
+;; Modifying F12 Invoice Printing Configuration
+;;---------------------------------------------
+
+[#Part: IPCFG Right]
+
+	Add : Lines : WithLogo
+
+	[Line : WithLogo]
+
+		Fields  : Medium Prompt, WithLogo
+		Local   : Field : Medium Prompt : Set AS : "Print with Logo ?"
+
+		[Field: WithLogo]
+
+			Use         : Logical Field
+			Modifies    : IsLogo
+
+;;------------------------------------------------
+;; Modifying Default Sales Invoice to include Logo
+;;------------------------------------------------
+
+[#Part: EXPINV SaleTopLeft]
+  
+	Add	: Part	: At Beginning 	: EXPINV Logo1
+
+	[Part: EXPINV Logo1]
+	
+	    Lines		: EXPINV Logo1
+	    Preprinted	: Yes
+	    Invisible	: NOT ##IsLogo OR $$IsSysName:$CompanyLogoChar:Company:##SVCurrentCompany
+	    
+	     [Line: EXPINV Logo1]
+	    
+	        Fields  : EXPINV Logo Fld 
+	
+	        [Field: EXPINV Logo Fld]
+	        
+	            Set as      : $CompanyLogoChar:Company:##SVCurrentCompany
+	            Style       : Logo Style
+	            Full Width  : Yes
+	
+;;--------------------------
+;; Style Definition for Logo
+;;--------------------------
+
+[Style: Logo Style]
+
+    Font Name   : "Tallylogo"
+    Height      : 32
+
+;; End-of-File

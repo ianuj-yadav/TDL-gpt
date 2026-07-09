@@ -1,0 +1,129 @@
+;=================================================================
+;  Compound Interest Calculator – Menu Integration
+;=================================================================
+[#Menu: Gateway of Tally]
+    Add: Key Item : At End : "Compound Interest" : C : Alter : CompoundInterestReport
+
+;=================================================================
+;  Variables to hold user input
+;=================================================================
+[Variable: CI_Principal]
+    Type: Number
+
+[Variable: CI_Rate]
+    Type: Number
+
+[Variable: CI_Time]
+    Type: Number
+
+;=================================================================
+;  Report Definition
+;=================================================================
+[Report: CompoundInterestReport]
+    Form: CompoundInterestForm
+    Title: "Compound Interest Calculator"
+    Object: CompoundInterestLine   ; dummy object – not used for data
+
+;=================================================================
+;  Form Definition
+;=================================================================
+[Form: CompoundInterestForm]
+    Part: CompoundInterestPart
+
+;=================================================================
+;  Part Definition – contains input lines and result line
+;=================================================================
+[Part: CompoundInterestPart]
+    Line: CI_InputLine, CI_SpaceLine, CI_ResultLine
+
+;=================================================================
+;  Input Line – Principal, Rate, Time (editable)
+;=================================================================
+[Line: CI_InputLine]
+    Fields: CI_PrincipalField, CI_RateField, CI_TimeField
+
+[Field: CI_PrincipalField]
+    Type: Number
+    Use: NumberField
+    Set as: $CI_Principal          ; binds to variable CI_Principal
+    Width: 12
+    Border: Thin
+
+[Field: CI_RateField]
+    Type: Number
+    Use: NumberField
+    Set as: $CI_Rate               ; binds to variable CI_Rate
+    Width: 12
+    Border: Thin
+
+[Field: CI_TimeField]
+    Type: Number
+    Use: NumberField
+    Set as: $CI_Time               ; binds to variable CI_Time
+    Width: 12
+    Border: Thin
+
+;=================================================================
+;  Spacer Line – just to give visual separation
+;=================================================================
+[Line: CI_SpaceLine]
+    Fields: CI_Space
+
+[Field: CI_Space]
+    Set as: ""                     ; empty field creates blank space
+    Width: 100% Page
+
+;=================================================================
+;  Result Line – Label and Calculated Value (read-only)
+;=================================================================
+[Line: CI_ResultLine]
+    Fields: CI_ResultLabel, CI_ResultValue
+
+[Field: CI_ResultLabel]
+    Set as: "Compound Interest :"
+    Skip: Yes
+    Width: 18
+
+[Field: CI_ResultValue]
+    Type: Number
+    Use: NumberField
+    Set As: $$CIExpCalc:$CI_Principal:$CI_Rate:$CI_Time
+    Set Always: Yes
+    Width: 18
+    Border: Thin Bottom
+    Align: Right
+
+;=================================================================
+;  User Defined Function – Compound Interest Calculation
+;=================================================================
+[Function: CIExpCalc]
+    Parameter : P : Amount          ; Principal
+    Parameter : R : Number          ; Rate (%)
+    Parameter : T : Number          ; Time (Years)
+    Returns   : Amount
+    Variable  : Base   : Number
+    Variable  : Factor : Amount
+    Variable  : CI     : Amount
+
+    01 : SET : Base   : (1 + (##R/100))          ; (1 + r/100)
+    02 : SET : Factor : $$Exponential:##Base:##T  ; (1 + r/100)^t
+    03 : SET : CI     : (##P * ##Factor) - ##P   ; P * [(1+r/100)^t – 1]
+    04 : RETURN : ##CI
+
+;=================================================================
+;  Exponential Function – a^b (used by CIExpCalc)
+;=================================================================
+[Function: Exponential]
+    Parameter : BaseVal : Number
+    Parameter : Exp    : Number
+    Returns   : Number
+    Variable  : Counter : Number
+    Variable  : Result  : Number
+
+    01 : SET : Counter : 1
+    02 : SET : Result  : 1
+    03 : WHILE : ##Counter <= ##Exp
+    04 : SET : Result  : ##Result * ##BaseVal
+    05 : SET : Counter : ##Counter + 1
+    06 : END WHILE
+    07 : RETURN : ##Result

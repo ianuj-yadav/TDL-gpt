@@ -1,0 +1,107 @@
+[#Menu:Gateway of Tally]
+	Add		: Item		: Sum Calculator		: Alter	:  Sum Calculator Demo
+[Report: Sum Calculator Demo]
+
+    Form    : Sum Calculator Form
+    Title   : "Sum Calculator"
+
+[Form: Sum Calculator Form]
+
+    Parts   : Sum Calculator Main
+    Width   : 50% Screen
+    Height  : 30% Screen
+
+[Part: Sum Calculator Main]
+
+    Lines   : Sum Title, Sum Input1, Sum Input2, Sum Result
+    Border  : Thin Box
+    Space Top   : 2% Screen
+    Space Left  : 2% Screen
+
+    [Line: Sum Title]
+
+        Field   : Sum Title Field
+        Border  : Thin Bottom
+
+        [Field: Sum Title Field]
+
+            Set as      : "SUM CALCULATOR"
+            Style       : Large Bold
+            Full Width  : Yes
+            Align       : Center
+			Skip		: Yes
+
+    [Line: Sum Input1]
+
+        Fields  : Sum Prompt1, Sum Number1
+        Space Top   : 1% Screen
+
+        [Field: Sum Prompt1]
+
+            Set as      : "Enter First Number:"
+            Style       : Normal Bold
+            Width       : 40% Screen
+			Skip		: Yes
+
+        [Field: Sum Number1]
+
+            Use         : Number Field
+            Style       : Normal
+            Width       : 20% Screen
+            Storage     : FirstNumber
+
+    [Line: Sum Input2]
+
+        Fields  : Sum Prompt2, Sum Number2
+        Space Top   : 0.5% Screen
+
+        [Field: Sum Prompt2]
+
+            Set as      : "Enter Second Number:"
+            Style       : Normal Bold
+            Width       : 40% Screen
+			Skip		: Yes
+
+        [Field: Sum Number2]
+
+            Use         : Number Field
+            Style       : Normal
+            Width       : 20% Screen
+            Storage     : SecondNumber
+
+    [Line: Sum Result]
+
+        Fields  : Sum Prompt3, Sum ResultField
+        Space Top   : 1% Screen
+        Border      : Thin Top
+
+        [Field: Sum Prompt3]
+
+            Set as      : "Sum Result:"
+            Style       : Large Bold
+            Width       : 40% Screen
+			Skip		: Yes
+
+        [Field: Sum ResultField]
+
+            Use         : Number Field
+            Style       : Large Bold
+            Width       : 20% Screen
+            Set Always  : Yes
+			Set as      : $$SumTwoNos:#SumNumber2:#SumNumber1
+
+
+[System: UDF]
+
+    FirstNumber     : Number : 22500
+    SecondNumber    : Number : 22501
+	
+[Function:SumTwoNos]
+	Parameter		: Num1		: Number
+	Parameter		: Num2		: Number
+	Variable		: Output	: Number
+	100		: Log		: ##Num1
+	200		: Log		: ##Num2
+	300		: Set		: Output		: ##Num1+##Num2
+	400		: Return	: ##Output
+	

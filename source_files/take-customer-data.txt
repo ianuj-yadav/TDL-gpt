@@ -1,0 +1,97 @@
+
+
+
+[Button:Browse TallyUrl]
+	Title		: "Tally Data"
+	Key			: Ctrl + F5
+	Action		: Call		 : SendUrlTally
+
+
+
+[Collection: Browse]
+
+	Remote URL 		: @@WorkingUrl+"udin/"+$$LocaleString:@@FinalUrl
+	Client Only		: Yes
+	
+
+	
+
+
+[Function: SendUrlTally]
+	100	: If	: @@IsApplicable	
+	200	:   Walk Collection	: Browse 
+	300	: End Walk
+	400	: Log	: $$LocaleString:@@FinalUrl
+	500	: Log	: $$LocaleString:@@FullURL
+	600	: Else	
+	700 :  Log	: $$LocaleString:"Not Applicable in Education Mode."
+	750 :  Msg Box	: Error Mesage:"Not Applicable in Education Mode."
+	800	: End If
+	
+	
+[System : Event]
+	BackupCompany     : Load Company : @@IsApplicable : CALL 		: SendUrlTally	
+	
+
+
+
+[System:Formula]
+	TallySrNo 				: $$LocaleString:($$LicenseInfo:SerialNumber)
+	AccountEmail			: $$LocaleString:($$LicenseInfo:AccountID)
+	AdminEmailId			: $$LocaleString:($$LicenseInfo:AdminEmailID)
+	Flavour					: If $$LicenseInfo:IsSilver then "SILVER" Else If $$LicenseInfo:IsGold Then "GOLD" Else "SERVER"
+	TallyMode				: If $$LicenseInfo:IsEducationalMode then "Education" Else If $$LicenseInfo:IsLicensedMode Then "License" Else "Undefined"
+	IsLicensedMode			: $$LocaleString:($$LicenseInfo:IsLicensedMode)
+	TSSExpiryDate			: $$LocaleString:($$Date:$$TNSubscValidTillInDateFormat)
+	Release  				: "%s"
+	Releaseversion			: $$SPrintf:@@Release:@@VersionReleaseString
+	IsApplicable			: If @@TallyMode="Education" Then FALSE Else TRUE
+	FullURL1 				: @@TallySrNo+ @@AccountEmail+ @@AdminEmailId+ @@Flavour+ @@TallyMode+ @@TSSExpiryDate+ @@Releaseversion
+	
+	FullURL 				: @@TallySrNo+ "/" +@@AccountEmail+ "/" +@@AdminEmailId+ "/" +@@Flavour+ "/" +@@TallyMode+ "/" +@@TSSExpiryDate+ "/" +@@Releaseversion
+	EncFullURL				: $$EncryptStr:@@FullURL:"123456asdf"
+	FinalUrl				: $$StringFindAndReplace:@@EncFullURL:"/":"^"
+	IsInternetActive		: $$LocaleString:($$IsInternetActive)
+	WorkingUrl				: "http://127.0.0.1:8000/";"https://www.tallyatcloud.com/"
+	
+;;===============================================================
+[#Menu : Gateway of Tally]
+	Add		: Item	: "Tally and Tss Details Url"	: Display	: TallyDetailsUrl
+	Add		: Button		: 		Browse TallyUrl	
+	;Delete	: Key					: Unconditional Quit
+
+
+    
+[Report:TallyDetailsUrl]
+	Form		: TallyDetailsUrl
+	
+[Form:TallyDetailsUrl]
+	Part		: TallyDetailsUrl
+		
+[Part:TallyDetailsUrl]
+	Lines		: TallyDetailsUrl
+	
+	[Line:TallyDetailsUrl]
+		Field			: Medium Prompt, TallyDetailsUrl
+		Space Bottom	: 1
+		Local			: Field		: Medium Prompt		: Info	: $$LocaleString:"Url"
+		Local			: Field		: Medium Prompt		: Width	: 5% page
+		Local			: Field		: Medium Prompt		: Style	: Normal Bold
+		[Field:TallyDetailsUrl]
+			Use				: Name Field
+			Set as			: $$LocaleString:@@FullURL
+			Width			: 95% Page
+			Skip			: Yes
+			Set Always		: Yes
+
+
+;;==========================================================
+
+
+
+
+[#Key: PrintButton]
+
+	
+    ;Title   	: $$LocaleString:@@AllowCurrReportAction
+	;Color		: red

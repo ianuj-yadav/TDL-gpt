@@ -1,0 +1,76 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This code demonstrates the Object association at Part Level
+-	Part Attribute 'AccessName' is used to specify a name by which this Part can be accessed later.
+- 	Object Association at Part can be done through Part Attribute 'Object' which requires 
+	Sub Object of the current primary object and Part Attribute 'Object Ex' can be used to 
+	specify any primary object with an object identifier.
+-	This code displays a ledger name and first bill number using Part Attribute 'Object Ex'.
+	With the help of Access Name, the current part is referred within Method Formula Syntax
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Part Object Association]
+
+	Form		: Part Object Association
+	Title		: "Part Object Association"
+	Fetch Object: Ledger	: "Customer"	: Name, BillAllocations
+
+[Form: Part Object Association]
+
+	Parts		: Part Object Association Main
+	Height		: 20% Screen
+	Width		: 70% Screen
+
+[Part: Part Object Association Main]
+
+	Parts		: Part Object Association, Objectof and New Method Syntax
+	Border		: Thin Box
+
+	[Part: Part Object Association]
+	
+		Lines		: Part Object Association
+		Object Ex	: (Ledger, "Customer").    	;; Part is associated with Primary Object
+		Access Name	: "Part 1"	;; Access Name specified so that this part can be referred
+		Background	: White
+		Width		: 35% Screen
+		Height		: 20% Screen
+	
+		[Line: Part Object Association]
+	
+			Fields	: Part Object Association
+	
+			[Field: Part Object Association]
+	
+				Set as : "This Part is associated with Ledger Object ''Customer''"
+	
+	[Part: Objectof and New Method Syntax]
+	
+		Lines	: Objectof, New Method Syntax
+
+		[Line: Objectof]
+
+			Field	: Name Field, Object Of
+			Local	: Field	: Name Field 	: Set as 	: "Ledger Name Using $$Objectof:"
+
+			[Field: Object Of]
+	
+				Set as	: $$ObjectOf:Part:"Part 1":$Name
+
+		[Line: New Method Syntax]
+	
+			Field 	: Name Field, New Method Syntax
+			Local 	: Field : Name Field	: Set as	: "Ledger's Bill Using New Method Syntax:"
+
+			[Field: New Method Syntax]
+	
+				Set as	: $(Part, "Part 1").BillAllocations[1].Name
+				
+;; Data Object is retrieved using UI Object and Method formula syntax. Primary Object is the
+;; Data Object associated within Part 'Part 1'
+
+;; End-of-File

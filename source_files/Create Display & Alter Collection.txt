@@ -1,0 +1,153 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+
+/*
+Objective(s) – 
+- 	This code demonstrates the usage of actions Create, alter and display collection actions
+-	The Actions 'Display Collection' and 'Alter Collection' invoke a initial trigger report
+	to accept an input from the user and subsequently displays a report based on the user 
+	input. 
+-	Action 'Create Collection' is used to create the objects continuously. In other
+	words, after creation of an object, an empty screen appears for creation of second object.
+	This is the difference between Action 'Create' and 'Create Collection' where Action 
+	'Create' allows the user to create an instance of the Object and then subsequently
+	quits the Report.
+
+Last modification – 
+-	Altered on 09/11/2009
+*/
+
+[Menu: Menu Create Display Alter]
+
+	Indent		: "Ledger Master"
+	Item		: Blank
+	Item		: Blank
+
+    Key Item    : Create   : C : Create Collection : Ledger Coll
+	Item		: Blank
+
+    Key Item    : Display  : D : Display Collection: Ledger Coll
+	Item		: Blank
+
+    Key Item    : Alter    : A : Alter Collection  : Ledger Coll
+	Item		: Blank
+	Item		: Blank
+
+;; Collection Definition
+
+[Collection: Ledger Coll]
+
+    Use         : Alias Collection      ;; Default Collection for including Alias
+    Type        : Ledger
+    Variable    : LedgerVar
+    Trigger     : Triggered Led Report
+    Report      : Final Led Report
+
+[Variable: LedgerVar]
+    
+    Type        : String
+
+;; Trigger Report Definition begins here
+
+[Report: Triggered Led Report]
+
+    Title       : "Select Ledger"
+    Form        : Triggered Led Report
+            
+[Form: Triggered Led Report]
+
+    Parts       : Triggered Led Report
+
+[Part: Triggered Led Report]
+
+    Lines       : Triggered Led Report
+    
+    [Line: Triggered Led Report]
+    
+        Fields      : Medium Prompt, Triggered Led Report
+        Local: Field: Medium Prompt : Set as    : "Ledger :"
+        
+        [Field: Triggered Led Report]
+        
+            Use         : Name Field
+            Table       : Ledger Coll
+            Show Table  : Always
+			Tooltip		: "Please enter the Ledger which needs to be displayed/altered"
+            Modifies    : LedgerVar
+            ;; Modifies the Variable Value "TDE LedgerVar" which is passed to the subsequent
+            ;; Report through the Collection
+
+;; Final Report Definition begins here
+
+[Report: Final Led Report]
+
+    Title       : if $$InCreateMode then "Ledger Creation" else if $$InAlterMode then "Ledger Alteration" else "Ledger Display"
+    Form        : Final Led Report
+    Object      : Ledger                ;; Object must be associated at the Report
+    
+[Form: Final Led Report]
+
+    Parts       : Final Led ReportName, Final Led ReportOthers
+    
+[Part: Final Led ReportName]
+
+    Lines       : Note, Final Led ReportName
+    Repeat      : Final Led ReportName  : Name
+    Break On    : $$IsEmpty:$Name
+    Height      : 25% Page
+	Local: Line	: Note	: Local	: Field	: Name Field	: Info	: "(Please hover the mouse pointer over the fields to view the Tooltip)"
+
+    [Line: Final Led ReportName]
+    
+        Fields      : Medium Prompt, Final Led ReportName
+        Local: Field: Medium Prompt     : Set as        : "Name :"
+        Local: Field: Medium Prompt     : Inactive      : $$Line > 1
+        
+        [Field: Final Led ReportName]
+        
+            Use         : Name Field
+            Storage     : Name
+			Case		: First Upper Case
+
+			;; This Attribute will display ToolTip when the mouse hovers over the current field
+			;; If the Repeatable Line is 1 then the value will be 'Please enter Ledger Name' else
+			;; it will be 'Please enter Alias ' with the Line Number
+			ToolTip		: if $$Line = 1 then "Please enter Ledger Name" else "Please enter Alias " + $$String:@@AliasLine
+            Unique      : Yes
+
+[System: Formula]
+
+	AliasLine	: $$Line - 1
+        
+[Part: Final Led ReportOthers]
+
+    Lines       : Final Led Report Group, Final Led Report OpBal
+    
+    [Line: Final Led Report Group]
+    
+        Fields      : Medium Prompt, Final Led Report Group
+        Local: Field: Medium Prompt     : Set as        : "Parent :"
+        
+        [Field: Final Led Report Group]
+
+            Use         : Name Field
+			Set As		: if $$InAlterMode then $Parent:Ledger:$Name else ""
+            Storage     : Parent
+            Table       : Group             ;; Default Collection of Groups
+            Show Table  : Always
+			Tooltip		: if $$InDisplayMode then "This is a Group" else if $$InAlterMode then "Please alter the Group, if required" else "Please enter an appropriate Group for the Ledger"
+                        
+    [Line: Final Led Report OpBal]
+    
+        Fields      : Medium Prompt, Final Led Report OpBal
+        Local: Field: Medium Prompt     : Set as        : "Opening Balance :"
+        
+        [Field: Final Led Report OpBal]
+
+            Use         : Amount Forex Field
+			Set As		: if $$InAlterMode then $OpeningBalance:Ledger:$Name else ""
+            Storage     : OpeningBalance
+			Tooltip		: if $$InDisplayMode then "Opening Balance as on " + $$String:@OpeningDate else if $$InAlterMode then "Please alter the Opening Balance, if required" else "Please enter Opening Balance, if any"
+			OpeningDate : $BooksFrom:Company:##SVCurrentCompany
+	
+;; End-of-File

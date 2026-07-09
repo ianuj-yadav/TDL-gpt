@@ -1,0 +1,601 @@
+---
+title: Duplicate voucher Date And Ledgers Button
+type: sample_code
+objects: Report, Form, Part, Line, Field, Collection, Function, Button
+source: Duplicate voucher Date And Ledgers Button.txt
+---
+
+# Duplicate voucher Date And Ledgers Button
+
+## Source Code
+
+```tdl
+/*
+[#Form:Voucher]
+;	Add	: Button	: ChangeLedgersInDuplicate; If $$BaseOwner:$$InDuplicateMode then $$LocaleString:" (Duplication)"
+;	
+;[Button: ChangeLedgersInDuplicate]
+;	Key	: Alt+8
+;	Title	: "Change Ledgers"
+;	Action	: Exchange	: @Ledger:($LedgerName:LedgerEntries:$$Name)
+;	Leger	: If $$BaseOwner:$$InDuplicateMode then $PartyLedgerName Else ""
+	
+[#Field:VCh PArticulars]
+	Set as		: If $$BaseOwner:$$InDuplicateMode Then "Hello" Else ""
+	
+
+	[#Form: NormalAccoutingViewVoucher]
+		Background		: Red
+		
+[#Field:PlainVCHDate]
+	Delete		: Set as
+	Delete		: Modifies
+	Switch		: PlainVCHDate	: DuplicateDate	: ($$Owner:$$InDuplicateMode)
+	
+[!Field:DuplicateDate]
+	Delete		: Set as
+	;Key						: NewDate
+	Set By Condition		: ($$Owner:$$InDuplicateMode):@NewDate
+	NewDate		: "19.3.2024"
+	;Background	: Red
+	Background	: If ($$Owner:$$InDuplicateMode) Then "Yellow" Else "Red"
+	Set Always	: Yes
+	
+[Key:NewDate]
+	Key		: Enter
+	Action	: Alter	: "1.1.2020";$$PrintDate
+
+[#Part: EXPINV OnAccountDetails]
+	Print BG	: Red
+	
+
+*/
+
+
+
+
+
+
+
+/*
+[#Form: Day Book]
+Add: Button : Dupjkvch
+
+[#Form: Ledger Vouchers]
+Add: Button : Dupjkvch
+
+[Button: Dupjkvch]
+Title: "Duplicate New"
+Key: Ctrl+X
+Action: Call : jaydup
+
+   
+[Collection: DupJktVouchers]
+
+Data Source : Report :Selected
+Fetch: Date, VoucherTypeName, Narration, LedgerEntries.*
+
+[Function: jaydup]
+
+    10     : WALK COLLECTION    : DupJktVouchers
+    20      :   SET             : SVViewName         : $$SysName:AcctgVchView
+    30    :     NEW OBJECT         : Voucher
+    40     :     SET VALUE         : Date                : $$PrintDate
+    50     :     SET VALUE         : VoucherTypeName     : $VoucherTypeName
+    60     :     SET VALUE         : Narration         : $Narration
+    70     :   SET VALUE       : PersistedView     : ##SVViewName
+
+    80    :     WALK COLLECTION : LedgerEntries
+    90    :         INSERT COLLECTION OBJECT     : Ledger Entries
+    100    :         SET VALUE                     : Ledger Name         : $LedgerName
+    110    :         SET VALUE                     : IsDeemedPositive     : $IsDeemedPositive
+    120    :         SET VALUE                     : Amount             : $Amount
+    130    :         SET TARGET                     : ..
+    140    :     END WALK
+    150    :     CREATE TARGET
+    160    : END WALK
+
+    170    : RETURN
+
+;;End Of Code
+*/
+
+
+
+
+
+
+
+
+
+
+;;=====================================================
+/*
+[#Menu: Gateway of Tally]
+
+Add : Item : "Multiple Sales Entry" : Alter : MultiSaleRep
+
+[Report : MultiSaleRep]
+
+Form : MultiSaleRep
+Object : Company
+
+;Fetch Collection: Sales Support Ledgers Extract, Party Ledgers Extract
+
+
+[form:MultiSaleRep]
+Height:100% Screen
+Width:100% Screen
+Button:Refresh TDL
+Part:MultiSaleRepCrPart,MultiSaleRep
+On : Form Accept : yes : Form Accept
+On : Form Accept : yes : Call : CphSale BulkAutoEntry;MultipleSalesEntryFun
+
+;;first part
+[Part:MultiSaleRepCrPart]
+Background:red
+Line:MultiSaleRepLinPartoneDate,MultiSaleRepLinPartone
+[Line:MultiSaleRepLinPartoneDate]
+Right Field:DatF,DatF1
+Local:Field:DatF:Info:""
+
+[Field:DatF]
+
+[Field:DatF1]
+;Type : Date
+Use : Short Date Field
+;Storage : Date
+;Width:mad:@ShortWidth
+Skip:Yes
+
+[Line:MultiSaleRepLinPartone]
+Field:CrF,CrF1,CrF2
+Local:Field:CrF:Info:"Date"
+Local:Field:CrF1:Info:"Dr Ledger"
+Local:Field:CrF2:Info:"Cr Ledger"
+
+[field:CrF]
+Skip:Yes
+Space Left:5
+
+[field:CrF1]
+Space Left:3
+
+[Field:CrF2]
+
+
+
+[Collection:SalesLedgersColl]
+Title:List Of Sales Ledgers
+Type:ledger
+Child Of:$$GroupSales
+
+
+
+[Part:MultiSaleRep]
+Line:AmtLin,DebitLin
+Repeat:DebitLin:CphSalesCollection
+Scroll:Vertical
+Break On:$$IsEndOfList:$DebitLin1Storage;$PartyLedgerName
+
+
+[Collection: CphSalesCollection]
+
+Title : "Bulk Sales Entry"
+Type : CphSales BulkEntry : Company
+Child Of : ##SVCurrentCompany
+
+
+
+[line:AmtLin]
+Right Field:AmtLin
+Local:Field:AmtLin:Info:"Amount"
+[Field:AmtLin]
+Use:Short Name Field
+Align:Right
+
+[Line:DebitLin]
+Border:THICK BOX
+Field:DebitLin,Datefld,DebitLin1,CrLedFld
+Right Field:AmtField
+Local:Field:DebitLin:Info:"Dr"
+
+[Field:DebitLin]
+
+
+[Field:Datefld]
+Type : Date
+Use : Short Date Field
+Storage : Date
+
+
+[Field:DebitLin1]
+Type:String
+Width:mad:@ShortWidth
+Table:SundDebtLedgres,EndOfList
+Show Table:Always
+Storage:DebitLin1Storage
+
+
+;;afsdfsgvsdgssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+
+[Field:CrLedFld]
+Type:String
+Use:Name Field
+Table:SalesLedgersColl;,Endoflist
+Show Table:Always
+Storage:CrLedFldStorage
+Inactive : $$IsEndOfList:$DebitLin1Storage
+
+[Field:AmtField]
+Type:Amount
+Use:Amount Field
+Storage:Amount
+Inactive :$$IsEndOfList:$DebitLin1Storage
+
+
+
+
+
+[System:UDF]
+CphSales BulkEntry : Aggregate : 41071
+Date:Date:41072
+CrLedgerNameFldStorage:String:41073
+DebitLin1Storage:String:41074
+CrLedFldStorage:String:41075
+Amount:Amount:41076
+
+
+[Collection:SundDebtLedgres]
+Title:"List Of Sundry Debtors"
+Type:Ledger
+;Child Of:$$GroupSundryDebtors
+Belongs to : yes
+;Format : $Name,30
+Align:Center
+
+
+
+
+
+
+;[Function:MultipleSalesEntryFun]
+
+[Function: CphSale BulkAutoEntry]
+
+;; Procedural Block
+
+Variable : CphDate : Date
+Variable : CphCrLedgerName : String
+Variable : CphDrLedgerName : String
+Variable : CphAmount : Amount
+
+Variable : Counter : Number: 1
+
+001 : Start Batch Post : 10
+005 : START PROGRESS : ($$NumItems:CphSalesCollection) : "Creating Vouchers" : @@CmpMailName : "Creating Sales Vouchers ..."
+007 : WALK COLLECTION :CphSalesCollection ;;Sales Info
+;010 : SET : CphDate : $$Date:$Date
+010 : SET : CphDate :$Date
+
+
+020 : SET : CphCrLedgerName : $CrLedFldStorage
+030 : SET : CphDrLedgerName : $DebitLin1Storage
+
+
+040 : SET : CphAmount :$Amount
+
+
+
+060:NEW OBJECT : Voucher
+070: SET VALUE : Date : ##CphDate
+080:SET VALUE : VoucherTypeName : $$VchTypeSales
+080a:LOG : $$String:##CphDate
+
+
+
+
+120 : SET VALUE : Ledger Name : ##CphDrLedgerName
+140 : SET VALUE : IsDeemedPositive : "Yes"
+141 : SET VALUE : Amount : ##CphAmount * (-1) ;##CphAmount
+;150 : SET TARGET : ..
+
+150a : LOG : $$String:##CphDrLedgerName
+
+;----------------------------------------------------------------------------
+;;Credit Entry
+160 : INSERT COLLECTION OBJECT : AllLedgerEntries
+;160a: SET TARGET : LedgerEntries
+170 : SET VALUE : Ledger Name :##CphCrLedgerName
+180 : SET VALUE : Amount : ##CphAmount ;##CphAmount
+190 : SET VALUE : IsDeemedPositive : "No"
+;200 : SET TARGET : ..
+200a : LOG : $$String:##CphCrLedgerName
+
+
+220 : CREATE TARGET
+240 : END WALK
+260 : END PROGRESS
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+[#Form: Day Book]
+Add: Button : Dupvch
+
+[#Form: Ledger Vouchers]
+Add: Button : Dupvch
+
+[Button: Dupvch]
+Title: "Duplicate Selected"
+Key: Ctrl+X
+Action: Call : jaydup
+
+
+[Function:jaydup]
+    Variable : MSTID : String
+    Object  : Voucher : #VchMasterID
+
+    01 : WALK COLLECTION : DupJktVouchers
+    02 : SET : MSTID : "ID:"+ $$String:$MasterID
+	;03	: Set: Date		: $$PrintDate
+    04 : Duplicate : Voucher
+	;04a:Set Field	: Vch Date: Date	: $$Date:$$SysInfo:SystemDate
+	;05: Trigger Key : Enter
+    010: Trigger Key : Ctrl+A
+    017 : END WALK
+   
+
+
+[Collection: DupJktVouchers]
+
+Data Source : Report :Selected
+Fetch : *.*,All Ledger Entries.*,Allinventoryentries.*
+
+[Key:ChangeDate1]
+	Key		: Enter
+	Action	: Set	: #VchDate	: $$Date:$$SysInfo:SystemDate
+
+
+
+
+[#Field:PlainVchDate]
+	
+	;Background	: If ($$Owner:$$InDuplicateMode) Then "Red" Else  "Yellow"
+	Switch		: PlainVchDate	: PlainDuplicateDate	: ($$Owner:$$InDuplicateMode)
+	;Delete		: Set as
+[!Field:PlainDuplicateDate]
+	Set as		: If ($$Owner:$$InDuplicateMode) Then $$Date:$$SysInfo:SystemDate Else  ##VARVchDate
+	Background			: Red
+
+
+*/
+
+
+
+;;============================================Final
+
+
+/*
+[#Form:DayBook]
+add:button:LearnWellBtn
+[#Form:Voucher]
+	Add	: Button	: Chgdate
+	Add	: Button	: ChageLedger
+[Button:LearnWellBtn]
+title:Voucher Cloning
+Key:Ctrl+V
+Action:Call:LearnWellVC
+ 
+[Function:LearnWellVC]
+Variable:LWID:String
+Object:Voucher:#VCHMasterId
+ 
+01:WALK COLLECTION:LearnwellCloning
+02:SET:LWID:ID:+$$String:$MasterId
+03:Duplicate:Voucher
+03a	: Trigger Key:Ctrl+z
+04:Trigger Key:Ctrl+A
+05:END WALK
+ 
+[Collection:LearnwellCloning]
+DataSource:Report:Selected
+Fetch: *.*
+
+[Function:ChangeDateFun]
+	01	: Set	: Varvchdate	: $$Date:$$SysInfo:SystemDate
+	
+[Button:Chgdate]
+	Key		: Alt+2
+	Title	: ChangeDate
+	Action	: Call	: ChangeDateFun;:#VchParticulars
+	Inactive	: NOT ($$Owner:$$InDuplicateMode)
+	
+[Function:ChangeLedgerFun]
+	Variable	: Ledg	: String
+;	10	: Set	: Ledg	: $LedgerEntries[1].LedgerName
+;	20	: Set Value	: 
+;	10	: Set Value	: $LedgerEntries[1].LedgerName	: $LedgerEntries[2].LedgerName
+;	20	: Set Value	: $LedgerEntries[2].LedgerName	: $LedgerEntries[1].LedgerName
+;	05	: Set		: Ledg			: $LedgerEntries[1].LedgerName
+	;10	: : 
+	;10	: Modify Object		: LedgerEntries[1].LedgerName: $LedgerEntries[2].LedgerName
+	;11	: Modify Object		: $(LedgerName:LedgerEntries[2])	: $LedgerEntries[1].LedgerName
+;	11	: Set		: Ledg		: 
+	;20	: Set Value 	: LedgerName[Second]	: $LedgerEntries[1].LedgerName
+	30 : Log	: "$LedgerEntries[2].LedgerName   "+ $LedgerEntries[2].LedgerName
+	40 : Log	: "$LedgerEntries[1].LedgerName   "+ $LedgerEntries[1].LedgerName
+;	50	: Log	: "Ledg  "+ ##Ledg
+;	10	: Walk Collection	: Ledger Entries
+;	20	: Set  	: Ledg		: $LedgerName
+;	30	: Set	: LedgerName	: $LedgerName
+;	40	: Set	: LedgerName	: ##Ledg
+;	50	: End Walk
+	;110	: If	:	#VchToBy=Dr
+	11	: Set		: Ledg		: $LedgerEntries[1].LedgerName
+	120 : Set value 	: LedgerName		:  $LedgerEntries[2].LedgerName
+	130 : Modify Object	: Ledger		:  ##Ledg; Else ##Ledg
+;	130	: If	:	#VchToBy="Cr"
+;	140	: Set Value	: LedgerName		: ##Ledg
+;	141:	Log	: "##Ledg  "+##Ledg
+;	;142	: Log	: #VchToBy
+;	150 : End If
+
+	
+[Button:ChageLedger]
+	Key			: Alt+3
+	Title		: "Change Ledger"
+	;Action		: Modify Object	: (Ledger,$LedgerEntries[2].LedgerName).LedgerName :$LedgerEntries[1].LedgerName
+	Action		: Call	: ChangeLedgerFun;:#VchParticulars
+	Inactive	: NOT ($$Owner:$$InDuplicateMode) or Not @@IsJournal
+	
+[#Field:VchParticulars]
+	Background	: If Not $$IsDr:#VchParticulars Then "red" Else "Green"
+;;End Of Code
+
+
+[#Part: PJR DrDetails]
+	Print BG	: red
+	
+ [#Field: PPR Accts]
+	 Print BG	: red
+	 
+*/
+
+;;===========================================
+
+
+[#Form:DayBook]
+add:button:LearnWellBtn
+[#Form:Voucher]
+	Add	: Button	: Chgdate
+	Add	: Button	: ChageLedger
+[Button:LearnWellBtn]
+title:Voucher Cloning
+Key:Ctrl+V
+Action:Call:LearnWellVC
+ 
+[Function:LearnWellVC]
+Variable:LWID:String
+Object:Voucher:#VCHMasterId
+ 
+01:WALK COLLECTION:LearnwellCloning
+02:SET:LWID:ID:+$$String:$MasterId
+03:Duplicate:Voucher
+03a	: Trigger Key:Ctrl+z
+04:Trigger Key:Ctrl+A
+05:END WALK
+ 
+[Collection:LearnwellCloning]
+DataSource:Report:Selected
+Fetch: *.*
+
+[Function:ChangeDateFun]
+	01	: Set	: Varvchdate	: $$Date:$$SysInfo:SystemDate
+	
+[Button:Chgdate]
+	Key		: Alt+2
+	Title	: ChangeDate
+	Action	: Call	: ChangeDateFun;:#VchParticulars
+	Inactive	: NOT ($$Owner:$$InDuplicateMode)
+	
+[Function:ChangeLedgerFun]
+	Static Variable	: Ledg1	: String	: $LedgerEntries[1].LedgerName
+	Static Variable	: Ledg2	: String	: $LedgerEntries[2].LedgerName
+	Variable		: Count1	: Number	: 1
+	
+	10	: Walk Collection	: LedgerEntries	;: Yes
+	
+	;40	: Log		: $LedgerName
+	;41	: Log		: ##Ledg1
+	;42	: Log		: ##Ledg2;	: $LedgerEntries[-1].LedgerName
+	;41	: Set Value	: LedgerName	: $$PrevObj:$LedgerName
+	
+	;45	: Do If	: ($$IsEqual:##Count1:1): Reset Value	: LedgerName	:##Ledg2;$$LastObj:$Ledgername;##Ledg2
+	;46	: Do If	: ($$IsEqual:##Count1:2): Reset Value	: LedgerName	:##Ledg1;$$FirstObj:$Ledgername;##Ledg1
+	43	: If	: ##Count1=1	
+	45	: Set Value	: LedgerName	: ##Ledg2
+	45a	: Log		: $ledgerName+"    Count1=1"
+;	46	: End If
+;	47	: If	: ##Count1=2
+	47	: Else
+	48	: Set Value		: LedgerEntries[1].LedgerName	: ##Ledg1
+	48a	: Log		: $ledgerName+##Ledg1+"    Count1=2"
+	49	: End If
+	;45	: Reset Value	: LedgerName	:##Ledg2
+	;46	: Do If	: ##Count1=2: Log	: $LedgerName	;:##Ledg1
+	;50	: Msg Box	:"LedgerName"			: $LedgerName	: No
+	;51	: Set	: Count1		: ##Count1+1
+	;55	: Log		: ##Count1
+	58	: Increment	: Count1
+	60	: End Walk
+;	10	: Set Value	: LedgerName		: ##Ledg2
+;	;11	: Walk Collection	: LedgerEntries	: Yes
+;	;15	: Set			: Count		:##Count+1
+;	;21	: Do If	: ##Count=1		: Continue
+;	;20	: Set Value			: LedgerName	: $LedgerEntries[1].LedgerName
+;	23	: Log	: $LedgerName
+;;	
+;;	30	: End Walk
+;	11	: Call		: LedgerCh2
+	
+[Function:LedgerCh2]
+	10	: Walk Collection	: LedgerEntries	: Yes
+	;20	: Set Value		: LedgerName	: 
+	40	: Set Value		: LedgerName	: ##Ledg1
+	50	: Log			: "50"
+	60	: End Walk
+	
+
+	
+
+
+	
+[Button:ChageLedger]
+	
+	Key			: Alt+3
+	Title		: "Change Ledger"
+	;Action		: Modify Object	: (Ledger,$LedgerEntries[2].LedgerName).LedgerName :$LedgerEntries[1].LedgerName
+	;Action		: Call	: ChangeLedgerFun;:#VchParticulars
+	Action		: Trigger Key	: Esc, Esc, Esc,Alt+2
+	Inactive	: NOT ($$Owner:$$InDuplicateMode) or Not @@IsJournal
+	
+[#Field:VchParticulars]
+	Background	: If  @@IsDr And $$Owner:$$InDuplicateMode Then "red" Else "Green"
+	Set as		: If @@IsDr And $$Owner:$$InDuplicateMode Then $LedgerEntries[2].LedgerName Else $LedgerEntries[1].LedgerName
+;;End Of Code
+
+
+[#Part: PJR DrDetails]
+	Print BG	: red
+	
+ [#Field: PPR Accts]
+	 Print BG	: red
+	
+	/*
+[#Part: Print Buttons]
+Add: Button: At End: Change Printer
+Background	: Red
+
+[#Button: Change Printer]
+Use : InlineButton Template Large
+Title : $$LocaleString:Printer
+Space Left : 1.25% Screen
+*/
+
+
+	
+
+```

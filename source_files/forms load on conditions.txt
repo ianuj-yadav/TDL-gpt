@@ -1,0 +1,67 @@
+/*
+[#Menu:Gateway of Tally]
+	Item:OptionReport:Alter:Option_Report
+[Variable:Chkcondition]
+	Type:Logical
+	Persistent:Yes
+[System:Variables]
+	Chkcondition:No
+[Report:Option_Report]
+	;Form:Optreport
+	Form:Voucher
+	[#Form: Voucher]
+		Add:Button:PNL
+		Add:Button:BalS
+		
+	[Form:Optreport]
+		Part:Optreport
+		[Part:Optreport]
+			Line:Optreport
+			[Line:Optreport]
+				Field:
+				
+				
+			Add:Button:PNL
+			Add:Button:BalS
+		
+		
+	;Option:Option1:##Chkcondition
+	;Option:Option2:Not ##Chkcondition
+;[*Form:Option1]
+;	Use:Profit and Loss
+;[*Form:Option2]	
+;	Use:Balnacesheet
+			
+[Button:PNL]
+	Title:"Check Profit and Loss"
+	Action:Set:Chkcondition:Yes
+[Button:BalS]
+	Title:"Check Balancesheet"
+	Action:Set:Chkcondition:No
+		*/
+		
+[#Form:Ledger]
+	Add:Part:NewPart
+	Background:Yellow
+	[Part:NewPart]
+		Line:NewLine
+		[Line:NewLIne]
+			Field:PL,Bal
+			[Field:PL]
+				Use:Profit and Loss
+				
+			[Field:Bal]
+				Use:Balancesheet
+[#Line: LED TaxTitle]
+	Add:Field:At Beginning:NewField
+	[Field:NewField]
+		Set as:"Show AAdhar"
+[#Part: LED Address Details]
+	Background:grey
+[Button:PNL]
+	Title:"Check Profit and Loss"
+	Action:Set:Chkcondition:Yes
+[Button:BalS]
+	Title:"Check Balancesheet"
+	Action:Set:Chkcondition:No
+

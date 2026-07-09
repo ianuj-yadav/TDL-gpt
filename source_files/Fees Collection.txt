@@ -1,0 +1,86 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the usage of aggregate UDF
+-	This code is written to store the Course, Student & Amount details with the help of an Aggregate UDF
+
+Last Modification -
+-	Altered on 09-11-2009
+*/
+
+[Report: Stud Fees Collection Form]
+
+	Form    	: Stud Fees Collection Form
+	Title		: "Student - Course wise Amount Collecion Form"
+	Object		: Company
+	 
+[Form: Stud Fees Collection Form]
+
+	Part		: Stud Fees Collection Form
+	Width		: 60% Screen
+	Height		: 60% Screen
+	Background	: FormClr
+
+	
+[Part:Stud Fees Collection Form]
+
+	Lines			: Stud Fees Collection Title, Stud Fees Collection Details
+	Repeat			: Stud Fees Collection Details	: Student Info
+	Scroll			: Vertical
+	Common Border	: Yes
+	Break On		: $$IsSysName:$CourseNameUdf
+	
+	[Line: Stud Fees Collection Title]
+		
+		Use		: Stud Fees Collection Details
+		Local	: Field	: Default			: Delete	: Storage
+		Local	: Field	: Default			: Inactive	: No
+		Local	: Field	: Default			: Type		: String
+		Local	: Field	: Course Name		: Info		: "Course Name"
+		Local	: Field	: Student Name		: Info		: "Student Name"
+		Local	: Field	: Amount Collected	: Info		: "Amount" 
+		Border	: Thin Bottom
+
+	
+	[Line: Stud Fees Collection Details]
+	
+		Fields	: Course Name, Student Name, AmountCollected
+		
+	
+		[Field: Course Name]
+		
+			Use			: Name Field
+			Storage		: Course Name Udf
+			Table		: List of Courses, End of List
+			Show Table	: Always
+			
+		[Field: Student Name]
+		
+			Use			: Name Field
+			Storage		: Student Name Udf
+			Inactive	: $$IsSysName:$CourseNameudf
+;			Validate	: NOT $$IsEmpty:$StudentNameUdf
+		
+		[Field: Amount Collected]
+		
+			Use			: Amount Field
+			Storage		: AmountCollected Udf
+			Inactive	: $$IsSysName:$CourseNameUdf
+			Validate	: NOT $$IsEmpty:$AmountCollectedudf
+
+[System: UDF]
+
+	 Student Info		: Aggregate	: 900
+	 Course Name UDf	: String	: 900
+	 Student Name Udf	: String	: 901
+	 Amount CollectedUDf: Amount	: 900
+
+[Collection: List of Courses]
+
+	Type	: Course Offered	: Company
+	Child Of: ##SVCurrentCompany
+	Format	: $CourseOffered, 20
+	Title	: "List of Courses"
+	
+;; End-of-File

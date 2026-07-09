@@ -1,0 +1,46 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code introduces the concept of User Defined Functions with a basic Compound
+	Interest Calculation code
+
+Last Modification -
+-	Altered on 09-11-2009
+
+Dependencies -
+-	Supporting files 'Simple Interest.txt' and 'Exponential.txt'
+*/
+
+[Report: Compound Interest Calculator]
+
+	Use		: Simple Interest Calculator
+	Local	: Form	: Interest Calc		: Local		: Field	: Form SubTitle	: Info	: "Compound Interest Calculator"
+	Local	: Line	: Interest Result	: Local		: Field	: Medium Prompt	: Info	: "Compound Interest Amount :"
+	Local	: Field	: Interest Result	: Set As	: $$CIExpCalc:#InterestPrincipal:#InterestRate:#InterestNoOfYrs
+
+;; Function to calculate Compound Interest
+
+[Function: CIExp Calc]
+
+;; Definition Block
+
+	Parameter	: P			: Amount
+	Parameter	: R			: Number
+	Parameter	: T			: Number
+	Returns		: Amount
+
+	Variable	: Interest	: Amount
+	Variable	: IntPYear	: Amount
+	Variable	: Counter	: Number
+
+;; Procedural Block
+
+	01 : SET	: Counter	: 0
+	02 : SET	: Interest	: 1
+	03 : SET	: Interest	: (1 + (##R/100))
+	05 : SET	: Interest	: $$Exponential:##Interest:##T
+	06 : SET	: Interest	: (##P * ##Interest) - ##P
+	07 : RETURN	: ##Interest
+
+;; End-of-File

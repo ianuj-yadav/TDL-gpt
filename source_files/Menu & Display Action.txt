@@ -1,0 +1,43 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+The following code demonstrates the usage of Menu and Display Actions and also the 
+the relevance of their association in Menu and Reports (through Form)
+*/
+
+[Button: Final Accounts] 		;; Button Definition to activate a Menu
+
+	Key    	: F5
+	Action	: Menu		: Sample Final Accounts
+
+;; Since the above Button activates a Menu, it can be acted only upon a Menu
+;; It cannot be associated to a Report.
+
+[Menu: Menu Display Menu]
+
+	Delete	: Buttons
+	Add		: Button 	: Final Accounts	;; attaching a Button to the Menu
+
+[#Form: Group Summary]
+
+	Buttons : Final Accounts	
+
+;; Above is an incorrect association as Buttons triggering Menu Action cannot be attached to a Form.
+
+[Button: Balance Sheet]			;; Button Definition to Display a Report
+
+	Key		: F6
+	Action  : Display	: Balance Sheet
+
+;; Since the above Button activates a Report, it can be associated both to a Menu
+;; as well as a Report.
+
+[#Form: Group Summary]
+
+	Buttons	: Balance Sheet		;; attaching a Button to the Report
+
+[#Menu: Display Menu]
+
+	Buttons	: Balance Sheet		;; attaching a Button to the Menu
+
+;; End-of-File

@@ -1,0 +1,20 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Demo TDLs for User defined fields
+*/
+
+[Menu: User Defined Fields]
+
+	Key Item	: "Simple UDF"		: S : Alter	: CMP Accounts Features
+	Key Item	: "Repeat UDF"		: R : Alter	: Course Offered to Students
+	Key Item	: "Aggregate UDF1"	: A : Alter	: Stud Fees Collection Form
+	Key Item	: "Aggregate UDF2" 	: G : Alter	: Company Vehicles
+
+[Include: Company Feature.txt]
+[Include: Course Master.txt]
+[Include: Fees Collection.txt]
+[Include: SubForm Code.txt]
+[Include: Company Vehicles.txt]
+
+;; End-of-File

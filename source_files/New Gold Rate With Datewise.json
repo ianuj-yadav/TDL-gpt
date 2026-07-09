@@ -1,0 +1,754 @@
+{
+    "goldrates": [
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1001,
+            "Date": "1-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1002,
+            "Date": "1-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1003,
+            "Date": "1-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1004,
+            "Date": "1-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1005,
+            "Date": "1-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1004,
+            "Date": "2-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1006,
+            "Date": "2-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1008,
+            "Date": "2-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1010,
+            "Date": "2-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1012,
+            "Date": "2-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1007,
+            "Date": "3-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1010,
+            "Date": "3-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1013,
+            "Date": "3-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1016,
+            "Date": "3-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1019,
+            "Date": "3-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1010,
+            "Date": "4-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1014,
+            "Date": "4-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1018,
+            "Date": "4-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1022,
+            "Date": "4-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1026,
+            "Date": "4-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1013,
+            "Date": "5-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1018,
+            "Date": "5-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1023,
+            "Date": "5-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1028,
+            "Date": "5-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1033,
+            "Date": "5-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1016,
+            "Date": "6-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1022,
+            "Date": "6-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1028,
+            "Date": "6-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1034,
+            "Date": "6-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1040,
+            "Date": "6-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1019,
+            "Date": "7-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1026,
+            "Date": "7-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1033,
+            "Date": "7-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1040,
+            "Date": "7-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1047,
+            "Date": "7-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1022,
+            "Date": "8-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1030,
+            "Date": "8-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1038,
+            "Date": "8-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1046,
+            "Date": "8-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1054,
+            "Date": "8-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1025,
+            "Date": "9-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1034,
+            "Date": "9-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1043,
+            "Date": "9-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1052,
+            "Date": "9-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1061,
+            "Date": "9-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1028,
+            "Date": "10-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1038,
+            "Date": "10-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1048,
+            "Date": "10-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1058,
+            "Date": "10-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1068,
+            "Date": "10-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1031,
+            "Date": "11-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1042,
+            "Date": "11-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1053,
+            "Date": "11-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1064,
+            "Date": "11-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1075,
+            "Date": "11-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1034,
+            "Date": "12-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1046,
+            "Date": "12-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1058,
+            "Date": "12-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1070,
+            "Date": "12-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1082,
+            "Date": "12-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1037,
+            "Date": "13-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1050,
+            "Date": "13-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1063,
+            "Date": "13-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1076,
+            "Date": "13-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1089,
+            "Date": "13-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1040,
+            "Date": "14-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1054,
+            "Date": "14-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1068,
+            "Date": "14-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1082,
+            "Date": "14-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1096,
+            "Date": "14-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1043,
+            "Date": "15-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1058,
+            "Date": "15-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1073,
+            "Date": "15-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1088,
+            "Date": "15-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1103,
+            "Date": "15-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1046,
+            "Date": "16-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1062,
+            "Date": "16-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1078,
+            "Date": "16-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1094,
+            "Date": "16-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1110,
+            "Date": "16-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1049,
+            "Date": "17-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1066,
+            "Date": "17-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1083,
+            "Date": "17-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1100,
+            "Date": "17-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1117,
+            "Date": "17-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1052,
+            "Date": "18-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1070,
+            "Date": "18-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1088,
+            "Date": "18-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1106,
+            "Date": "18-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1124,
+            "Date": "18-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1055,
+            "Date": "19-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1074,
+            "Date": "19-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1093,
+            "Date": "19-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1112,
+            "Date": "19-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1131,
+            "Date": "19-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1058,
+            "Date": "20-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1078,
+            "Date": "20-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1098,
+            "Date": "20-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1118,
+            "Date": "20-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1138,
+            "Date": "20-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1061,
+            "Date": "21-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1082,
+            "Date": "21-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1103,
+            "Date": "21-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1124,
+            "Date": "21-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1145,
+            "Date": "21-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1064,
+            "Date": "22-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1086,
+            "Date": "22-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1108,
+            "Date": "22-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1130,
+            "Date": "22-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1152,
+            "Date": "22-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1067,
+            "Date": "23-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1090,
+            "Date": "23-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1113,
+            "Date": "23-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1136,
+            "Date": "23-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1159,
+            "Date": "23-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1070,
+            "Date": "24-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1094,
+            "Date": "24-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1118,
+            "Date": "24-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1142,
+            "Date": "24-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1166,
+            "Date": "24-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1073,
+            "Date": "25-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1098,
+            "Date": "25-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1123,
+            "Date": "25-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1148,
+            "Date": "25-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1173,
+            "Date": "25-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1076,
+            "Date": "26-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1102,
+            "Date": "26-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1128,
+            "Date": "26-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1154,
+            "Date": "26-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1180,
+            "Date": "26-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1079,
+            "Date": "27-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1106,
+            "Date": "27-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1133,
+            "Date": "27-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1160,
+            "Date": "27-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1187,
+            "Date": "27-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1082,
+            "Date": "28-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1110,
+            "Date": "28-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1138,
+            "Date": "28-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1166,
+            "Date": "28-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1194,
+            "Date": "28-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1085,
+            "Date": "29-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1114,
+            "Date": "29-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1143,
+            "Date": "29-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1172,
+            "Date": "29-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1201,
+            "Date": "29-04-19"
+        },
+        {
+            "quality": "10 Carat",
+            "ratepergram": 1088,
+            "Date": "30-04-19"
+        },
+        {
+            "quality": "14 Carat",
+            "ratepergram": 1118,
+            "Date": "30-04-19"
+        },
+        {
+            "quality": "18 Carat",
+            "ratepergram": 1148,
+            "Date": "30-04-19"
+        },
+        {
+            "quality": "22 Carat",
+            "ratepergram": 1178,
+            "Date": "30-04-19"
+        },
+        {
+            "quality": "24 Carat",
+            "ratepergram": 1208,
+            "Date": "30-04-19"
+        }
+    ]
+}

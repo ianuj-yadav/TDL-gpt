@@ -1,0 +1,133 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This code demonstrates the usage of Type Attribute within Collection
+- 	Collection Attribute 'Type' is used to specify the Internal Object which is ledger in 
+	this case
+-	This code displays all the Ledger with their details
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: CAT Ledger List]
+
+	Form        : CAT Ledger Form
+	Title       : "Company Ledger List"
+
+[Form: CAT Ledger Form]
+
+	Use         : DSP Template
+	Parts       : CAT Ledger Part
+	Height      : 100% screen
+	Width       : 100% screen
+	Background  : Grey
+	
+[Part: CAT Ledger Part]
+
+	Lines       : CAT Ledger Title, CAT Ledger Line
+	Repeat      : CAT Ledger Line	: CAT My Ledgers
+	CommonBorder: Yes
+	Scroll      : Vertical
+
+;; Collection 'CAT My Ledgers' is a Collection of Type Ledger which contains
+;; all the Ledger Objects. When a line is repeated over a Collection, all the Objects
+;; are considered one after another. The line is repeated until all the objects
+;; within the collection gets exhausted.
+
+    [Line: CAT Ledger Title]
+
+		Use     : CAT Ledger Line
+		Local	: Field	: Default			: Type		: String
+		Local	: Field	: Default 			: Align		: Centre
+		Local	: Field	: Default 			: Style		: Normal Bold
+		
+		Local	: Field	: CAT Led No        : Set as    : "Sl. No"
+		Local	: Field	: CAT Led Name	    : Set as    : "Ledger Name"
+		Local	: Field	: CAT Led address 	: Set as    : "Address"
+		Local	: Field	: CAT Led States  	: Set as 	: "State"
+		Local	: Field	: CAT Led Pin 		: Set as   	: "PinCode"
+		Local	: Field	: CAT Led Cont	 	: Set as 	: "Contact Person"
+		Local	: Field	: CAT Led Tel 		: Set as 	: "Telephone"
+		Local	: Field	: CAT Led Faxno		: Set as 	: "Fax"
+		Local	: Field	: CAT Led emailadd	: Set as 	: "Email"
+		Local	: Field	: CAT Led CB		: Set as 	: "Closing Balance"
+		Border  : Thin Top Bottom
+
+    [Line: CAT Ledger Line]
+
+		Fields      : CAT Led No, CAT Led Name, CAT Led Address, CAT Led States, CAT Led Pin, CAT Led Cont, CAT Led Tel, CAT Led FaxNo, CAT Led EmailAdd, CAT Led CB
+		Repeat      : CAT Led CB
+		Option      : AlterOnEnter
+	
+        [Field: CAT Led No]
+
+			Set as      : $$Line		;; Function 'Line' returns the current line number
+			Width       : 3
+			Align       : Centre
+			Border      : Thin Right
+			Alter       : Ledger
+
+        [Field: CAT Led Name]
+
+			Use         : Name Field
+			Set as      : $Name			;; Method 'Name' returns the value of the Method 'Name' within the current Object
+			Border      : Thin Right
+						
+        [Field: CAT LedAddress]
+
+			Set as      : $STPartyFullAdd
+			Width       : 30
+			Border      : Thin Right
+
+        [Field: CAT Led States]
+
+			Set as      : $StateName
+			Width       : 10
+			Border      : Thin Right
+
+        [Field: CAT Led Pin]
+
+			Set as      : $PinCode
+			Width       : 10
+			Border      : Thin Right
+
+        [Field: CAT Led Cont]
+
+			Set as      : $LedgerContact
+			Width       : 10
+            Border      : Thin Right
+
+        [Field: CAT Led Tel]
+
+			Set as      : $LedgerPhone
+			Width 	    : 10
+            Border      : Thin Right
+
+        [Field: CAT Led FaxNo]
+
+			Set as      : $LedgerFax
+			Width       : 10
+			Border      : Thin Right
+
+        [Field: CAT Led EmailAdd]
+
+			Set as      : $Email
+			Width   	: 20
+			Border      : Thin Right
+
+        [Field: CAT Led CB]
+
+            Use         : Amount Forex Field
+			Set as      : $ClosingBalance		;; Method 'ClosingBalance' returns the value of the Method 'Closing Balance' for the current Object
+
+[Collection: CAT My Ledgers]	;; Collection Definition
+
+    Type	: Ledger
+;; Collection Attribute 'Type' is used for collecting Internal Objects
+	Fetch	: Name, STPartyFullAdd, StateName, Pincode, LedgerContact, LedgerPhone, LedgerFax, Email, ClosingBalance
+;; Fetch attribute required for remoting 2.0
+
+
+;; End-of-File

@@ -1,0 +1,51 @@
+---
+title: NewDayBook
+type: sample_code
+objects: Report, Form, Part, Line, Field
+source: NewDayBook.txt
+---
+
+# NewDayBook
+
+## Source Code
+
+```tdl
+[Report:NewDayBook]
+	Form		: NewDayBook
+	
+[Form:NewDayBook]
+	Part	: NewDayBook
+	Width	: 100% Screen
+	Height	: 100% Screen
+	
+[Part:NewDayBook]
+	Line	: NewDayBookLine
+	Repeat	: NewDayBookLine	: SalesCollection
+	[Line:NewDayBookLine]
+		Field		: NewDayBookSrNumber, NewDayBookType
+		Right Field	: NewDayBookVchNo, NewDayBookDrAmt, NewDayBookCrAmt
+		
+		[Field:NewDayBookSrNumber]
+			Use		: Number Field
+			Set as	: $$Line
+			
+		[Field:NewDayBookType]
+			Use		: Short Name Field
+			Set as	: if NOT $$IsVoucher then "" else  if NOT $$InPixelMode then @@AdditionalName else $Name:VoucherType:$VoucherTypeName
+			
+		[Field:NewDayBookVchNo]
+			Use		: Number Field
+			Set as	: $VoucherNumber
+			
+		[Field:NewDayBookDrAmt]
+			Use		: Amount Field
+			Set as	: $Amount:Vouchers:$VoucherNumber
+			
+		[Field:NewDayBookCrAmt]
+			Use		: Amount Field
+			Set as	: IF $$IsDr:$Amount Then 0 Else $Amount
+			
+
+			
+
+```

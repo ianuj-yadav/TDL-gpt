@@ -1,0 +1,40 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Demo TDLs for XML Collection
+*/
+
+[Menu: XML Collection]
+
+	Indent		: "Get"
+	Item 		: Blank
+	Key Item 	: Simple Get 					: S : Display 	: XML Get Collection		: NOT $$IsEmpty:$$SelectedCmps
+	Key Item 	: Retrieve XML Fragment			: G : Display 	: XML Get CollObjPath		: NOT $$IsEmpty:$$SelectedCmps
+	Key Item 	: Simple Get with Object Spec 	: O : Display 	: XML Get CollObjSpec		: NOT $$IsEmpty:$$SelectedCmps
+	Item 		: Blank
+
+	Indent		: "Post"
+	Item 		: Blank
+	Key Item 	: Simple Post					: L : Display 	: XML Post Collection		: NOT $$IsEmpty:$$SelectedCmps
+	Key Item 	: Post with Pre-Request Report	: P : Display 	: XML Post PreReq Collection: NOT $$IsEmpty:$$SelectedCmps
+	Key Item	: Action HTTP Post				: H : Display 	: HTTP Post Welcome			: NOT $$IsEmpty:$$SelectedCmps
+	Item 		: Blank
+
+	Indent		: "Data Source"
+	Item 		: Blank
+	Key Item 	: XML File as Data Source		: X : Display 	: XML Data Source Explode	: NOT $$IsEmpty:$$SelectedCmps
+	Item 		: Blank
+	Item 		: Blank
+
+[Include: XML Data.txt]
+[Include: Simple Get.txt]
+[Include: Retrieve XML Fragment.txt]
+[Include: Simple Get With Obj Spec.txt]
+
+[Include: XML Request To Server.txt]
+[Include: Simple Post.txt]
+[Include: Post with Pre-Request Report.txt]
+
+[Include: XML Data Source Explode.txt]
+
+;; End-of-File

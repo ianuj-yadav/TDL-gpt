@@ -1,0 +1,342 @@
+
+
+;;==================Add Additional Details In ledger Creation
+[#Part:MST LED Details]
+	Add		: Lines		: ServiceRate;, StudentBranch, StudentBatch, StudentRollNo
+	
+	[Line:ServiceRate]
+		Fields		: MediumPrompt, ServiceRate
+		Border		: Thick Box
+		
+		Local		: Field		: MediumPrompt	: Info		: $$LocaleString:"Is Service Ledger ? :"
+		Local		: Field		: MediumPrompt	: Color		: Blue
+		Local		: Field		: MediumPrompt	: Style		: NormalBold
+		
+		
+		
+		[Field:ServiceRate]
+			Use		: Logical field
+			Table	: YesNo Table
+			Set as	: $ServiceRate
+			Storage	: ServiceRate
+			Color	: Blue
+			
+			
+;;-------------------------------------------------------
+
+
+;;========================Change Value Of Ledger In voucher Creation
+[#Field:EiValue]
+	
+	;Set as				: If $ServiceRate:Ledger:#EIAccDesc Then @NewRateCenter Else @RoundedVal
+	RoundedVal			: If $ServiceRate:Ledger:#EIAccDesc Then #VchRateNew*#VchQtyNew Else +
+							if @@RoundUp then $$RoundUp:@CalcVal:$RoundLimit else +
+                          if @@RoundDown then $$RoundDown:@CalcVal:$RoundLimit else +
+                          if @@RoundOff then $$Round:@CalcVal:$RoundLimit else +
+                          @CalcVal
+	Set Always			: Yes
+	
+	;;;=======Delte This Before give It
+	;Skip				: ($Parent:Ledger:#EIAccDesc)=$$String:"Duties & Taxes"
+;;--------------------------------------
+
+
+;;======================Add Quantity In Title Line In Voucher Creation	
+[#Line: Ei ColumnOne]
+	Add			: Right Fields	: After		: Vch RateTitle		: VchQtyTitleNew
+	Add			: Right Fields	: Before		: Vch RateTitle		: VchDateTitleNew
+	[Field: VchQtyTitleNew]
+
+    Width       : If @@IsJobOrdersOn Then @@VCHQtyWidth Else if ($DiffActualQty AND NOT @@IsPhysStock AND NOT @@IsStockJrnl AND NOT @@IsExciseSupplementaryInv ) then (@@VCHQtyWidth + @@VCHQtyWidth + 1) else @@VCHQtyWidth
+    SubTitle    : Yes
+    Setas       : @VAl
+    Style       : Small Bold
+    Align       : Centre
+    Skip        : Yes
+    Fixed       : Yes
+	Width		: @Wide
+	VAl			: If (NOT (@@IsSales AND ##VoucherMode="Accounting Invoice" ))Then "" Else $$LocaleString:"Quantity"
+	Background	: Red
+	Wide		: If (NOT (@@IsSales AND ##VoucherMode="Accounting Invoice" ))Then 0 Else 10
+	[Field: VchDateTitleNew]
+
+    Width       : If @@IsJobOrdersOn Then @@VCHQtyWidth Else if ($DiffActualQty AND NOT @@IsPhysStock AND NOT @@IsStockJrnl AND NOT @@IsExciseSupplementaryInv ) then (@@VCHQtyWidth + @@VCHQtyWidth + 1) else @@VCHQtyWidth
+    SubTitle    : Yes
+    Setas       : @VAl
+    Style       : Small Bold
+    Align       : Centre
+    Skip        : Yes
+    Fixed       : Yes
+	Width		: @Wide
+	VAl			: If (NOT (@@IsSales AND ##VoucherMode="Accounting Invoice" ))Then "" Else $$LocaleString:"Date"
+	;Background	: Red
+	Wide		: If (NOT (@@IsSales AND ##VoucherMode="Accounting Invoice" ))Then 0 Else 10
+;;-------------------------------------------
+;[#Field: VCH RateUnitsTitle]
+;	Width		: 5
+ 
+;;==============================Add Rate, Quantity, Quantity Per Fields And their UDFs In voucher Ledger
+[#Line:EIAccInfo]
+	
+	Add			: Right Field	: Before	: EiValue	 : VchDateNew, VchRateNew, VchQtyNew, VchPerNew
+	
+[Field:VchDateNew]
+	Use			: Uni Date Field
+	Storage		: VCHCSTDate
+	Skip		: If $ServiceRate:Ledger:#EIAccDesc  Then No Else Yes
+	Set Always	: Yes
+	Width		: 10
+	Set as		: $$AsAmount:$VchRateNew
+	Inactive    : $$IsEnd:$LedgerName Or ($Parent:Ledger:#EIAccDesc)=$$String:"Duties & Taxes" 
+	Set By Condition	: ($$Owner:$$InAlterMode) And ($ServiceRate:Ledger:#EIAccDesc) 		: $VchPerNew;:Ledger:$LedgerName
+	Set Always			: Yes
+
+
+
+[Field:VchRateNew]
+	Use         : Amount Forex Field
+	Use			: Amount Field
+	Storage		: VCHCSTRate
+	Skip		: If $ServiceRate:Ledger:#EIAccDesc  Then No Else Yes
+	Set Always	: Yes
+	Width		: 10
+	Set as		: $$AsAmount:$VchRateNew
+	Inactive    : $$IsEnd:$LedgerName Or ($Parent:Ledger:#EIAccDesc)=$$String:"Duties & Taxes" 
+	Set By Condition	: ($$Owner:$$InAlterMode) And ($ServiceRate:Ledger:#EIAccDesc) 		: $VchPerNew;:Ledger:$LedgerName
+	Set Always			: Yes
+
+
+[Field:VchQtyNew]
+	Use			: Number Field
+	;Background	: red
+	Storage		: VCHCSTQty
+	Skip		: If $ServiceRate:Ledger:#EIAccDesc  Then No Else Yes
+	Set Always	: Yes
+	Width		: 10
+	Set as		: $$Number:$VchQtyNew
+	Inactive    : $$IsEnd:$LedgerName Or ($Parent:Ledger:#EIAccDesc)=$$String:"Duties & Taxes" Or $$IsEmpty:#VchRateNew
+	Set By Condition	: ($$Owner:$$InAlterMode) And ($ServiceRate:Ledger:#EIAccDesc) 		: $VchPerNew;:Ledger:$LedgerName
+	Set Always			: Yes
+	Align				: Right
+	
+[Field:VchPerNew]
+	;Use			: StkiBaseUom
+	;Background	: red
+	Storage		: VchPerNew
+	Skip		: If $ServiceRate:Ledger:#EIAccDesc  Then No Else Yes
+	Set Always	: Yes
+	Width		: 5
+	Set as		: $VchPerNew
+	Inactive    : $$IsEnd:$LedgerName Or ($Parent:Ledger:#EIAccDesc)=$$String:"Duties & Taxes" Or $$IsEmpty:#VchRateNew
+	Set By Condition	: ($$Owner:$$InAlterMode) And ($ServiceRate:Ledger:#EIAccDesc) 		: $VchPerNew;:Ledger:$LedgerName
+	Set Always			: Yes
+	Align				: Right
+	
+	Use         : Symbol Field
+	Use			: Create Unit
+    Table       : Not Applicable, Unit, Create Master
+    Show Table  : Always
+    Key         : Create Units, Alter Unit
+    Skip on     : $$InAlterMode AND NOT $$CanDelete And NOT ##ShowUOMOfLedgers
+	Common Table: No
+;;--------------------------------------------------------------
+	
+
+	
+;;-------------------------------------------------------------
+
+	
+;;=========================Alter Ledger Details In voucher Comprehensive Print===================
+	
+
+[#Part: EXPINV Column]
+	Delete		: Lines       : EXPINV Column1, EXPINV Column2
+	Add			: Lines			: ExpinvColumn1Title
+	Border		: thin Box
+	
+	[Line:ExpinvColumn1Title]
+		Left Fields : EXPINV SLNoTitle, EXPINV MarksTitle1, EXPINV PackagesTitle1, EXPINVDateTitle, EXPINV DescTitle
+			Right Fields : EXPINV PartNoTitle, EXPINV MRPTitle, EXPINV VATPercTitle, EXPINV DueTitle, EXPINV QtyTitle, EXPINV RateInclTitle, EXPINV RateTitle, EXPINV RatePerTitle, EXPINV DiscTitle, EXPINV AmountTitle
+			
+			
+
+			Local : Field : EXPINV SLNoTitle  		: Set as : $$StringWord:1:$$LocaleString:"Sl No."
+			Local : Field : EXPINV MRPTitle  		: Set as : $$LocaleString:"MRP" + "/"
+			Local : Field : EXPINV RateInclTitle	: Info	 : $$StringWord:1:$$LocaleString:"Rate (Incl. of Tax)" 
+			Local : Field : EXPINV RateTitle      	: Info   : $$LocaleString:"Rate"
+			Local : Field : EXPINV RatePerTitle   	: Info   : $$LocaleString:"per"
+			Local : Field : EXPINV AmountTitle    	: Info   : $$LocaleString:"Amount"
+			Local : Field : EXPINV QtyTitle  		: Width  : If @@IsJobWorkVouchers Then @@QtyWidth Else If (@@InvWithActQty AND $$InPixelMode) Then (@@QtyWidth + @@QtyWidth + .9) Else @@QtyWidth
+			
+			Options : EXPINVAlt Column1 			: (@@InvWithQty AND NOT $$IsEmpty:$StockItemName AND $IsAltunits And @@AltUnitasCol)
+			Options : DealerDNoteInv Column1  		: @@IsExciseDealerOn AND @@IsDebitNote AND @@IsTraderInvoice AND ##PUDealerExciseDutyInfo
+			Options : GJVAT HSNCodeTitle 			: @@IsVATTaxInvoiceOfVCHType AND @@GujaratState AND ##SAGJVATHSNCode AND @@IsIndian
+			Options : EXPINV Column1HSN    			: @@IsGSTOnAppl
+			Options : EXPINV Column1GCCAnalysis 	: @@IsGVATNonBlankVch
+			Options : EXPINV Column1Arabic  		: ##vIsPrintedInvoiceArabic
+			Options : EXPINV VATGCC Column1Title	: @@IsVchGVATApplicable AND ##vIsPrintedInvoiceArabic
+		
+[Field:EXPINVDateTitle]
+	Width       : @@ShortDateWidth+1
+    Max         : @@MaxNumberWidth
+	Info		: "Date"
+	Border		: Thin Right
+[#Part: EXPINV AccInfo]
+	Delete			: Line		: EXPINV AccDetails
+	Delete			: Repeat	: EXPINV AccDetails		: Ledger Entries
+	Add				: Parts		: EXPINV AccDetails1, EXPINV AccDetailsGst
+	Vertical		: Yes
+	Total			: ExpInvAmt
+	
+[Part:EXPINV AccDetails1]
+	Add				: Line		: EXPINV AccDetails1;, EXPINV AccDetailsGst
+	Add				: Repeat	: EXPINV AccDetails1		: Ledger Entries
+	Scroll			: Vertical
+	
+	[Line:EXPINV AccDetails1]
+		Left Fields		: EXPINV SLNo1,  ExpinvAccDate, EXPINV AccName
+		Right Fields	:EXPINV AccHSNSACDetails,EXPINV IGSTRate,ExpInvQty1, ExpInvRate1, EXPINV AccRatePer1, EXPINV AccAmount;ExpInvAmt
+		Remove if		: Not $ServiceRate:Ledger:$LedgerName;($Parent:Ledger:$LEdgerName)=$$String:"Duties & Taxes"
+		[Field:EXPINV SLNo1]
+			Use			: Name Field
+			Set as		: @LineNo
+			Border		: Thin Right
+			Width		: 1.7
+			LineNo		: If (@@IsSales AND ##VoucherMode="Accounting Invoice" ) Then $$String:$$Line Else ""
+			
+		[#Field:EXPINV AccDesc]
+			;Align		: Left
+			
+		[#Field: EXPINV AccName]
+       
+			Set as		: @Less + @Value	;;; used to print on invoice
+					  
+			Value		: if ##SATCSDetails AND @@TaxLedgerHasTCS then $$LocaleString:"TCS : Income Tax" else +
+						  if NOT $$IsSysName:$LedgerName then $LedgerName else ""
+			Less		: If $Amount<0 Then "Less :     " Else ""
+		
+		[Field:ExpinvAccDate]
+			Use			: Uni Date Field
+			Set as		: $VCHCSTDate
+			Border      : Thin Right
+			Width       : @@Qtywidth
+			Align		: Center
+		[Field:ExpInvQty1]
+			Use			: Name Field
+			Set as		: @Val
+			Val			: If $$IsEqual:$VCHCSTQty:0 Or $$IsEmpty:$VchPerNew Then "" Else $$String:$VCHCSTQty
+			Border      : Thin Left
+			Width       : @@Qtywidth
+			Align		: Center
+	
+	
+		[Field:ExpInvRate1]
+			Use			: Amount Field
+			Set as		: $$AsAmount:$VCHCSTRate
+			Width 		: @@RateWidth
+			Border		: Thin Left Right
+			Align		: Right
+			Format      : "NoZero,Decimals:-1"
+	
+	
+		[Field:EXPINV AccRatePer1]
+			Use			: Name Field
+			Set as		: @Val
+			Val			: If $$IsEmpty:$VchPerNew Then "" Else $$String:$VchPerNew
+			Width 		: If $$InDraftMode then 5 else @@UnitsWidth
+	
+	
+		[Field:ExpInvAmt]
+			Use			: EXPINV AccAmount
+			Set as		: $Amount
+			
+
+[Part:EXPINV AccDetailsGst]
+	Line			: EXPINV AccDetailsGst
+	Add				: Repeat	: EXPINV AccDetailsGst		: Ledger Entries
+	;Scroll			: Vertical
+	[Line:EXPINV AccDetailsGst]
+		Use				: EXPINV AccDetails1
+		Space Top		: If $$Line=1 Then 1 Else 0
+		Remove if		: $ServiceRate:Ledger:$LedgerName;($Parent:Ledger:$LEdgerName)=$$String:"Duties & Taxes"
+		Local			: Field		: EXPINV AccName	: Align		: Right
+		Local			: Field		: EXPINV SLNo1		: Setas		: ""
+		Local			: Field		: ExpInvRate1		: Type		: Number
+		Local			: Field		: ExpInvRate1		: Setas		:If @@IsTaxHeadSecEdCess then $$AsAmount:$$GETSTXRates:"SecondaryCessRate":"SerLedger" else IF @@IsTaxHeadEdCess then $$AsAmount:$$GETSTXRates:"CessRate":"SerLedger" else  If @@IsTaxHeadServiceTax then $$AsAmount:$$GETSTXRates:"ServiceTaxRate":"SerLedger" else +
+				  If @@IsSBCTaxTypeLedger then @@STSBCRateInPrint else If @@IsKKCTaxTypeLedger then @@STKKCRateInPrint else if ##SATCSDetails AND @@TaxLedgerHasTCS then @@TCSITTaxRate else +
+				  $BasicRateOfInvoiceTax; If @Formula Then $BasicRateOfInvoiceTax:Ledger:$LedgerName Else $RateOfTaxCalculation:Ledger:$LedgerName
+		Local			: Field		: ExpInvRate1		: Align		: Right
+		Local			: Field		: EXPINV AccRatePer1: Setas		: If $$IsEqual:($$Number:#ExpInvRate1):0 Then "" Else "%"
+		Local			: Field		: EXPINV AccRatePer1: Align		: Left
+		
+
+	
+;;=========Change Default Visisbility Of Rate OPtion in Voucher
+[#Field:EI AccRate]
+	Inactive	: $$IsEnd:$LedgerName Or ($Parent:Ledger:#EIAccDesc)=$$String:"Duties & Taxes" Or $ServiceRate:Ledger:#EIAccDesc
+	Skip 		: $ServiceRate:Ledger:#EIAccDesc
+	
+	
+
+;;================= New UDFs Created
+
+[System:UDF]
+	VCHCSTRate		: Amount	: 30001
+	VCHCSTQty		: Number	: 30002
+	ServiceRate		: Logical	: 30003
+	VchPerNew		: String	: 30004
+	VCHCSTDate		: Date		: 30005
+	
+	
+	
+	
+
+;;===================================Alter Ledger Details In voucher Simple Printed Invoice
+
+
+[#Part: EXPSMP AccDetails]
+	Delete			: Line		: EXPSMP AccDetails
+	Delete			: Repeat	: EXPSMP AccDetails	: Ledger Entries
+	Add				: Parts		: EXPINV AccDetails1, EXPINV AccDetailsGst
+	
+
+
+
+
+
+
+
+;;=============================Can Change UOM In Accounting Invoice 
+;;  ---------------WITH F12 Configuration in accounting Invoice
+
+
+[#Part: SalesAcctMode Right More Cfg]  
+	Add		: Line		: ShowUOMOfLedgers
+	
+	[Line:ShowUOMOfLedgers]
+		Invisible	: Not (@@IsSales AND ##VoucherMode="Accounting Invoice" )
+		Fields		: LOngPrompt, ShowUOMOfLedgers
+		Local		: Field		: Long Prompt : Info 	:  $$LocaleString:"Change Unit Of Measure For Ledgers :" 
+		Local		: Field		: Long Prompt : Color 	:  Blue
+		Local		: Field		: Long Prompt : Border 	:  Thick Top
+		Space Top	: 1
+		;Border 	:  Thick Top
+		[Field:ShowUOMOfLedgers]
+			Use			: Logical Field
+			Set as		: ##ShowUOMOfLedgers
+			Table		: YesNoTable
+			Show Table	: Always
+			Modifies	: ShowUOMOfLedgers
+			Color		: If ##ShowUOMOfLedgers Then "Blue" Else "Red"
+			Style		: Normal Bold
+			Border 		:  Thick Top
+			
+
+[Variable:ShowUOMOfLedgers]
+	Type		: Logical
+	Persistent	: Yes
+	
+[System:Variable]
+	ShowUOMOfLedgers	: No
+	
+[#Form:comprehensive invoice]

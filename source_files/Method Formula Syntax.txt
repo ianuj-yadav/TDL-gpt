@@ -1,0 +1,27 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This code demonstrates the simplified way of accessing Methods of Sub-Objects
+	at any level (Dotted Method Syntax)
+-	This code redirects to another report wherein the sub-objects of the voucher
+	can be easily accessed using Dollar Method syntax.
+
+Syntax -
+-	${(<Primary Object>, <Primary Object Identifier>).}<Sub-Object[Position{, 
+	Filter condition}]>.<Sub-Object[Position{, Filter condition}]>.MethodName
+	where values within {} are optional
+
+Last modification – 
+-	Altered on 09/11/2009
+*/
+
+[Report: LangSyntax]
+
+	Use		: ModObject
+	Local	: Form		: ModObject	: Delete	: Buttons
+	Title	: "Method Formula Syntax"
+
+;; End-of-File
+
+

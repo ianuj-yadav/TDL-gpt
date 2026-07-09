@@ -1,0 +1,135 @@
+[#Form : Purchase Color]
+	Button	: Address Print 
+
+[#Form : Sales Color]
+	Button	: Address Print 
+
+[Button : Address Print ]
+
+	Key 		: 	Ctrl + E
+	Action 		: 	Print Report	: EnvelopePrint
+
+[Report	: EnvelopePrint]
+	Form		: 	EnvPrintForm
+	Object		: 	Ledger
+	Object		: 	Voucher
+		
+[Form	: EnvPrintForm]
+	Width		:	100% Page
+	Height		:	100% Page
+	Space Top	:	0.5 inch	
+	Space Left	:	0.5 inch	
+	Space Right	:	0.5 inch	
+	Part		:	EnvPrintBody
+			
+[Part	: EnvPrintBody]
+	Part		:	EnvPrintBodyTop
+					
+[Part	: EnvPrintBodyTop]
+	Width		:	100 % page
+	Height		:	3 inch		
+	Space Top	:	0.5 inch	
+	Space Left	:	0.5 inch	
+	Space Right	:	0.5 inch	
+	Line		:	EnvelopeHead1, EnvelopeHead2, FullAddress, PhoneNumbers, EmailAdd
+	Repeat		:	FullAddress:PartyAddress
+	Vertical	:	Yes
+
+[Line	: EnvelopeHead1]
+	Field		:	ToAddress, EnvelopeHead1
+	Space Top	:	1	
+
+[Field	: ToAddress]
+	Use		:	Name Field
+	Set as		:	"To ->"
+	Width		:	15		
+	Align		:	Centre
+	Style		:	EnvStyleBOLD
+	Space Left	:	9		
+
+[Field	: EnvelopeHead1]
+	Use		:	Name Field
+	Setas		:	$Name:Ledger:$PartyLedgerName 
+	Width		:	50		
+	style		:	EnvStyleBOLD
+	Align		:	Left
+	Object		:	Ledger
+
+[Line	: EnvelopeHead2]
+	Field		:	KindAttn, ContactPerson
+
+[Field	: KindAttn]
+	Use		:	Name Field
+	Set as		:	"Kind Attn : "
+	Width		:	15		
+	Align		:	Centre
+	Style		:	EnvStyleNormal
+	Space Left	:	9		
+	PrintFG		:	Red
+			
+[Field	: ContactPerson]
+	Use		:	Name Field
+	Setas		:	$LedgerContact:Ledger:$PartyLedgerName
+	Set Always	:	Yes
+	Width		:	50		
+	Style		:	EnvStyleNormal
+	Align		:	Left
+	Border		:	thin Bottom
+	PrintFG		:	Red
+	
+
+[Style	: EnvStyleBOLD]
+	Font		:	"Arial Bold"
+	Height		:	16
+	Bold		:	yes
+
+					
+
+[Line	: FullAddress]
+	Field		:	FullAddress
+					
+[Field	: FullAddress]
+	Use		:	Name Field
+	Setas		:	$Address
+	Width		:	50		
+	Style		:	EnvStyleNormal
+	Space Left	:	25	
+	Align		:	Left
+	Object		:	Ledger
+
+[Line	: PhoneNumbers]
+	Field		:	PhoneNumbers
+	
+[Field	: PhoneNumbers]
+	Use		:	Name Field
+	Setas		:	"Phone : " + $LedgerPhone:Ledger:$PartyLedgerName + " / " + "Mobile : " + $LedgerMobile:Ledger:$PartyLedgerName
+	Width		:	50		
+	Style		:	EnvStyleNormal
+	Space Left	:	25		
+	Align		:	Left
+	Object		:	Ledger
+
+[Line	: EmailAdd]
+	Field		:	EmailAdd
+
+[Field	: EmailAdd]
+	Use		:	Name Field
+	Setas		:	"Email : " + $EMail:Ledger:$LedgerName
+	Width		:	50		
+	Style		:	EnvStyleNormal
+	Space Left	:	25		
+	Align		:	Left
+	Object		:	Ledger
+
+[Style	: EnvStyleNormal]
+	Font		:	"Arial Bold"
+	Height		:	12
+	Bold		:	yes
+
+				 
+
+
+
+
+
+						

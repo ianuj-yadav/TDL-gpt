@@ -1,0 +1,40 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Demo TDLs for Actions in TDL
+*/
+
+[Menu: Actions in TDL]
+
+	Key Item	: "Menu Action"							: M : Menu		: Sample Final Accounts
+	Item		: Blank
+
+	Key Item	: "Create, Display & Alter Collection"	: P : Menu		: Menu Create Display Alter
+	Item		: Blank
+	Key Item	: "Display & Display Collection"		: O : Menu		: Display and Display Collection
+	Item		: Blank
+
+	Key Item	: "Modify Object"						: D : Display	: ModObject
+	Item		: Blank
+	Key Item	: "Browse URL Ex"						: W : Display	: BrowseURL
+	Item		: Blank
+	Key Item 	: "HTTP Post"			 				: H : Display 	: HTTP Post Welcome
+	Item		: Blank
+
+	Key Item	: "Multi Line Selection Actions & Scope": A : Display	: MultiSample
+	Item		: Blank
+	Key Item	: "Event Framework"						: E : Menu		: Event Framework
+	Item		: Blank
+
+[Include: Menu.txt]
+
+[Include: Create Display & Alter Collection.txt]
+[Include: Display and Display Collection.txt]
+
+[Include: Modify Object.txt]
+[Include: Browse URL.txt]
+[Include: HTTP Post.txt]
+[Include: Multi Line Selection.txt]
+[Include: Event Framework\Event Framework.txt]
+
+;; End-of-File

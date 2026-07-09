@@ -1,0 +1,266 @@
+
+[#Field: VCH StockItem]
+	Width	: 20% Page
+[#Field: VCH ItemTitle]
+	Width	: 20% Page
+
+[#Line: EI ColumnOne]
+	Add:Field:After:VCH ItemTitle:SizeOfItem
+	
+
+	[Field:SizeOfItem]
+		Fields		: Fldv1, Fldv2, Fldv3, Fldv4, Fldv5, Fldv6, Fldv7, Fldv8, Fldv9, Fldv10, Fldv11, Fldv12, Fldv13
+		;Invisible	: Not ##VaaraClotingConfig
+		
+		[Field:Fldv1]
+			Set as		: 16
+			Type		: Number
+			Width		: 4% Page
+			Border		: Thin Right
+			Align		: Center
+			Skip		: Yes
+			
+		
+
+		[Field:Fldv2]
+			Use         : Fldv1	
+			Set as		: 18
+
+		[Field:Fldv3]
+			Use         : Fldv1	
+			Set as		: 20
+
+		[Field:Fldv4]
+			Use         : Fldv1	
+			Set as		: 22
+
+		[Field:Fldv5]
+			Use        	: Fldv1	
+			Set as		: 24
+
+		[Field:Fldv6]
+			Use         : Fldv1	
+			Set as		: 26
+
+		[Field:Fldv7]
+			Use         : Fldv1	
+			Set as		: 28
+
+		[Field:Fldv8]
+			Use         : Fldv1	
+			Set as		: 30
+
+		[Field:Fldv9]
+			Use         : Fldv1	
+			Set as		: 32
+
+		[Field:Fldv10]
+			Use        	: Fldv1	
+			Set as		: 34
+
+		[Field:Fldv11]
+			Use         : Fldv1	
+			Set as		: 36
+
+		[Field:Fldv12]
+			Use         : Fldv1	
+			Set as		: 38
+
+		[Field:Fldv13]
+			Set as		: 40
+			Type		: Number
+			Width		: 4% Page
+			Align		: Center
+			Skip		: Yes
+			
+
+[#Line: EI InvInfo]
+	Add	:Left Fields : After	: VCH StockItem	: FldvDtlsAll
+	
+	[Field:FldvDtlsAll]
+		Fields	: Fldv1Dtls, Fldv2Dtls, Fldv3Dtls, Fldv4Dtls, Fldv5Dtls, Fldv6Dtls,+
+		Fldv7Dtls, Fldv8Dtls, Fldv9Dtls, Fldv10Dtls, Fldv11Dtls, Fldv12Dtls, Fldv13Dtls
+		;Invisible	: Not ##VaaraClotingConfig
+	[Field:Fldv1Dtls]
+			Width		: 4% Page
+			Storage		: Fldv1
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+			
+
+		[Field:Fldv2Dtls]
+			Width		: 4% Page
+			Storage		: Fldv2
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+			
+
+		[Field:Fldv3Dtls]
+			Width		: 4% Page
+			Storage		: Fldv3
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+			
+		[Field:Fldv4Dtls]
+			Width		: 4% Page
+			Storage		: Fldv4
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+			
+
+		[Field:Fldv5Dtls]
+			Width		: 4% Page
+			Storage		: Fldv5
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+			
+
+		[Field:Fldv6Dtls]
+			Width		: 4% Page
+			Storage		: Fldv6
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+			
+
+		[Field:Fldv7Dtls]
+			Width		: 4% Page
+			Storage		: Fldv7
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+			
+
+		[Field:Fldv8Dtls]
+			Width		: 4% Page
+			Storage		: Fldv8
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+			
+
+		[Field:Fldv9Dtls]
+			Width		: 4% Page
+			Storage		: Fldv9
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+			
+
+		[Field:Fldv10Dtls]
+			Width		: 4% Page
+			Storage		: Fldv10
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+			
+
+		[Field:Fldv11Dtls]
+			Width		: 4% Page
+			Storage		: Fldv11
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+			
+
+		[Field:Fldv12Dtls]
+			Width		: 4% Page
+			Storage		: Fldv12
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+			
+
+		[Field:Fldv13Dtls]
+			Width		: 4% Page
+			Storage		: Fldv13
+			Type		: Quantity
+			Align		: Right
+			Use			: Qty Primary Field
+			Skip		: $$IsEndOfList:#VCHStockItem
+
+[#Field:VCH BilledQty ]
+	Delete		: Option
+	Use         : Qty Primary Field
+    Width       : @@VCHQtyWidth
+    Set always  : Yes
+    Storage     : Billed Qty
+    Delete		: Inactive    
+   
+    Style       : Small
+    Delete		: Key       
+	Delete		: Sub Form	   
+	Delete		: Switch		
+	Set as		: #Fldv1Dtls+#Fldv2Dtls+#Fldv3Dtls+#Fldv4Dtls+#Fldv5Dtls+#Fldv6Dtls+#Fldv7Dtls+#Fldv8Dtls+#Fldv9Dtls+#Fldv10Dtls+#Fldv11Dtls+#Fldv12Dtls+#Fldv13Dtls
+	;Set as		: $Fldv1+$Fldv2
+	Set Always	: Yes
+	Skip		: Yes
+	
+
+
+[#Line: EI ColumnOne]
+	Add		: Right Fields		: After		: VchDiscTitle	: VchGstTitle
+	
+[Field:VchGstTitle]
+	Width       : @@VCHDiscountWidth
+    Setas       : $$LocaleString:"Gst %"
+    Style       : Small
+    Align       : Centre
+	Skip        : Yes
+    Fixed       : Yes
+	;Invisible	: Not ##VaaraClotingConfig
+	
+
+[#Line: EI InvInfo]
+	Add		: Right Fields		: After		: VCH Discount	: Vch Gst
+	
+[Field:Vch Gst]
+	Use         : Number Field
+    Width       : @@VCHDiscountWidth
+    Align       : Right
+    Style       : Normal Bold
+    Storage     : GstPercent
+    Set always  : Yes
+    Format      : "NoZero,Percentage"
+	Set as		:  $GSTIGSTRate:StockItem:$StockItemName
+	Skip		: Yes
+	;Invisible	: Not ##VaaraClotingConfig
+	
+
+[System:UDF]
+	Fldv1		: Quantity	: 20501
+	Fldv2       : Quantity	: 20502
+    Fldv3       : Quantity	: 20503
+    Fldv4       : Quantity	: 20504
+    Fldv5       : Quantity	: 20505
+    Fldv6       : Quantity	: 20506
+    Fldv7       : Quantity	: 20507
+    Fldv8       : Quantity	: 20508
+    Fldv9       : Quantity	: 20509
+    Fldv10      : Quantity	: 20510
+    Fldv11      : Quantity	: 20511
+    Fldv12      : Quantity	: 20512
+    Fldv13      : Quantity	: 20513
+	GstPercent	: Number	: 20550
+
+
+
+
+

@@ -1,0 +1,31 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This program demonstrates the usage and purpose of 'Full Screen' Attribute at Report 
+	Definition
+
+Syntax -
+-	Full Screen : <Logical Value>
+
+Last modification – 
+-	Altered on 07/11/2009
+
+Dependencies -
+-	TDL File 'Retain Focus.txt' & Company data consisting of Groups, Ledgers & Stock Items
+*/
+
+[Report: Full Screen Sample]
+
+	Use			: Retain Focus Sample
+	Local: Form	: Retain Focus Sample	: Delete		: Buttons	: Retain Focus Button
+	Title		: "Sample demonstrating Full Screen attribute at Report Definition"
+	Full Screen	: No
+	Set			: Retain Focus	: No
+	Local		: Form			: Retain Focus Sample	: Local	: Field	: Form Sub Title	: Set As	: "Full Screen Attribute at Report Level is set to No."
+
+;; Full Screen Attribute for Report is set to Retain Focus variable value,
+;; which is altered by the user on pressing F5 Button
+
+;; End-of-File
+

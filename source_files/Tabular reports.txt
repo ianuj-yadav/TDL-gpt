@@ -1,0 +1,94 @@
+[Report:StockTabular]
+	Title	: "Stock Item report In Tabular Report Format"
+	Form	: StockTabularForm
+	
+[Form:StockTabularForm]
+	Part	: StockTabularPart
+	;Width	: 100% Page
+	
+[Part:StockTabularPart]
+	Lines 	: StockTabularLineTitle, StockTabularLineBody
+	Repeat	: StockTabularLineBody		: StkGrpColl
+	Scroll	: Vertical
+	Common Borders	: Yes
+	
+	[Line:StockTabularLineTitle]
+		Use		: StockTabularLineBody
+		Local	: Field		: Default	: Style	: Normal Bold
+		Local	: Field		: Default	: Align	: Center
+		Local	: Field		: Default	: Type	: String
+		
+		Local	: Field		: StockTabularLineBodyName	: Info	: $$LocaleString:"Particulars"
+		Local	: Field		: StockTabularLineBodyOpb	: Info	: $$LocaleString:"Opening Balance"
+		Local	: Field		: StockTabularLineBodyClB	: Info	: $$LocaleString:"Closing Balance"
+		
+		Border			: Thick Bottom
+		Space Bottom	: 2
+
+	[Line:StockTabularLineBody]
+		Field			: StockTabularLineBodyName
+		Right Fields	: StockTabularLineBodyOpb, StockTabularLineBodyClB
+		;Explode			: StkItemPart
+		Explode			: StkItemPart	: $$KeyExplode ;;With This It give items only key press of "Shift+Enter"
+		
+		[Part:StkItemPart]
+			Line	: ExpStkItem
+			Repeat	: ExpStkItem	: StkItemColl ;; For this we dont require scroll because the parent has it
+												  ;; and child inherit it from parent.
+												  
+			[Line:ExpStkItem]
+				Field			: StockTabularLineBodyName
+				Right Fields	: StockTabularLineBodyOpb, StockTabularLineBodyClB
+				Indent			: 4
+				
+				Local	: Field		: Default	: Style	: Normal Italic
+		
+		[Field:StockTabularLineBodyName]
+			Type			: String
+			Set as			: $Name
+			Width			: 50
+			Quick Search	: Yes ; With this we can search the items on press name like n for search names start with n
+			
+		[Field:StockTabularLineBodyOpb]
+			Type		: Quantity
+			Set as		: $OpeningBalance
+			Border		: Thin Left Right
+			Width		: 20
+			
+		[Field:StockTabularLineBodyClB]
+			Type		: Quantity
+			Set as		: $OpeningBalance
+			Width		: 20
+			
+
+
+[Collection:StkGrpColl]
+	Type	: Stock Group
+	
+[Collection:StkItemColl]
+	Type		: Stock Item
+	Child Of	: $Name ;; Without this it will show every item in every grouop
+					;; This refer to stock group as the requestor line is in the 
+					;; data context of Stock Group
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		

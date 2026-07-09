@@ -1,0 +1,493 @@
+;;Version 1.0 30-06-2022
+
+;;; credit to unknown
+
+;1;DayBook
+
+[#System: Formula]
+  SV_SEL_CURSOR_FG  : Released green
+  
+
+[#Form: Day Book]
+  Add:Bottom Parts : Daybook Total
+
+[Part : Daybook Total]
+  Line : Daybook Total
+  Border: Column Titles
+
+[Line : Daybook Total]
+  Right Field : LineselectDDTotalNet,TotalDD,Daybook dr, Daybook cr
+   
+[Field : TotalDD]
+   Use: Short Name Field
+   Set as: if @@InselectMode Then "Selected Sum :" Else "Total :"
+   Background : if @@InselectMode Then "Karry Orange"  Else Warning Amber
+   Align:Right
+     
+[Field : Daybook dr]
+  Use : Name Field
+  Set as  : if @@InselectMode Then $$String:@SelectedTotalValD Else $$String:@totaldr + " Dr"
+  Width  : 12
+  Align  : Centre
+  Background  : if @@InselectMode Then "AppleGreen"  Else Warning Amber
+  Invisible  :  ##IsVoucherregister
+  Totaldr : $$Total:DSPDBDrAmt
+  SelectedTotalValD: $$String:##SelectedDebit:"DrCr"
+   
+[Field : Daybook cr]
+  Use : Name Field
+  Set as  : if @@InselectMode Then $$String:@SelectedTotalValC Else $$String:@totalcr + " Cr"
+  Width  : 12
+  Align  : Centre
+  TotalCr : $$Total:DSPDBCrAmt
+  SelectedTotalValC  : $$String:##SelectedCredit:"DrCr"
+  Background  : if @@InselectMode Then "Red"  Else Warning Amber
+  Invisible  :  ##IsVoucherregister
+
+[Field: LineselectDDTotalNet]
+  Use  : Name Field   
+  Set as  : if @@InselectMode Then $$String:@SelectedTotal1 + $$String:@SelectedTotalVal1 Else ""
+  Width  : 18
+  Align  : Centre
+  SelectedTotal1  : $$LocaleString:"Net : "
+  SelectedTotalVal1: $$String:##SelectedTotal1:"DrCr"
+  Background  : if @@InselectMode Then "yellow"  Else Warning Amber
+  Invisible  :  ##IsLedgerReport
+
+   
+[#Part: DB Body]
+  Total: DSPDBDrAmt,DSP DBCrAmt
+
+[#Line : DSP VchDetail]
+  Option  : SelectedLinesTotalOnFocus1
+  Option  : SelectedLinesTotalOnFocusdr
+  Option  : SelectedLinesTotalOnFocuscr
+
+[!Line: SelectedLinesTotalOnFocus1] ;Line to Call Selected BillsTotal Function
+
+  On  : Focus  : Yes  : Call  : SelectedTotal1
+  On  : Focus  : Yes  : Call  : SelectedDebit
+  On  : Focus  : Yes  : Call  : SelectedCredit
+ 
+[Function: SelectedTotal1]
+ 0010  : Set  : IsLineselected1  : (NOT $$IsEmpty:##SelectedTotal1)
+ 0020  : Set  : SelectedTotal1  : ($$CollAmtTotal:SelectedLinesColl1:$Amount)
+
+[Function: SelectedDebit]
+ 0010  : Set  : IsLineselected1  : (NOT $$IsEmpty:##SelectedTotal1)
+ 0030  : Set  : SelectedDebit  : ($$CollAmtTotal:SelectedLinesCollD:$Amount)
+
+[Function: SelectedCredit]
+ 0010  : Set  : IsLineselected1  : (NOT $$IsEmpty:##SelectedTotal1)
+ 0040  : Set  : SelectedCredit  : ($$CollAmtTotal:SelectedLinesCollC:$Amount)
+   
+[System: Variables]
+	  SelectedTotal1 : 0
+	  SelectedDebit : 0
+	  SelectedCredit : 0
+	  IsLineselected1  : NO
+
+[Variable: SelectedTotal1]
+	 Type  : Amount
+	 Persistent : Yes
+
+[Variable: SelectedDebit]
+	 Type  : Amount
+	 Persistent : Yes
+
+[Variable: SelectedCredit]
+	  Type  : Amount
+	  Persistent : Yes
+
+[Variable: IsLineselected1]
+	  Type  : Logical
+
+[Collection:SelectedLinesColl1]
+	  Data Source  : Report  : Selected
+	  Fetch  : Amount
+	  Client Only  : Yes
+
+[Collection:SelectedLinesCollD]
+	  Data Source  : Report  : Selected
+	  Fetch  : Amount
+	  Fetch  : AllLedgerEntries.LedgerName, AllLedgerEntries.Amount
+	  Fetch  : AllLedgerEntries.BankAllocations.*
+	  Client Only  : Yes
+	  Filter : onlydrdb
+
+[Collection:SelectedLinesCollC]
+	  Data Source  : Report  : Selected
+	  Fetch  : Amount
+	  Fetch  : AllLedgerEntries.LedgerName, AllLedgerEntries.Amount
+	  Fetch  : AllLedgerEntries.BankAllocations.*
+	  Client Only  : Yes
+	  Filter : onlycrdb
+
+[System : Formulae]
+	 onlycrdb : NOT $$isDr:$Amount
+[#Menu : Gateway of Tally]
+Title : "Professor M-ex & Team"
+
+[System : Formulae]
+	  onlydrdb :$$IsDr:$Amount
+
+[System : Formulae]   
+	 InselectMode:##IsLineselected1 AND NOT $$IsEmpty:($$ReportObject:$$CollAmtTotal:SelectedLinesColl1:$Amount)
+
+
+;2;Group Vouchers
+
+[#Line : DSP VchClAmt]
+    Add : Left Field :  NetAmtG, LineselectedTotalDrG, LineselectedTotalCrG
+
+[#Line : DSP VchDetail]
+    Option : SelectedLinesTotalOnFocusGroup 
+  
+[!Line : SelectedLinesTotalOnFocusGroup ]                    
+    On : Focus : Yes : Call : SelectedDebitrG
+    On : Focus : Yes : Call : SelectedCreditrG
+    On        : Focus    : Yes    : Call    : SelectedLinesTotalnetGroup
+
+[Function : SelectedDebitrG]
+    0010 : Set : SelectedDebitrG : ($$CollAmtTotal:SelectedLinesCollDjG:$TotalGrpDrVchAmt)
+    0011 : Set : IsLineselectedDrG     : (NOT $$IsEmpty:##SelectedDebitrG)
+  
+[Function : SelectedCreditrG]
+    0010 : Set : SelectedCreditrG : ($$CollAmtTotal:SelectedLinesCollCjG:$TotalGrpCrVchAmt)
+    0011 : Set : IsLineselectedCrG     : (NOT $$IsEmpty:##SelectedCreditrG)   
+
+[Function : SelectedLinesTotalnetGroup]
+   0010 : Set : SelectedLinesTotalnetGroup : ($$CollAmtTotal:SelectedLinesCollnetG:$TotalGrpVchAmt)
+    0011 : Set : IsLineselectednetG     : (NOT $$IsEmpty:##SelectedLinesTotalnetGroup)   
+
+[Field : LineselectedTotalDrG]
+    Use                : Name Field
+    Set as             : if ##IsLineselectedDrG AND NOT $$IsEmpty:($$ReportObject:$$CollAmtTotal:SelectedLinesCollDjG:$TotalGrpDrVchAmt) Then $$String:@SelectedTotalDrG + $$String:@SelectedTotalValDrG Else ""
+    Width              : 30
+    Align              : Centre
+    Background           : if ##IsLineselectedDrG AND NOT $$IsEmpty:($$ReportObject:$$CollAmtTotal:SelectedLinesCollDjG:$TotalGrpDrVchAmt) Then  "AppleGreen" Else Warning Amber
+    Invisible           :   ##IsLedgerReport
+    SelectedTotalDrG    : $$LocaleString:"Selected Dr : "
+    SelectedTotalValDrG : $$String:##SelectedDebitrG:"DrCr"
+
+[Field : LineselectedTotalCrG]
+    Use                : Name Field
+    Set as             : if ##IsLineselectedCrG AND NOT $$IsEmpty:($$ReportObject:$$CollAmtTotal:SelectedLinesCollCjG:$TotalGrpCrVchAmt) Then $$String:@SelectedTotalCrG + $$String:@SelectedTotalValCrG Else ""
+    Width              : 30
+    Align              : Centre
+    Background           : if ##IsLineselectedCrG AND NOT $$IsEmpty:($$ReportObject:$$CollAmtTotal:SelectedLinesCollCjG:$TotalGrpCrVchAmt) Then "Red" Else Warning Amber
+    Invisible           :   ##IsLedgerReport
+    SelectedTotalCrG    : $$LocaleString:"Selected Cr : "
+    SelectedTotalValCrG : $$String:##SelectedCreditrG:"DrCr"
+
+[Field : NetAmtG]
+    Use                 : Name Field
+    Set as              :  if ##IsLineselectednetG AND NOT $$IsEmpty:($$ReportObject:$$CollAmtTotal:SelectedLinesCollnetG:$TotalGrpVchAmt) Then $$String:@SelectedTotalnetG + $$String:@SelectedTotalValnetG Else ""
+    Width               : 30
+    Align               : Centre
+    Background            : if ##IsLineselectednetG AND NOT $$IsEmpty:($$ReportObject:$$CollAmtTotal:SelectedLinesCollNetG:$TotalGrpVchAmt) Then "Yellow" Else Warning Amber
+    Format                : "DrCr"
+    Invisible           :   ##IsLedgerReport
+    SelectedTotalNetG    : $$LocaleString:"Net Selection : "
+    SelectedTotalValNetG : $$String:##SelectedLinesTotalnetGroup:"DrCr"
+
+[System : Variables]
+       SelectedDebitrG : 0
+       SelectedCreditrG : 0
+       SelectedLinesTotalnetGroup : 0
+       
+       IsLineselectedDrG     : NO
+       IsLineselectedCrG     : NO
+       IsLineselectednetG   : NO
+  
+[Variable : SelectedDebitrG]
+    	Type : Amount
+	Persistent : Yes
+
+[Variable : SelectedCreditrG]
+    	Type : Amount
+	Persistent : Yes
+
+[Variable : SelectedLinesTotalnetGroup]
+    Type : Amount
+    Persistent : Yes
+
+[Variable : IsLineselectedDrG]
+    Type : Logical
+
+[Variable : IsLineselectedCrG]
+    Type : Logical
+
+[Variable : IsLineselectednetG]
+    Type : Logical
+[#Menu : Gateway of Tally]
+Title : "Professor M-ex & Team"
+[Collection : SelectedLinesCollnetG]
+        Data Source : Report : Selected
+        Fetch       : Name, TotalGrpVchAmt
+        Client Only : Yes
+
+[Collection:SelectedLinesCollDjG]
+       Data Source    : Report    : Selected
+       Fetch       : Name, TotalGrpDrVchAmt
+   	 Filter : onlydrG
+   
+  
+[Collection:SelectedLinesCollCjG]
+  	  Data Source    : Report    : Selected
+        Fetch       : Name, TotalGrpCrVchAmt
+ 	  Client Only    : Yes
+ 	  Filter : onlycrG
+   
+[System : Formulae]
+        onlycrG : NOT $$isDr:$TotalGrpVchAmt
+
+[System : Formulae]
+    	onlydrG : $$IsDr:$TotalGrpVchAmt
+   
+[Color: AppleGreen]
+	RGB:0,204,153
+
+
+;3;LEDGERS
+
+
+[#Line : DSP VchClAmt]
+   
+    Add : Left Field :  NetAmt, LineselectedTotalDr, LineselectedTotalCr
+
+[#Line : DSP VchDetail]
+    Option : SelectedLinesTotalOnFocus : ##IsLedgerReport
+  
+[!Line : SelectedLinesTotalOnFocus]                     ;; Line to Call Selected BillsTotal Function
+        On : Focus : Yes : Call : SelectedDebitr
+	  On : Focus : Yes : Call : SelectedCreditr
+	  On : Focus : Yes : Call : SelectedLinesTotalnet
+
+[Function : SelectedDebitr]
+    0010 : Set : SelectedDebitr : ($$CollAmtTotal:SelectedLinesCollDj:$TotalLedDrVchAmt)
+    0011 : Set : IsLineselectedDr     : (NOT $$IsEmpty:##SelectedDebitr)
+  
+[Function : SelectedCreditr]
+    0010 : Set : SelectedCreditr : ($$CollAmtTotal:SelectedLinesCollCj:$TotalLedCrVchAmt)
+    0011 : Set : IsLineselectedCr     : (NOT $$IsEmpty:##SelectedCreditr)   
+
+[Function : SelectedLinesTotalnet]
+   0010 : Set : SelectedLinesTotalnet : ($$CollAmtTotal:SelectedLinesCollnet:$TotalLedVchAmt)
+   0011 : Set : IsLineselectednet     : (NOT $$IsEmpty:##SelectedLinesTotalnet)   
+[#Menu : Gateway of Tally]
+	Title : "Professor M-ex & Team"
+[Field : LineselectedTotalDr]
+    Use                : Name Field
+    Set as             : if ##IsLineselectedDr AND NOT $$IsEmpty:($$ReportObject:$$CollAmtTotal:SelectedLinesCollDj:$TotalLedDrVchAmt) Then $$String:@SelectedTotalDr + $$String:@SelectedTotalValDr Else ""
+    Width              : 30
+    Align              : Centre
+    Background           : if ##IsLineselectedDr AND NOT $$IsEmpty:($$ReportObject:$$CollAmtTotal:SelectedLinesCollDj:$TotalLedDrVchAmt) Then  "AppleGreen" Else "RELEASED GREEN"
+    Invisible          : NOT  ##IsLedgerReport OR NOT $$InDisplayMode
+    SelectedTotalDr    : $$LocaleString:"Selected Dr : "
+    SelectedTotalValDr : $$String:##SelectedDebitr:"DrCr"
+
+[Field : LineselectedTotalCr]
+    Use                : Name Field
+    Set as             : if ##IsLineselectedCr AND NOT $$IsEmpty:($$ReportObject:$$CollAmtTotal:SelectedLinesCollCj:$TotalLedCrVchAmt) Then $$String:@SelectedTotalCr + $$String:@SelectedTotalValCr Else ""
+    Width              : 30
+    Align              : Centre
+    Background         : if ##IsLineselectedCr AND NOT $$IsEmpty:($$ReportObject:$$CollAmtTotal:SelectedLinesCollCj:$TotalLedcrVchAmt) Then "Red" Else "RELEASED GREEN"
+    Invisible          : NOT  ##IsLedgerReport OR NOT $$InDisplayMode
+    SelectedTotalCr    : $$LocaleString:"Selected Cr : "
+    SelectedTotalValCr : $$String:##SelectedCreditr:"DrCr"
+
+[Field : NetAmt]
+    Use                 : Name Field
+    Set as              :  if ##IsLineselectednet AND NOT $$IsEmpty:($$ReportObject:$$CollAmtTotal:SelectedLinesCollnet:$TotalLedVchAmt) Then $$String:@SelectedTotalnet + $$String:@SelectedTotalValnet Else ""
+    Width               : 30
+    Align               : Centre
+    Background          : if ##IsLineselectednet AND NOT $$IsEmpty:($$ReportObject:$$CollAmtTotal:SelectedLinesCollNet:$TotalLedVchAmt) Then "yellow" Else "Released Green"
+    Format              : "DrCr"
+    Invisible           : NOT  ##IsLedgerReport OR NOT $$InDisplayMode
+    SelectedTotalNet    : $$LocaleString:"Net Selection : "
+    SelectedTotalValNet : $$String:##SelectedLinesTotalnet:"DrCr"
+
+[System : Variables]
+       SelectedDebitr : 0
+	 SelectedCreditr : 0
+	 SelectedLinesTotalnet : 0
+       
+    IsLineselectedDr     : NO
+    IsLineselectedCr     : NO
+    IsLineselectednet   : NO
+  
+[Variable : SelectedDebitr]
+    	Type 		: Amount
+	Persistent 	: Yes
+
+[Variable : SelectedCreditr]
+    	Type 		: Amount
+	Persistent 	: Yes
+
+[Variable : SelectedLinesTotalnet]
+    Type 		: Amount
+    Persistent 	: Yes
+
+[Variable : IsLineselectedDr]
+    Type : Logical
+
+[Variable : IsLineselectedCr]
+    Type : Logical
+
+[Variable : IsLineselectednet]
+    Type : Logical
+[#Menu : Gateway of Tally]
+	Title : "Professor M-ex & Team"
+[Collection : SelectedLinesCollnet]
+    Data Source : Report : Selected
+    Fetch       : Name, TotalLedVchAmt
+    Client Only : Yes
+
+[Collection:SelectedLinesCollDj]
+       Data Source : Report    : Selected
+	 Fetch       : Name,TotalLedDrVchAmt
+       Client Only : Yes
+	 Filter 	 : onlydr
+
+[Collection:SelectedLinesCollCj]
+     Data Source  : Report    : Selected
+     Fetch       	: Name, TotalLedCrVchAmt
+     Client Only  : Yes
+     Filter 	: onlycr
+
+[System : Formulae]
+    onlycr : NOT $$isDr:$TotalLedVchAmt
+
+[System : Formulae]
+    onlydr :$$IsDr:$TotalLedVchAmt
+
+
+;4;Group Ledgers
+
+
+
+[#Form: Group Summary]
+    Add : Bottom Part : At End : Selected Total for Group Ledgers
+    Add: Key: BottomToolBarBtn12
+
+[Part : Selected Total for Group Ledgers]
+        Line : Selected Total for Group Ledgers
+
+[Line : Selected Total for Group Ledgers]
+        Add : left Field :NettAmt,LineselectedTotalDebitGroupl,LineselectedTotalCreditGroupl
+
+[#Line: DSP AccLine]
+        Option : SelectedLinesTotalOnFocusGroupl
+  
+[!Line : SelectedLinesTotalOnFocusGroupl]                     ;; Line to Call Selected BillsTotal Function
+    On : Focus : Yes : Call : SelectedLinesTotalDebitGroupl
+    On : Focus : Yes : Call : SelectedLinesTotalCreditGroupl
+    On : Focus : Yes : Call : SelectedLinesTotalNettGroupl
+
+[Function : SelectedLinesTotalDebitGroupl]
+    0010 : Set : SelectedLinesTotalDebitGroupl : ($$CollAmtTotal:SelectedLinesCollDebitGroupl:$Closingbalance)
+    0011 : Set : LineselectedDebitGroupl     : (NOT $$IsEmpty:##SelectedLinesTotalDebitGroupl)
+[#Menu : Gateway of Tally]
+	Title : "Professor M-ex & Team"
+[Function : SelectedLinesTotalCreditGroupl]
+    0010 : Set : SelectedLinesTotalCreditGroupl : ($$CollAmtTotal:SlectedLinesCollCreditGroupl:$Closingbalance)
+    0011 : Set : LineselectedCreditGroupl     : (NOT $$IsEmpty:##SelectedLinesTotalCreditGroupl)
+
+[Function : SelectedLinesTotalNettGroupl]
+    0010 : Set : SelectedLinesTotalNettGroupl : ($$CollAmtTotal:SelectedLinesCollNettGroupl:$Closingbalance)
+    0011 : Set : LineselectedNettGroupl     : (NOT $$IsEmpty:##SelectedLinesTotalNettGroupl)   
+  
+[Field : LineselectedTotalDebitGroupl]
+    Use                : Name Field
+    Set as             : if ##LineselectedDebitGroupl AND NOT $$IsEmpty:($$ReportObject:$$CollAmtTotal:SelectedLinesCollDebitGroupl:$Closingbalance) Then $$String:@SelectedTotalDebit + $$String:@SelectedTotalValDebit Else ""
+    Width              : 30
+    Align              : Centre
+    Background         : if ##LineselectedDebitGroupl AND NOT $$IsEmpty:($$ReportObject:$$CollAmtTotal:SelectedLinesCollDebitGroupl:$Closingbalance) Then "AppleGreen" Else @@SV_Groupsummary
+   ; Invisible         : NOT  ##IsLedgerReport OR NOT $$InDisplayMode
+    SelectedTotalDebit : $$LocaleString:"Selected Dr : "
+    SelectedTotalValDebit : $$String:##SelectedLinesTotalDebitGroupl:"DrCr"
+
+[Field : LineselectedTotalCreditGroupl]
+    Use                : Name Field
+    Set as             : if ##LineselectedCreditGroupl AND NOT $$IsEmpty:($$ReportObject:$$CollAmtTotal:SlectedLinesCollCreditGroupl:$Closingbalance) Then $$String:@SelectedTotalCredit + $$String:@SelectedTotalValCredit Else ""
+    Width              : 30
+    Align              : Centre
+   Background           : if ##LineselectedCreditGroupl AND NOT $$IsEmpty:($$ReportObject:$$CollAmtTotal:SlectedLinesCollCreditGroupl:$Closingbalance) Then "Red" Else @@SV_Groupsummary
+    ;Invisible          : NOT  ##IsLedgerReport OR NOT $$InDisplayMode
+    SelectedTotalCredit    : $$LocaleString:"Selected Cr : "
+    SelectedTotalValCredit : $$String:##SelectedLinesTotalCreditGroupl:"DrCr"
+
+[Field : NettAmt]
+    Use                 : Name Field
+    Set as              :  if ##LineselectedNettGroupl AND NOT $$IsEmpty:($$ReportObject:$$CollAmtTotal:SelectedLinesCollNettGroupl:$Closingbalance) Then $$String:@SelectedTotalNett + $$String:@SelectedTotalValNett Else ""
+    Width               : 30
+    Align               : Centre
+    Background            : if ##LineselectedNettGroupl AND NOT $$IsEmpty:($$ReportObject:$$CollAmtTotal:SelectedLinesCollNettGroupl:$Closingbalance) Then "yellow" Else @@SV_Groupsummary
+    Format                : "DrCr"
+    ;Invisible           : NOT  ##IsLedgerReport OR NOT $$InDisplayMode
+    SelectedTotalNett   : $$LocaleString:"Net Selection : "
+    SelectedTotalValNett : $$String:##SelectedLinesTotalNettGroupl:"DrCr"
+
+[System : Variables]
+    SelectedLinesTotalDebitGroupl : 0
+    SelectedLinesTotalCreditGroupl : 0
+    SelectedLinesTotalNettGroupl : 0
+    LineselectedDebitGroupl     : NO
+    LineselectedCreditGroupl     : NO
+    LineselectedNettGroupl     : NO
+  
+[Variable : SelectedLinesTotalDebitGroupl]
+    Type : Amount
+
+[Variable : SelectedLinesTotalCreditGroupl]
+    Type : Amount
+  
+[Variable : SelectedLinesTotalNettGroupl]
+    Type : Amount
+
+[Variable : LineselectedDebitGroupl]
+    Type : Logical
+
+[Variable : LineselectedCreditGroupl]
+    Type : Logical
+  
+[Variable : LineselectedNettGroupl]
+    Type : Logical
+
+[System : Formulae]
+    OnlyCrside : NOT $$isDr:$Closingbalance
+    Onlydrside :$$IsDr:$Closingbalance
+[#Menu : Gateway of Tally]
+	Title : "Professor M-ex & Team"
+[Collection : SelectedLinesCollDebitGroupl]
+      Data Source : Report : Selected
+      Fetch       : Name,Closingbalance
+      Client Only : Yes
+    	Filter : Onlydrside
+
+[Collection : SlectedLinesCollCreditGroupl]
+       Data Source : Report : Selected
+       Fetch       : Name,Closingbalance
+       Client Only : Yes
+	 Filter : OnlyCrside
+
+[Collection : SelectedLinesCollNettGroupl]
+       Data Source : Report : Selected
+       Fetch       : Name,Closingbalance
+       Client Only : Yes
+
+[#Collection: Daybook Vouchers of Company]
+    Fetch        : Allledgerentries.*,*.*
+
+[#Collection : Filtered Vouchers of Company ]
+    Fetch        : Allledgerentries.*,*.*
+
+[#Collection : Specific Vouchers of Company]
+    Fetch        : Allledgerentries.*,*.*
+
+[#Collection: Vouchers of Ledger]
+    Fetch        : Allledgerentries.*,*.*
+
+[#Collection: Vouchers Of Group]
+    Fetch        : Allledgerentries.*,*.*

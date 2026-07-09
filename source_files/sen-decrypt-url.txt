@@ -1,0 +1,109 @@
+;; Add Url Button Start
+[#Menu:gateway of tally]
+	Add		: Button	: Browse Url
+
+[Button:Browse Url]
+	Key			: Ctrl + F5
+	Action		: Call		: TSPL Smp IsInternetActive1
+	
+[Function: TSPL Smp IsInternetActive1]
+	Variable	: PopMessage		: String
+	00	: Walk Collection	: Browse 
+	100	: End Walk
+	
+[Collection: Browse]
+
+	Remote URL 		: "https://tallyatcloud.com/tallybackup/?q="+@@EncFinal   ;Give your Actual URL name
+	Client Only		: Yes
+	
+[System:Formula]
+	PopMessage	: "https://tallyatcloud.com/tallybackup/"+@@SrNo + @@EmailId + @@UserType 
+	SrNo		: $$LocaleString:($$LicenseInfo:SerialNumber)+"/" 
+	EmailId		: $$LocaleString:($$LicenseInfo:AdminEmailID)+"/"
+	EncEmailId	: $$EncryptStr:@@EmailId:123456 
+	DecEmailId	: $$DecryptStr:@@EncEmailId:123456
+	UserType	: If $$LicenseInfo:IsSilver then "SILVER" Else If $$LicenseInfo:IsGold Then "GOLD" Else "SERVER"
+	EncUserType	: $$EncryptStr:@@UserType:123456
+	DecUserType	: $$DecryptStr:@@EncUserType:123456
+	EnPopMess	: $$EncryptStr:@@PopMessage:123456
+	SrNo1		: $$LocaleString:($$LicenseInfo:SerialNumber)
+	EncSrNo1	: $$EncryptStr:@@SrNo:123456
+	DecSrNo1	: $$DecryptStr:@@EncSrNo:123456
+	EmailId1	: $$LocaleString:($$LicenseInfo:AdminEmailID)
+	EncEmailId1	: $$EncryptStr:@@EmailId:123456 
+	DecEmailId1	: $$DecryptStr:@@EncEmailId:123456
+	UserType1	: If $$LicenseInfo:IsSilver then "SILVER" Else If $$LicenseInfo:IsGold Then "GOLD" Else "SERVER"
+	EncUserType1	: $$EncryptStr:@@UserType:123456
+	DecUserType1	: $$DecryptStr:@@EncUserType:123456
+	788448564,tanu.nksagar@gmail.com,SILVER
+	Final			: @@SrNo1+","+@@EmailId1+","+@@UserType1
+	
+
+
+
+
+	Final			:"788448564,tanu.nksagar@gmail.com,SILVER" ;; String For Encryption
+	EncFinal		: $$EncryptStr:@@Final:123456 ;; Encryption Method
+	
+;; Add Url Button End
+
+
+
+
+
+
+[#Menu : Gateway of Tally]
+Add		: Item	: "All Serial No"	: Display	: AllSerials
+
+
+
+[Report:AllSerials]
+	Form		: AllSerials
+	
+[Form:AllSerials]
+	Part		: AllSerials
+	
+[Part:AllSerials]
+	Line		: AllSerials,Dex,dec
+	
+	[Line:AllSerials]
+		Fields		: ShortPrompt, No
+		Local		: Field		: ShortPrompt	: Info	: $$LocaleString:"Hello"
+		[Field:No]
+			Use			: Name Field
+			Set as		: $$LocaleString:@@Final;;"https://tallyatcloud.com/tallybackup/?q="+@@Final
+			;Set as		: $$LocaleString:($$EncryptStr:@@SrNo:123456)
+			
+			Width		: 80% Page
+			
+	[Line:Dex]
+		Field		: ShortPrompt,Dex
+		Local		: Field		: ShortPrompt	: Info	: $$LocaleString:"Hello"
+		[Field:Dex]
+			Use			: Name Field
+			Set as		: $$String:@@EncFinal;@@DecSrNo + @@DecEmailId + @@DecUserType 
+			;Set as		: $$LocaleString:($$EncryptStr:@@SrNo:123456)
+			
+			Width		: 80% Page
+			Set Always	: Yes
+			
+
+	[Line:dec]
+		Field		: ShortPrompt,dec
+		Local		: Field		: ShortPrompt	: Info	: $$LocaleString:"Hello"
+		[Field:dec]
+			Use			: Name Field
+			Set as		: $$DecryptStr:"xs65CKH9mA/68TxePUBwYQrY+vAqid3FH6k0qVNXXilv4Y+++YOmdLEA0Zad2edCZIHGdPLqRSfS0lfORyC93YCsPQn79vmp65t8fwVlttQ=":123456;@@DecSrNo + @@DecEmailId + @@DecUserType 
+			;Set as		: $$LocaleString:($$EncryptStr:@@SrNo:123456)
+			
+			Width		: 80% Page
+			Set Always	: Yes
+			
+
+
+
+
+
+
+
+			

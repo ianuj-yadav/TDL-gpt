@@ -1,0 +1,84 @@
+;; 1. Add Converter to Gateway of Tally
+[#Menu: Gateway of Tally]
+    ;; We are explicitly placing it AFTER "Quit" so it lands at the bottom
+    Add : Item : After : Quit : "Celsius Converter" : Alter : CTEMP_ConverterReport
+
+;; 2. Report Definition
+[Report: CTEMP_ConverterReport]
+    Form : CTEMP_ConverterForm
+    Variable : CTEMP_CelVar
+    Set : CTEMP_CelVar : 0 
+
+;; 3. Form Definition 
+[Form: CTEMP_ConverterForm]
+    Part : CTEMP_HdrPart, CTEMP_InPart, CTEMP_OutPart
+    Width : 35% Screen
+    Height : 25% Screen
+    Bottom Button : CTEMP_ClearBtn
+
+;; 4. Parts (Stripped of risky spacing attributes to ensure compiling)
+[Part: CTEMP_HdrPart]
+    Lines : CTEMP_HdrLine
+
+[Part: CTEMP_InPart]
+    Lines : CTEMP_InLine
+
+[Part: CTEMP_OutPart]
+    Lines : CTEMP_OutLine
+
+;; 5. Lines
+[Line: CTEMP_HdrLine]
+    Fields : CTEMP_HdrFld
+
+[Line: CTEMP_InLine]
+    Fields : CTEMP_LblFld, CTEMP_CelFld
+
+[Line: CTEMP_OutLine]
+    Fields : CTEMP_ResLblFld, CTEMP_FahFld
+
+;; 6. Fields
+[Field: CTEMP_HdrFld]
+    Use : Name Field
+    Set As : "Celsius to Fahrenheit"
+    Style : Large
+    Full Width : Yes
+    Align : Center
+
+[Field: CTEMP_LblFld]
+    Use : Medium Prompt
+    Set As : "Celsius :"
+    Align : Right
+
+[Field: CTEMP_CelFld]
+    Use : Number Field
+    Variable : CTEMP_CelVar
+    Align : Left
+
+[Field: CTEMP_ResLblFld]
+    Use : Medium Prompt
+    Set As : "Fahrenheit :"
+    Align : Right
+
+[Field: CTEMP_FahFld]
+    Use : Number Field
+    ;; Using 1.8 instead of (9/5) prevents integer math parsing errors in Tally
+    Set As : (#CTEMP_CelFld * 1.8) + 32
+    Set Always : Yes
+    Skip : Yes
+    Align : Left
+    Style : Bold
+    Color : Dark Green
+
+;; 7. Variable Declarations
+[Variable: CTEMP_CelVar]
+    Type : Number
+    Volatile : Yes
+
+;; 8. Clear Button & Function
+[Button: CTEMP_ClearBtn]
+    Key : Alt + C
+    Title : "Clear"
+    Action : Call : CTEMP_ClearFunc
+
+[Function: CTEMP_ClearFunc]
+    10 : Set : CTEMP_CelVar : 0

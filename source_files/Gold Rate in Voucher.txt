@@ -1,0 +1,103 @@
+[#Part: EXPINV CompanyDetails]
+	Delete	: Part	: EXPINV Image
+	
+[#Part: EXPINV Terms]
+	Horizontal Align	: Center
+	Delete		: Lines	: EXPINV SubTitle, EXPINV Terms
+	Delete		: Repeat	
+	Parts			: EXPINV Logo
+	
+
+	
+
+[Collection: GoldDynamicRate]
+	Data Source 		: File JSON 	: "E:\tirlok\tdl files\Gold Rate\New Gold Rate With Datewise.json";"E:\tirlok\tdl files\Gold Rate\Gold Rate Json File.json" 	; File Path/Name
+	JSON Object Path	: goldrates		: 1				; Main object path
+	Client Only			: Yes							; For client side only 
+	;Remote Request  : GoldDynamicRate [:ASCII]
+	
+
+
+[Collection:GoldQualityColl]
+	Title	: "Gold Quality"
+	Source Collection	: GoldDynamicRate
+	Filter	: DateWise
+	Fetch	: Quality, ratepergram, Date
+	Format	: $Quality, 10
+	Format	: $ratepergram, 10
+	Format	: $$Date:$Date,10
+	
+
+[System:Formula]
+	DateWise	: $$Date:$Date=##VARVchDate
+	
+[#Line: EI ColumnOne]
+	Option	: GoldEiColumnOne	: @@IsSales
+	
+[!Line:GoldEiColumnOne]
+	
+	Add		: Right Fields		: Before		:	VCH QtyTitle	:	GoldQualityTitleVoucher;, GoldRateTitleVoucher
+	
+	[Field:GoldQualityTitleVoucher]
+		Use			: VCH QtyTitle
+		Set as		: "Quality"
+		
+		
+[#Line:Ei invinfo]
+	Option	: GoldEiInvInfo	: @@IsSales
+	
+[!Line:GoldEiInvInfo]
+	Add		: Right Field	: Before	: VCH ActualQty	:  GoldQualityInVoucher
+	[Field:GoldQualityInVoucher]
+		Use			: Name Field
+		Storage		: GoldQuality
+		Table		: GoldQualityColl
+		Show Table	: Always
+		Align		: Right
+		Width		: 8
+		Set Always	: Yes
+		Skip		: If $Parent:StockItem:$StockitemName="Jewellery" Then No Else Yes
+		
+		
+		
+;[#Field: VCH Rate]
+;	Delete		: Switch	: VCH Rate	: VCH NrmlRate 
+;	Delete		: Switch	: VCH Rate	: VCH JrnlRate
+;	Delete		: Switch	: VCH Rate	: VCH POS Rate
+;	Switch		: VCH Rate	: VCH GoldRate	: $$IsEqual:$StockitemName:"Gold" 
+;	Switch		: VCH Rate  : VCH NrmlRate : NOT @@IsStockJrnl AND NOT @@IsPOSInvoice
+;    Switch		: VCH Rate	: VCH JrnlRate : @@IsStockJrnl
+;    Switch		: VCH Rate	: VCH POS Rate : NOT @@IsStockJrnl AND @@IsPOSInvoice 
+
+[#Field:VCH NrmlRate]
+		Skip On     	: @HasInvAlloc OR $$IsEmpty:$BilledQty OR (NOT @@DoEditAll AND $$IsValidPriceLevel:$PriceLevel AND @@StdVchFldSkipCond)
+        Style       	: Normal Bold
+        
+        ;; this is added to solve referesh problem while rate is picked from price list for Item item having negative stock...
+        Set as      	: IF @YesNo Then @GoldRate Else ( If (@TaxationEnabled AND (@@InvoiceInCreate OR NOT $$IsEmpty:$InclusiveTaxValue) AND (@@STKInclTax OR ##ICFGInclTax) AND @@SalesInvoiceMode) AND NOT (@HasBatchAllocation OR $$IsEmpty:$$Number:$InclusiveTaxValue OR (($Amount != 0) AND ($Amount != @@CalcedAmt))) Then $$InclusiveTaxValue:@@ExItemRate:@@STItemRate:@@VATItemRate:@@TCSItemRate:@@GSTItemRate:@@GSTItemQtyRate:@@ExItemMRPDutyValue:@@VATItemMRPDutyValue:@@ExItemQuantum Else + 
+						  If #VCHBilledQty = 0 OR  #VCHBilledQty != 0 then @Setval else @Setval)
+						  
+		YesNo			: If $Parent:StockItem:$StockitemName="Jewellery" Then Yes Else No
+		;YesNo			: If $StockitemName="Gold" Then Yes Else No
+		GoldRate		: $$Table:GoldQualityInVoucher:$ratepergram
+		
+		TaxationEnabled	: ($$IsTCSOn AND @@IsIndian) OR @@IsExciseTraderOn OR @@IsIndianVAT OR @@IsKenyaVAT OR @@IsGSTOn OR @@IsGCCCountriesVATOn OR (($$IsServiceTaxOn AND @@IsSTTaxenabledDate_Vch) AND (@@IsIndian OR @@IsMalaysia))
+		On 				: Focus : @IsNrmlInvRate : CALL : GetValue
+		IsNrmlInvRate 	: ((Not ($$InAlterMode OR $$InDuplicatemode)) And @@IsInvoice AND NOT $$IsFieldEdited:VchValue)
+		HasBatchAllocation: (@@HasBatchWise OR $$IsMultiGodownOn OR $$IsTrackingOn OR @@IsOrdersOn OR @@IsStkCostTrackingON)
+	
+	
+
+	
+;[!Field:VCH GoldRate]
+;	Set as		: @GoldRate
+;	GoldRate	: $$Table:GoldQualityInVoucher:$ratepergram
+;	Skip		: Yes
+;	Background	: Yellow
+;	Color		: Red
+;	Set Always	: Yes
+			
+[System:UDF]
+
+	GoldQuality	: String	: 20056
+	

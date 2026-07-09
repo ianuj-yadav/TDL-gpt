@@ -1,0 +1,159 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This program demonstrates the usage of Grouping and Aggregation
+-	Following Report displays the list of Stock Items along with the quantities 
+	Purchased, Consumed, Produced and Sold with the help of Collection Attribute By.
+
+Syntax -
+-	Grouping :-
+	By			 : Method-Name : Method-Formula
+-	Aggregation :-
+	Aggr Compute : Method-Name : Aggr-Type : Method-Formula
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+;; Report Definition
+
+[Report: STQuery]
+
+	Use			: DSP Template
+	Form 		: STQuery
+	Title		: "Itemwise Breakup"
+	PrintSet	: Report Title	: "Itemwise Breakup"
+	
+[Form: STQuery]
+
+	Use			: DSP Template
+	Parts 		: DB Title, STQuery
+	Delete		: Buttons			: ExplodeFlag
+	
+;;To incorporate the changes for TallyPrime
+;	Delete		: Bottom Buttons	: DSPAutoColumns, BudgetAnalysis, ReportConfig
+	Delete	: Button			: DSPAutoColumns
+	Delete	: Bottom Buttons	: BudgetAnalysis, ReportConfig
+
+	Local: Line	: DB Title	: Local	: Field	: Name Field: Set as	: "Itemwise Columnar Breakup"
+
+	;; Locally altering the default Line DB Title (within the default Part DB Title) to change 
+	;; the value set in the Field Name Field to "Itemwise Columnar Breakup" */
+
+[Part: STQuery]
+
+	Lines			: STQueryT, STQuery
+	Repeat			: STQuery 	: SItemColl
+	Scroll	 		: Vertical
+	Common Borders	: Yes
+	Total			: OpQty, InQty, ConsQty, ProdQty, OutwQty, ClosQty
+
+	[Line: STQueryT]
+
+		Use 	: STQuery
+		Local	: Field	: Default	: Type	: String
+		Local	: Field	: Default	: Align	: Center
+		Local	: Field	: Default	: Lines	: 0
+		Local	: Field	: ItemName	: Align	: Left
+		Local	: Field	: ItemName	: Set as: "Particulars"
+		Local	: Field	: OpQty		: Set as: "Opening Quantity"
+		Local	: Field	: InQty		: Set as: "Inwards Quantity"
+		Local	: Field	: ConsQty	: Set as: "Consumption Quantity"
+		Local	: Field	: ProdQty	: Set as: "Production Quantity"
+		Local	: Field	: OutwQty 	: Set as: "Outwards Quantity"
+		Local	: Field	: ClosQty	: Set as: "Closing Quantity"
+		Border	: Thin Top Bottom
+	
+	[Line: STQuery]
+	
+		Fields		: ItemName, OpQty, InQty, ConsQty, ProdQty, OutwQty, ClosQty
+		Repeat		: ClosQty
+		Option		: AlterOnEnter
+	
+		[Field: ItemName] ;; Stock Item Name
+		
+			Use	   		: Name Field
+			Style		: Normal
+			Width		: 30
+			Maximum		: 30
+			Set As 		: $Name
+			Fixed		: Yes
+ 		
+		[Field: OpQty] ;; Opening Qty
+		
+			Use			: Qty Primary Field
+			Style		: Normal
+			Format		: "No Zero"
+			Set as		: $ItOpQty
+			Border		: Thin Left Right
+			Scroll		: Yes
+			Display		: Stock Summary
+		
+		[Field: InQty] ;; Purchase Qty
+		
+			Use			: OpQty
+			Set As 		: $TrPurcQty
+			Border		: Thin Right
+		
+		[Field: ConsQty] ;; Consumption of Stock journal
+		
+			Use			: InQty
+			Set As 		: $TrTranOutQty
+			Border		: Thin Right
+		
+		[Field: ProdQty] ;; Production of Stock journal
+		
+			Use			: InQty
+			Set As 		: $TrTranInQty
+		
+		[Field: OutwQty] ;; Sales Qty
+		
+			Use			: InQty
+			Set As 		: $TrSaleQty
+		
+		[Field: ClosQty] ;; Closing Qty
+		
+			Use			: InQty
+			Set As 		: $ItClQty
+			Delete		: Border
+			Style		: Normal Bold
+
+;; Collection Definition
+
+[Collection: Voucher Collection]
+
+	Type	: Voucher
+	
+
+[Collection: SItemColl]
+
+	Source Collection	: Voucher Collection
+
+	Walk				: All Inventory Entries
+
+	By					: Name				: $StockItemName ;; Grouping done by Stock Item
+
+	Aggr Compute		: TrPurcQty			: Sum : If @@PurcVr Then $BilledQty Else 0
+	Aggr Compute		: TrSaleQty			: Sum : If @@SaleVr Then $BilledQty Else 0
+	Aggr Compute		: TrTranOutQty		: Sum : If @@StockJrnlVr And NOT $$IsInwards:$BilledQty Then $BilledQty Else 0
+	Aggr Compute		: TrTranInQty		: Sum : If @@StockJrnlVr And $$IsInwards:$BilledQty Then $BilledQty Else 0
+
+	;; Aggregation done on Stock Item to compute Purchase, Sales, Consumption and Production quantities
+	
+	Compute				: ItClQty			: $StkClBalance:StockItem:$StockItemName
+	Compute				: ItOpQty			: $StkOpBalance:StockItem:$StockItemName
+
+	Sort				: @@SortAlphaIncr 	: $Name
+	
+	Fetch				: StockItemName, OpeningBalance, ClosingBalance, Billed Qty
+
+;; System Formula
+
+[System: Formula]
+
+	Purc Vr		 		: $$IsPurchase:$VoucherTypeName
+	Sale  Vr			: $$IsSales:$VoucherTypeName
+	Stock Jrnl Vr		: $$IsStockJrnl:$VoucherTypeName
+
+;; End-of-File

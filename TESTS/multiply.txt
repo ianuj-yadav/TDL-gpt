@@ -1,0 +1,122 @@
+;; --- MENU ENTRY ---
+[#Menu: Gateway of Tally]
+    Add: Key Item: Before: @@locQuit: Multiply Three Numbers: M: Alter: MTP Report
+
+
+;; --- REPORT DEFINITION ---
+[Report: MTP Report]
+    Form        : MTP Form
+    Title       : "Multiply Three Numbers"
+ 
+
+;; --- FORM DEFINITION ---
+[Form: MTP Form]
+    ;; Removed Height and 1-inch margins so it auto-fits the screen dynamically
+    Width       : 40% Screen
+    Parts       : MTP Header Part, MTP Input Part, MTP Result Part
+
+;; --- HEADER PART ---
+[Part: MTP Header Part]
+    Lines        : MTP Header Line
+    Space Bottom : 2 mms
+
+[Line: MTP Header Line]
+    Fields       : MTP Header Field
+
+[Field: MTP Header Field]
+    ;Set as       : "Multiplication Calculator"
+    Info         : "Enter three numbers to calculate their product"
+    Style        : Large Bold
+    Align        : Center
+    Width        : 100 % Page
+
+;; --- INPUT PART ---
+[Part: MTP Input Part]
+    Lines        : MTP Input Line 1, MTP Input Line 2, MTP Input Line 3
+    Space Bottom : 5 mms
+
+;; First Number Input
+[Line: MTP Input Line 1]
+    Fields       : MTP Label 1, MTP Number 1
+    Space Bottom : 2 mms
+
+[Field: MTP Label 1]
+    Set as       : "First Number :"
+    Style        : Normal Bold
+    Width        : 40% Page 
+	Skip		 : Yes
+
+[Field: MTP Number 1]
+    Use          : Number Field
+    Width        : 60% Page 
+    Border       : Thin Box
+	On: Focus	:Yes: Set		: MTP_Num1	: #MTPNumber1
+
+;; Second Number Input
+[Line: MTP Input Line 2]
+    Fields       : MTP Label 2, MTP Number 2
+    Space Bottom : 2 mms
+
+[Field: MTP Label 2]
+    Set as       : "Second Number :"
+    Style        : Normal Bold
+    Width        : 40% Page
+	Skip		 : Yes
+
+[Field: MTP Number 2]
+    Use          : Number Field
+    Width        : 60% Page
+    Border       : Thin Box
+	On: Focus	:Yes: Set		: MTP_Num2	: #MTPNumber2
+
+;; Third Number Input
+[Line: MTP Input Line 3]
+    Fields       : MTP Label 3, MTP Number 3
+
+[Field: MTP Label 3]
+    Set as       : "Third Number :"
+    Style        : Normal Bold
+    Width        : 40% Page
+	Skip		 : Yes
+
+[Field: MTP Number 3]
+    Use          : Number Field
+    Width        : 60% Page
+    Border       : Thin Box
+	On: Focus	:Yes: Set		: MTP_Num3	: #MTPNumber3
+
+;; --- RESULT PART ---
+[Part: MTP Result Part]
+    Lines        : MTP Result Line
+    Space Top    : 5 mms
+
+[Line: MTP Result Line]
+    Fields       : MTP Result Label, MTP Result Field
+
+[Field: MTP Result Label]
+    Set as       : "Product Result :"
+    Style        : Normal Bold
+    Width        : 40% Page
+	Skip		 : Yes
+
+[Field: MTP Result Field]
+    Use          : Number Field
+    ;Set as       : $$Multiply:##MTP_Num1:##MTP_Num2:##MTP_Num3
+	Set as       : $$Multiply:#MTPNumber1:#MTPNumber2:#MTPNumber3
+    Style        : Large Bold
+    Width        : 60% Page
+    Border       : Thin Box
+    Color        : Blue
+	Set Always	 : Yes
+	
+[Function:Multiply]
+	Parameter	: Num1		: Number
+	Parameter	: Num2		: Number
+	Parameter	: Num3		: Number
+	Variable	: Output	: Number
+	100		: Log	: ##num1
+	200		: Log	: ##num2
+	300		: Log	: ##num3
+	400		: Set	: output	: ##num1 * ##num2 * ##num3
+	500		: Return	: ##output
+	

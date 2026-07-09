@@ -1,0 +1,117 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This code demonstrates the Functions chained within another Function.  In other words, the 
+	output of one function is an input to the other function.
+-	List of sales vouchers with their Bill details (last) is displayed
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[System: Formula]
+
+	SalesVouchers	: $$IsSales:$VoucherTypeName
+
+[Collection: CompanySalesVouchers]
+
+	Type			: Voucher
+	Filter			: SalesVouchers
+	Fetch			: Date, VoucherNumber, LedgerName, LedgerEntries.*
+
+[Report: Function Chain]
+
+	Form			: Function Chain
+	Title			: "Chain of Functions"
+	Print Set 		: Report Title		: "Chain of Functions"
+
+[Form: Function Chain]
+
+	Parts 			: Function Chain
+	Height			: 100% Page
+	Width			: 100% Page
+
+[Part: Function Chain]
+
+	Lines			: Function Chain Title, Function Chain Details
+	Bottom Lines	: Function Chain Total
+	Repeat			: Function Chain Details	: CompanySalesVouchers
+	Common Borders 	: Yes
+	Scroll			: Vertical
+	Total			: BillDueAmt
+
+	[Line: Function Chain Title]
+
+		Use		: Function Chain Details
+
+		Local 	: Field	: Default		: Type	: String
+		Local 	: Field	: Default		: Align	: Centre
+		Local 	: Field	: Default		: Style	: Normal Bold
+
+		Local	: Field : BillVchDt 	: Set as: "Date"
+		Local	: Field : BillVchNo	 	: Set as: "Voucher No."
+		Local	: Field : BillLedger 	: Set as: "Party Name"
+		Local	: Field : BillNo 		: Set as: "Bill No."
+		Local   : Field : BillDueDate 	: Set as: "Bill Due"
+		Local	: Field : BillDueAmt	: Set as: "Bill Amount"
+		Border	: Thin Top Bottom
+
+	[Line: Function Chain Details]
+	
+		Fields 		: BillVchDt, BillVchNo, BillLedger
+		Right Fields: BillNo, BillDueDate, BillDueAmt
+		Local: Field: Default			: Style : Normal
+	
+		[Field: BillVchDt]
+		
+			Use			: Uni Date Field
+			Set As		: $Date
+			Width		: 10
+			Align		: Centre
+
+		[Field: BillVchNo]
+		
+			Use			: Short Name Field
+			Set As		: $VoucherNumber
+			Border		: Thin Left Right
+
+		[Field: BillLedger]
+		
+			Use			: Name Field
+			Set As		: $LedgerName
+			FullWidth	: Yes
+
+		[Field: BillNo]
+		
+			Use			: Short Name Field
+			Set As		: $$CollectionField:($$CollectionField:$Name:(-1):(BillAllocations)):1:LedgerEntries
+			Border		: Thin Left Right
+
+		[Field: BillDueDate]
+		
+			Use			: BillVchDt
+			Set as		: $$CollectionField:($$CollectionField:$BillCreditPeriod:(-1):BillAllocations):1:LedgerEntries
+			Border		: Thin Right
+
+		[Field: BillDueAmt]
+		
+			Use			: Amount Forex Field
+			Set as		: $$CollectionField:($$CollectionField:$Amount:(-1):BillAllocations):1:LedgerEntries
+
+	[Line: Function Chain Total]
+
+		Use		: Function Chain Details
+
+		Local 	: Field	: Default		: Style	: Normal Bold
+		Local	: Field : BillLedger 	: Align	: Centre
+
+		Local	: Field : BillVchDt 	: Set as: ""
+		Local	: Field : BillVchNo	 	: Set as: ""
+		Local	: Field : BillLedger 	: Set as: "TOTAL"
+		Local	: Field : BillNo 		: Set as: ""
+		Local   : Field : BillDueDate 	: Set as: ""
+		Local	: Field : BillDueAmt	: Set as: $$Total:BillDueAmt
+		Border	: Thin Top Bottom
+
+;; End-Of-File

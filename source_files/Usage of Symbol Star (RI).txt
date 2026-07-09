@@ -1,0 +1,46 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	The objective of this program is to demonstrate the usage of Re-Initialize Operator '*'
+-	All the Attributes of the original Field Definition is overridden by the Re-Initialized 
+	Field 'Sample ReInitialize'
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Sample ReInitialize]
+
+    Form	: Sample ReInitialize
+       
+[Form: Sample ReInitialize]
+
+    Parts	: Sample ReInitialize
+    
+[Part: Sample ReInitialize]
+
+    Lines	: Sample ReInitialize
+    
+	[Line: Sample ReInitialize]
+    
+		Fields     : Sample ReInitialize
+
+		[Field: Sample ReInitialize]
+
+			Info   	: "Original Value"
+			Style 	: Large Bold
+			Color 	: Blue
+
+;; To check the functionality comment the below definition which is reinitialized.
+;; When we need to reset all the attributes set in the previous definition, 
+;; we can reinitialize the definition by prefixing it with *
+		[*Field: Sample ReInitialize]
+		
+			Info	: "Re-Initialized"
+		    Border  : Thick Box
+			Width	: 15% Page
+;; Style 'Large Bold' and Color 'Blue' specified previously has been reinitialized; i.e.,
+;; All the previously set Attributes are reset to defaults
+
+;; End-of-File

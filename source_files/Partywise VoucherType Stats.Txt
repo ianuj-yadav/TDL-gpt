@@ -1,0 +1,137 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This program demonstrates the usage of Grouping and Aggregation
+-	The following Report demonstrates the usage of Enhanced Collection where Aggregation 
+	is done based on Party and Voucher Type.  This Report gives Partywise VoucherTypewise 
+	Totals
+
+Syntax -
+-	Grouping :-
+	By			 : Method-Name : Method-Formula
+-	Aggregation :-
+	Aggr Compute : Method-Name : Aggr-Type : Method-Formula
+
+Last modification – 
+-	Altered on 06/11/2009
+*/
+
+[Collection: TransVchLedgerColl]
+
+    Use         : Ledger
+    Report      : Transact Report
+    Trigger     : Ledger Name
+    Variable    : Ledger Name
+
+[Report: Transact Report]
+
+	Use			: DSP Template
+	Form		: TransVchReport
+	Variable	: Ledger Name
+
+[Form: TransVchReport]
+
+	Use			: DSP Template
+	Part		: LV Title, TransVchTitle, TransVchBody
+	Width		: 100% Screen
+	Height		: 100% Screen
+	Delete		: Buttons			: ExplodeFlag
+	
+; 	To incorporate the changes in TallyPrime	
+;	Delete		: Bottom Buttons	: DSPAutoColumns, BudgetAnalysis, ReportConfig
+	Delete		: Button			: DSPAutoColumns
+	Delete		: Bottom Buttons	: BudgetAnalysis, ReportConfig
+	
+
+	Local: Line	: LV Title	: Local	: Field	: LV Title	: Local	: Field: Simple Prompt	: Info	    : $$LocaleString:"Ledger"
+	Local: Line	: LV Title	: Local	: Field	: LV Title	: Local	: Field: Name Field		: Set as    : #LedgerName
+	;; Using the default Part LV Title to get the Party Ledger Name and Period Details
+	;; Using Nested Locals to modify the attribute values as required
+
+[Part: TransVchTitle]
+
+	Lines		: TransVchTitle
+
+	[Line: TransVchTitle]
+	
+		Use 	: TransVchLedDetail
+
+		Local 	: Field : Default			: Type 	 : String
+		Local 	: Field : Default			: Align	 : Centre
+		Local 	: Field : Default		 	: Style	 : Normal Bold
+
+		Local	: Field : TransVchTypeName 	: Set as : "Voucher Type Name"
+		Local 	: Field : TransVchDrAmt		: Set as : "Debit Amt"
+		Local 	: Field : TransVchCrAmt		: Set as : "Credit Amt"
+		Border 	: Thin Top Bottom
+	
+[Part: TransVchBody]
+
+	Lines  		: TransVchLedDetail
+	Bottom Lines: TransVchLedTotal
+	Repeat 		: TransVchLedDetail		: TransVchSummaryColl
+	Scroll 		: Vertical
+	CommonBorder: Yes
+	Total		: TransVchDrAmt, TransVchCrAmt
+
+	[Line: TransVchLedDetail]
+	
+		Fields 		 	: TransVchTypeName
+		Right Fields 	: TransVchDrAmt, TransVchCrAmt
+
+		Local 	: Field : Default		 : Style	 : Normal
+
+		[Field: TransVchTypeName]
+		
+			Use		: Name Field
+			Set as	: $TransVchName
+
+		[Field: TransVchDrAmt]
+		
+			Use 	: Amount Forex Field
+			Set as 	: $TransVchDrAmt
+			Border 	: Thin Left Right
+	
+		[Field: TransVchCrAmt]
+		
+			Use		: Amount Forex Field
+			Set as 	: $TransVchCrAmt
+			Border  : Thin Right
+
+[Line: TransVchLedTotal]
+
+	Use 	: TransVchLedDetail
+	Local	: Field	: Default			: Style	 	: Normal Bold
+	Local 	: Field : TransVchTypeName 	: Set as 	: "Total"
+	Local 	: Field : TransVchDrAmt		: Set as 	: $$Total:TransVchDrAmt
+	Local 	: Field : TransVchCrAmt		: Set as 	: $$Total:TransVchCrAmt
+	Border 	: Thin Top Bottom
+
+[Collection: TransVchColl]
+
+	Type 	: Voucher
+
+[Collection: TransVchSummaryColl]
+
+	SourceCollection: TransVchColl
+
+	Walk			: Ledger Entries
+
+	By				: TransVchName		: $VoucherTypeName
+	;; Grouping By VoucherTypeName done here to get a Voucherwise Totals across the source
+
+	By				: TransVchLed		: $LedgerName
+	;; Grouping By PartyName done here to get a Partywise Totals across the source
+
+	Aggr Compute	: TransVchDrAmt		: Sum 		: If $$IsDr:$Amount then $Amount else ""
+	Aggr Compute	: TransVchCrAmt		: Sum  		: If NOT $$IsDr:$Amount then $Amount else ""
+
+	Filter			: TransVchFilter
+	;; Filtering done here to retrieve only values pertaining to the requested Party
+
+[System: Formula]
+
+	TransVchFilter 	: #LedgerName = $TransVchLed
+	
+;; End-of-Code

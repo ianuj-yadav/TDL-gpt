@@ -1,0 +1,31 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	The objective of this program is to display the Form with Default Dimensions
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Default Dimensions]
+
+	Form	: Default Dimensions
+
+[Form: Default Dimensions]
+
+	Parts	: Default Dimensions
+
+[Part: Default Dimensions]
+
+	Lines	: Default Dimensions
+
+ 	[Line: Default Dimensions]
+
+		Fields	: Default Dimensions
+		
+		[Field: Default Dimensions]
+
+			Set as	: "Sample code to demonstrate default Dimensions"
+
+;; End-of-File

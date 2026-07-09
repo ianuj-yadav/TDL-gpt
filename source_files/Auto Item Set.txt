@@ -1,0 +1,91 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the usage of User Defined Functions in Vouchers
+-	This function uses the action 'Set Object Values' to set the current object values
+-	In an Invoice entry, entering a blank in Reference Field fills the Narration with 
+	'No Reference entered' else fills the Item details with the first and second item in
+	the Item collection within the selected company
+
+Last Modification -
+-	Altered on 09-11-2009
+*/
+
+[Report: PurcVoucher]
+
+	Use		: Voucher
+	Form	: Voucher
+	Set		: SVVoucherType		: $$VchTypePurchase
+	Set		: InvoicingModeFlag	: Yes
+	Local	: Form	: Default	: Delete		: Buttons
+
+[#Field: VCH Ref]
+
+	Switch	: Case 1: Purc VCH Ref	: @@IsPurchase
+
+	[!Field: Purc VCH Ref]
+	
+		Delete	: Key
+		Add		: Key		: SetItemRMAccept
+		Style	: Normal Italic
+
+		[Key: SetItemRMAccept]
+
+			Key			: Enter
+			Action List	: Field Accept, SetItemRM
+
+		[Key: SetItemRM]
+
+			Key			: Enter
+			Action		: Call		: SetItemRM Func
+
+[#Form: VCHBASIC Form]
+
+	Switch	: Case 1	: Purc VCHBASIC Form		: @@IsPurchase
+
+	[!Form: Purc VCHBASIC Form]
+	
+	    Add		: Parts 	: Before	: VCH Title	: Vch User Info
+
+		[Part: Vch User Info]
+		
+			Lines	: Vch User Info
+		
+			[Line: Vch User Info]
+		
+				Fields	: Simple Field
+				Local	: Field	: Simple Field: Set As		: "To prefill first and second Item under Raw Materials Group automatically, enter some value in Ref. Field and press Enter"
+				Local	: Field	: Simple Field: Set Always	: Yes
+				Local	: Field	: Simple Field: Skip		: Yes
+				Local	: Field	: Simple Field: Width		: 100% Page
+				Local	: Field	: Simple Field: Style		: Normal Italic
+				Local	: Field	: Simple Field: Align		: Centre
+
+[Collection: RM Coll]
+
+	Type	: Stock Item
+	Child Of: "Raw Materials"
+	Fetch	: Name
+	
+;; Function to set items automatically on entering some Reference
+		
+[Function: SetItemRM Func]
+	<InUse:Collection:RMColl>
+	
+;; Procedural Block
+
+	01	: IF : NOT $$IsEmpty:$$Value AND $$InCreateMode
+	02 	: 	IF	: $Narration CONTAINS "No Reference Entered"
+	03	: 		SET OBJECT VALUES	: .InventoryEntries[1].StockItemName: ($$CollectionField:$Name:1:RMColl), BilledQty: ($$AsQty:100), Rate: ($$AsRate:50), Amount: ($$AsAmount:500), +
+									  .InventoryEntries[2].StockItemName: ($$CollectionField:$Name:2:RMColl), BilledQty: ($$AsQty:200), Rate: ($$AsRate:30), Amount: ($$AsAmount:600), +
+									  ().Narration : ""
+	04	: 	ELSE :
+	05	: 		SET OBJECT VALUES	: .InventoryEntries[1].StockItemName: ($$CollectionField:$Name:1:RMColl), BilledQty: ($$AsQty:100), Rate: ($$AsRate:50), Amount: ($$AsAmount:500), +
+									  .InventoryEntries[2].StockItemName: ($$CollectionField:$Name:2:RMColl), BilledQty: ($$AsQty:200), Rate: ($$AsRate:30), Amount: ($$AsAmount:600)
+	06	: 	END IF
+	07	: ELSE :
+	08	: 	SET OBJECT VALUES		: Narration	: "No Reference Entered"
+	09	: END IF
+
+;; End-of-File

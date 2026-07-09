@@ -1,0 +1,44 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+[#Form: Sales Color]
+
+	Delete		: Print
+	Add			: Print	: ObjAccessViaUIObjExtraction
+	Variable	: Sales ObjAccess
+
+[Report: ObjAccessViaUIObjExtraction]
+
+	Form		: ObjAccessViaUIObjExtraction
+	Object		: Voucher
+
+[Form: ObjAccessViaUIObjExtraction]
+
+	Parts		: ObjAccessViaUIObjExtraction
+	
+[Part: ObjAccessViaUIObjExtraction]
+
+	Lines		: ObjAccessViaUIObjExtractionTitle, ObjAccessViaUIObjExtractionInfo
+
+;; To demonstrate Part Level Association
+
+;; Object		: LedgerEntries:First
+
+/* Collection Extraction */
+
+	Repeat		: ObjAccessViaUIObjExtractionInfo	: (Ledger, $LedgerName).BillAllocations
+	Scroll		: Vertical
+
+	[Line: ObjAccessViaUIObjExtractionTitle]
+	
+		Use		: ObjAccessViaUIObjExtractionInfo
+		Local	: Field	: BillAllocBillName			: Set as 	: "Bill Name of Party :-"
+		
+	[Line: ObjAccessViaUIObjExtractionInfo]
+	
+		Fields	: BillAllocBillName
+
+		[Field: BillAllocBillName]
+			
+			Use		: Name Field
+			Set as	: $Name
+;; End-of-File

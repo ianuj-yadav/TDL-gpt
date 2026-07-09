@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Online HTML Editor</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  function toTitleCase(str) {
+    return str.toLowerCase().replace(/(?:^|\s)\w/g, function(match) {
+        // alert(str.toLowerCase());
+        return match.toUpperCase();
+    });
+}
+$("#undone").html();
+$("#done").html(toTitleCase($("#undone").html()));
+//alert(toTitleCase("foo bar baz"));
+});
+
+$('.printMe').click(function(){
+     $("#outprint").print();
+});
+
+</script>
+</head>
+<body id="outprint">
+
+
+
+<p id="undone">RAM PRRRRRRR HELLLO</p>
+<p id="done"></p>
+<button class="printMe">Print Me</button>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	The objective of this program is to demonstrate the usage of Option
+-	The Background color of the Field is controlled depending on Variable value using Option 
+	condition
+-	Switch Case terminates the search once a condition is satisfied Option continues to search 
+	all the options and then executes the ones satisfied sequentially
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Option within Field]
+
+	Form		: Option within Field
+	Variable	: OWF Green Color
+	Set			: OWF Green Color	: Yes
+	Title		: "Optional Definition using Options"
+
+[Form: Option within Field]
+
+	Parts		: Option within Field
+	Button		: OWF Change Color
+
+[Part: Option within Field]
+
+	Lines		: Option within Field
+
+	[Line: Option within Field]
+
+		Fields	: Option within Field
+
+		[Field: Option within Field]
+
+			Option	: OWF Red Option1	: NOT ##OWFGreenColor
+			Option	: OWF Green Option2	: ##OWFGreenColor
+;; Though the condition associated with one of the Option Statements happen to be 
+;; true, all the subsequent conditions will be validated.  This is the difference
+;; between Switch and an Option. Switch doesn't execute any of the further Switch
+;; Statements grouped under the same label.
+
+			[!Field: OWF Red Option1]
+
+				Set as		: "Background here is set to RED"
+				Background	: Red
+				
+;; The Option Statements are specified to Field, therefore Optional Definitions
+;; are required for Field.  Definitions and Attribute execution are similar to 
+;; Optional Definitions for Switch Case
+
+			[!Field: OWF Green Option2]
+
+				Set as		: "Background here is set to GREEN"
+				Background	: Green
+
+;; Button Definition
+
+[Button: OWF Change Color]
+
+	Key		: F6
+	Title	: if NOT ##OWFGreenColor then "Green" else "Red"
+	Action	: Set	: OWF Green Color	: NOT ##OWFGreenColor
+
+;; Variable Definition
+
+[Variable: OWF Green Color]
+
+	Type	: Logical
+
+;; End-Of-File

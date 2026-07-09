@@ -1,0 +1,106 @@
+[Report:Voucher Details]
+	Title	: "Voucher Book"
+	Form	: Voucher Details
+	
+[Form:Voucher Details]
+	Part	: Voucher Details
+	Width	: 100% Page
+[Part:Voucher Details]
+	Line	: VoucherDetailsTop
+	Line	: VoucherDetailsBody
+	Repeat	: VoucherDetailsBody	: Voucher Details
+	Scroll	: Vertical
+	Common Borders	: Yes
+	
+	[Line:VoucherDetailsTop]
+		Fields	: VchDateT, VchTypeT, VchNumberT, VchPartyLedNameT, VchPartyOpBalT,  LedgerFirstBillOpT, LedgerAddressT
+		[Field:VchDateT]
+			Set as	: "Date"
+			Width	: 10% Page
+			Border	: Thick Top Bottom
+			Style	: Normal Bold
+			Align	: Center
+			Line	: 0
+			Type	: String
+			
+		[Field:VchTypeT]
+			Set as	: "Type"
+			Width	: 10% Page
+			Border	: Thick Top Bottom
+			Style	: Normal Bold
+			Align	: Center
+			Line	: 0
+			Type	: String
+			
+		[Field:VchNumberT]
+			Set as	: "Number"
+			Width	: 10% Page
+			Border	: Thick Top Bottom
+			Align	: Center
+			Style	: Normal Bold
+			Align	: Center
+			Line	: 0
+			Type	: String
+			
+		[Field:VchPartyLedNameT]
+			Set as	: "Ledger Name"
+			Width	: 25% Page
+			Border	: Thick Top Bottom
+			Style	: Normal Bold
+			Align	: Center
+			Line	: 0
+			Type	: String
+			
+		[Field:VchPartyOpBalT]
+			Set as	: "Opening Balance"
+			Width	: 10% Page
+			Border	: Thick Top Bottom
+			Style	: Normal Bold
+			Align	: Center
+			Line	: 0
+			Type	: String
+			
+		[Field:LedgerFirstBillOpT]
+			Set as	: "1st Bill Op Bal"
+			Width	: 15% Page
+			Style	: Normal Bold
+			Align	: Center
+			Line	: 0
+			Type	: String
+			Border	: Thick Top Bottom
+			
+		[Field:LedgerAddressT]
+			Set as	: "Address"
+			Width	: 15% Page
+			Style	: Normal Bold
+			Align	: Center
+			Line	: 0
+			Type	: String
+			Border	: Thick Top Bottom
+			
+		
+	[Line:VoucherDetailsBody]
+		Use	: VoucherDetailsTop
+		Fields	: VchDateT, VchTypeT, VchNumberT, VchPartyLedNameT, VchPartyOpBalT,  LedgerFirstBillOpT, LedgerAddressT
+		Local	: Field	: Default				: Style		: Normal Bold Italic
+		Local	: Field	: Default				: Align		: Left
+		Local	: Field	: Default				: Type		: String
+		Local	: Field	: Default				: Line		: 0
+		Local	: Field	: Default				: Border	: Thin Right
+		
+		Local	: Field	: VchDateT				: Set as	: $Date
+		Local	: Field	: VchTypeT				: Set as	: $VoucherTypeName
+		Local	: Field	: VchNumberT			: Set as	: $VoucherNumber
+		Local	: Field	: VchPartyLedNameT		: Set as	: $PartyLedgerName
+		Local	: Field	: VchPartyOpBalT		: Set as	+;;: $OpeningBalance:Ledger:$PartyLedgerName ;; This is by reference
+															: $(Ledger,$PartyLedgerName).OpeningBalance ;; This is by method formula
+		Local	: Field	: LedgerFirstBillOpT	: Set as	: $(Ledger,$PartyLedgerName).BillAllocations[1].OpeningBalance
+		Local	: Field	: LedgerAddressT		: Set as	: $Address:Ledger:$PartyLedgerName 
+		
+
+
+[Collection:Voucher Details]
+	Type	: Voucher
+	Fetch	: ? ;; ? is used To fetch all the methods of current object in context.
+	;Fetch	: * 	;; * is used To fetch all the methods and collections of the current object in context.
+	;Fetch	: Date, VoucherTypeName, VoucherNumber, PartyLedgerName

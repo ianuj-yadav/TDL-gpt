@@ -1,0 +1,27 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This program demonstrates the usage and purpose of 'Default Line' Attribute at Part 
+	Definition
+
+Syntax -
+-	Default Line : <Condition Formula>
+
+Last modification – 
+-	Altered on 07/11/2009
+
+Dependencies -
+-	TDL File 'Retain Focus.txt' & Company data consisting of Groups, Ledgers & Stock Items 
+	and also a Ledger 'Discount'
+*/
+
+[Report: Default Line Sample]
+
+	Use		: Retain Focus Sample
+	Local	: Form	: Retain Focus Sample	: Local	: Field	: Form Sub Title	: Set As	: "Usage of Default Line Attribute at Part Level"
+	Local	: Form	: Retain Focus Sample	: Delete		: Button			: Retain Focus Button
+	Local	: Part	: Led Details			: Default Line	: $Name = "Discount"
+	Title	: "Sample demonstrating Default Line Attribute at Part Definition"
+
+;; End-of-File

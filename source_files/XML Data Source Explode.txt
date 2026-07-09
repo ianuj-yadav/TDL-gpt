@@ -1,0 +1,101 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+-	This program demonstrates the capability of Collection data fetched from an 
+	external File and displayed in a report. Also the filename can be variable.
+
+Syntax -
+-	Data Source 	: File XML 	: <File-Name Formula including Folder Path>
+
+Last modification – 
+-	Altered on 07/11/2009
+
+Dependencies -
+-	Folder 'XMLDATA' must be copied in the running Tally Folder
+*/
+
+[Report: XML Data Source Explode]
+
+	Form 		: XML Data Source Explode
+	Variable	: XML File Info
+	Set			: ExplodeFlag	: Yes
+
+[Form: XML Data Source Explode]
+
+	Parts 	    : Note, XML Data Source Explode
+	Add			: Buttons		: ExplodeFlag
+	Height 		: 100% Screen
+	Width  		: 100% Screen
+	Local: Part	: Note	: Local	: Line	: Note	: Local : Field : Name Field	: Set As	: "(Please ensure if you have copied the Folder XMLData to your local Tally Folder)"
+	Local: Part	: Note	: Local	: Line	: Note	: Local	: Field	: Name Field	: FullWidth	: Yes
+	Local: Part	: Note	: Local	: Line	: Note	: Local	: Field	: Name Field	: Align		: Centre
+	Local: Part	: Note	: Local	: Line	: Note	: Local	: Field	: Name Field	: Border	: Thin Bottom
+	Local: Part	: Note	: Invisible		: $$NumItems:XMLDataSourceExplode > 0 OR ##XMLFileInfo Contains "XXX"
+
+[Part: XML Data Source Explode]
+
+	Lines		: XML Data Source Explode Title, XML Data Source Explode
+	Repeat 		: XML Data Source Explode	: XML Data Source Explode
+	Scroll		: Vertical
+	CommonBorder: Yes
+
+	[Line: XML Data Source Explode Title]
+
+		Fields		: XML Data Source Explode 1
+		Right Fields: XML Data Source Explode 2
+		Local: Field: Default					: Align		: Center
+
+		Local: Field: XML Data Source Explode 1	: Set As	: "Object"
+		Local: Field: XML Data Source Explode 2	: Set As	: "File Info"
+		Border		: Thin Top Bottom
+
+	[Line: XML Data Source Explode]
+
+		Fields		: XML Data Source Explode 1
+		Right Fields: XML Data Source Explode 2
+		Explode		: XML Data Source Explode Exp: NOT $$IsEmpty:$FileName AND ##ExplodeFlag
+
+		[Field: XML Data Source Explode 1]
+
+			Use 		: Name Field
+			Set As 		: $Name
+	
+		[Field: XML Data Source Explode 2]
+
+			Use 		: Name Field
+			Set As 		: $FileName
+			Variable    : XML File Info
+			Border		: Thin Left
+			Width		: 40
+			Display		: XML Data Source Explode : $$NumItems:XMLDataSourceExplode > 1
+
+[Part: XML Data Source Explode Exp]
+
+	Lines		: XML Data Source Explode
+	Repeat 		: XML Data Source Explode 	: XML Data Source Explode Exp
+    Scroll		: Vertical
+	Local: Line	: XML Data Source Explode	: Indent	: $$ExplodeLevel * 2
+	CommonBorder: Yes
+	Local: Field: Default					: Style		: Normal
+
+[Collection: XML Data Source Explode]
+    
+	Data Source 	: File XML 	: ##XMLFileInfo
+    XMLObjectPath 	: Object 	: 1	: Collection
+	Client Only		: Yes
+	
+[Collection: XML Data Source Explode Exp]
+    
+    Data Source 	: File XML 	: $FileName
+    XMLObjectPath  	: Object 	: 1	: Collection
+	Client Only		: Yes
+
+[Variable: XML File Info]
+
+    Type        : String
+    Volatile    : Yes
+    Default     : "ScriptData\XMLData\MyFile.XML"
+
+;; End-of-File
+

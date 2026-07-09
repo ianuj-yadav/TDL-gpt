@@ -1,0 +1,113 @@
+
+[#Menu:gateway of tally]
+	Add		: Button		: Call Function
+	Add		: Item	: "All Companies"	: Display	: AllCompanies
+
+
+
+[Report:AllCompanies]
+	Form		: AllCompanies
+	
+[Form:AllCompanies]
+	Part		: AllCompanies
+	
+[Part:AllCompanies]
+	Line		: AllCompanies
+	Repeat		: AllCompanies		: List of Companies On Disk;List of Primary Companies
+	Scroll		: Vertical
+	
+	[Line:AllCompanies]
+		Fields		: AllCompanies, CmpNo,DateTime1
+		
+		[Field:AllCompanies]
+			Use			: Name Field
+			Set as		: $name
+			Line		: 0
+			Width		: 40% Page
+			
+		[Field:CmpNo]
+			Use			: Name Field
+			Set as		: $$LocaleString:@@DestPath;$$Number:($$String:$CompanyNumber:Company:$name)
+			Line		: 0
+			Width		: 50% Page
+			
+		[Field:DateTime1]
+			Use			: Name Field
+			Set as		: $$StringPart:("000"+$$String:$CompanyNumber):(($$StringLength:@number)-6):6;$$CommaList:$CompanyNumber;$$ReadINI:@path1:"TALLY":"Default Companies"
+			Line		: 0
+			Width		: 10% Page
+			path1		: $$SysInfo:ApplicationPath + "\tally.ini"
+			time		: $$SysInfo:SystemTimeHMS
+			number		: "000"+$$String:$CompanyNumber
+			Set Always	: yes
+			
+
+
+
+
+/*
+
+
+[#Menu : Gateway of Tally]
+Add		: Item	: "All Serial No"	: Display	: AllSerials
+
+
+[Report:AllSerials]
+	Form		: AllSerials
+	
+[Form:AllSerials]
+	Part		: AllSerials
+	
+[Part:AllSerials]
+	Line		: AllSerials
+	
+	[Line:AllSerials]
+		Fields		: No
+		
+		[Field:No]
+			Use			: Name Field
+			Set as		: "https://tallyatcloud.com/tallybackup/"+@@SrNo + @@EmailId + @@UserType 
+			Line		: 0
+			Width		: 80% Page
+			
+
+
+
+*/
+
+
+[#Menu:gateway of tally]
+	Add			: Button		: Browse Url1
+
+	
+	
+[#Menu : Gateway of Tally]
+
+	;Add : Keys : Stop Backup Timer
+
+;; Declaring a Key to Stop the Timer
+
+[Key : Stop Backup Timer]
+
+	Key    : Alt + S
+	Action : Stop Timer : GetMessage
+	Title  : "Stop Backup"
+	;Title  : Stop Backup
+
+
+;; Add Url Button Start
+
+
+[Button:Browse Url]
+	Key			: Ctrl + F5
+	Action		: Call		: SendUrl
+	
+[Button : Call Function]
+	Key 		: Alt + F9
+	Title 		: "Backup"
+	Action		: Call : BackupStartFunction
+
+[Button:Browse Url1]
+	Title		: "Browse Url"
+	Key			: Ctrl + F5 
+	Action		: Call	: TSPL Smp IsInternetActive1

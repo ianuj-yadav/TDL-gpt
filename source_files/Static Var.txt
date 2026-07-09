@@ -1,0 +1,74 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+-	The following code demonstrates the usage of Static Variables within Function
+-	A Static Variable retains its value for the current session
+-	A Static Variable Static Var of Type Number is defined within Function which is retained 
+	across multiple sessions. Even after exiting functions, the value is retained. 
+
+Specific TDL feature(s) used –
+-	Static Variable
+
+Last modification – 
+-	Altered on 07/11/2009
+-	Altered on 30/09/2025 
+	- Key changed from Alt + F to Alt + S in Button - Report Again
+*/
+
+[Function: Static Var in Func]
+
+	Static Variable	: Static Var: Number
+
+	01: INCREMENT	: Static Var
+	02: DISPLAY		: StaticReport
+
+[Report: Static Report]
+
+	Form		: Static Report
+
+[Form: Static Report]
+
+	Parts		: Static Report
+	Button		: Report Again
+
+[Part: Static Report]
+
+	Lines		: Static Report Info, Static Report, Static Report Var Value
+	Width		: 60% Page
+
+	[Line: Static Report Info]
+
+		Fields	: Info Field
+		Local	: Field	: Info Field	: Info		: "Example - Static Variables"
+		Local	: Field	: Info Field	: FullWidth	: Yes
+		Local	: Field	: Info Field	: Align		: Centre
+		Local	: Field	: Info Field	: Border	: Thin Bottom
+		Local	: Field	: Info Field	: Style		: Normal Italic
+
+	[Line: Static Report]
+
+		Fields	: Static Report
+		SpaceTop: 1
+
+		[Field: Static Report]
+
+			Set As	: "Static Variable Static Var value is static which means that the value is retained across the Function sessions.  To check the Functionality, please click the Button Func Call or exit the Report and re-enter here."
+			Lines	: 0
+			Width	: 60% Page
+
+	[Line: Static Report Var Value]
+
+		Fields	: Static Report
+		SpaceTop: 1
+		Local	: Field	: Static Report	: Set As	: "Value of Static Variable Static Var = " + $$String:##StaticVar
+		Local	: Field	: Static Report	: Style		: Large Bold
+		Local	: Field	: Static Report	: Align		: Center
+
+[Button: Report Again]
+
+	Key		: Alt + S
+	Title	: Func Call
+	Action	: CALL		: Static Var in Func
+
+;; End-of-File

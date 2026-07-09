@@ -1,0 +1,61 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Demo TDLs for Objects and Collections
+*/
+
+[Menu: Objects and Collections]
+	
+	Indent		: "Collection Attributes"
+	Item		: Blank
+	Key Item	: Collection Attribute - Type		: T : Display				: CAT Ledger List
+	Key Item	: Collection Attribute - ChildOf	: C : Display				: CAC Ledger List
+	Key Item	: Collection Attribute - BelongsTo	: B : Display				: CAB Ledger List
+	Key Item	: Collection Attribute - Filter		: F	: Display				: CAF Ledger List
+	Key Item	: Collection using Switch 			: L : Display				: Coll Switch Report
+	Item		: Blank
+
+	Indent		: "Object Association"
+	Item		: Blank
+	Key Item 	: Report Level Object Association	: R : Display Collection	: Stock Item Report Association
+	Key Item	: Part Object Association 			: P : Display 				: Part Object Association
+	Key Item	: Line Object Association 			: L : Display 				: Line Object Association
+	Key Item	: Method Formula Syntax				: M : Display				: LangSyntax
+	Item		: Blank
+
+	Indent		: "Functions and External Object"
+	Item		: Blank
+	Key Item	: Collection Functions				: F : Display 				: CollReport
+	Key Item	: Chain	of Functions 				: U : Display				: Function Chain
+	Key Item	: Function IsObjectBelongsTo		: I : Display				: IsObjectBelongsTo Report
+	Key Item 	: External Object					: X	: Display				: Stud List
+	Item		: Blank
+
+	Indent		: "Advanced usage of Collections"
+	Item		: Blank
+	Key Item	: Grouping & Aggregation			: A : Menu					: Grouping and Aggregation
+	Key Item	: XML Collection					: X : Menu					: XML Collection
+	Key Item	: Collection As Table				: C : Menu					: CollAsTable
+	Item		: Blank
+
+[Include: Collection Attribute Type.txt]
+[Include: Collection Attribute Childof.txt]
+[Include: Collection Attribute BelongsTo.txt]
+[Include: Collection Attribute Filter.txt]
+[Include: Collection using Switch.txt]
+
+[Include: Report Level Object Association.txt]
+[Include: Access Name & Part Level Association using Object Ex.txt]
+[Include: Access Name & Line Level Association.txt]
+[Include: Method Formula Syntax.txt]
+
+[Include: Collection Functions.txt]
+[Include: Function Chain.txt]
+[Include: IsObjectBelongsTo Function.txt]
+[Include: External Object.txt]
+
+[Include: Grouping & Aggregation\Grouping & Aggregation.txt]
+[Include: XML Collection\XML Collection.txt]
+[Include: Collection As Table\Collection As Table.txt]
+
+;; End-of-File

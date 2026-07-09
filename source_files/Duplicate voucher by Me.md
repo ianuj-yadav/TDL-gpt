@@ -1,0 +1,219 @@
+---
+title: Duplicate voucher by Me
+type: sample_code
+objects: Function, Button
+source: Duplicate voucher by Me.txt
+---
+
+# Duplicate voucher by Me
+
+## Source Code
+
+```tdl
+
+
+;;===============================My Work In Duplicate
+
+/*
+[#Form	: Daybook]
+	Add	: Button	: FormDup,ChangeLegerVariable,ChangeLedgerVarNo
+
+[Key: Form Dup]
+
+	Title		: $$LocaleString:"Duplicate Vch"
+	Key     	: Alt+4
+	Inactive    : NOT $$HasVouchers OR (NOT $$Allow:Create:Vouchers) OR NOT ##OnFocusInactiveCreate
+	Action	    : Trigger Key	: Alt+2, $$Date:$$SysInfo:SystemDate, Enter, Enter,Enter,
+	Scope	    : Current
+	BottomToolbar Position : BottomToolBarBtn5
+
+	
+
+	
+[Key:ChangeLedgerVarNo]
+	Title		:"Same Ledger"
+	Key			: Alt+7
+	Action		: Call		: ChgVarNo
+	
+[Function:ChgVarNo]
+	5	: Set		: ChangeLegerVariable	: No
+	
+[Button: ChangeLegerVariable]
+	Title	: "Exchange Ledger"
+	Key		: Alt+ 6
+	Action	: Call	: ChangeLedgerVar
+	Background	:  IF ##ChangeLedgerVar Then "Yellow" Else "Red"
+	
+	
+	
+[System:Variable]
+	ChangeLegerVariable		: No	
+	
+[Variable:ChangeLegerVariable]
+	Default		: No
+	Type		: Logical
+	Persistent	: No
+	Volatile	: No
+[Function:ChangeLedgerVar]
+	
+	10	: Set		: ChangeLegerVariable	: Yes;Not ##ChangeLegerVariable
+	
+
+[#Field:VchToBy]
+	Set By Condition		: @@IsDr And ($$Owner:$$InDuplicateMode) And ##ChangeLegerVariable : @@CrStr
+	Set By Condition		: @@IsDr And ($$Owner:$$InDuplicateMode) And Not ##ChangeLegerVariable : @@DrStr
+	Set By Condition		: Not @@IsDr And ($$Owner:$$InDuplicateMode) And ##ChangeLegerVariable : @@DrStr
+	Set By Condition		: Not @@IsDr And ($$Owner:$$InDuplicateMode) And Not ##ChangeLegerVariable : @@CrStr; else @@DrStr
+
+*/
+
+;;================================================New Work 
+
+/*
+
+[#Form	: Daybook]
+	Add	: Button	: FormDup;,ChangeLegerVariable
+	Add	: Key		: ChangeVarLedgerDaybook
+
+[Key:ChangeVarLedgerDaybook]
+	Key		: Alt+C
+	Action	: Call	: ChangeLedgerVar
+[#Form:Voucher]
+	Add	: Button		: ChangeLegerVariable, RefreshData1
+	Add	: Key			: ChgLedgerVar
+	
+[Key:ChgLedgerVar]
+	Key			: Alt+R
+	Action		: Call		: ChangeLedgerVar
+	
+[Key: Form Dup]
+
+	Title		: $$LocaleString:"Duplicate"
+	Key     	: Alt+4
+	Inactive    : NOT $$HasVouchers OR (NOT $$Allow:Create:Vouchers) OR NOT ##OnFocusInactiveCreate
+	Action	    : Trigger Key	: Alt+2, $$Date:$$SysInfo:SystemDate, Enter, Alt+7
+	Scope	    : Current
+	BottomToolbar Position : BottomToolBarBtn5
+
+	
+[Button:RefreshData1]
+	Key			: Alt+5
+	Action		: Refresh Data
+
+
+[Button: ChangeLegerVariable]
+	Title	: "Change Ledger"
+	Key		: Alt+ 6
+	Action	: Call	: ChangeLedgerVar
+	;Action		: Trigger Key	: Enter,Enter, Ctrl+C,Alt+R,;Esc; Y, Y, Y, Y, 
+	Inactive    : NOT @@IsJournal And Not ($$Owner:$$InDuplicateMode)
+	
+	
+[#Form: SV Quit Query]
+	Background		: Red
+	
+	
+[#Part: YesNo Query Part]
+	Background		: Red
+	
+[System:Variable]
+	ChangeLegerVariable		: No	
+	
+[Variable:ChangeLegerVariable]
+	Default		: No
+	Type		: Logical
+	Persistent	: No
+	Volatile	: No
+[Function:ChangeLedgerVar]
+	10	: Set		: ChangeLegerVariable	: Not ##ChangeLegerVariable
+	;20	: Msg Box	: "My Msg"	: $LedgerEntries[1].Amount	: Yes
+	;30	: Refresh Data
+	
+	
+[#Form: SV Quit Query]
+	Background		: Red
+	
+
+[#Field:VchToBy]
+	Set By Condition		: @@IsDr And ($$Owner:$$InDuplicateMode) And ##ChangeLegerVariable : @@CrStr
+	Set By Condition		: @@IsDr And ($$Owner:$$InDuplicateMode) And Not ##ChangeLegerVariable : @@DrStr
+	Set By Condition		: Not @@IsDr And ($$Owner:$$InDuplicateMode) And ##ChangeLegerVariable : @@DrStr
+	Set By Condition		: Not @@IsDr And ($$Owner:$$InDuplicateMode) And Not ##ChangeLegerVariable : @@CrStr
+	
+
+;[#Field:VchDrAmt]
+;	Set Always	: Yes
+;	Set By Condition	: ($$Owner:$$InDuplicateMode) 	: $LedgerEntries[1].Amount
+;
+;[#Field:VchCrAmt]
+;	Set Always	: Yes
+;	Set By Condition	: ($$Owner:$$InDuplicateMode) 	: $LedgerEntries[1].Amount
+
+*/
+
+;;=============================================
+
+/*
+[#Key: Form Duplicate]
+	Delete	: Action	:Duplicate : Voucher 
+	Add		: Action	: Trigger Key	: Alt+3,  $$Date:$$SysInfo:SystemDate, Enter
+	
+[#Form: Daybook]
+	Add		: Key	: DuplicateVoucher
+	
+[Key:DuplicateVoucher]
+	Key		: Alt+3
+	Action	: Duplicate	: Voucher
+	
+*/
+
+;;=============================Final Code
+/*
+[#Form	: Daybook]
+	Add	: Button	: FormDup
+
+[Key:ChangeVarLedgerDaybook]
+	Key		: Alt+C
+	Action	: Call	: ChangeLedgerVar
+[#Form:Voucher]
+	Add	: Button		: ChangeLegerVariable
+	Add	: Key			:     Change Ledger1
+	
+
+	
+[Key: Form Dup]
+
+	Title		: $$LocaleString:"Duplicate"
+	Key     	: Alt+4
+	Inactive    : NOT $$HasVouchers OR (NOT $$Allow:Create:Vouchers) OR NOT ##OnFocusInactiveCreate
+	Action	    : Trigger Key	: Alt+2, $$Date:$$SysInfo:SystemDate, Enter, Enter, Ctrl+C
+	Scope	    : Current
+	BottomToolbar Position : BottomToolBarBtn5
+
+	
+
+
+[Button: ChangeLegerVariable]
+	Title	: "Change Ledger"
+	Key		: Alt+ 6
+	Action		: Trigger Key	: Alt+5,Enter, Enter,Enter, Ctrl+V , Enter,
+	Inactive    : @@DuplicateMode And Not @@IsJournal
+	
+[Function:ChangeLedgerVar]
+	10	: Set Value	: LedgerName		: $LedgerEntries[2].Ledgername
+	200	: Log		: ($$Owner:$$InDuplicateMode)
+	
+	
+[Key:ChangeLedger1]
+	Key		: Alt+5
+	Action	: Call	: ChangeLedgerVar
+	
+[#Form: SV Field Warning Msg]
+	Background	: Red
+	
+[System:Formula]
+	DuplicateMode		: Not ($$Owner:$$InDuplicateMode)
+
+*/
+
+```

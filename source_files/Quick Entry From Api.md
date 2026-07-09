@@ -1,0 +1,883 @@
+---
+title: Quick Entry From Api
+type: sample_code
+objects: Report, Form, Part, Line, Field, Collection, Function, Button
+source: Quick Entry From Api.txt
+---
+
+# Quick Entry From Api
+
+## Source Code
+
+```tdl
+
+;;==================================Code 1
+
+/*
+
+    [#Line:DSP VchDetail]
+		;Border		: Thick Box
+[#Menu: Gateway of Tally] 
+	Add: Button	: QuickEntry
+	
+[Button:QuickEntry]
+	Key		: Alt+Q
+	Action	: Call:LWQuickCall Function
+[Collection:Transactions]
+	;Data Source     : HTTP JSON: "https://tallyerp.binarysoft.com/transactionsapi.json"
+	Data Source 		: File JSON 	: "E:\tirlok\tdl files\Gold Rate\transactions api.json" 	; File Path/Name
+	JSON Object Path	: transactions		: 1				; Main object path
+	Client Only			: Yes	
+	
+[Collection:Transactions1]
+	Source Collection	: Transactions
+	Fetch				: *
+	Filter				:  DateFilter
+	
+[System:Formula]
+	DateFilter		:$date="20.03.2024"
+	
+[#Menu:Gateway of tally]
+	Add			: Item		: Transactions		: Display		: Transactions
+	
+[Report:Transactions]
+	Form		: Transactions
+	
+[Form:Transactions]
+	Part		: Transactions
+	
+[Part:Transactions]
+	Lines		: TransactionsBody
+	Repeat		: TransactionsBody		: Transactions1
+	Scroll		: Vertical
+	[Line:TransactionsBody]
+		Field		: TransactionsSrNo, TransactionsDate, TransactionsVchType, TransactionsDr, TransactionsCr, TransactionsAmount
+		Right Field	: TransactionsNarr
+		
+		[Field:TransactionsSrNo]
+			Use			: Number Field
+			Set as		: $$Line
+			Width		: 5
+			
+		[Field:TransactionsDate]
+			Use			: Name Field
+			Set as		: $date
+			Border		: Thin Left Right
+			
+		[Field:TransactionsVchType]
+			Use			: Name Field
+			Set as		: $voucher_type
+			Border		: Thin Left Right
+			
+		[Field:TransactionsDr]
+			Use			:  Name Field
+			Set as		: $dr_ledger
+			
+			
+		[Field:TransactionsCr]
+			Use			: Name Field
+			Set as		: $cr_ledger
+			
+		[Field:TransactionsAmount]
+			Use			: Amount Field
+			Set as		: $$AsAmount:$amount
+			
+		[Field:TransactionsNarr]
+			Use			: Name Field
+			Set as		: $narration
+			Full Width	: Yes
+			Lines		: 0
+			
+		
+	
+
+[Function: LWQuickCall Function]
+	Parameter		: LearnWellVCGT	: String	: ##SVVoucherType
+	Variable 		: SVVoucherType	: String
+	Variable		: LWLDate		: Date 
+	Variable		: LWLDrL		: String 
+	Variable		: LWLCrL		: String 
+	Variable 		: LWLAMT 		: Amount 
+	Variable		: LWLNarr		: String
+	Variable		: LWLBnkt		: String
+	Variable 		: LearnWellGETD	: Number	: 1
+	001: Start Batch Post	: 10
+	005: START PROGRESS		: ($$NumItems:Transactions1): "In process" : @@CmpMailName: "Voucher Creation in Process" 
+	007: WALK COLLECTION	: Transactions1
+	010: SET	: LWLDate 	: $$Date:$date
+	010a: Set	: LWLBnkt 	: ""
+	015: SET 	: LWLBnkt 	: $voucher_type 
+	020: SET	: LWLDrL	: $dr_ledger 
+	030: SET	: LWLCrL	: $cr_ledger 
+	040: SET	: LWLAMt	: $$AsAmount:$amount
+	045: SET	: LWLNarr	: $narration
+	050: SET	: SVViewName: $$SysName:AcctgVchView 
+	060: NEW OBJECT	: Voucher
+	070: SET VALUE	: Date : ##LWLDate
+	080: SET VALUE	: VoucherTypeName 	: ##LWLBnkt
+	080a: Log		: "Done"
+	090: SET VALUE	: Narration			: $Narration
+	110: INSERT COLLECTION OBJECT		: AllLedgerEntries
+	120: SET VALUE	: Ledger Name 		: ##LWLDrL
+	140: SET VALUE	: IsDeemedPositive	: "Yes" 
+	141: SET VALUE	: Amount : ##LWLAMt * (-1) 
+	150: SET TARGET	: ..
+	150a: LOG		: $$String:##LWLDrL
+	160: INSERT COLLECTION OBJECT	: AllLedgerEntries
+	170: SET VALUE	: Ledger Name : ##LWLCrL 
+	180: SET VALUE	: Amount : ##LWLAMt
+	190: SET VALUE	: IsDeemedPositive: "No"
+	200: SET TARGET	: ..
+	210: SET VALUE	: PersistedView: ##SVViewName
+	220: CREATE TARGET
+	230: INCREMENT	: LearnWellGETD
+	230a: SHOW PROGRESS	: ##LearnWellGETD
+	240: END WALK
+	260: END PROGRESS
+	280: RETURN
+	290: End Batch Post
+	
+*/
+
+;;==================================Code 2
+
+/*
+[#Line:DSP VchDetail]
+		;Border		: Thick Box
+[#Menu: Gateway of Tally] 
+	Add: Button	: QuickEntry
+	Add	: Key		: FetchDate
+	
+[Key: FetchDate]
+	Key		: Alt+F
+	Action	: Alter		: FetchDate
+	
+[Report:FetchDate]
+	Form		: FetchDate
+	
+[Form:FetchDate]
+	Part		: FetchDate
+	
+[Part:FetchDate]
+	Line		: FetchDate
+	[Line:FetchDate]
+		Field		: FetchDate
+		[Field:FetchDate]
+			Use			: Date Field
+			Set as		: ##FetchDate
+			Modifies	: FetchDate
+			
+
+[Variable:FetchDate]
+	Type			: Date
+	Persistent		: Yes
+	
+[System:Variable]
+	FetchDate		: $$CurrentDate
+[Button:QuickEntry]
+	Key		: Alt+Q
+	Action	: Call	: QuickEntryFunction
+[Collection:Transactions]
+	;Data Source     : HTTP JSON: "https://tallyerp.binarysoft.com/transactionsapi.json"
+	Data Source 		: File JSON 	: "E:\tirlok\tdl files\Gold Rate\transactions api.json" 	; File Path/Name
+	JSON Object Path	: transactions		: 1				; Main object path
+	Client Only			: Yes	
+	
+[Collection:Transactions1]
+	Source Collection	: Transactions
+	Fetch				: *
+	Filter				:  DateFilter
+	
+[System:Formula]
+	DateFilter		:($$Date:$date)=##FetchDate
+	
+[#Menu:Gateway of tally]
+	Add			: Item		: Transactions		: Display		: Transactions
+	
+[Report:Transactions]
+	Form		: Transactions
+	
+[Form:Transactions]
+	Part		: Transactions
+	
+[Part:Transactions]
+	Lines		: TransactionsTitle, TransactionsBody
+	Repeat		: TransactionsBody		: Transactions1
+	Scroll		: Vertical
+	Common Borders	: Yes
+	[Line:TransactionsTitle]
+		Use		: TransactionsBody
+		Border	: Thin Bottom
+		Space Bottom	: 1
+		Local	: Field	: Default		: Type		: String
+		Local	: Field	: Default		: Style		: Normal Bold
+		Local	: Field	: Default		: Align		: Center
+		
+		Local	: Field	: TransactionsSrNo		: Info	: "Sr No"
+		Local	: Field	: TransactionsDate		: Info	: "Date"
+		Local	: Field	: TransactionsVchType	: Info	: "Voucher Type"
+		Local	: Field	: TransactionsDr		: Info	: "Dr Ledger"
+		Local	: Field	: TransactionsCr		: Info	: "Cr Ledger"
+		Local	: Field	: TransactionsAmount	: Info	: "Amount"
+		Local	: Field	: TransactionsNarr		: Info	: "Narration"
+		
+	[Line:TransactionsBody]
+		Field		: TransactionsSrNo, TransactionsDate, TransactionsVchType, TransactionsDr, TransactionsCr, TransactionsAmount
+		Right Field	: TransactionsNarr
+		
+		[Field:TransactionsSrNo]
+			Use			: Number Field
+			Set as		: $$Line
+			Width		: 5
+			Style		: Normal
+			
+		[Field:TransactionsDate]
+			Use			: Name Field
+			Set as		: $date
+			Border		: Thin Left Right
+			Style		: Normal
+			
+		[Field:TransactionsVchType]
+			Use			: Name Field
+			Set as		: $voucher_type
+			Border3D		: Thin Left Right
+			Style		: Normal
+			
+		[Field:TransactionsDr]
+			Use			:  Name Field
+			Set as		: $dr_ledger
+			Style		: Normal
+			Border		: Thin Left Right
+			
+			
+		[Field:TransactionsCr]
+			Use			: Name Field
+			Set as		: $cr_ledger
+			Style		: Normal
+			
+		[Field:TransactionsAmount]
+			Use			: Amount Field
+			Set as		: $$AsAmount:$amount
+			;Width		: 10
+			Space Right	: 3
+			Border		: Thin Left Right
+			Style		: Normal
+			
+		[Field:TransactionsNarr]
+			Use			: Name Field
+			Set as		: $narration
+			Full Width	: Yes
+			Lines		: 0
+			Style		: Normal
+			
+		
+	
+
+;[Function: QuickEntryFunction]
+;	Parameter		: LearnWellVCGT	: String	: ##SVVoucherType
+;	Variable 		: SVVoucherType	: String
+;	Variable		: LWLDate		: Date 
+;	Variable		: LWLDrL		: String 
+;	Variable		: LWLCrL		: String 
+;	Variable 		: LWLAMT 		: Amount 
+;	Variable		: LWLNarr		: String
+;	Variable		: LWLBnkt		: String
+;	Variable 		: ProgressBar	: Number	: 1
+;	001: Start Batch Post	: 10
+;	005: START PROGRESS		: ($$NumItems:Transactions1): "In process" : @@CmpMailName: "Voucher Creation in Process" 
+;	007: WALK COLLECTION	: Transactions1
+;	010: SET	: LWLDate 	: $$Date:$date
+;	010a: Set	: LWLBnkt 	: ""
+;	015: SET 	: LWLBnkt 	: $voucher_type 
+;	020: SET	: LWLDrL	: $dr_ledger 
+;	030: SET	: LWLCrL	: $cr_ledger 
+;	040: SET	: LWLAMt	: $$AsAmount:$amount
+;	045: SET	: LWLNarr	: $narration
+;	050: SET	: SVViewName: $$SysName:AcctgVchView 
+;	060: NEW OBJECT	: Voucher
+;	070: SET VALUE	: Date : ##LWLDate
+;	080: SET VALUE	: VoucherTypeName 	: ##LWLBnkt
+;	080a: Log		: "Done"
+;	090: SET VALUE	: Narration			: $Narration
+;	110: INSERT COLLECTION OBJECT		: AllLedgerEntries
+;	120: SET VALUE	: Ledger Name 		: ##LWLDrL
+;	140: SET VALUE	: IsDeemedPositive	: "Yes" 
+;	141: SET VALUE	: Amount : ##LWLAMt * (-1) 
+;	150: SET TARGET	: ..
+;	150a: LOG		: $$String:##LWLDrL
+;	160: INSERT COLLECTION OBJECT	: AllLedgerEntries
+;	170: SET VALUE	: Ledger Name : ##LWLCrL 
+;	180: SET VALUE	: Amount : ##LWLAMt
+;	190: SET VALUE	: IsDeemedPositive: "No"
+;	200: SET TARGET	: ..
+;	210: SET VALUE	: PersistedView: ##SVViewName
+;	220: CREATE TARGET
+;	230: INCREMENT	: ProgressBar
+;	230a: SHOW PROGRESS	: ##ProgressBar
+;	240: END WALK
+;	260: END PROGRESS
+;	280: RETURN
+;	290: End Batch Post
+	
+
+[Function: QuickEntryFunction]
+	Parameter		: LearnWellVCGT			: String	: ##SVVoucherType
+	Variable 		: SVVoucherType			: String
+	Variable		: QuickVchDate			: Date 
+	Variable		: QuickVchDrLedger		: String 
+	Variable		: QuickVchCrLedger		: String 
+	Variable 		: QuickVchAmount 		: Amount 
+	Variable		: QuickVchNarration		: String
+	Variable		: QuickVchType			: String
+	Variable 		: ProgressBar			: Number	: 1
+	001		: Start Batch Post	: 10
+	005		: START PROGRESS	: ($$NumItems:Transactions1): "In process" : @@CmpMailName: "Voucher Creation in Process" 
+	007		: WALK COLLECTION	: Transactions1
+	010		: SET	: QuickVchDate 	: $$Date:$date
+	010a	: Set	: QuickVchType 	: ""
+	015		: SET 	: QuickVchType 	: $voucher_type 
+	020		: SET	: QuickVchDrLedger	: $dr_ledger 
+	030		: SET	: QuickVchCrLedger	: $cr_ledger 
+	040		: SET	: QuickVchAmount	: $$AsAmount:$amount
+	045		: SET	: QuickVchNarration	: $narration
+	050		: SET	: SVViewName: $$SysName:AcctgVchView 
+	060		: NEW OBJECT	: Voucher
+	070		: SET VALUE	: Date : ##QuickVchDate
+	080		: SET VALUE	: VoucherTypeName 	: ##QuickVchType
+	080a	: Log		: "Done"
+	090		: SET VALUE	: Narration			: $Narration
+	110		: INSERT COLLECTION OBJECT		: AllLedgerEntries
+	120		: SET VALUE	: Ledger Name 		: ##QuickVchDrLedger
+	140		: SET VALUE	: IsDeemedPositive	: "Yes" 
+	141		: SET VALUE	: Amount : ##QuickVchAmount * (-1) 
+	150		: SET TARGET: ..
+	150a	: LOG		: $$String:##QuickVchDrLedger
+	160		: INSERT COLLECTION OBJECT	: AllLedgerEntries
+	170		: SET VALUE	: Ledger Name : ##QuickVchCrLedger 
+	180		: SET VALUE	: Amount : ##QuickVchAmount
+	190		: SET VALUE	: IsDeemedPositive: "No"
+	200		: SET TARGET: ..
+	210		: SET VALUE	: PersistedView: ##SVViewName
+	220		: CREATE TARGET
+	230		: INCREMENT	: ProgressBar
+	230a	: SHOW PROGRESS	: ##ProgressBar
+	240		: END WALK
+	260		: END PROGRESS
+	280		: RETURN
+	290		: End Batch Post
+	
+*/
+
+
+;;=======================================Code 3
+/*
+
+[#Line:DSP VchDetail]
+		;Border		: Thick Box
+[#Menu: Gateway of Tally] 
+	Add: Button	: QuickEntry
+	Add	: Key		: FetchDate
+	
+[Key: FetchDate]
+	Key		: Alt+F
+	Action	: Alter		: FetchDate
+	
+[Report:FetchDate]
+	Form		: FetchDate
+	
+[Form:FetchDate]
+	Part		: FetchDate
+	
+[Part:FetchDate]
+	Line		: FetchDate,FetchVchType
+	
+	[Line:FetchDate]
+		Field		: LongPrompt, FetchDate
+		Local		: Field		: LongPrompt	: Info	: "Enter The date"
+		[Field:FetchDate]
+			Use			: Date Field
+			Set as		: ##FetchDate
+			Modifies	: FetchDate
+			
+	[Line:FetchVchType]
+		Field		: LongPrompt, FetchVchType
+		Local		: Field		: LongPrompt	: Info	: "Enter Voucher Type"
+		[Field:FetchVchType]
+			Use			: Date Field
+			Set as		: ##FetchVchType
+			Modifies	: FetchVchType
+			Table		: VoucherCollections;, EndOfList
+			Set always 	: Yes
+			Show Table	: Always
+			Case		: Title Case
+
+[Collection: VoucherCollections]
+	Title		: $$LocaleString:"Voucher Types" 
+	Collection	: Journal Vouchers
+	Collection	: Payment Vouchers 
+	Collection	: Receipt Vouchers 
+	Collection	: Contra Vouchers 
+	;Collection	: Sales Vouchers 
+	Fetch 		: Name, Actual VoucherType 
+	Format		: $$Name, 10
+	
+[Variable:FetchDate]
+	Type			: Date
+	Persistent		: Yes
+	Volatile		: No
+	
+[Variable:FetchVchType]
+	Type			: String
+	Persistent		: Yes
+	Volatile		: Yes
+	
+	
+[System:Variable]
+	FetchDate		: $$CurrentDate
+	FetchVchType	: "Payment"
+[Button:QuickEntry]
+	Key		: Alt+Q
+	Action	: Call	: QuickEntryFunction
+[Collection:Transactions]
+	;Data Source     : HTTP JSON: "https://tallyerp.binarysoft.com/transactionsapi.json"
+	Data Source 		: File JSON 	: "E:\tirlok\tdl files\Gold Rate\transactions api.json" 	; File Path/Name
+	JSON Object Path	: transactions		: 1				; Main object path
+	Client Only			: Yes	
+	
+[Collection:Transactions1]
+	Source Collection	: Transactions
+	Fetch				: *
+	Filter				:  DAteVoucherFilter;, VoucherFilter;DateFilter
+	
+[System:Formula]
+	;DateFilter		:($$Date:$date)=##FetchDate
+	DAteVoucherFilter	: (($$Date:$date)=##FetchDate) And (($voucher_type)=##FetchVchType)
+	VoucherFilter		: (($voucher_type)=##FetchVchType)
+	
+[#Menu:Gateway of tally]
+	Add			: Item		: Transactions		: Display		: Transactions
+	
+[Report:Transactions]
+	Form		: Transactions
+	
+[Form:Transactions]
+	Part		: Transactions
+	
+[Part:Transactions]
+	Lines		: TransactionsTitle, TransactionsBody
+	Repeat		: TransactionsBody		: Transactions1
+	Scroll		: Vertical
+	Common Borders	: Yes
+	[Line:TransactionsTitle]
+		Use		: TransactionsBody
+		Border	: Thin Bottom
+		Space Bottom	: 1
+		Local	: Field	: Default		: Type		: String
+		Local	: Field	: Default		: Style		: Normal Bold
+		Local	: Field	: Default		: Align		: Center
+		
+		Local	: Field	: TransactionsSrNo		: Info	: "Sr No"
+		Local	: Field	: TransactionsDate		: Info	: "Date"
+		Local	: Field	: TransactionsVchType	: Info	: "Voucher Type"
+		Local	: Field	: TransactionsDr		: Info	: "Dr Ledger"
+		Local	: Field	: TransactionsCr		: Info	: "Cr Ledger"
+		Local	: Field	: TransactionsAmount	: Info	: "Amount"
+		Local	: Field	: TransactionsNarr		: Info	: "Narration"
+		
+	[Line:TransactionsBody]
+		Field		: TransactionsSrNo, TransactionsDate, TransactionsVchType, TransactionsDr, TransactionsCr, TransactionsAmount
+		Right Field	: TransactionsNarr
+		
+		[Field:TransactionsSrNo]
+			Use			: Number Field
+			Set as		: $$Line
+			Width		: 5
+			Style		: Normal
+			
+		[Field:TransactionsDate]
+			Use			: Name Field
+			Set as		: $date
+			Border		: Thin Left Right
+			Style		: Normal
+			
+		[Field:TransactionsVchType]
+			Use			: Name Field
+			Set as		: $voucher_type
+			Border3D		: Thin Left Right
+			Style		: Normal
+			
+		[Field:TransactionsDr]
+			Use			:  Name Field
+			Set as		: $dr_ledger
+			Style		: Normal
+			Border		: Thin Left Right
+			
+			
+		[Field:TransactionsCr]
+			Use			: Name Field
+			Set as		: $cr_ledger
+			Style		: Normal
+			
+		[Field:TransactionsAmount]
+			Use			: Amount Field
+			Set as		: $$AsAmount:$amount
+			;Width		: 10
+			Space Right	: 3
+			Border		: Thin Left Right
+			Style		: Normal
+			
+		[Field:TransactionsNarr]
+			Use			: Name Field
+			Set as		: $narration
+			Full Width	: Yes
+			Lines		: 0
+			Style		: Normal
+			
+		
+	
+
+
+[Function: QuickEntryFunction]
+	Parameter		: LearnWellVCGT			: String	: ##SVVoucherType
+	Variable 		: SVVoucherType			: String
+	Variable		: QuickVchDate			: Date 
+	Variable		: QuickVchDrLedger		: String 
+	Variable		: QuickVchCrLedger		: String 
+	Variable 		: QuickVchAmount 		: Amount 
+	Variable		: QuickVchNarration		: String
+	Variable		: QuickVchType			: String
+	Variable 		: ProgressBar			: Number	: 1
+	001		: Start Batch Post	: 10
+	005		: START PROGRESS	: ($$NumItems:Transactions1): "In process" : @@CmpMailName: "Voucher Creation in Process" 
+	007		: WALK COLLECTION	: Transactions1
+	010		: SET	: QuickVchDate 	: $$Date:$date
+	010a	: Set	: QuickVchType 	: ""
+	015		: SET 	: QuickVchType 	: $voucher_type 
+	020		: SET	: QuickVchDrLedger	: $dr_ledger 
+	030		: SET	: QuickVchCrLedger	: $cr_ledger 
+	040		: SET	: QuickVchAmount	: $$AsAmount:$amount
+	045		: SET	: QuickVchNarration	: $narration
+	050		: SET	: SVViewName: $$SysName:AcctgVchView 
+	060		: NEW OBJECT	: Voucher
+	070		: SET VALUE	: Date : ##QuickVchDate
+	080		: SET VALUE	: VoucherTypeName 	: ##QuickVchType
+	080a	: Log		: "Done"
+	090		: SET VALUE	: Narration			: $Narration
+	110		: INSERT COLLECTION OBJECT		: AllLedgerEntries
+	120		: SET VALUE	: Ledger Name 		: ##QuickVchDrLedger
+	140		: SET VALUE	: IsDeemedPositive	: "Yes" 
+	141		: SET VALUE	: Amount : ##QuickVchAmount * (-1) 
+	150		: SET TARGET: ..
+	150a	: LOG		: $$String:##QuickVchDrLedger
+	160		: INSERT COLLECTION OBJECT	: AllLedgerEntries
+	170		: SET VALUE	: Ledger Name : ##QuickVchCrLedger 
+	180		: SET VALUE	: Amount : ##QuickVchAmount
+	190		: SET VALUE	: IsDeemedPositive: "No"
+	200		: SET TARGET: ..
+	210		: SET VALUE	: PersistedView: ##SVViewName
+	220		: CREATE TARGET
+	230		: INCREMENT	: ProgressBar
+	230a	: SHOW PROGRESS	: ##ProgressBar
+	240		: END WALK
+	260		: END PROGRESS
+	280		: RETURN
+	290		: End Batch Post
+	
+
+*/
+
+
+;;=======================================Code 4
+
+
+
+[#Menu: Gateway of Tally] 
+	Add	: Button	: QuickEntry
+	Add	: Key		: FetchDate
+	
+[Key: FetchDate]
+	Key		: Alt+F
+	Action	: Alter		: FetchDate
+	
+[Report:FetchDate]
+	Form		: FetchDate
+	
+[Form:FetchDate]
+	Part		: FetchDate
+	On          : Form Accept   : Yes       : Form Accept
+	On			: Form Accept	: Yes		: Display		: Transactions
+	
+[Part:FetchDate]
+	;Line		: FetchDate,FetchVchType
+	Line		: FetchFromDate, FetchToDate, FetchVchType
+	[Line:FetchDate]
+		Field		: LongPrompt, FetchDate
+		Local		: Field		: LongPrompt	: Info	: "Enter The date"
+		[Field:FetchDate]
+			Use			: Date Field
+			Set as		: ##FetchDate
+			Modifies	: FetchDate
+			
+	[Line:FetchFromDate]
+		Field		: LongPrompt, FetchFromDate
+		Local		: Field		: LongPrompt	: Info	: "Enter From date"
+		[Field:FetchFromDate]
+			Use			: Date Field
+			Set as		: ##FromDateQuickEntry
+			Modifies	: FromDateQuickEntry
+			Set Always	: Yes
+			
+	[Line:FetchToDate]
+		Field		: LongPrompt, FetchToDate
+		Local		: Field		: LongPrompt	: Info	: "Enter To date"
+		[Field:FetchToDate]
+			Use			: Date Field
+			Set as		: ##ToDateQuickEntry
+			Modifies	: ToDateQuickEntry
+			Control 	: DateShouldMore	: $$Date:#FetchToDate < $$Date:#FetchFromDate
+			Set Always	: Yes
+			
+	[Line:FetchVchType]
+		Field		: LongPrompt, FetchVchType
+		Local		: Field		: LongPrompt	: Info	: "Enter Voucher Type"
+		[Field:FetchVchType]
+			Use			: Date Field
+			Set as		: ##FetchVchType
+			Modifies	: FetchVchType
+			Table		: VoucherCollections;, EndOfList
+			Set always 	: Yes
+			Show Table	: Always
+			Case		: Title Case
+
+[Collection: VoucherCollections]
+	Title		: $$LocaleString:"Voucher Types" 
+	Collection	: Journal Vouchers
+	Collection	: Payment Vouchers 
+	Collection	: Receipt Vouchers 
+	Collection	: Contra Vouchers 
+	;Collection	: Sales Vouchers 
+	Fetch 		: Name, Actual VoucherType 
+	Format		: $$Name, 10
+	
+[Variable:FetchDate]
+	Type			: Date
+	Persistent		: Yes
+	Volatile		: No
+	
+[Variable:FromDateQuickEntry]
+	Type			: Date
+	Persistent		: Yes
+	Volatile		: No
+	
+[Variable:ToDateQuickEntry]
+	Type			: Date
+	Persistent		: Yes
+	Volatile		: No
+	
+[Variable:FetchVchType]
+	Type			: String
+	Persistent		: Yes
+	Volatile		: Yes
+	
+	
+[System:Variable]
+	FetchDate		: $$CurrentDate
+	FromDateQuickEntry	: "3.3.24"
+	ToDateQuickEntry		: "12.3.24"
+	FetchVchType	: "Receipt"
+[Button:QuickEntry]
+	Key		: Alt+Q
+	Action	: Trigger Key	: Alt+F
+[Collection:Transactions]
+	;Data Source     : HTTP JSON: "https://tallyerp.binarysoft.com/transactionsapi.json"
+	Data Source 		: File JSON 		: "E:\tirlok\tdl files\Gold Rate\New Transaction Api 1000  2 to 28 march.json";"E:\tirlok\tdl files\Gold Rate\New Transactions Api 1000.json";"E:\tirlok\tdl files\Gold Rate\transactions api.json" 	; File Path/Name
+	JSON Object Path	: transactions		: 1				; Main object path
+	Client Only			: Yes	
+	
+[Collection:Transactions1]
+	Source Collection	: Transactions
+	Fetch				: *
+	Filter				:  DAteVoucherFilter;, VoucherFilter;DateFilter
+	
+[System:Formula]
+	;DateFilter		:($$Date:$date)=##FetchDate
+	;DAteVoucherFilter	: (($$Date:$date)=##FetchDate) And (($voucher_type)=##FetchVchType)
+	DAteVoucherFilter	: ($$Date:$date) >=##FromDateQuickEntry AND ($$Date:$date)<=##ToDateQuickEntry And (($voucher_type)=##FetchVchType)
+	VoucherFilter		: (($voucher_type)=##FetchVchType)
+	DateShouldMore		: $$LocaleString:"Enter to Date Value Is Lesser Than Enter from Date Value"
+	
+	
+[#Menu:Gateway of tally]
+	Add			: Item		: Transactions		: Display		: Transactions
+	
+[Report:Transactions]
+	Form		: Transactions
+	
+[Form:Transactions]
+	Part		: Transactions
+	Add			: Button		: EnterAllEntries
+	
+[Button:EnterAllEntries]
+	Title		: "EnterAllEntries"
+	Key			: Alt + Q
+	Action		: Call		: QuickEntryFunction
+	
+[Part:Transactions]
+	Lines		: TransactionsTitle, TransactionsBody
+	Repeat		: TransactionsBody		: Transactions1
+	Scroll		: Vertical
+	Common Borders	: Yes
+	[Line:TransactionsTitle]
+		Use		: TransactionsBody
+		Border	: Thin Bottom
+		Space Bottom	: 1
+		Local	: Field	: Default		: Type		: String
+		Local	: Field	: Default		: Style		: Normal Bold
+		Local	: Field	: Default		: Align		: Center
+		
+		Local	: Field	: TransactionsSrNo		: Info	: "Sr No"
+		Local	: Field	: TransactionsDate		: Info	: "Date"
+		Local	: Field	: TransactionsVchType	: Info	: "Voucher Type"
+		Local	: Field	: TransactionsDr		: Info	: "Dr Ledger"
+		Local	: Field	: TransactionsCr		: Info	: "Cr Ledger"
+		Local	: Field	: TransactionsAmount	: Info	: "Amount"
+		Local	: Field	: TransactionsNarr		: Info	: "Narration"
+		
+	[Line:TransactionsBody]
+		Field		: TransactionsSrNo, TransactionsDate, TransactionsVchType, TransactionsDr, TransactionsCr, TransactionsAmount
+		Right Field	: TransactionsNarr
+		
+		[Field:TransactionsSrNo]
+			Use			: Number Field
+			Set as		: $$Line
+			Width		: 5
+			Style		: Normal
+			
+		[Field:TransactionsDate]
+			Use			: Name Field
+			Set as		: $date
+			Border		: Thin Left Right
+			Style		: Normal
+			Width		: 10
+			
+		[Field:TransactionsVchType]
+			Use			: Name Field
+			Set as		: $voucher_type
+			Border3D	: Thin Left Right
+			Style		: Normal
+			Width		: 10
+			
+		[Field:TransactionsDr]
+			Use			:  Name Field
+			Set as		: $dr_ledger
+			Style		: Normal
+			Border		: Thin Left Right
+			Width		: 18
+			
+			
+		[Field:TransactionsCr]
+			Use			: Name Field
+			Set as		: $cr_ledger
+			Style		: Normal
+			Width		: 18
+			
+		[Field:TransactionsAmount]
+			Use			: Amount Field
+			Set as		: $$AsAmount:$amount
+			;Width		: 10
+			Space Right	: 3
+			Border		: Thin Left Right
+			Style		: Normal
+			Width		: 8
+			
+		[Field:TransactionsNarr]
+			Use			: Name Field
+			Set as		: $narration +"  "+ @Date
+			Date		: $$String:$$MachineTime
+			Full Width	: Yes
+			Lines		: 0
+			Style		: Normal
+			
+		
+	
+
+
+[Function: QuickEntryFunction]
+	Parameter		: LearnWellVCGT			: String	: ##SVVoucherType
+	Variable 		: SVVoucherType			: String
+	Variable		: QuickVchDate			: Date 
+	Variable		: QuickVchDrLedger		: String 
+	Variable		: QuickVchCrLedger		: String 
+	Variable 		: QuickVchAmount 		: Amount 
+	Variable		: QuickVchNarration		: String
+	Variable		: QuickVchType			: String
+	Variable 		: ProgressBar			: Number	: 1
+	001		: Start Batch Post	: 10
+	005		: START PROGRESS	: ($$NumItems:Transactions1): "In process" : @@CmpMailName: "Voucher Creation in Process" 
+	007		: WALK COLLECTION	: Transactions1
+	010		: SET	: QuickVchDate 	: $$Date:$date
+	010a	: Set	: QuickVchType 	: ""
+	015		: SET 	: QuickVchType 	: $voucher_type 
+	020		: SET	: QuickVchDrLedger	: $dr_ledger 
+	030		: SET	: QuickVchCrLedger	: $cr_ledger 
+	040		: SET	: QuickVchAmount	: $$AsAmount:$amount
+	045		: SET	: QuickVchNarration	: $narration ; 
+	050		: SET	: SVViewName: $$SysName:AcctgVchView 
+	060		: NEW OBJECT	: Voucher
+	070		: SET VALUE	: Date : ##QuickVchDate
+	080		: SET VALUE	: VoucherTypeName 	: ##QuickVchType
+	080a	: Log		: "Done"
+	090		: SET VALUE	: Narration			: $Narration+ "  "+ $$String:$$MachineTime + "  " + $$String:$$CurrentDate
+	110		: INSERT COLLECTION OBJECT		: AllLedgerEntries
+	120		: SET VALUE	: Ledger Name 		: ##QuickVchDrLedger
+	140		: SET VALUE	: IsDeemedPositive	: "Yes" 
+	141		: SET VALUE	: Amount : ##QuickVchAmount * (-1) 
+	150		: SET TARGET: ..
+	150a	: LOG		: $$String:##QuickVchDrLedger
+	160		: INSERT COLLECTION OBJECT	: AllLedgerEntries
+	170		: SET VALUE	: Ledger Name : ##QuickVchCrLedger 
+	180		: SET VALUE	: Amount : ##QuickVchAmount
+	190		: SET VALUE	: IsDeemedPositive: "No"
+	200		: SET TARGET: ..
+	210		: SET VALUE	: PersistedView: ##SVViewName
+	220		: CREATE TARGET
+	230		: INCREMENT	: ProgressBar
+	230a	: SHOW PROGRESS	: ##ProgressBar
+	240		: END WALK
+	260		: END PROGRESS
+	;280		: RETURN
+	290		: End Batch Post
+	;300		: Display		: Daybook
+	310		: Trigger Key	: Esc, K,;F2, $$Date:$date, Enter
+	
+
+
+
+
+
+[#Field : VCH Number]
+Use : Voucher Number Field
+Inactive : @@NoVchNumbering
+Skip On : @@AutoVchNumbering
+Control : DuplicateNumber : @@NoDupVchNumbering AND (NOT $$InAlterMode OR NOT @SameVchTypeAndNum ) AND  $$IsDuplicateNumber:$$Value:SameVchTypeAndNum:$VoucherTypeName = ##ORIGVchType AND  $$Value = ##ORIGVchNum
+Validate : (@@NoDupVchNumbering AND NOT $$IsEmpty:$$Value) +
+ OR NOT @@NoDupVchNumbering
+Keys : PrevVchNumber
+;;;;;;;;;==================================
+
+/*Trigger Key
+Auto Press Button on Behalf of user
+Trigger Key, which sends the list of keys in
+sequence to the system as if an User/operator is
+pressing those Keys*/
+;[#Form: Voucher]
+;Add: Button:Autowork
+;[#Form: Daybook]
+;Add: Button:Autowork
+;[Button: Autowork]
+;
+;Title: "Autowork"
+;Key:Alt+U
+;Action	: Trigger Key	: Ctrl+C,Alt+P, Ctrl+P,i,
+;Action: Trigger Key: Ctrl+c, Ctrl+E,c, "FileName", Enter, Ctrl+V, Enter,Esc:2, E
+```

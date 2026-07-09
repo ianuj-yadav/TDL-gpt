@@ -1,0 +1,80 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+-	This program displays an image similar to Indian National Flag using Dimensions
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: National Flag]
+
+	Form 		: National Flag
+	Title 		: "National Flag"
+
+[Form: National Flag]
+
+	Parts		: National Flag
+
+[Part: National Flag]
+
+	Parts 		: NF Part1, NF Part2, NF Part3, NF Part4
+	Height 		: 90% Screen
+	Width 		: 40% Screen
+	Vertical	: Yes
+
+	[Part: NF Part1]
+
+		Lines 		: NF Line
+		Height 		: 12% Screen
+		Border 		: NFBorder
+		Background 	: White, Saffron
+
+		[Line: NF Line]
+			
+			Field : Simple Field 
+			Local : Field : Simple Field : Set as : ""
+
+	[Part: NF Part2]
+	
+		Lines		: NF Line
+		Height 		: 12% Screen
+		Border 		: NFBorder
+		Background 	: White
+		Local: Field: Simple Field	: Info		: "O"
+		Local: Field: Simple Field	: Style		: NF Style
+		Local: Field: Simple Field	: Align		: Center
+		Local: Field: Simple Field	: FullWidth	: Yes
+
+	[Part: NF Part3]
+
+		Use 		: NF Part1
+		Background 	: White, Green
+
+	[Part: NF Part4]
+
+		Lines 		: NF Line
+		Height 		: 54% Screen
+		Border 		: NF Border 
+
+;; Border Definition
+
+[Border: NFBorder]
+
+	Left 	: Thick, Double Lined
+
+;; Colour Definition
+
+[Color: Saffron]
+
+	RGB 	: 252, 196, 112  
+
+;; Style Definition
+
+[Style: NF Style]
+
+	Height 	: 50
+	Font 	: "Arial"
+
+;; End-of-File

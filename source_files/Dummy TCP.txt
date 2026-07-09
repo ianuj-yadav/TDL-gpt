@@ -1,0 +1,292 @@
+
+[#Menu:gateway of tally]
+	Add		: Button		: Call Function
+	
+[Button : Call Function]
+	Key 		: Alt + F9
+	Title 		: "Backup"
+	Action		: Call : TestFunction
+	
+[Function: TestFunction]
+	Variable		: BackupDetVar			: String
+	10		: Call		: SendUrl
+	
+	200		: IF		: ##EnableAutoBackup
+	300 	: IF		: ##AutoBackupPrompt
+	400 	: QUERYBOX 	: "Backup Company ?" 	:Yes	: No
+	500		: IF 		: $$LastResult
+	600		: CALL		: Backup Function
+	700		: ENDIF	
+	800		: ELSE		: 
+	900		: CALL		: Backup Function 
+	1000 	: ENDIF
+	1100	: ENDIF
+	;1200	: CALL 		: TBafterSleep
+	;100	: Log	: "Done"
+
+[Function: Backup Function]
+	Variable	: Cmps		: String
+	Variable	: BackupDetVar	: String
+	
+	100		: Set	: Cmps		: ""
+	110		: Set	: BackupDetVar	:""
+	200		: Walk Collection	: List of Companies On Disk
+	250		: Set		: Cmps	: ""
+	300		: Set		: Cmps	: @@DestPath + "," +  ##SVCurrentPath +","+ $name + "," +$$StringPart:("00"+$$String:$CompanyNumber):(($$StringLength:("00"+$$String:$CompanyNumber))-6):8+","
+	400 	: SET	: BackupDetVar	: ##BackupDetVar+##Cmps
+	600		: End Walk
+	1000	: Set	: BackupDetVar	: $$StringPart:##BackupDetVar:0:(($$StringLength:##BackupDetVar)-1)
+	1500	: Log		: ##BackupDetVar
+	1200	: BACKUP COMPANY: "," : ##BackupDetVar
+	
+	
+	;1500	: Log		: ##BackupDetVar
+
+	
+
+[System: Formula]
+	DestPath	: $$LocaleString:##DestinationPath +"\" + @@DateForm + "\" + @@TimeForm 
+	CoNumber	: $$Number:($$String:$CompanyNumber:Company:$name);$$String:($$Number:($CompanyNumber:Company:##SVCurrentCompany))
+	CNumber		: $CompanyNumber:Company:$name
+	DateForm	: $$LocaleString:$$MachineDate+"-v"+@@Releaseversion
+	TimeForm	: @@HrsForm + @@MtsForm + @@SesForm
+	HrsForm		: $$StringPart:($$LocaleString:($$SysInfo:SystemTimeHMS)):0:2
+	MtsForm		: $$StringPart:($$LocaleString:($$SysInfo:SystemTimeHMS)):3:2
+	SesForm		: $$StringPart:($$LocaleString:($$SysInfo:SystemTimeHMS)):6:2
+	Release  			: "%s"
+	Releaseversion		: $$SPrintf:@@Release:@@VersionReleaseString
+
+
+[Variable: EnableAutoBackup] 
+	Type		: Logical
+	Persistent	: Yes 
+[Variable: DestinationPath] 
+	Type		: String
+	Persistent	: Yes
+[Variable: AutoBackupPrompt]
+	Type		: Logical
+	Persistent	: Yes
+[Variable: CurrTime]
+	Type		: String
+	Persistent	: Yes
+[System: Variable]
+	EnableAutoBackup		: Yes
+	DestinationPath			: "T:\My Drive\Backup-tally" 
+	AutoBackupPrompt		: Yes
+	
+[#Menu : Gateway of Tally]
+Add		: Item	: "All Companies"	: Display	: AllCompanies
+
+
+[Report:AllCompanies]
+	Form		: AllCompanies
+	
+[Form:AllCompanies]
+	Part		: AllCompanies
+	
+[Part:AllCompanies]
+	Line		: AllCompanies
+	Repeat		: AllCompanies		: List of Companies On Disk;List of Primary Companies
+	Scroll		: Vertical
+	
+	[Line:AllCompanies]
+		Fields		: AllCompanies, CmpNo,DateTime1
+		
+		[Field:AllCompanies]
+			Use			: Name Field
+			Set as		: $name
+			Line		: 0
+			Width		: 50% Page
+			
+		[Field:CmpNo]
+			Use			: Name Field
+			Set as		: $$LocaleString:@@DestPath;$$Number:($$String:$CompanyNumber:Company:$name)
+			Line		: 0
+			Width		: 20% Page
+			
+		[Field:DateTime1]
+			Use			: Name Field
+			Set as		: $$StringPart:("00"+$$String:$CompanyNumber):(($$StringLength:@number)-6):8;$$CommaList:$CompanyNumber;$$ReadINI:@path1:"TALLY":"Default Companies"
+			Line		: 0
+			Width		: 20% Page
+			path1		: $$SysInfo:ApplicationPath + "\tally.ini"
+			time		: $$SysInfo:SystemTimeHMS
+			number		: "00"+$$String:$CompanyNumber
+			Set Always	: yes
+			
+
+
+
+;;===========================Enable Drive Backup Start
+
+[#Part: Company F11 Other Features]
+	
+	Local	: Part	: Cfg PartContent		:Add			: Lines	: Cmp EnableAutoBackup
+	[Line: Cmp EnableAutoBackup]
+
+		Use			: Cmp Ops More Config	
+		Fields		: Medium Prompt, Cmp EnableAutoBackup
+		Space Top	: 0.6
+		Local  		: Field : Medium Prompt : Info    		: $$LocaleString:"Enable Auto Backup On Drive Module :"
+		Local  		: Field : Medium Prompt : Background	: Yellow
+	
+		[Field:Cmp EnableAutoBackup]
+			Type		: Logical
+			Width		: 3
+			Modifies	: EnableAutoBackup
+			Max			: 3
+			Set as		: ##EnableAutoBackup
+			Table		: YesNoTable
+			Show Table	: On Error
+			Key			: LogicalToggle		
+			Style		: Normal Bold
+			Sub Form	: DriveAutoBackup	: $$Value=Yes  ;; This would be a name of report.
+							;; Sub Form attribute is always open in alter mode.
+							
+			Background	: Yellow
+	
+			
+
+
+[System:UDF]
+	IsAutoBackupDrive	: Logical	: 20001
+	
+;;===========================Enable Drive Backup End
+
+
+
+;;=================================
+[Report:DriveAutoBackup]
+	Title	: "Auto Backup On Drive"
+	Form	: DriveAutoBackup
+	
+[Form:DriveAutoBackup]
+	Part	: DriveAutoBackup
+	
+[Part:DriveAutoBackup]
+	Lines		: DriveAutoBackup, DriveAutoBackupPath;, DriveAutoBackup, DriveAutoBackup
+		
+	[Line:DriveAutoBackup]
+		Use			: Cmp Ops All Config
+		Fields		: Medium Prompt, DriveAutoBackup
+	
+		Local 		: Field : Medium Prompt : Info  	: $$LocaleString:"Enable Auto Backup :"
+		Space Bottom	: 1
+
+		[Field:DriveAutoBackup]
+			Type		: Logical
+			Width		: 4
+			Modifies	: EnableAutoBackup
+			Max			: 4
+			Set as		: ##EnableAutoBackup
+			Table		: YesNoTable
+			Show Table	: On Error
+			Key			: LogicalToggle		
+			Style		: Normal Bold
+			
+
+	[Line:DriveAutoBackupPath]
+		Use			: Cmp Ops All Config
+		Fields		: Medium Prompt, DriveAutoBackupPath
+	
+		Local 		: Field : Medium Prompt : Info  	: $$LocaleString:"Backup Drive Path :"
+		Local 		: Field : Medium Prompt : Inactive	: Not #DriveAutoBackup
+		Space Bottom	: 1
+
+		[Field:DriveAutoBackupPath]
+			Use			: Backup Destination Template
+			Set as		: ##DestinationPath
+			Modifies	: DestinationPath		: Yes
+			Help		: @@HlpConfigureBackupPath
+			ASCII Only	: Yes
+			KBLanguage	: @@EnglishLanguageID
+			Width		: 80
+			Inactive	: Not #DriveAutoBackup
+			
+			
+
+;;===============================
+
+
+;; Add Url Button Start
+
+
+[Button:Browse Url]
+	Key			: Ctrl + F5
+	Action		: Call		: SendUrl
+	
+[Function: SendUrl]
+	Variable	: PopMessage		: String
+	00	: Walk Collection	: Browse 
+	100	: End Walk
+	
+[Collection: Browse]
+
+	Remote URL 		: "https://tallyatcloud.com/tallybackup/"+@@SrNo + @@EmailId + @@UserType  ;Give your Actual URL name
+	Client Only		: Yes
+	
+[System:Formula]
+	PopMessage	: "https://tallyatcloud.com/tallybackup/"+@@SrNo + @@EmailId + @@UserType 
+	SrNo		: $$LocaleString:($$LicenseInfo:SerialNumber)+"/" 
+	EmailId		: $$LocaleString:($$LicenseInfo:AdminEmailID)+"/" 
+	UserType	: If $$LicenseInfo:IsSilver then "SILVER" Else If $$LicenseInfo:IsGold Then "GOLD" Else "SERVER"
+	
+	
+;; Add Url Button End
+
+
+[#Menu : Gateway of Tally]
+Add		: Item	: "All Serial No"	: Display	: AllSerials
+
+
+[Report:AllSerials]
+	Form		: AllSerials
+	
+[Form:AllSerials]
+	Part		: AllSerials
+	
+[Part:AllSerials]
+	Line		: AllSerials
+	
+	[Line:AllSerials]
+		Fields		: No
+		
+		[Field:No]
+			Use			: Name Field
+			Set as		: "https://tallyatcloud.com/tallybackup/"+@@SrNo + @@EmailId + @@UserType 
+			Line		: 0
+			Width		: 80% Page
+			
+
+
+
+
+
+			
+;;===========================
+
+[System : Event]
+	BackupCompany     : Load Company : TRUE : CALL 		: TestFunction
+	;; Setting up timer event to call a function
+	GetMessage     : TIMER : ##EnableAutoBackup : CALL 		: TBafterSleep
+	;; Starting the Timer when Tally Application Starts
+	Schedule Message : Load Company : TRUE : START TIMER : GetMessage          : 5
+	;; Adding Keys to ‘Company Info’ Menu
+[Function : TBafterSleep]
+	;100  	: SLEEP 	: 5
+	200  	: Msg Box 	: Trial Balance		: "Hello Your Backup is Complete"
+	300		: Action 	: Stop Timer 		: GetMessage
+	
+[#Menu : Gateway of Tally]
+
+	Add : Keys : Stop Backup Timer
+
+;; Declaring a Key to Stop the Timer
+
+[Key : Stop Backup Timer]
+
+Key    : Alt + S
+
+Action : Stop Timer : GetMessage
+
+Title  : “Stop Backup”

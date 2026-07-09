@@ -1,0 +1,62 @@
+[System : Event]
+	CreateLedger1 	: NatLangQuery 	: @@IsCreateLedger1 	: Call 	: Create LedgerFunction
+	CreateItem		: NatLang Query	: @@IsStockItem			: Call	: CreateItem Function
+	
+	
+[System : Formula]
+	IsCreateLedger1 	: ##SVNatLangFullRequest CONTAINS "Create Ledger"
+	IsStockItem			: ##SVNatLangFullRequest CONTAINS "Create Item"
+	
+[Function : TokenizeQueryFunction]
+
+	000 : List Delete Ex 	: SMSStringsTirlok
+
+	010 : For Token 		: TokenVar1 		: ##SVNatLangFullRequest 	: " "
+
+	020 : List Add Ex 		: SMSStringsTirlok 	: ##TokenVar1
+
+	030 : End For
+
+[System : Variable]
+
+	List Var 	: SMSStringsTirlok 	: String
+	
+[Function : Create LedgerFunction]
+
+	000 : Call : TokenizeQueryFunction
+
+	010 : New Object : Ledger : ##SMSStringsTirlok[3] : Yes
+
+	020 : Set Value : Name : ##SMSStringsTirlok[3]
+
+	030 : Set Value : Parent : If $$IsEmpty:##SMSStringsTirlok[4] Then "Sundry Debtors" Else ##SMSStringsTirlok[4]
+
+	040 : Save Target
+	
+	050	: If	: $$LastResult
+	060	: Set	: SVNatLangResponse	: "Ledger " + ##SMSStringsTirlok[3]+ " Created/Altered"
+	070	: Else	:
+	080	: Set	: SVNatLangResponse	: $$LastError
+	090	: End If
+	100	: Set	: SVNatLangRequestProcessed		: Yes
+	
+;	050 : Set : SVNatLangResponse : “Ledger Created”
+;
+;	060 : Set : SVNatLangRequestProcessed : Yes
+
+[Function:CreateItem Function]
+	001	: Call		: TokenizeQueryFunction
+	005	: New Object	: Stockitem		: ##SMSStringsTirlok[3] : Yes
+	010	: Set Value		: Name			: ##SMSStringsTirlok[3]
+	015	: Set Value		: Parent		: If $$IsEmpty:##SMSStringsTirlok[4] Then "Hardware" Else ##SMSStringsTirlok[4]
+	020	: Set Value		: BaseUnits		: If $$IsEmpty:##SMSStringsTirlok[4] Then "Nos" Else ##SMSStringsTirlok[4]
+	025	: Save Target
+	
+	030	: If	: $$LastResult
+	035	: Set	: SVNatLangResponse	: "Stockitem " + ##SMSStringsTirlok[3]+ " Created/Altered"
+	040	: Else	:
+	045	: Set	: SVNatLangResponse	: $$LastError
+	050	: End If
+	055	: Set	: SVNatLangRequestProcessed		: Yes
+
+

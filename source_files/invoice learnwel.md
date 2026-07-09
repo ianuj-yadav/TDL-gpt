@@ -1,0 +1,103 @@
+---
+title: invoice learnwel
+type: sample_code
+objects: Part, Line, Field
+source: invoice learnwel.txt
+---
+
+# invoice learnwel
+
+## Source Code
+
+```tdl
+
+[#Part: EXPINV SaleTopLeft]
+Height      : If ($$InExportMode OR $$InMailAction OR $$InUploadAction) AND ($$IsSysNameEqual:Excel:##SVExportFormat OR $$IsSysNameEqual:HTML:##SVExportFormat) THEN +
+							(10 + 10 + @WithOrderVch + @WithOrderTerms + @WithBuyer + @WithCountry)  ELSE +
+							(10 + 10 + @WithOrderVch + @WithOrderTerms + @WithBuyer + @WithCountry) % page
+	
+	Delete: Parts: EXPINV Company	
+	
+	[#Form: Printed Invoice]
+		Add:Parts:LWCMPDetails	
+
+[part:LWCMPDetails]
+Add:Parts:LWQR,CMPdtl,CMPLOGO
+
+
+[Part:LWQR]
+Part :LearnWellQRIn,qrtxt
+Vertical : Yes
+[Part :LearnWellQRIn]
+Horizontal Alignment :Left
+Vertical : No
+Lines :LWQrLn
+QR code: "VCH No. : "+$VoucherNumber+",Party: "+ (if @@RejInvoice then @@RejinOutPartyName else @@BuyerName)+ ",Amount: "+($$String:$Amount)+ ",Quantity: ";+($$String:($$Total:EXPINVQty));("upi://pay?pa=9131810293@ybl&pn=AshishKumarSingh&tn=Bill No."+$$String:$voucherNumber) : True
+Height : 20% page
+Width : 20% Page
+[Line :LWQrLn]
+Field :LWQrFn
+[Field :LWQrFn]
+Set As : ""
+[Part:qrtxt]
+Line:as
+[Line:as]
+Field:as
+[Field:as]
+Use:name field
+Set as:"Scan to Pay"
+
+[Part:CMPLOGO]
+Part :LearnWellLOGO
+Vertical : Yes
+[Part :LearnWellLOGO]
+Horizontal Alignment :Right
+Vertical : No
+Lines :LWLG
+Graph Type: "E:\tirlok\tdl files\vaara.bmp"
+Height : 10% page
+Width : 15% Page
+[Line :LWLG]
+Field :LWLGF
+[Field :LWLGF]
+Set As : ""
+
+[Part:CMPdtl]
+Lines:LWCMPName,LWCMPAdd
+Repeat:LWCMPAdd:CompanyAddress
+[Line:LWCMPName]
+Field:LWCMPName
+[Field:LWCMPName]
+Use:name field
+Set as:@@CMPMailNAme
+Full Width:Yes
+Align:Centre
+Style:Cmpstyle
+[Line:LWCMPAdd]
+Field:LWCMPAdd
+[Field:LWCMPAdd]
+Set as:$address
+Align:Center
+Full Width:Yes
+Style:ADDStyle
+[Style:Cmpstyle]
+Use: Normal Bold
+Height:20	 
+[Style:ADDStyle]
+Height:10
+Use:Normal  
+[#Part: EXPINV Signature]
+Delete:Border
+[#Part: EXPINV Column]
+Border:Thick Box
+Delete:Line:EXPINV Column2
+Local : Field : Default : Style :Normal Bold
+Local : Field : Default : Print FG :White
+Print BG:Black
+
+[#Field: EXPINV HSNSACDetails]
+	Print BG	: Red
+           
+[#Line : GST Print SAHSNSAC]
+	Border	: Thick Box
+```

@@ -1,0 +1,7 @@
+[System: Formula]
+	IsSalesItem		: @@IsSales And ##VoucherMode="Item Invoice"
+	
+
+[System: Udf]
+	OpeningStockPetrol		: Quantity			: 15001
+	ClosingStockPetrol		: Quantity			: 15002

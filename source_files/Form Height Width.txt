@@ -1,0 +1,34 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	The objective of this program is to display the Form with specification of Height and 
+	Width Dimensions
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Form Height Width]
+
+	Form	: Form Height Width
+
+[Form: Form Height Width]
+
+	Parts	: Form Height Width
+	Height 	: 50% Page
+	Width	: 50% Page
+
+[Part: Form Height Width]
+
+	Lines	: Form Height Width
+
+ 	[Line: Form Height Width]
+
+		Fields	: Form Height Width
+		
+		[Field: Form Height Width]
+
+			Set As	: "Form Height and Width set to 50% Page"
+
+;; End-of-File

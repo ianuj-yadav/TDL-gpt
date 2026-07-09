@@ -1,0 +1,36 @@
+[#Menu:Gateway of Tally]
+	Add		: Item		: "Strcrypt" 	: Alter	: Strcrypt
+	
+[Report:Strcrypt]
+	Form		: Strcrypt
+	
+[Form:Strcrypt]
+	Part		: Strcrypt
+	Width		: 100% Page
+	
+[Part:Strcrypt]
+	Lines		: Strcrypt01, Strcrypt02
+	[Line:Strcrypt01]
+		Field		: Medium Prompt, Strcrypt01
+		Local		: Field		: Medium Prompt		: Info		: $$LocaleString:"String for crypt"
+		[Field: Strcrypt01]
+			Use			: Name Field
+			Type		: String
+			Set as		: "788448564/tanu.nksagar@gmail.com/tanu.nksagar@gmail.com/SILVER/License/30-Apr-26/7.0"
+			Full Width	: Yes
+			Lines		: 0
+			Set Always	: Yes
+			
+		
+	[Line:Strcrypt02]
+		Field		: Medium Prompt, Strcrypt02
+		Local		: Field		: Medium Prompt		: Info		: $$LocaleString:"Encrypted String"
+		[Field: Strcrypt02]
+			Use			: Name Field
+			Set Always	: Yes
+			Set as		: $$LocaleString:($$EncryptStr:#Strcrypt01:"123456asdf")
+			Lines		: 0
+			Full Width	: Yes
+			
+			
+		

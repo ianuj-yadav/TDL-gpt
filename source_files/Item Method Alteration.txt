@@ -1,0 +1,96 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the usage of User Defined Functions in an Object
+-	This code accepts few inputs from the user for altering Item details and calls
+	a functions with inputs as parameters and alters the value of Methods as entered
+	by the user
+
+Last Modification -
+-	Altered on 09-11-2009
+*/
+
+[Report: Item Method Alteration]
+
+	Form	: Item Method Alteration
+	Local	: Collection: StockItem		: Fetch	: Description, IsBatchwiseOn, Parent
+	Fetch Collection	: StockItem
+	
+[Form: Item Method Alteration]
+	
+	Parts	: Form Subtitle, Item Method Alteration
+	Local	: Field	: Form SubTitle	: Info	: "Item Methods Alteration within a Stock Group"
+	Width	: 40% Page
+	On		: Form Accept	: Yes	: Call	: AlterItemMethod:#IMAStockGroup:#IMAMaintainBatchwise:#IMADescription
+
+[Part: Item Method Alteration]
+	
+	Lines	: IMA Stock Group, IMA Maintain Batchwise, IMA Description
+	
+[Line: IMA Stock Group]
+	
+	Fields	: Medium Prompt, IMA Stock Group
+	Local	: Field	: Medium Prompt	: Info		: "Stock Group :"
+	
+	[Field: IMA Stock Group]
+		
+		Use		: Name Field
+		Table	: Stock Group
+
+[Line: IMA Maintain Batchwise]
+	
+	Fields	: Medium Prompt, IMA Maintain Batchwise
+	Local	: Field	: Medium Prompt	: Info		: "Maintain Batchwise ?"
+	Indent	: 2
+	
+	[Field: IMA Maintain Batchwise]
+		
+		Use			: Logical Field
+		Set As		: $$FilterValue:$IsBatchwiseOn:StockItem:1:TSPLSmpParentFilter
+		Set Always	: Yes
+		Inactive	: $$IsEmpty:#IMAStockGroup
+
+[Line: IMA Description]
+	
+	Fields	: Medium Prompt, IMA Description
+	Local	: Field	: Medium Prompt	: Info		: "Description"
+	Indent	: 2
+
+	[Field: IMA Description]
+		
+		Use			: Name Field
+		Set As		: $$FilterValue:$Description:StockItem:1:TSPLSmpParentFilter
+		Set Always	: Yes
+		Inactive	: $$IsEmpty:#IMAStockGroup
+
+[System: Formula]
+	
+	TSPL Smp ParentFilter	: $Parent = #IMAStockGroup
+
+[Collection: ItemsUnderSGroup]
+
+	Type		: Stock Item
+	Child Of	: ##InputSGroup
+	Fetch		: Name, Parent
+
+
+[Function: AlterItemMethod]
+
+;; Definition Block
+
+	Parameter	: InputSGroup	: String
+	Parameter	: InputIsBWise	: Logical
+	Parameter	: InputDesc		: String
+
+;; Procedural Block
+
+	01 : WALK COLLECTION: ItemsUnderSGroup
+	02 :	SET TARGET	: (Stock Item, $Name).
+	03 : 	SET VALUE	: Is BatchWise On	: ##InputIsBWise
+	04 : 	SET VALUE	: Description		: ##InputDesc
+	05 : 	SAVE TARGET
+	06 : END WALK
+	07 : RETURN
+
+;; End-of-File

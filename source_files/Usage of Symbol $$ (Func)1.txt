@@ -1,0 +1,44 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	The objective of this program is to demonstrate the process of extracting value from 
+	Functions using Symbol '$$'
+-	Functions accept zero or more parameters, processes and returns some value
+-	This code displays the current date and time using Platform Functions 'MachineDate' 
+	and 'MachineTime'.
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Function Example 1]
+
+	Form	: Function Example 1
+
+[Form: Function Example 1]
+
+	Parts	: Function Example 1
+
+[Part: Function Example 1]
+
+	Lines	: Function Example 1
+
+	[Line: Function Example 1]
+	
+		Fields	: Medium Prompt, FE 1 System Date, FE 1 System Time
+		Local 	: Field : Medium Prompt : Info : "System Date and Time"
+
+		[Field: FE 1 System Date]
+	
+			Set as	: $$MachineDate
+;; The function 'MachineDate' returns the current system date. Symbol $$ is used extract 
+;; Value from any Function.  Functions may or may not require parameters.  It depends on 
+;; the nature of Function.
+
+		[Field: FE 1 System Time]
+
+			Set as 	: $$MachineTime
+;; The function 'MachineTime' returns the current system time.
+
+;; End-Of-File

@@ -1,0 +1,26 @@
+---
+title: del print
+type: sample_code
+objects: 
+source: del print.txt
+---
+
+# del print
+
+## Source Code
+
+```tdl
+<DefType: *>
+[!Form	: GCCVAT Comprehensive Bilingual Invoice]
+
+	Width  		: @@InvWidth Inch
+	Height 		: @@InvHeight Inch
+    Space Top   : @@InvSpace inch
+    Space Right : 0.5 inch
+    Space Left  : @@InvSpaceLeft  inch
+    Space Bottom: 0.25 inch
+
+	Delete	: Parts
+	Delete	: Bottom Parts
+	Delete	: Page Break
+```

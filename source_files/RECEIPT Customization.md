@@ -1,0 +1,334 @@
+---
+title: RECEIPT Customization
+type: sample_code
+objects: Report, Form, Part, Line, Field
+source: RECEIPT Customization.txt
+---
+
+# RECEIPT Customization
+
+## Source Code
+
+```tdl
+;; Sample Code customize receipt print in Tally
+
+[#Form: Receipt Color]
+
+Add : Print : RCPT Sattam
+;;PrintAfterSave : ##PPRCTPrintAfterSave OR ##PRCTPrintAfterSav
+
+[Report : RCPT Sattam]
+
+Object : Voucher
+;; ;; PrintSet : Report Title : "Receipt"
+Filtered : Yes
+Print : VCHPrintConfigure
+;; ;; Empty : (NOT ##PRCTPrintEnabled) OR (NOT ##PRCTPrintAfterSave AND $$InAcceptMode) OR $$IsEmpty:$VoucherChequeName
+
+[Form : RCPT Sattam]
+Parts : RcptCOmpanyAddr, RcptNoDate, Rcpt Body, RcptFoot
+Width : ##PRCTWidth inch
+Height : ##PRCTHeight inch
+Space Top : ##PRCTSpaceTop inch
+Space Bottom: 0.25 inch
+;; Space Left : 0.75 inch
+Space Right : 0.25 inch
+Width : 170 mms
+Space Left : 10 mms
+HorizontalAlign :Left
+
+
+[Part : RcptCompanyAddr]
+Lines : Rcpt Company, Rcpt Addr,Rcpt Email
+Repeat : Rcpt Addr : Company Address
+Local : Field : Simple Field : Align : Left
+Local : Field : Simple Field : FullWidth : Yes
+HorizontalAlign : Centre
+Border: Thin Box
+
+[Line: Rcpt Company]
+
+Fields : Simple Field
+Local : Field : Simple Field : Set as : @@CmpMailName
+Local : Field : Simple Field : Style : Normal Bold
+
+[Line: Rcpt Addr]
+
+Fields : Simple Field
+Local : Field : Simple Field : Set as : $Address
+
+[Line: Rcpt Email]
+Fields : Simple Field
+Local : Field : Simple Field : Set as :"Email- " +$EMail:Company:##SVCurrentCompany
+Local : Field : Simple Field : Style : Normal Bold
+
+[Part : RcptNoDate]
+Lines :prntdttime, Rcpt NODate
+HorizontalAlign : Center
+Border: Thin Left Right
+SpaceBottom : 0.5
+
+[Line :prntdttime]
+Fields : Simple Prompt, RcptNo
+RightFields : Info Field, Prntdt
+Local : Field : Simple Prompt : Info : "Voucher No. :"
+Local : Field : Info Field : Info : "Date of Printing"
+
+[Field : Rcpt No]
+Set as : $VoucherNumber
+Style : Normal Bold
+
+[Field: Prntdt]
+Set as : $$MachineDate
+Style : Normal Bold
+
+[Line : Rcpt NoDate]
+Fields : Simple Prompt, Rcpt Date
+RightFields : Info Field, Prnttime
+Local : Field : Simple Prompt : Info : "Voucher Date :"
+Local : Field : Info Field : Info : "Time of Printing "
+
+[Field : Prnttime]
+Set as : $$MachineTime
+Style : Normal Bold
+
+[Field: Rcpt Date]
+Set as : $$String:$Date:UniversalDate
+Style : Normal Bold
+
+[Part : Rcpt Body]
+Parts : Rcpt Top, Rcpt Bottom
+Vertical : Yes
+Border: Thin Box
+[Part : Rcpt Top]
+
+Lines : Rcpt Payer, Rcpt PayerAddr, Rcpt Words ;;Rcpt Thru ;;, Rcpt Remarks
+Repeat : Rcpt PayerAddr : Party Address
+Local : Field : Short Prompt : Style : Normal Italic
+Local : Field : Short Prompt : Width : 20
+HorizontalAlign : centre
+
+[Line: Rcpt Title]
+
+Fields : Rcpt Title
+SpaceBottom : 2
+
+[Field: Rcpt Title]
+
+Set as : "RECEIPT"
+Wide Spaced : Yes
+Style : Large Bold
+Border : Thin Bottom
+Align : Centre
+FullWidth : Yes
+
+[Line: Rcpt Payer]
+
+Fields : Short Prompt, Rcpt Payer
+Local : Field : Short Prompt : Info : "Received with thanks from :"
+
+SpaceBottom : 0.25
+
+[Field: Rcpt Payer]
+
+Set as : $LedgerName ;;VoucherChequeName
+Style : Normal Bold
+
+
+[Line : Rcpt PayerAddr]
+Fields : Short Prompt, Rcpt PartyAddr
+Local : Field : Info Field : Width : 17
+Local : Field : Info Field : Info : " "
+
+[Field : Rcpt PartyAddr]
+Set as:$Address
+
+
+[Line: Rcpt Words]
+
+Fields : Short Prompt, Rcpt Words
+Local : Field : Short Prompt : Info : "The sum of Amount "
+SpaceBottom : 1
+
+[Field: Rcpt Words]
+
+Set as : $$InWords:#RcptAmount+" Only"
+
+Style : Normal Bold
+Lines : 0
+FullWidth : Yes
+
+
+[Part : Rcpt Bottom]
+Parts : RcptBottomLeft, RcptBottomRight
+Vertical : No
+
+Local : Field : Short Prompt : Style : Normal Italic
+Local : Field : Short Prompt : Width : 20
+
+[Part : RcptBottomLeft]
+Lines : RcptThru1, Rcpt Thru2
+
+[Line: Rcpt Thru1]
+Local : Field : Short Prompt : Info : "by Cash / Cheque / D.D. No."
+Fields : Short Prompt
+
+[Field : Rcpt Thru1]
+Info : ""
+
+[Line: Rcpt Thru2]
+Field : Rcpt Thru2
+Fields : Short Prompt
+Local : Field : Short Prompt : Info : "Through Cash/Bank Account"
+
+[Field: Rcpt Thru2]
+Info : ""
+
+
+[Part : RcptBottomRight]
+Line : Rcpt Remarks1,Rcpt Remarks2
+
+[Line: Rcpt Remarks1]
+
+Fields : Rcpt Remarks1
+
+
+[Field: Rcpt Remarks1]
+
+Set as : $Narration
+Style : Normal Bold
+
+Width : 120 mms
+
+[Line: Rcpt Remarks2]
+
+Fields : Rcpt Remarks2
+[Field: Rcpt Remarks2]
+
+Set as : if $$IsLedOfGrp:mad:@BankName:$$GroupCash then $$LocaleString:"Cash" else $BankName
+Style : Small Bold
+
+Width : 120 mms
+
+[Part : Rcpt Foot]
+Lines : ForComp, RcptAmt, CompSign
+Border:Thin Left Right
+
+
+[Line : ForComp]
+Right Fields : ForComp
+SpaceBottom : 1
+
+[Field : ForComp]
+Set As : "For " + @@CmpMailName
+Style : Normal Bold
+Border: Thin Bottom Left
+[Line : RcptAmt]
+Fields : AmtPrompt, RcptAmount
+
+[Field : AmtPrompt]
+Info : "Received Amt.Rs."
+Style : Normal Bold
+Align : Left
+
+[Field: RcptAmount]
+
+Use : Amount Base Field
+Set as : $$CollectionField:$Amount:1:AllLedgerEntries
+Align : Left
+Border : Thin Bottom
+
+[Line : CompSign]
+Fields : ChqRel,Chkandvrif, PrepCheck
+Right Fields : CompSign
+Border : Thin Bottom
+
+[Field : ChqRel]
+Info : "Cheques are being subject to realization."
+Align : Left
+Style : Small Bold
+
+[Field : Chkandvrif]
+Info : "Checked & Verified By"
+SpaceLeft : 5 mms
+Style : Small
+Align : Left
+Border : Thin Top
+
+[Field : PrepCheck]
+Info : "Accountant"
+SpaceLeft : 5 mms
+Style : Small
+Align : Left
+Border : Thin Top
+
+[Field : CompSign]
+Info : "Authorised Signatory"
+Align : Right
+Style : Small Bold
+Border : Thin Top
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;TDL Developed by SKC
+
+[#Part: Rcpt Foot]
+Add:Lines:Before:ForComp:ExBal, RcptAmt1, NetBal
+
+[Line:ExBal]
+Space Top:0.5
+Field:ExBalFld
+
+[Field:ExBalFld]
+Field : Simple Prompt, Amount Field
+Local : Field : Simple Prompt : Info : "Previous Balance:"
+Local : Field : Simple Prompt : Width : 14
+Local : Field : Amount Field : Set as : If ($$IsDr:$$ToValue:$Date:$ClosingBalance:Ledger:$$CollectionField:$LedgerName:1:LedgerEntries) +
+then($$ToValue:$Date:$ClosingBalance:Ledger:$$CollectionField:$LedgerName:1:LedgerEntries)+$$abs:$$CollectionField:$Amount:1:AllLedgerEntries else +
+($$ToValue:$Date:$ClosingBalance:Ledger:$$CollectionField:$LedgerName:1:LedgerEntries) - $$abs:$$CollectionField:$Amount:1:AllLedgerEntries
+Local : Field : Amount Field : Format : "Symbol,DrCr"
+Invisible:Not ##BalPrntRcpt
+
+[Line:RcptAmt1]
+Field:RcptAmtFld
+
+[Field:RcptAmtFld]
+Field : Simple Prompt, Amount Field
+Local : Field : Simple Prompt : Info :$$LocaleString:"Receipt Amount:"
+Local : Field : Simple Prompt : Width : 14
+Local : Field : Simple Prompt : Border : Full Thin Bottom
+Local : Field : Amount Field : Set as : $$CollectionField:$Amount:1:AllLedgerEntries
+Local : Field : Amount Field : Format : "Symbol,DrCr"
+Local : Field : Amount Field : Border : Full Thin Bottom
+Invisible:Not ##BalPrntRcpt
+
+[Line:NetBal]
+Field:NetBalFld
+Border : Double Bottom
+[Field:NetBalFld]
+Field : Simple Prompt, Amount Field
+Local : Field : Simple Prompt : Info : "Current Balance:"
+Local : Field : Simple Prompt : Width : 14
+Local : Field : Amount Field : Set as : $$ToValue:$date:$ClosingBalance:Ledger:$$CollectionField:$LedgerName:1:LedgerEntries
+Local : Field : Amount Field : Format : "Symbol,DrCr"
+Local : Field : Amount Field : Border : Double Bottom
+Invisible:Not ##BalPrntRcpt
+
+[#Part: Receipt Print Config]
+Add:Line:At End:BalPrnt
+
+[Line: BalPrnt]
+
+Fields : Medium Prompt, BalPrnt
+Local : Field : Medium Prompt : Set as:"Show Mini Statement?"
+
+[Field: BalPrnt]
+
+Use : Logical Field
+Modifies : BalPrntRcpt
+
+[System:Variable]
+BalPrntRcpt:Yes
+
+[Variable:BalPrntRcpt]
+Type:Logical
+Persistent:Yes
+```

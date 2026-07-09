@@ -1,0 +1,456 @@
+[#Form: Comprehensive Invoice]
+
+	Option: InvoiceOfA6    : @@IsSales  AND ##A6Print
+
+[#Form: Simple Printed Invoice]
+
+	Option: InvoiceOfA6    : @@IsSales  AND ##A6Print 
+	
+[!Form:InvoiceOfA6]
+	Width       : 3.6 Inch
+	Height      : 5.4 Inch
+	Delete  	: Parts
+	Delete	    : Bottom Parts
+	Delete	    : PageBreak
+	add:Parts		: STD Invoice Top, A6OpPgBrk, A6InvoiceBody
+	add:Bottom Parts: A6TotalAmount, A6TotalAmountInWords
+	Space Top   : 5% Page; inch
+    Space Right : 5% Page;0.2 inch
+    Space Left  : 5% Page;0.2 inch
+    Space Bottom: 5% Page;0.2 inch
+	add:Page Break	: A6ClPgBrk, A6OpPgBrk
+	
+
+[Part:A6ClPgBrk]
+	Lines		: A6ClPgBrk
+
+	[Line: A6ClPgBrk]
+
+		Fields		: Simple Field
+		Local: Field: Simple Field	: Set As	: "Continued..."
+		Local: Field: Simple Field	: FullWidth	: Yes
+		Local: Field: Simple Field	: Align		: Right
+		Border		: Full Thin Top
+	
+[Part:A6OpPgBrk]
+	Parts		: A6InvoiceTitle, A6InvoiceLeading, A6InvoiceColumn,
+	Vertical	: Yes
+[Part:A6InvoiceTitle ]
+	Use			: EXPINV Title
+	
+	[Line: A6InvoiceTitle]
+		Field	: A6InvoiceTitle
+		[Field:A6InvoiceTitle]
+			Set as		: "TAX Invoice"
+			Full Width	: Yes
+			Align		: Center
+			
+[Part:A6InvoiceLeading]
+	Parts       : A6InvoiceTopLeft
+    Right Parts : A6InvoiceTopRight
+    Vertical    : No
+    Border      : Thin Box
+	
+[Part:A6InvoiceTopLeft]
+	Width		: 70% Page
+	Parts		: A6Company, A6Buyer 
+	Vertical	: Yes
+	Border		: Thin Right
+	
+[Part:A6Company]
+	Lines		: A6CmpName, A6CmpAddress
+	Repeat      : A6CmpAddress : A6Company Address
+	[Line:A6CmpName]
+		Field	: A6CmpName
+		
+		[Field:A6CmpName]
+			Set as		: @@CmpMailName
+			Style		: A6Bold9
+			Full Width	: Yes
+
+	[Line:A6CmpAddress]
+		Field	: A6CmpAddress
+		
+		[Field:A6CmpAddress]
+			Set as		: $Address
+			Style		: A6Normal9
+			Full Width	: Yes
+			
+
+			
+
+			
+
+[Part:A6Buyer]
+	Lines		:  A6BuyerName, A6BuyerAddress
+	Repeat      : A6BuyerAddress : Address
+	[Line:A6BuyerTitle]
+		Field	: A6BuyerTitle
+		Border	: Thin Top Bottom
+		[Field:A6BuyerTitle]
+			Info		: "Buyer (Bill To)"
+			Style		: A6Bold10
+			Full Width	: Yes
+			
+
+	
+	[Line:A6BuyerName]
+		Field	: A6BuyerName
+		Border	: Thin Top
+		[Field:A6BuyerName]
+			Set as		: if @@RejInvoice then @@RejinOutPartyName else @@BuyerName
+			Style		: A6Bold9
+			Full Width	: Yes
+
+	[Line:A6BuyerAddress]
+		
+		Field	: A6BuyerAddress
+		
+		[Field:A6BuyerAddress]
+			Set as		: $Address
+			Style		: A6Normal9
+			Full Width	: Yes
+	
+
+[Part:A6InvoiceTopRight]
+
+	;Width		: 50% Page
+	Parts		: A6Vch, /*A6DelNote*/ A6Reference;, A6Terms
+	Vertical	: Yes
+[Part:A6Vch]
+	Parts		: A6VchNumber
+	Right Parts	: A6VchDate
+	Border		: Thin Bottom
+	Vertical	: No
+	
+
+[Part:A6VchNumber]
+	;Width	: 25% Page
+	Line	: A6VchNumberT, A6VchNumberB
+	
+	[Line:A6VchNumberT]
+		Field	: A6VchNumberT
+		[Field:A6VchNumberT]
+			Set as	: @@INVNumTitle
+			Style	: A6Bold9
+			Full Width	: Yes
+			
+			
+	[Line:A6VchNumberB]
+		Field	: A6VchNumberB
+		[Field:A6VchNumberB]
+			Set as	: $VoucherNumber
+			Style	: A6Normal9
+			Full Width	: Yes
+	
+[Part:A6VchDate]
+	;Width	: 25% Page
+	Line	: A6VchDateT, A6VchDateB
+	Border	: Thin Left
+	[Line:A6VchDateT]
+		Field	: A6VchDateT
+		[Field:A6VchDateT]
+			Set as	: "Dated"
+			Style	: A6Bold9
+			Full Width	: Yes
+			
+	[Line:A6VchDateB]
+		Field	: A6VchDateB
+		[Field:A6VchDateB]
+			Set as	: $Date
+			Style	: A6Normal9
+			Full Width	: Yes
+			
+[Part:A6DelNote]
+	Use		: A6Vch
+	Local	: Field	: A6VchNumberT	: Info    	: If @@IsSales AND ##SADespatchDet Then $$LocaleString:"Delivery Note" Else ""
+	Local	: Field	: A6VchNumberB	: Set as	: if NOT $$IsSysName:$BasicShipDeliveryNote then $$FullList:InvoiceDelNotes:$BasicShipDeliveryNote else ""
+	Local	: Field	: A6VchDateT	: Set as	: "Terms"
+	Local	: Field	: A6VchDateB	: Set as	: $BasicDueDateOfPymt
+	
+[Part:A6Reference]
+	Use		: A6Vch
+	Local	: Field	: A6VchNumberT	: Set as	: If @@IsGCCCountries Then @@GCCSupplierRefTitle Else if @@IsSalesOrder OR @@IsJobOrderIn then $$LocaleString:"Buyer's Ref./Order No." else+
+														if @@IsSales OR @@IsDelNote OR @@IsJobMaterialIssue OR @@IsJobMaterialReceive OR @@IsJournal then $$LocaleString:"Ref. No. & Dt." else +
+														if @@IsPurchase then $$LocaleString:"Supplier Invoice No. & Date." else +
+														if @@IsCreditNote OR @@IsDebitNote then $$LocaleString:"Original Invoice No. & Date." else +
+														if @@IsRcptNote OR @@IsPurcOrder then $$LocaleString:"Reference No. & Date." else +
+														if @@IsJobOrderOut then $$LocaleString:"Supplier's Ref./Order No." else +
+														if @@IsPayment OR @@IsReceipt then $$LocaleString:"Supplier Inv/Ref No. & Date." else +
+														if @@IsStockJrnl then $$LocaleString:"Reference No. & Date." else $$LocaleString:"Supplier's Ref."
+	Local	: Field	: A6VchNumberB	: Set as	: If @@IsOrderVch AND $$IsEmpty:$Reference Then $InventoryEntries[1].BatchAllocations[1].OrderNo Else $Reference+@@VchReferDate
+	Local	: Field	: A6VchDateT	: Info    	: If @@IsGCCCountries Then $$LocaleString:"Other Reference(s)" Else $$LocaleString:"Other Ref."
+	Local	: Field	: A6VchDateB	: Set as	: $BasicOrderRef
+	
+	
+[Part:A6Terms]
+	Lines		: A6TermsT, A6TermsB
+	Repeat      : A6TermsB	 : BasicOrderTerms
+	Delete		: Border		
+	[Line:A6TermsT]
+		Field	: A6TermsT
+		[Field:A6TermsT]
+			Info        : $$LocaleString:"Terms of Delivery"
+			Style		: A6Bold9
+			Full Width	: Yes
+			
+	[Line:A6TermsB]
+		Field	: A6TermsB
+		[Field:A6TermsB]
+			Set as      : $BasicOrderTerms
+			Style		: A6Normal9
+			Full Width	: Yes
+			
+	
+
+[Part:A6InvoiceColumn]
+	Line	: A6InvoiceColumn
+	Border	: Thin Left Right
+	Common Borders	: Yes
+	[Line:A6InvoiceColumn]
+		Use		: A6ItemDetails
+		Local	: Field		: Default 		: Type		: String
+		Local	: Field		: Default 		: Align		: Center
+		Local	: Field		: Default 		: Style		: A6Bold10
+		;Local	: Field		: Default 		: Lines		: 2
+		
+		Local	: Field		: A6SrNo			: Info		: "Sl."
+		Local	: Field		: A6Description		: Info		: "Description Of Goods"
+		Local	: Field		: A6Quantity		: Info		: "Qty"
+		Local	: Field		: A6Rate			: Info		: "Rate"
+		Local	: Field		: A6Per				: Info		: "Per"
+		Local	: Field		: A6Amount			: Info		: "Amt"
+		
+		
+	
+	
+		
+	
+[Part:A6 Invoice Body]
+	Parts		: A6 Invoice Body1, A6 Invoice BodyGst
+	Vertical	: Yes
+	Border		: Thin Box
+	Common Border	: Yes
+	
+[Part:A6 Invoice Body1]
+	Border		: Thin Cover
+	Lines		: A6ItemDetails
+	Repeat		: A6ItemDetails		: Inventory Entries
+	Total   	: A6Quantity, A6Amount
+	Common Borders	: Yes
+	Scroll		: Vertical
+	
+	[Line:A6ItemDetails]
+		Fields			: A6SrNo, A6Description, 
+		Right Fields	: A6Quantity, A6Rate, A6Per, A6Amount
+		;Height			: 5
+
+		
+		[Field:A6SrNo]
+			Use			: Number Field
+			Set as		: $$Line
+			Width		: 5% Page
+
+		[Field:A6Description]
+			Use         : Name Field
+			Set as		: If @@InvWithPartNo And (@@UseNamePartNo OR @@UsePartNoName) Then $StockItemName Else If NOT $$IsSysName:$StockItemName then @@InvItemName else ""
+			Full Width	: Yes
+			;Width		: 30% Page
+			Lines		: 1
+			Border		: Thin Left
+
+		[Field:A6Quantity]
+			Use			: Qty Primary Field
+			Set as		: $BilledQty
+			Border		: Thin Left
+			Width		: 15% Page
+			Style		: A6Bold9
+
+		[Field:A6Rate]
+			Use			: Rate Price Field
+			Set as		: $Rate
+			Border		: Thin Left
+			Width		: 17.5% Page
+			Format      : "Symbol,Forex"
+
+		[Field:A6Per]
+			Use         : Name Field
+			Align       : Right
+			Set as		: $BaseUnits:StockItem:$StockItemName
+			Border		: Thin Left
+			Width		: 7.5% Page
+			
+
+		[Field:A6Amount]
+			Use			: Amount Forex Field
+			Set as		: $Amount
+			Border		: Thin Left
+			Width		: 20% Page
+
+[Part:A6 Invoice BodyGst]
+	Lines		: A6GstDetails
+	Repeat		: A6GstDetails		: Ledger Entries
+	Border		: Thin Left Right
+	
+	[Line:A6GstDetails]
+		Use		: A6ItemDetails
+		Space Bottom	: 0.1
+		Local	: Field		: Default 		: Align		: Right
+		
+		Local	: Field		: A6SrNo			: Info			: ""
+		Local	: Field		: A6Description		: Set as		: $LedgerName
+		Local	: Field		: A6Quantity		: Info			: ""
+		Local	: Field		: A6Rate			: Info			: ""
+		Local	: Field		: A6Per				: Info			: ""
+		Local	: Field		: A6Amount			: Set as		: $Amount
+		
+[Part:A6TotalAmount]
+	Lines		: A6TotalAmount
+	Border		: Thin Cover
+	Common Borders	: Yes
+	
+	[Line:A6TotalAmount]
+		Use		: A6ItemDetails
+		Local	: Field		: Default 		: Align		: Right
+		
+		Local	: Field		: A6SrNo			: Info			: ""
+		Local	: Field		: A6Description		: Set as		: "Total"
+		Local	: Field		: A6Quantity		: Set as		: $$Total:A6Quantity
+		Local	: Field		: A6Rate			: Info			: ""
+		Local	: Field		: A6Per				: Info			: ""
+		Local	: Field		: A6Amount			: Set as		: $Amount
+	
+[Part:A6TotalAmountInWords]
+	Parts		: A6AmountInWords, A6DeclarationPart
+	Vertical	: Yes
+	Border		: Thin Box
+	
+[Part:A6AmountInWords]
+	Lines		: A6TotalAmountInWordsTitle, A6TotalAmountInWords
+	[Line: A6TotalAmountInWordsTitle]
+		Field	: A6TotalAmountInWordsTitle
+		[Field:A6TotalAmountInWordsTitle]
+			Info        : $$LocaleString:"Amount Chargeable (in words)"
+			Full Width	: Yes
+			Style		: A6Normal9
+			
+	[Line: A6TotalAmountInWords]
+		Field	: A6TotalAmountInWords
+		[Field:A6TotalAmountInWords]
+			Set as      : @ValueInWords;
+			ValueInWords: $$InWords:$Amount
+			Style       : A6Bold9
+			Lines       : 0
+			FullWidth   : Yes
+			
+[Part:A6DeclarationPart]
+	Part	: A6Signatory
+	Vertical	: No
+	;Space Top	: 0.4
+	
+[Part:A6Declaration]
+	Lines	: A6DeclarationTitle, A6DeclarationBody
+	Width	: 100% Page
+	[Line:A6DeclarationTitle]
+		Field	: A6DeclarationTitle
+		[Field:A6DeclarationTitle]
+			Info		: "Declaration"
+			Width		: 100% Page
+			Style		: Normal Bold
+			Border		: Thin Bottom
+			
+	[Line:A6DeclarationBody]
+		Field	: A6DeclarationBody
+		[Field:A6DeclarationBody]
+			Info		: $$LocaleString:"We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct."
+			Lines		: 0
+			Full Width	: Yes
+			
+[Part:A6Signatory]
+	Line		: A6SignatoryTitle
+	Bottom Line	: A6SignatoryBody
+	;Width		: 30% Page
+	;Border: Left Thin Top
+	[Line:A6SignatoryTitle]
+		Field		: A6SignatoryTitle
+		[Field:A6SignatoryTitle]
+			Info	: "For "+@Cmp
+			Cmp		: ##SVCurrentCompany
+			Align	: Right
+			Full Width	: Yes
+			Style		: A6Normal9
+	[Line:A6SignatoryBody]
+		Field		: A6SignatoryBody
+		Space Top	: 1.5
+		[Field:A6SignatoryBody]
+			Info	: "Authorised Signatory"
+			Align	: Right
+			Full Width	: Yes
+			Style		: A6Normal9
+			
+[Style:A6Normal12]
+	Height	: 12
+	Font Name	: "Arial"
+	
+[Style:A6Normal11]
+	Height	: 11
+	Font Name	: "Arial"
+
+[Style:A6Bold10]
+	Height	: 10
+	Font Name	: "Arial"	
+	Bold		: yes
+
+[Style:A6Bold11]
+	Font Name	: "Arial"
+	Height		: 11
+	Bold		: Yes
+	
+[Style:A6Bold9]
+	Font Name	: "Arial"
+	Height		: 9
+	Bold		: Yes
+	
+[Style:A6Normal9]
+	Font Name	: "Arial"
+	Height		: 9
+	
+
+
+[Collection: A6Company Address]
+	
+    Type        : Address   : Company
+    Child of    : ##SVCurrentCompany
+	Compute		: IsNumber	  	: No
+	Compute		: FixedDirection: No 
+	Filter      : IsNotBlankAddr
+	
+[Collection: A6Consignee Address]
+	
+    Type        : Address   : Ledger
+    Child of    : @@ConsigneeName 
+	Filter      : IsNotBlankAddr
+	
+[#Collection: Sales VoucherDetails]; pymt
+	;Color		: Red
+	Object		: A6Print
+	
+[Object: A6Print]
+	Use         : Vch Output Configuration
+	Name		: "Print In A6"
+	Value		: ##A6Print
+	Action		: ConfigAction :  Do If : @@IsSales	: Set   : A6Print    : NOT ##A6Print
+
+[Variable: A6Print]
+    Type        : Logical
+    Persistent  : Yes
+	;Default		: Yes
+
+[System: Formulae]
+	A6Print	: ##A6Print
+	;TirlokYes	: If @@IsReceipt Then ##TirlokYes Else ""
+		
+
+[System: Variable]
+ 	A6Print    : Yes
+	

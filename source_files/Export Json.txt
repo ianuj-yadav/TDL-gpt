@@ -1,0 +1,59 @@
+[#Menu : Gateway of Tally]
+	Add		: Item	: "Tally and Tss Details"	: Display	: TallyDetails1
+	Add		: Button		: ExportJson
+[Report:TallyDetails1]
+	Form		: TallyDetails1
+	Plain JSON	: Yes
+	
+[Form:TallyDetails1]
+	Part		: TallyDetails1
+	Button		: ExportJson
+	JSONTag		: "Details"
+	
+[Part:TallyDetails1]
+	Scroll:Vertical
+	Line:TallyDetails1
+	Height:100% page
+	Width:100% page
+	Repeat:TallyDetails1:TallyDetails
+	
+[Line:TallyDetails1]
+	JSONTag:"Srnos"
+	Fields:SrNo10,Email10,TssExpiry10
+	Space Top:1
+	
+[Field:SrNo10]
+	Set as:$SrNo
+	JSONTag:"Srno"
+	Use:Name Field
+	
+
+[Field:Email10]
+	Set as:$Email
+	JSONTag:"Email"
+	Use:Name Field
+	
+[Field:TssExpiry10]
+	Set as:$TssExpiry
+	JSONTag:"TssExpiry"
+	Use:Name Field
+
+[Collection:TallyDetails]
+	Object		: TallyDts
+	
+[Object:TallyDts]
+    SrNo    		: $$LocaleString:($$LicenseInfo:SerialNumber)
+    Email     		: $$LocaleString:($$LicenseInfo:AccountID)
+    TssExpiry	 	: $$LocaleString:($$Date:$$TNSubscValidTillInDateFormat)
+   
+
+[Button:ExportJson]
+	Title		: "ExportJson"
+	Key			: Ctrl + F2
+	Action		: Call			: ExportJsonFunction
+	
+[Function:ExportJsonFunction]
+	100		: Set	: SVEXPORTFormat		: $$SysName:UTF8JSON
+	200		: Set	: SVExportLanguage		: $$SysName:UTF8JSON
+	300		: Set	: SVPrintFileName		:"E:\"+$$String:@@Final+".json" 
+	400		: Export Report		: TallyDetails1		: Yes		: Yes

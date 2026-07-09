@@ -1,0 +1,30 @@
+
+{
+  "goldrates": [
+    {
+      "Date": "1-04-19",
+      "GoldDetails": [
+        {
+          "quality": "10 Carat",
+          "ratepergram": 1001
+        },
+        {
+          "quality": "14 Carat",
+          "ratepergram": 1002
+        },
+        {
+          "quality": "18 Carat",
+          "ratepergram": 1003
+        },
+        {
+          "quality": "22 Carat",
+          "ratepergram": 1004
+        },
+        {
+          "quality": "24 Carat",
+          "ratepergram": 1005
+        }
+      ]
+    }
+  ]
+}

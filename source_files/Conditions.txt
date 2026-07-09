@@ -1,0 +1,129 @@
+
+[#Part: Company F11 Other Features]
+	
+	Local	: Part	: Cfg PartContent		:Add			: Lines	: ProgulfEnableConditions
+	[Line: ProgulfEnableConditions]
+
+		Use			: Cmp Ops More Config	
+		Fields		: Medium Prompt, CMP EnableCondition
+		Space Top	: 0.6
+		Local  		: Field : Medium Prompt : Info    		: $$LocaleString:"Terms and Condition :"
+		Local  		: Field : Medium Prompt : Background	: Yellow
+	
+		[Field:CMP EnableCondition]
+			Type		: Logical
+			Storage		: IsQuotationEnabled
+			Width		: 3
+			Max			: 3
+			Table		: YesNoTable
+			Show Table	: On Error
+			Key			: LogicalToggle		
+			Style		: Normal Bold
+			Sub Form	: ProgulfTerms	: $$Value=Yes  ;; This would be a name of report.
+							;; Sub Form attribute is always open in alter mode.
+							
+			Background	: Yellow
+	
+			
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[#Menu:Gatewayoftally]
+	;Add		: Key Item    : After:@@locChartofAccounts  : Terms & Conditions : G :Alter   	: ProgulfTerms	: $IsQuotationEnabled:Company:##SVCurrentCompany
+	;Item	: Terms & Conditions	: Alter	: ProgulfTerms
+	Item	: Display Terms		: Display	: Terms
+
+
+;; ===================== Input ======================= ;;
+
+[Report:ProgulfTerms]
+	Form	: ProgulfTerms
+	Object	: Company
+
+[Form:ProgulfTerms]
+	Part	: title, ProgulfTerms
+	Height	: 100% screen
+	Width	: 100% screen
+
+
+[Part:title] ;; ====================== Part
+	Line	: title
+	[Line:title]
+
+		Field	: NameListTit
+		Local	: Field		: NameListTit	: Info	: "All Terms And Conditions"
+		Local	: Field		: NameListTit	: Align	: Center
+		Border	: column titles
+
+		[Field:NameListTit]
+			Use			: Name Field
+			Set as		: ""
+			Full Width	: Yes
+
+
+
+[Part:ProgulfTerms] ;; ====================== Part
+	
+	Line		: ProgulfTerms
+	Repeat		: ProgulfTerms	:AggrUDFProgulf
+	Scroll		: Vertical
+	BreakOn 	: $$IsEnd:$NameList
+
+	[Line:ProgulfTerms]
+		Field		:NameList
+		[Field:NameList]
+			Use			: Name Field
+			Set as		: " "
+			Storage		: NameList
+			Full Width	: Yes
+			Line		: 0
+
+
+;; ===================== Output ======================= ;;
+
+
+[Report:Terms]
+	Form	: Output
+[Form:Output]
+	Part		: title, Output, Conditions
+	Height		: 100% screen
+	Width		: 100% screen
+
+
+[Part:Output] ;; ====================== Part
+	Line		: Output
+	Repeat		: Output 	: Output Coll
+	[Line:Output]
+		Field		:Output
+
+		[Field:Output]
+			Set as	: $NameList
+			Width	: 100% Page
+			Line	: 0
+
+[Part:Conditions]
+	Line			: NotificationVaara1
+	Repeat			: NotificationVaara1		: AllConditionsVaaraFinal
+	Scroll			: Vertical
+	
+	Space Bottom	: 0
+	
+	[Line:NotificationVaara1]
+		Fields			: NotificationVaara1
+		Right Fields	: YesNoNotification1
+		Space Top		: If $$Line=1 Then 1 Else 0
+		Remove if		: $VaaraYesNoCondition="No"
+		
+			
+		[Field:NotificationVaara1]
+			Set as		: $ConditionsVaara
+			Style		: ArialNormal10
+			Full Width	: Yes
+			Width		: 90% Page
+			
+		
+		[Field:YesNoNotification1]
+			Set as		: $VaaraYesNoCondition
+			Style		: ArialNormal10
+			Full Width	: Yes
+			Width		: 10% Page

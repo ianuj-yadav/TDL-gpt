@@ -1,0 +1,212 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the alteration of Voucher
+-	Receipt/Payment Voucher is altered to accept/print cheque details
+
+Last modification -
+-	Altered on 09-11-2009
+*/
+
+[#Part: VCH Narration]           ;; Modify the Narration Part to add the details 
+
+    Add : Switch    : BankDetRcpt	: BankDet VCH Narration 	: @@IsPayment OR @@IsReceipt
+	Add	: Switch	: BankDetRcpt	: BankDet VCH NarrationRcpt	: @@ReceiptAfterSave
+
+    [!Part: BankDet VCH Narration]
+    
+        Add : Line 	: At Beginning	: BankDet VCH Cheque Number, BankDet VCH Bank Name, +
+										BankDet VCH NarrWOChqDet
+
+    [!Part: BankDet VCH NarrationRcpt]
+    
+		Delete		: Lines						: VCH ReceiptName
+        Add 		: Line 	: At Beginning		: VCH ReceiptName 
+		Local		: Line	: VCH ReceiptName	: Local	: Field : Short Prompt	:Width: @@MediumWidth
+
+        [Line: BankDet VCH Cheque Number]  
+        
+	        Fields  : Medium Prompt, BankDet VCH Cheque Number, Short Prompt, BankDet VCH ChqDate
+
+			Local	: Field	: Default		: Inactive	: @@BankDetBank
+
+	        Local   : Field : Medium Prompt : Info      : $$LocaleString:"Cheque Number:"
+		    Local   : Field : Short Prompt  : Set as   	: $$LocaleString:"Dated:"
+
+	        [Field: BankDet VCH Cheque Number] 
+	
+				Use         : Number Field
+				Storage     : ChequeNumber
+				Format		: "NoZero, NoComma"
+				Max			: 7
+				Width		: 7
+
+            [Field: BankDet VCH ChqDate]
+        
+			    Use         : Uni Date Field
+			    Storage     : ChqDate
+			    Set as      : If $$IsEmpty:$$Value then $Date else $$Value
+			    Set Always  : Yes
+				Align		: Left
+		
+        [Line: BankDet VCH Bank Name] 
+    
+		    Fields	: Medium Prompt, BankDet VCH Bank Name
+			Local	: Field	: Default		: Inactive	: @@BankDetBank
+
+		    Local 	: Field : Medium Prompt : Info      : $$LocaleString:"Vide Bank:"
+			Invisible		: NOT @@IsReceipt
+
+	        [Field: BankDet VCH Bank Name]
+	    
+		    	Use         : Name Field
+		    	Storage     : BankName
+
+        [Line: BankDet VCH NarrWOChqDet]
+
+		    Fields	: Medium Prompt, BankDet VCH NarrWOChqDet
+			Local	: Field	: Default		: Inactive	: @@BankDetBank
+
+		    Local 	: Field : Medium Prompt : Info      : $$LocaleString:"Remark:"
+
+	        [Field: BankDet VCH NarrWOChqDet]
+
+		    	Use         : VCH Narration
+		    	Storage     : NarrWOCh
+
+[#Field: VCH Narration] 
+
+	Add	: Key   : At Beginning			: Bank Det Key Narration
+
+[Key: Bank Det Key Narration]
+
+	Key         : CTRL + B
+	Action      : Set   : VCH Narration	: $BankDetNarr
+	Inactive    : @@BankDetBank
+
+[#Object: Voucher] 
+
+    BankDetNarr	: if @@IsReceipt then $$LocaleString:"Ch.No.: " + $$String:$ChequeNumber+ " dated " + $$String:$ChqDate:UniDate + " drawn on " + $BankName + " - " + $NarrWOCh +
+				  else $$LocaleString:"Ch.No.: " + $$String:$ChequeNumber+ " dated " + $$String:$ChqDate:UniDate + " - " + $NarrWOCh
+
+    BankDetRcpt	: $$LocaleString:"Cheque Number " + $$String:$ChequeNumber+ " dated " + $$String:$ChqDate:UniDate + " drawn on " + $BankName
+
+	NarrPrn		: if $$IsEmpty:$NarrWOCh then $Narration else $NarrWOCh
+
+[System: Formula]
+
+	BankDetBank	: $$FilterCount:AllLedgerEntries:HasBankEntry = 0
+	
+[System: UDF]
+
+	BankName 	: String    : 1000
+	NarrWOCh	: String	: 1001
+
+	ChequeNumber: Number    : 1000
+
+	ChqDate     : Date      : 1000
+
+;; Changes in the Voucher Print
+
+[#Field: PPR Narr]
+
+	Option		: PPR Narr Rct Pymt			: @@IsPayment OR @@IsReceipt AND ##PPRChqInfo
+
+	[!Field: PPR Narr Rct Pymt]
+
+		Set As		: $NarrPrn
+
+[#Part: PPRBottomDetails]
+
+	Option		: PPRBottomDetails Rct Pymt	: (@@IsPayment OR @@IsReceipt) AND ##PPRChqInfo
+
+	[!Part: PPRBottomDetails Rct Pymt]
+
+		Add		: Parts	: At Beginning	: BankDet VCH CheqDet
+
+		[Part: BankDet VCH CheqDet]
+
+			Lines    : BankDet VCH PCheque No Title, BankDet VCH PCheque No, +
+						BankDet VCH PBank Title, BankDet VCH PBank
+												
+			[Line: BankDet VCH PCheque No Title]
+
+				Use         : PPR SubTitles
+				Local       : Field : Name Title Field  		: Info  	: $$LocaleString:"Cheque Number and Date :"
+
+			[Line: BankDet VCH PCheque No]
+		
+				Left Fields : BankDet VCH Cheque Number
+				RightFields : Amount Title Field
+				Indent      : 4
+				Local       : Field : AmountTitleField      	: Border	: Thin Left
+				Local		: Field	: Default					: Style		: Normal
+				Local		: Field	: BankDet VCH Cheque Number	: Type		: String
+				Local		: Field	: BankDet VCH Cheque Number	: Width		: 0
+				Local		: Field	: BankDet VCH Cheque Number	: FullWidth	: Yes
+				Local		: Field	: BankDet VCH Cheque Number	: Delete	: Storage
+				Local		: Field	: BankDet VCH Cheque Number	: Set As	: $$String:$ChequeNumber + " dt " + $$String:$ChqDate
+
+			[Line: BankDet VCH PBank Title]
+
+				Use         : PPR SubTitles
+				Local       : Field : Name Title Field  		: Info  	: $$LocaleString:"Vide Bank :"
+				Invisible	: NOT @@IsReceipt
+
+			[Line: BankDet VCH PBank]
+		
+				Left Fields : BankDet VCH Bank Name
+				RightFields : Amount Title Field
+				Indent      : 4
+				Local       : Field : AmountTitleField      	: Border	: Thin Left
+				Local		: Field	: Default					: Style		: Normal
+				Local		: Field	: BankDet VCH Bank Name		: Width		: 0
+				Local		: Field	: BankDet VCH Bank Name		: FullWidth	: Yes
+				Invisible	: NOT @@IsReceipt
+
+;; Changes in the print of Receipt
+
+[#Field: PRCT Thru]
+
+	Option		: PRCT Thru Rct Pymt		: @@IsReceipt
+
+	[!Field: PRCT Thru Rct Pymt]
+
+		Set as      : if $$IsLedOfGrp:@@BankName:$$GroupCash then $$LocaleString:"Cash" else $BankDetRcpt
+
+[#Field: PRCT Remarks]
+
+	Option		: PRCT Remarks Rct Pymt		: @@IsReceipt
+
+	[!Field: PRCT Remarks Rct Pymt]
+
+		Set As		: $NarrPrn
+
+;; Config Changes
+
+[Variable: PPRChqInfo]
+
+    Type    	: Logical
+    Persistent  : Yes	
+
+[System: Variable]
+
+	PPRChqInfo	: Yes
+
+;;This has been removed in default code of TallyPrime
+;[#Part: Payment Print Config]		;; Payment Config Changes
+;
+;	Add		: Lines   : Before	: PPRVchNarr : PPR ChqDetails
+;
+;[#Part: Receipt Print Config]		;; Receipt Config Changes
+;
+;	Add		: Lines   : After	: PPRWithCost: PPR ChqDetails
+;
+;	[Line: PPR ChqDetails]
+;
+;		Field: Medium Prompt, Logical Field
+;        Local: Field: Medium Prompt : Info 		: $$LocaleString:"Print Cheque Info ?"
+;        Local: Field: Logical Field : Modifies	: PPRChqInfo
+
+;; End-of-File

@@ -1,0 +1,726 @@
+[#Form: Comprehensive Invoice]
+
+	Option: Global Invoice    : @@IsSales 
+
+[#Form: Simple Printed Invoice]
+
+	Option: Global Invoice    : @@IsSales  
+	
+[!Form : Global Invoice]
+
+	Delete  	: Parts
+	Delete	    : Bottom Parts
+	Delete	    : PageBreak
+	Space Top	: 5% Page
+ 	Space Right	: 5% Page
+	Space Bottom: 5% Page
+	Space Left	: 5% Page
+	
+	add			:Parts			: STD Invoice Top,GI OpPgBrk, ItemDtlsPartSixer
+	add			:Bottom Parts	: InvoiceBottomSixer
+
+	add			:Page Break		: GI ClPgBrk, GI OpPgBrk
+	
+
+	
+
+[Part: GI ClPgBrk]
+
+	Lines		: GI ClPgBrk
+	
+	[Line: GI ClPgBrk]
+
+		Fields		: Simple Field
+		Local		: Field			: Simple Field	: Set As	: "Continue..."; + $$PageNo+1
+		Local		: Field			: Simple Field	: FullWidth	: Yes
+		Local		: Field			: Simple Field	: Align		: Right
+		
+
+[Part: GI OpPgBrk]
+
+	Parts		: Invoice Type, Supplier Details, CmpTitleSixer, CmpAddressSixer,InvoiceDetails1, ItemDtlsTitleSixer
+	Vertical	: Yes
+
+
+[Part:Invoice Type]
+	Line	: Invoice Type
+	
+	[Line:Invoice Type]
+		Fields			: Invoice Type
+		
+		
+		[Field:Invoice Type]
+			Set as		: "TAX INVOICE"
+			Align		: Center
+			Full Width	: Yes
+			
+
+[Part:Supplier Details]
+	Parts		: Supplier Name
+	Right Part	: MobileNumber
+	
+[Part:Supplier Name]
+	
+	Line		: Supplier Name
+	
+	[Line:Supplier Name]
+		Field			: Supplier Name
+		
+		[Field:Supplier Name]
+			Set as		: "SIXER";@@CmpMailName
+			Style		: TimesBold48
+			Space Left	: 40
+			
+[Part:MobileNumber]
+	
+	Line		: MobileNumber
+	
+	[Line:MobileNumber]
+		Field			: MobileNumber
+		Space Top		: 2
+		[Field:MobileNumber]
+			Set as		: "Mob.: " + $LedgerMobile:Ledger:$PartyLedgerName
+			Style		: TimesBold14
+			
+		
+[Part:CmpTitleSixer]
+	
+	Line		: CmpTitleSixer
+	
+	[Line:CmpTitleSixer]
+		Field			: CmpTitleSixer
+		
+		[Field:CmpTitleSixer]
+			Set as		: "MFG. OF ETHNIC WEAR"
+			Style		: TimesBold16
+			Align		: Center
+			Full Width	: Yes
+			
+			
+[Part:CmpAddressSixer]
+	
+	Line		: CmpAddressSixer
+	
+	[Line:CmpAddressSixer]
+		Field			: CmpAddressSixer
+		
+		[Field:CmpAddressSixer]
+			Set as		: $StateName:Company:@@CmpMailName  +", "+$PinCode:Company:@@CmpMailName 
+			Style		: TimesNormal14
+			Align		: Center
+			Full Width	: Yes
+		
+[Part:InvoiceDetails1]
+	Left Parts	: Customer Details
+	Right Parts	: Invoice Details
+	Border		: Thick Box
+	
+[Part:Customer Details]
+	Border		: Thin Left
+	Width		: 50% Page
+	Lines		: CustomerName1/*, CustomerName2, CustomerName3*/, CustomerGst, CustomerTransport
+	[Line:CustomerName1]
+		Space Top	: 0.3
+		Fields	: ShortPrompt, CustomerName1
+		Local	: Field		: Short Prompt	: Info	: $$LocaleString:"TO M/S. "
+		Local	: Field		: Short Prompt	: Style	: TimesNormal14
+		[Field:CustomerName1]
+			Full Width	: Yes
+			Border		: Thin Bottom
+			Set as		: @@CmpMailName
+			Lines		: 3
+			
+	[Line:CustomerName2]
+		Fields	: CustomerName2
+		
+		[Field:CustomerName2]
+			Full Width	: Yes
+			Border		: Thin Bottom
+			
+	[Line:CustomerName3]
+		Fields	: CustomerName3
+		
+		[Field:CustomerName3]
+			Full Width	: Yes
+			Border		: Thin Bottom
+		
+	[Line:CustomerGst]
+		Fields	: CustomerGst
+		
+		[Field:CustomerGst]
+			Full Width	: Yes
+			Fields		: GstTitle, GstNumber, LrTitle, LrNumber
+			
+			[Field: GstTitle]
+				Style		: TimesNormal14
+				Set as		: "GSTIN No."
+				Width		: 10
+				
+			[Field: GstNumber]
+				Style		: TimesNormal14
+				Width		: 20
+				Border		: Thin Bottom
+				
+			[Field: LrTitle]
+				Style		: TimesNormal14
+				Set as		: "L. R. No."
+				Width		: 6
+				
+			[Field: LrNumber]
+				Style		: TimesNormal14
+				Full Width	: Yes
+				Border		: Thin Bottom
+				
+	[Line:CustomerTransport]
+		Fields	: CustomerTransport
+		Space Bottom	: 0.2
+		
+		[Field:CustomerTransport]
+			Full Width	: Yes
+			Fields		: TransportTitle, TransportNumber, DateTitle, DateNumber, CaseTitle, CaseNumber
+			
+			[Field: TransportTitle]
+				Style		: TimesNormal14
+				Set as		: "TRANSPORT"
+				Width		: 10
+				
+			[Field: TransportNumber]
+				Set as		: ""
+				Style		: TimesNormal14
+				Width		: 20
+				Border		: Thin Bottom
+				
+			[Field: DateTitle]
+				Style		: TimesNormal14
+				Set as		: "DATE:"
+				Width		: 5
+				
+			[Field: DateNumber]
+				Style		: TimesNormal14
+				Width		: 8
+				Border		: Thin Bottom
+				Set as		: $$String:$Date:ShortDate
+				
+			[Field: CaseTitle]
+				Style		: TimesNormal14
+				Set as		: "CASE:"
+				Width		: 5
+				
+			[Field: CaseNumber]
+				Style		: TimesNormal14
+				Full Width	: Yes
+				Border		: Thin Bottom
+				
+				
+[Part:Invoice Details]	
+	Lines	: InvoiceNo, InvoiceDate, OrderNo, OrderDate
+	;Border	: Thick Top Right Bottom 
+	[Line:InvoiceNo]
+		Space Top	: 0.3
+		Fields	: Short Prompt,InvoiceNo
+		Local	: Field	: Short Prompt	: Info	:$$LocaleString:"INVOIVE NO :"
+		Local	: Field	: Short Prompt	: Style	: TimesNormal14
+		[Field:InvoiceNo]
+			Set as		: $VoucherNumber
+			Border		: Thin Bottom
+			Full Width	: Yes
+	
+	[Line:InvoiceDate]
+		Space Top	: 0.3
+		Fields	: Short Prompt,InvoiceDate
+		Local	: Field	: Short Prompt	: Info	:$$LocaleString:"DATE :"
+		Local	: Field	: Short Prompt	: Style	: TimesNormal14
+		Local	: Field	: Short Prompt	: Width	: 5
+		[Field:InvoiceDate]
+			Set as		: $Date
+			Border		: Thin Bottom
+			Full Width	: Yes
+	
+	[Line:OrderNo]
+		Space Top	: 0.3
+		Fields	: Short Prompt,OrderNo
+		Local	: Field	: Short Prompt	: Info	:$$LocaleString:"ORDER NO :"
+		Local	: Field	: Short Prompt	: Style	: TimesNormal14
+		[Field:OrderNo]
+			Set as		: "";$VoucherNumber
+			Border		: Thin Bottom
+			Full Width	: Yes
+	
+	[Line:OrderDate]
+		Space Top		: 0.3
+		Space Bottom	: 0.2
+		Fields	: Short Prompt,OrderDate
+		Local	: Field	: Short Prompt	: Info	:$$LocaleString:"DATE :"
+		Local	: Field	: Short Prompt	: Style	: TimesNormal14
+		Local	: Field	: Short Prompt	: Width	: 5
+		[Field:OrderDate]
+			Set as		: $VoucherNumber
+			Border		: Thin Bottom
+			Full Width	: Yes
+	
+	
+	
+[Part:ItemDtlsTitleSixer]
+	Line	: ItemDtlsTitleSixer
+	Border	: Thick Left Right
+	Common Borders	: Yes
+	
+	[Line:ItemDtlsTitleSixer]
+		Use				: ItemDtlsPartSixer
+		Space Top		: 0.3
+		Space Bottom	: 0.3
+		Local			: Field	: Default		: Style	: TimesBold12
+		Local			: Field	: Default		: Align	: Center
+		Local			: Field	: Default		: Type	: String
+		
+		
+		Local			: Field	: SINoSixB			: Set as	: "Sr."
+		Local			: Field	: ParticularsSixB	: Set as	: "Particulars"
+		Local			: Field	: HSNCodeSixB		: Set as	: "HSN Code"
+		Local			: Field	: SizeSixB			: Set as	: "Size"
+		Local			: Field	: QuantitySixB		: Set as	: "Qty"
+		Local			: Field	: RateSixB			: Set as	: "Price"
+		Local			: Field	: DiscountSixB		: Info		: $$LocaleString:"Disc%"
+		Local			: Field	: AmountSixB		: Set as	: "Amount INR"
+		
+			
+
+
+[Part:ItemDtlsPartSixer]
+	Line	: ItemDtlsPartSixer
+	Repeat	: ItemDtlsPartSixer		: Inventory Entries
+	Border	: Thick Box
+	Common Borders	: Yes
+	Scroll      	: Vertical
+	Total			: DiscountValSixB
+	[Line:ItemDtlsPartSixer]
+		Left Fields	: SINoSixB, ParticularsSixB,
+		Right Fields	:  HSNCodeSixB, SizeSixB, QuantitySixB, RateSixB, DiscountSixB, DiscountValSixB, AmountSixB
+		Space Top	: 0.5
+		[Field:SINoSixB]
+			Width	: 8% Page
+			Set as	: $$Line
+			Style	: TimesNormal9
+			Align	: Center
+			
+		[Field:ParticularsSixB]
+			;Width	: 30% Page
+			Set as	: if NOT $$IsSysName:$StockItemName then @@InvItemName else ""
+			Border	: Thin Left 
+			Style	: TimesNormal9
+			Full Width	: Yes
+			
+		[Field:HSNCodeSixB]
+			Use		: EXPINV HSNSACDetails
+			;Set as	: #EXPINVHSNSACDetails;$GSTHSNCode:Stockitem:$stockitemName
+			Width	: 11% Page
+			Style	: TimesNormal9
+			
+		[Field:SizeSixB]
+			Width	: 8% Page
+			Set as	:  ""
+			Border	: Thin Left Right
+			Style	: TimesNormal9
+			
+		[Field:QuantitySixB]
+			Use		: Qty Primary Field
+			Width	: 8% Page
+			Set as	: $BilledQty
+			Style	: TimesNormal9
+			Border	: Thin Right
+			
+		[Field:RateSixB]
+			Use     : Rate Price Field
+			Width	: 12% Page
+			Set as	: $Rate
+			Border	: Thin  Right
+			Style	: TimesNormal9
+			
+		[Field:DiscountSixB]
+			Use         : VCH Discount
+			Width		: 8% Page
+			;Set as		: $Discount
+			Style		: TimesNormal9
+;			Set always  : Yes
+;			Format      : "NoZero,Percentage"	
+;			Invisible   : If (@@IsJobOrderOut OR @@IsJobOrderIn OR @@IsJobMaterialIssue OR @@IsJobMaterialReceive ) Then Yes Else NOT @@WithDiscount OR @@AcctsInvoice
+		[Field:DiscountValSixB]
+			Use		: Amount Forex Field
+			;Width	: 15% Page
+			Set as	: ($Rate*$Discount*$BilledQty)/100
+			Border	: Thin Left
+			Style	: TimesNormal9
+			Invisible	: Yes
+		[Field:AmountSixB]
+			Use		: Amount Forex Field
+			Width	: 15% Page
+			Set as	: $Amount
+			Border	: Thin Left Right
+			Style	: TimesNormal9
+	
+[Part:InvoiceBottomSixer]
+	Parts		: GSTBottomPart, BankBottomPart, AmountInWords, DeclarationSixer
+	Vertical	: Yes
+	
+[Part:GSTBottomPart]
+	Line	: GSTBottomPart
+	Border	: Thick Left Right
+	Total	: DiscValue
+	Common Borders	: Yes
+	
+	[Line:GSTBottomPart]
+		Left Fields		: GSTNumberSixer
+		Right Fields	: DiscountTitleSixer, DiscountAmtSixer
+		
+		[Field:GSTNumberSixer]
+			Set as		: "GSTIN NO. : " +@@CMPGSTCurrRegNumber 
+			Width		: 65% Page
+			Style		: TimesBold16
+			Border		: Thin Right
+			
+		[Field:DiscountTitleSixer]
+			Type		: String
+			Set as		: "DISCOUNT"
+			Style		: TimesBold16
+			Full Width	: Yes
+			Align		: Right
+			
+		[Field:DiscountAmtSixer]
+			Use		: AmountSixB
+			;Type	: Amount
+			;Set as	: $$Total:DiscValue
+			Set as	: $$Total:DiscountValSixB
+;			Width	: 15% Page
+;			Style	: TimesNormal9
+;			Border	: Thin Left
+			
+
+			
+[Part:BankBottomPart]
+	Parts	: BankBottomPartSixer, TotalAmtPart
+	Border	: Thick Box
+	
+	
+[Part:BankBottomPartSixer]
+	Width		: 65% Page
+	Parts		: BankBottomPart1, Conditions
+	Vertical	: Yes
+	Border		: Thin Right
+	
+[Part:BankBottomPart1]
+	Height		: 5
+	Line		: BankDtls, BankNameSixer, BankBranch, BanAcNo
+	Border		: Thin Bottom
+	[Line:BankDtls]
+		Field	: BankDtls
+		[Field:BankDtls]
+			Set as		: "BANK DETAILS : "
+			Full Width	: Yes
+			Style		: TimesBold14
+			Border		: Thin Bottom
+			
+	[Line:BankNameSixer]
+		Field	: BankNameSixer
+		[Field:BankNameSixer]
+			Set as		: "Name Of Bank : " + $BankingConfigBank:Ledger:"HDFC Bank A/c"
+			Full Width	: Yes
+			Style		: TimesBold12
+			
+	[Line:BankBranch]
+		Field	: BankBranch
+		[Field:BankBranch]
+			Set as		: "Branch : " + $BankBranchName:Ledger:"HDFC Bank A/c"
+			Full Width	: Yes
+			Style		: TimesBold12
+			
+	[Line:BanAcNo]
+		Field	: BanAcNo
+		[Field:BanAcNo]
+			Set as		: "Account No. : " + $BankDetails:Ledger:"HDFC Bank A/c"+"  IFSC Code : " + $IFSCode:Ledger:"HDFC Bank A/c"
+			Full Width	: Yes
+			Style		: TimesBold12
+			
+[Part:Conditions]
+	Height		: 3
+	Lines		: Condition1, Condition2, Condition21
+	
+	[Line:Condition1]
+		Field	: Condition1
+		[Field:Condition1]
+			Set as		: $$Upper:"1) net cash rate - no discount"
+			Style		: timesnormal9
+			Full Width	: Yes
+			
+	[Line:Condition2]
+		Field	: Condition2
+		[Field:Condition2]
+			Set as		: $$Upper:"2) Payment of this invoice will be accepted by crossed"
+			Style		: timesnormal9
+			Full Width	: Yes
+			
+	[Line:Condition21]
+		Field	: Condition21
+		[Field:Condition21]
+			Set as		: $$Upper:" cheque or demand draft only."
+			Style		: timesnormal9
+			Full Width	: Yes
+			Space Left	: 2
+			
+	
+	
+[Part:TotalAmtPart]
+	Parts		: InvGst1, InvGrandTotal
+	Vertical	: Yes
+	
+
+[Part:InvGst1]
+	Height		: 5
+	Line		: TotalBaseSixer, TotalGst
+	Repeat		: TotalGst		: Ledger Entries
+	Border		: Thin Bottom
+	[Line:TotalBaseSixer]
+		Field	: TotalTitle, TotalBaseAmount
+		Border	: Thin Bottom
+		
+		[Field:TotalTitle]
+			Type		: String
+			Set as		: "TOTAL"
+			Style		: TimesBold14
+			Full Width	: Yes
+			Align		: Right
+			
+		[Field:TotalBaseAmount]
+			Use		: Amount Forex Field
+			Width	: 15% Page
+			Style	: TimesNormal2
+			Border	: Thin Left
+			Set as	: $$CollAmtTotal:InventoryEntries:$Amount
+			
+
+	[Line:TotalGst]
+		Fields	: GstNameSixer,GstAmountSixer
+		Border	: Thin Top
+		Height	: 2.5
+		[Field: GstNameSixer]
+			;Use			: EIAccDesc
+			Use			: Name Field
+			Set as		: $LedgerName ;+"@ " +(If ##GstVAr = "Yes" Then $$String:$CGSTRATE Else $$String:$IGSTRate)+" %"
+			Full Width	: Yes
+			Align		: Right
+			Style		: TimesBold14
+		
+		
+		[Field: GstAmountSixer]
+
+			Use			: Amount Forex Field
+			;Border		: Full Thin Top Left
+			Set as		: $Amount
+			Width		: 15% Page
+			Align		: Right
+			Style		: TimesNormal2
+			Border		: Thin Left
+			
+	
+[Part:InvGrandTotal]
+	Height		: 3
+	Line		: InvGrandTotal
+	
+	[Line:InvGrandTotal]
+		Field	: InvGrandTotalTitle, InvGrandTotalAmount
+		Border	: Thin Bottom
+		
+		[Field:InvGrandTotalTitle]
+			Type		: String
+			Set as		: "GRAND TOTAL"
+			Style		: TimesBold14
+			Full Width	: Yes
+			Align		: Right
+			
+		[Field:InvGrandTotalAmount]
+			Use		: Amount Forex Field
+			Width	: 15% Page
+			Style	: TimesNormal2
+			Border	: Thin Left
+			Set as	: $Amount
+			
+[Part:AmountInWords]
+	Line	: AmountInWords
+	Border	: Thick Left Right Bottom
+	[Line:AmountInWords]
+		Field	: AmountInWords
+		[Field:AmountInWords]
+			Fields	: RupeeTitle, AmountinWordsSixer
+			[Field:RupeeTitle]
+				Set as		: "RUPEES :  " 
+				Width		: 13
+				Style		: TimesBold12
+				
+			[Field:AmountinWordsSixer]
+				Set as		: $$InWords:$Amount
+				Full Width	: Yes
+				Style		: TimesNormall2
+				Align		: Right
+
+
+[Part:DeclarationSixer]
+	Left Parts	: Declaration, Jurisdiction
+	Right Parts	: SignProp
+	Height		: 8
+	Space Top	: 0.5
+[Part:Declaration]
+	Width		: 60% Page
+	Line		: Declaration
+	;Lines		: Declaration1, Declaration2, Declaration3, Declaration4, Declaration5, Declaration6, Declaration7 
+	[Line:Declaration]
+		Field		: Declaration
+		[Field:Declaration]
+			Set as		: "I/We hereby certify that my/our registration certificate under the GOODS AND SERVICES TAX (GST) 2017 is in force on the date on which the sale of the goods specified in this tax invoice is made by me/us and that the transaction of sale covered by this tax invoice has been effected by me/us and it shall be accounted for in the turnover of sale while filling of return and the due tax, if any payable on the sale has been paid or shall be paid."
+			Style		: TimesNormal8
+			Full Width	: Yes
+			Lines		: 0
+	[Line:Declaration1]
+		Field: Declaration1
+		[Field:Declaration1]
+			Set as		: "I/We hereby certify that my/our registration certificate under the"
+			Style		: TimesNormal8
+			Full Width	: Yes
+	
+	[Line:Declaration2]
+		Field: Declaration2
+		[Field:Declaration2]
+			Set as		: "GOODS AND SERVICES TAX (GST) 2017 is in force on the date on"
+			Style		: TimesNormal8
+			Full Width	: Yes
+
+    [Line:Declaration3]
+		Field: Declaration3
+		[Field:Declaration3]
+			Set as		: "which the sale of the goods specified in this tax invoice is made by"
+			Style		: TimesNormal8
+			Full Width	: Yes
+
+    [Line:Declaration4]
+		Field: Declaration4
+		[Field:Declaration4]
+			Set as		: "me/us and that the transaction of sale covered by this tax invoice has"
+			Style		: TimesNormal8
+			Full Width	: Yes
+ 
+    [Line:Declaration5]
+		Field: Declaration5
+		[Field:Declaration5]
+			Set as		: " been effected by me/us and it shall be accounted for in the turnover of"
+			Style		: TimesNormal8
+			Full Width	: Yes
+
+    [Line:Declaration6]
+		Field: Declaration6
+		[Field:Declaration6]
+			Set as		: "sale while filling of return and the due tax, if any payable on the sale"
+			Style		: TimesNormal8
+			Full Width	: Yes
+
+    [Line:Declaration7]
+		Field: Declaration7
+		[Field:Declaration7]
+			Set as		: "has been paid or shall be paid."
+			Style		: TimesNormal8
+			Full Width	: Yes
+			
+[Part:Jurisdiction]
+	Parts		: TopJurisdiction, BottomJurisdiction
+	Vertical	: Yes
+	Width		: 20% Page
+	;Space Left	: 5% Page
+[Part:TopJurisdiction]
+	Line	: TopJurisdiction
+	
+	[Line:TopJurisdiction]
+		Field:TopJurisdiction
+		[Field:TopJurisdiction]
+			Set as		: "Subject To Mumbai Jurisdiction"
+			Full Width	: Yes
+			Align		: Center
+
+[Part:BottomJurisdiction]
+	Line		: BottomJurisdiction
+	Space Top	: 6
+	[Line:BottomJurisdiction]
+		Field:BottomJurisdiction
+		[Field:BottomJurisdiction]
+			Set as		: "E. & O.E."
+			Full Width	: Yes
+			Align		: Center
+			
+[Part:SignProp]
+	Parts		: TopSignProp, BottomSignProp
+	Vertical	: Yes
+	Width		: 20% Page
+	
+[Part:TopSignProp]
+	Line	: TopSignProp
+	
+	[Line:TopSignProp]
+		Field:TopSignProp
+		[Field:TopSignProp]
+			Set as		: "For SIXER"
+			Full Width	: Yes
+			Align		: Right
+			Style		: TimesBold14
+
+[Part:BottomSignProp]
+	Line		: BottomSignProp
+	Space Top	: 6
+	[Line:BottomSignProp]
+		Field:BottomSignProp
+		[Field:BottomSignProp]
+			Set as		: "Proprietor"
+			Full Width	: Yes
+			Align		: Right
+			
+
+;;;--------------------Other Details---------------------------
+[Style:TimesBold48]
+	Font Name		: "Times New Roman"
+	Bold			: Yes
+	Height			: 48
+	
+[Style:TimesBold14]
+	Font Name		: "Times New Roman"
+	Bold			: Yes
+	Height			: 14
+	
+[Style:TimesBold16]
+	Font Name		: "Times New Roman"
+	Bold			: Yes
+	Height			: 16
+	
+[Style: TimesNormal14]
+	Font Name		: "Times New Roman"
+	Height			: 14
+	
+	
+[Style: TimesBold12]
+	Font Name		: "Times New Roman"
+	Height			: 12
+	Bold			: Yes
+	
+
+[Style: TimesNormall2]
+	Font Name		: "Times New Roman"
+	Height			: 12
+	
+[Border	: Thick Top Right Bottom ]
+	Top		: Thick
+	Right	: Thick
+	Bottom	: Thick
+	
+[Border	: Thick Left Right Bottom]
+	Left	: Thick
+	Right	: Thick
+	Bottom	: Thick
+/*I/We hereby certify that my/our registration certificate under the GOODS AND 
+SERVICES TAX (GST) 2017 is in force on the date on 
+*/
+
+

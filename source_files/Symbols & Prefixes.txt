@@ -1,0 +1,52 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Demo TDLs for Symbol Prefixes
+*/
+
+[Menu: Symbols and Prefixes]
+
+	Indent		: "Symbols - Definition Modifiers"
+
+	Key Item 	: Reinitializing Definition	: E : Display 	: Sample ReInitialize
+	Item		: Blank
+
+	Indent		: "Symbol Prefix - Formula"
+	Key Item	: Local Formula				: L : Create 	: Local Formula
+	Key Item	: Global Formula			: G : Display 	: Global Formula
+	Item		: Blank
+
+	Indent		: "Symbol Prefix - Field/ Variable"
+	Key Item	: Field Value				: F : Display 	: Field Value
+	Key Item 	: Variable Value			: V : Display	: Variable Value
+	Item		: Blank
+
+	Indent		: "Symbol Prefix - Functions"
+	Key Item 	: System Date and Time		: D : Display 	: Function Example 1
+	Key Item	: Check Odd Even			: O : Alter		: Function Example 2
+	Key Item	: Date Functions			: A : Display 	: Function Example 3
+	Item		: Blank
+
+	Indent		: "Symbol Def Modifiers - Switch/ Option"
+	Key Item 	: Switch within Form		: W : Display	: Switch within Form
+	Key Item 	: Option within Field		: T : Display	: Option within Field
+	Item		: Blank
+
+	Indent		: "Symbols - Combined Usage"
+	Key Item	: Reminder Calculation		: U : Alter 	: Reminder Calc
+
+[Include: Usage of Symbol Star (RI).txt]
+
+[Include: Usage of Symbol @ (LF).txt]
+[Include: Usage of Symbol @@ (GF).txt]
+
+[Include: Usage of Symbol # (F).txt]
+[Include: Usage of Symbol ## (V).txt]
+
+[Include: Usage of Symbol $$ (Func)1.txt]
+[Include: Usage of Symbol $$ (Func)2.txt]
+[Include: Usage of Symbol $$ (Func)3.txt]
+
+[Include: Usage of Symbols - Mixed.txt]
+
+;; End-of-File

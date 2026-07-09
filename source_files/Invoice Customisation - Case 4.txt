@@ -1,0 +1,26 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demostrates the alteration of default Invoice Printing format 
+-	Sorting of Items being printed in default format is altered to print in 
+	descending order of Groups of Items and then ascending order of Items 
+	falling under same groups
+
+Last modification -
+-	Altered on 09-11-2009
+*/
+
+[Collection: Sorted Inventory Entries]
+
+	Type 		: Inventory Entries : Voucher
+	Sort 	    : Default 			: -$Parent:StockItem:$StockItemName, $StockItemName
+
+;; sorting first by Stock group of the Item in Descending order then by 
+;; the name of the stock item
+
+[#Part: EXPINV InvInfo]
+
+	Repeat      : EXPINV InvDetails : Sorted Inventory Entries
+
+;; End-of-File

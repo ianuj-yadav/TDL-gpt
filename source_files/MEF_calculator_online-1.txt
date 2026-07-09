@@ -1,0 +1,311 @@
+[#Menu:Gateway of Tally]
+	Add		: Item	: Before : @@locQuit : "Category Calculator" : Alter	: MEFCalculator
+	
+[Report:MEFCalculator]
+	Form		: MEFCalculator
+	
+[Form:MEFCalculator]
+	Parts	: Form SubTitle, MEFCalculator
+	Height	: 100% Page
+	Width	: 80% Page
+[Part:MEFCalculator]
+	Width	: 80% Page
+	
+	
+	Lines	: FirmType, V_TOTAL_EXCL_PARTNERS, V_TOTAL_EXCL_CAS, V_TOTAL_STAFF, V_CONCERN_BANK_AUDIT_EXP,+
+	PART1_PARTNER_BANK_AUDIT_8TO9YR_EXP, PART1_PARTNER_BANK_AUDIT_5TO7YR_EXP, +
+	PART1_PARTNER_BANK_AUDIT_3TO4YR_EXP, partnerBankAuditUnder3, firmStanding, Longest_Standing_COP, 
+	
+	Bottom Line	: FinalCategory,check, 	;partnerCOPYear, , PARTNER_COP_DIFF, ,
+	[Line:FirmType]
+		Height		: 2
+		Field		: Calc Prompt, FirmType
+		Local		: Field		: Calc Prompt		: Info	: $$LocaleString:"Firm Type:"
+		
+		[Field:FirmType]
+			Use			: Name Field
+			Width       : @@AmountWidth
+			Table		: FirmTypes
+			Show Table	: Always
+			
+	[Line:V_TOTAL_EXCL_PARTNERS]
+		Height		: 2
+		Field		: Calc Prompt, V_TOTAL_EXCL_PARTNERS
+		Local		: Field		: Calc Prompt		: Info	: $$LocaleString:"Enter Total No. of exclusive Partners:"
+		[Field:V_TOTAL_EXCL_PARTNERS]
+			Use			: Number Field
+			Format		: "NoZero"
+			Align		: Right
+		    Width       : @@AmountWidth
+			
+	[Line:V_TOTAL_EXCL_CAS]
+		Height		: 2
+		Field		: Calc Prompt, V_TOTAL_EXCL_CAS
+		Local		: Field		: Calc Prompt		: Info	: $$LocaleString:"Enter Total No. of exclusive CAs(excl. Partners and Paid CA):"
+		[Field:V_TOTAL_EXCL_CAS]
+			Use			: Number Field
+			Format		: "NoZero"
+			Align		: Right
+		    Width       : @@AmountWidth
+			
+
+[Line:V_TOTAL_STAFF]
+		Height		: 2
+    Field       : Calc Prompt, V_TOTAL_STAFF
+    Local       : Field  : Calc Prompt  : Info : $$LocaleString:"Enter Total No. of Professional staff:"
+[Field:V_TOTAL_STAFF]
+    Use         : Number Field
+    Format      : "NoZero"
+    Align       : Right
+    Width       : @@AmountWidth
+
+[Line:V_CONCERN_BANK_AUDIT_EXP]
+		Height		: 2
+    Field       : Calc Prompt, V_CONCERN_BANK_AUDIT_EXP
+    Local       : Field  : Calc Prompt  : Info : $$LocaleString:"Enter Firm Bank audit experience (Public Sector):"
+[Field:V_CONCERN_BANK_AUDIT_EXP]
+    Use         : Number Field
+    Format      : "NoZero"
+    Align       : Right
+    Width       : @@AmountWidth
+
+[Line:PART1_PARTNER_BANK_AUDIT_8TO9YR_EXP]
+		Height		: 2
+    Field       : Calc Prompt, PART1_PARTNER_BANK_AUDIT_8TO9YR_EXP
+    Local       : Field  : Calc Prompt  : Info : $$LocaleString:"Partners Bank audit experience (8+ years):"
+[Field:PART1_PARTNER_BANK_AUDIT_8TO9YR_EXP]
+    Use         : Number Field
+    Format      : "NoZero"
+    Align       : Right
+    Width       : @@AmountWidth
+
+[Line:PART1_PARTNER_BANK_AUDIT_5TO7YR_EXP]
+		Height		: 2
+    Field       : Calc Prompt, PART1_PARTNER_BANK_AUDIT_5TO7YR_EXP
+    Local       : Field  : Calc Prompt  : Info : $$LocaleString:"Partners Bank audit experience (5-7 years):"
+[Field:PART1_PARTNER_BANK_AUDIT_5TO7YR_EXP]
+    Use         : Number Field
+    Format      : "NoZero"
+    Align       : Right
+    Width       : @@AmountWidth
+
+[Line:PART1_PARTNER_BANK_AUDIT_3TO4YR_EXP]
+		Height		: 2
+    Field       : Calc Prompt, PART1_PARTNER_BANK_AUDIT_3TO4YR_EXP
+    Local       : Field  : Calc Prompt  : Info : $$LocaleString:"Partners Bank audit experience (3-4 years):"
+[Field:PART1_PARTNER_BANK_AUDIT_3TO4YR_EXP]
+    Use         : Number Field
+    Format      : "NoZero"
+    Align       : Right
+    Width       : @@AmountWidth
+
+[Line:partnerBankAuditUnder3]
+		Height		: 2
+    Field       : Calc Prompt, partnerBankAuditUnder3
+    Local       : Field  : Calc Prompt  : Info : $$LocaleString:"Partners Bank audit experience (up to 3 years):"
+[Field:partnerBankAuditUnder3]
+    Use         : Number Field
+    Format      : "NoZero"
+    Align       : Right
+    Width       : @@AmountWidth
+
+[Line:firmStanding]
+		Height		: 2
+    Field       : Calc Prompt, firmStanding
+    Local       : Field  : Calc Prompt  : Info : $$LocaleString:"Date of Enrollment:"
+[Field:firmStanding]
+    Use         : Number Field
+    Format      : "NoZero"
+    Align       : Right
+    Width       : @@AmountWidth
+    
+/*
+[Line:applicationYear]
+    Field       : Calc Prompt, applicationYear
+    Local       : Field  : Calc Prompt  : Info : $$LocaleString:"Application Year:"
+[Field:applicationYear]
+    Use         : Number Field
+    Format      : "NoZero"
+    Align       : Right
+    Width       : @@AmountWidth
+
+[Line:partnerCOPYear]
+    Field       : Calc Prompt, partnerCOPYear
+    Local       : Field  : Calc Prompt  : Info : $$LocaleString:"Partner COP Year:"
+[Field:partnerCOPYear]
+    Use         : Number Field
+    Format      : "NoZero"
+    Align       : Right
+    Width       : @@AmountWidth
+[Line:PARTNER_COP_DIFF]
+    Field       : Calc Prompt, PARTNER_COP_DIFF
+    Local       : Field  : Calc Prompt  : Info : $$LocaleString:"Partner COP Difference (Years):"
+[Field:PARTNER_COP_DIFF]
+    Use         : Number Field
+    Format      : "NoZero"
+    Align       : Right
+    Width       : @@AmountWidth
+
+
+
+[Line:EASTERN_STATE_EXP]
+		Height		: 2
+    Field       : Calc Prompt, EASTERN_STATE_EXP
+    Local       : Field  : Calc Prompt  : Info : $$LocaleString:"Eastern State Experience (Years):"
+[Field:EASTERN_STATE_EXP]
+    Use         : Number Field
+    Format      : "NoZero"
+    Align       : Right
+    Width       : @@AmountWidth
+*/
+[Line:Longest_Standing_COP]
+		Height		: 2
+    Field       : Calc Prompt, Longest_Standing_COP
+    Local       : Field  : Calc Prompt  : Info : $$LocaleString:"COP Year of Partner with longest COP:"
+[Field:Longest_Standing_COP]
+    Use         : Number Field
+    Format      : "NoZero"
+    Align       : Right
+    Width       : @@AmountWidth
+	
+	
+
+[Line:FinalCategory]
+		Height		: 2
+    Field       : Calc Prompt, FinalCategory
+    Local       : Field  : Calc Prompt  : Info : $$LocaleString:"Final Category : "
+	Border		: Thick Box
+[Field:FinalCategory]
+    Use         : Name Field
+    Set Always	: Yes
+	;Set As		: $$FormCategoryCalculator:#FirmType:#V_TOTAL_EXCL_PARTNERS:#V_TOTAL_EXCL_CAS:#V_TOTAL_STAFF:#V_CONCERN_BANK_AUDIT_EXP:#PART1_PARTNER_BANK_AUDIT_8TO9YR_EXP:#PART1_PARTNER_BANK_AUDIT_5TO7YR_EXP:#PART1_PARTNER_BANK_AUDIT_3TO4YR_EXP:#partnerBankAuditUnder3:#firmStanding:#applicationYear:#partnerCOPYear:#EASTERN_STATE_EXP:#PARTNER_COP_DIFF:#Longest_Standing_COP
+	Set as		: $$FormCategoryCalculator:#FirmType:#V_TOTAL_EXCL_PARTNERS:#V_TOTAL_EXCL_CAS:#V_TOTAL_STAFF:#V_CONCERN_BANK_AUDIT_EXP:#PART1_PARTNER_BANK_AUDIT_8TO9YR_EXP:#PART1_PARTNER_BANK_AUDIT_5TO7YR_EXP:#PART1_PARTNER_BANK_AUDIT_3TO4YR_EXP:#partnerBankAuditUnder3:#firmStanding:#Longest_Standing_COP
+	On			: Focus		: Yes	: Call	: FormCategoryCalculator:#FirmType:#V_TOTAL_EXCL_PARTNERS:#V_TOTAL_EXCL_CAS:#V_TOTAL_STAFF:#V_CONCERN_BANK_AUDIT_EXP:#PART1_PARTNER_BANK_AUDIT_8TO9YR_EXP:#PART1_PARTNER_BANK_AUDIT_5TO7YR_EXP:#PART1_PARTNER_BANK_AUDIT_3TO4YR_EXP:#partnerBankAuditUnder3:#firmStanding:#Longest_Standing_COP
+[Line:check]
+		Height		: 2
+    Field       : Calc Prompt, check
+    Local       : Field  : Calc Prompt  : Info : $$LocaleString:"check Category : "
+	Border		: Thick Box
+[Field:check]
+    Use         : Name Field
+    Set Always	: Yes
+	Set as		: ##MyNewUrl
+	Width		: 100
+	Lines		: 0
+
+
+[Function : FormCategoryCalculator]
+    Parameter : FirmType    				: String
+    Parameter : V_TOTAL_EXCL_PARTNERS    	: Number
+    Parameter : V_TOTAL_EXCL_CAS         	: Number
+    Parameter : V_TOTAL_STAFF            	: Number
+    Parameter : V_CONCERN_BANK_AUDIT_EXP 	: Number
+    Parameter : PART1_PARTNER_BANK_AUDIT_8TO9YR_EXP : Number
+    Parameter : PART1_PARTNER_BANK_AUDIT_5TO7YR_EXP : Number
+    Parameter : PART1_PARTNER_BANK_AUDIT_3TO4YR_EXP : Number
+    Parameter : partnerBankAuditUnder3   	: Number
+    Parameter : firmStanding       			: Number
+    Parameter : Longest_Standing_COP     	: Number
+	Variable : applicationYear          	: Number
+	Variable	: Currentdate				: Date
+    Variable : finalCategory            	: String
+	Variable : URL            	: String
+	Variable : a : String
+    Variable : b : String
+    Variable : c : String
+    Variable : d : String
+    Variable : e : String
+    Variable : f : String
+    Variable : g : String
+    Variable : h : String
+    Variable : i : String
+    Variable : j : String
+    Variable : k : String
+	Variable : l : String
+
+
+; --------------------------
+    ; CATEGORY CALCULATION LOGIC
+    ; --------------------------
+	100 	: Set		: Currentdate		: $$MachineDate 
+	200		: Set		: applicationYear	: $$YearOfDate:$$MachineDate
+	201 : Log : "FirmType=" + ##FirmType
+	202	: Set	: a		: "/" + ##FirmType
+	;210 : Log : "V_TOTAL_EXCL_PARTNERS=" + $$LocaleString:##V_TOTAL_EXCL_PARTNERS
+	215	: Set	: b		: "/" + $$LocaleString:##V_TOTAL_EXCL_PARTNERS
+    ;220 : Log : "V_TOTAL_EXCL_CAS=" + $$LocaleString:##V_TOTAL_EXCL_CAS
+	225	: Set	: c		: "/" + $$LocaleString:##V_TOTAL_EXCL_CAS
+	;230 : Log : "V_TOTAL_STAFF=" + $$LocaleString:##V_TOTAL_STAFF
+	235	: Set	: d		: "/" + $$LocaleString:##V_TOTAL_STAFF
+	;240 : Log : "V_CONCERN_BANK_AUDIT_EXP=" + $$LocaleString:##V_CONCERN_BANK_AUDIT_EXP
+	245	: Set	: e		: "/" + $$LocaleString:##V_CONCERN_BANK_AUDIT_EXP
+	;250 : Log : "PART1_PARTNER_BANK_AUDIT_8TO9YR_EXP=" + $$LocaleString:##PART1_PARTNER_BANK_AUDIT_8TO9YR_EXP
+	255	: Set	: f		: "/" + $$LocaleString:##PART1_PARTNER_BANK_AUDIT_8TO9YR_EXP
+	;260 : Log : "PART1_PARTNER_BANK_AUDIT_5TO7YR_EXP=" + $$LocaleString:##PART1_PARTNER_BANK_AUDIT_5TO7YR_EXP
+	265	: Set	: g		: "/" + $$LocaleString:##PART1_PARTNER_BANK_AUDIT_5TO7YR_EXP
+    ;270 : Log : "PART1_PARTNER_BANK_AUDIT_3TO4YR_EXP=" + $$LocaleString:##PART1_PARTNER_BANK_AUDIT_3TO4YR_EXP
+	275	: Set	: h		: "/" + $$LocaleString:##PART1_PARTNER_BANK_AUDIT_3TO4YR_EXP
+    ;280 : Log : "partnerBankAuditUnder3=" + $$LocaleString:##partnerBankAuditUnder3
+	285	: Set	: i		: "/" + $$LocaleString:##partnerBankAuditUnder3
+   ; 290 : Log : "firmStanding=" + $$LocaleString:##firmStanding
+	295	: Set	: j		: "/" + $$LocaleString:##firmStanding
+    ;300 : Log : "Longest_Standing_COP=" + $$LocaleString:##Longest_Standing_COP
+	305	: Set	: k		: "/" + $$LocaleString:##Longest_Standing_COP
+    ;310 : Log : "applicationYear=" + $$LocaleString:##applicationYear
+	315	: Set	: l		: "/" + $$LocaleString:##applicationYear
+	
+    ;315	: Log	: ##SVCUrrentcompany
+	
+	
+	400 : SET : URL : "http://127.0.0.1:8000/mef" + ##a + ##b + ##c + ##d + ##e + ##f + ##g + ##h + ##i + ##j + ##k + ##l
+	405 : Set	: MyNewUrl	: $$LocaleString:##URL
+
+	410		: Call		: SendUrlMef
+  
+    ;500 : HTTP Post : ##Url : ASCII : ReqRep: ERRRespRep: SuccRep
+    
+    ;600 : LOG : "Server Response : " + ##SuccRep
+	
+[Function: SendUrlMef]
+	Variable	: PopMessage		: String
+	100	: Walk Collection	: MefUrl 
+	200	: End Walk
+	
+[Collection: MefUrl]
+
+
+	Remote URL 		: ##MyNewUrl
+	Client Only		: Yes
+	
+[Collection:FirmTypes]
+	Object		: Proprietary, Partnership
+	
+[Object:Proprietary]
+	Name	: Proprietary
+	
+[Object:Partnership]
+	Name	: Partnership
+	
+[Field:Calc Prompt]
+	Align       : Prompt
+    Width       : 50
+    Skip        : Yes
+    Fixed       : Yes
+	Style		: Calc
+	
+[Style:Calc]
+	Height		: 10
+	Bold		: Yes
+	
+[Variable: MyNewUrl]
+	Type		: String
+	Persistent	: Yes
+	Volatile    : Yes
+[System:Variables]
+	MyNewUrl 	: "" 
+/*
+[Part : TestPart1]
+On : FOCUS : Yes : HTTP Post : @@MyUrl : ASCII : ReqRep, RespRep
+
+HTTP Post : <URL Formula> : <Encoding> : +
+ <Request Report>: <Error Report> : <Success Report >

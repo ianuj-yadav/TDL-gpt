@@ -1,0 +1,299 @@
+[Collection:Emps]
+	Object	: Emp1, Emp2
+	
+[Object:Emp1]
+	name	: "h1"
+	age		: 21
+	
+[Object:Emp2]
+	name	: "h2"
+	age		: 22
+	
+
+[#Menu:Gateway Of Tally]
+	Add		: Item		: ShowEmp		: Display	: Emps
+	
+[Report:Emps]
+	Form	: Emps
+	
+[Form:Emps]
+	Part	: Emps
+	
+[Part:Emps]
+	Line		: Emps
+	Repeat		: Emps		: NewToDo;Emps
+	
+	[Line:Emps]
+		Field	: Emps1;, Emps2
+		[Field:Emps1]
+			Set as		: $$Line;ToDoListDesc
+			
+		[Field:Emps2]
+			Set as		: $TaskCycle
+
+
+
+
+
+
+[Collection:NewToDo]
+	Object		: ToDoList
+
+[#Collection: Accounting Masters Objects]
+	
+	Add			: Object: ToDoList 
+
+[Object: TestNewObjCC]
+	
+	Use					: Obj Accounting Masters Template
+	
+ 	Name				: "Todoname";@@loctest
+
+	PrmyVisbl			: Yes 
+	FeatEnabled			: Yes 
+	
+	IsCreate			: Yes
+	IsAlter				: Yes
+	
+	SortPos				: 36
+	
+	Action   			: MasterAlter  	: Set       		: BaseOwnerName           		   		: "Todoname";@@loctest
+	Action				: MasterAlter	: Change Table		: CreateAndBack Actions, CCColl		: Yes 	: NOT $$IsActionObject
+	Action				: MasterAlter	: Ignore Field 		: Yes
+	
+	Action				: MasterCreate	: Create Collection : CCColl
+	Action				: MasterCreate	: Ignore Field 		: Yes
+
+	
+[Object: ToDoList]
+	Use					: Obj Accounting Masters Template
+	
+ 	Name				: @@loctest
+
+	PrmyVisbl			: Yes 
+	FeatEnabled			: Yes 
+	
+	IsCreate			: Yes
+	IsAlter				: Yes
+	
+	SortPos				: 36
+	Storage				: ToDoListDesc		: String
+	Storage				: TaskStartDate		: Date
+	Storage				: TaskCycle			: Number
+	Storage				: TaskEndDate		: Date
+	Storage				: RemindDays		: Number
+	Storage				: YourName			: String
+	Storage				: Remarks			: String
+	Storage				: ToDoName			: String
+	
+	
+[System: UDF]
+	ToDoListDesc	        : String 	: 41070
+    ToDoListEntry           : Aggregate : 41071
+    TaskStartDate           : Date      : 41072
+    TaskCycle            	: Number    : 41073
+    TaskEndDate             : Date    	: 41074
+    RemindDays            	: Number    : 41075
+    YourName                : String	: 41076
+    Remarks  				: String	: 41077
+	ToDoName				: String	: 41078
+[System: Formula]
+	
+	NewCCType	: $CCType = "New CC"
+	ExistCCType	: $CCType = "CC"
+	ToDoName		: @@TimeForm + @@DateForm 
+	DateForm		: @@DateToday + @@MonthToday + @@YearToday
+	;Toddate			: $$MachineDate:ShortDate
+	DateToday		: $$StringPart:($$LocaleString:@@Toddate):0:2
+	MonthToday		: $$StringPart:($$LocaleString:@@Toddate):3:3
+	YearToday		: $$StringPart:($$LocaleString:$$MachineDate):7:2
+	TimeForm		: @@HrsForm + @@MtsForm + @@SesForm
+	HrsForm			: $$StringPart:($$LocaleString:($$SysInfo:SystemTimeHMS)):0:2
+	MtsForm			: $$StringPart:($$LocaleString:($$SysInfo:SystemTimeHMS)):3:2
+	SesForm			: $$StringPart:($$LocaleString:($$SysInfo:SystemTimeHMS)):6:2
+
+;;;;;;;;;;;;; In Default to List only Default CC ;;;;;;;;;;;;;;
+
+
+[Variable: SToDo]
+
+[#Menu: Gateway of Tally]  
+  
+    Add    : Item   : "ToDo List" : Create : ToDoList
+  
+
+[Report : ToDoList]
+    Use         : Master Report
+	Form    	: ToDoList
+	Title   	: $$LocaleString:"ToDo List Creation"
+	Object    	: ToDoList	: ##SToDo
+      
+
+
+[Form : ToDoList]
+    Use				: Master Form Template 
+    Part         	: Form SubTitle, DescribeTask, TaskDate, TaskCycle, RemindDays, YourName, RemarksTodo
+    Width        	: 100% Page
+    Height        	: 100% Page
+	
+    
+    ;Horizontal Align: Left
+          
+    Local        : Field    : Form SubTitle    : Info        : "ToDo List"
+          
+    On      : Form Accept : yes 	: Form Accept
+    On		: Form Accept : yes     : Call     		: AddToDoList
+
+
+
+;; Sales Debit Part ;;                          
+;;------------------------------------------------------------------------------------------                      
+
+[Part : DescribeTask]
+	Line		: ToDoName, DescribeTaskT, DescribeTaskB
+	Space Top	: 1
+	[Line:ToDoName]
+		Field		: LongPrompt, TodoName
+		Local		: Field		: LongPrompt	: Info	: "ToDoName"
+		[Field:TodoName]
+			Use		: Name Field
+			Set as	: @@ToDoName
+			;Skip	: Yes
+			;Control		: DuplicateEntryErrObjStr	: $$IsMstNameDuplicate:$$Value OR @@HasDupNameInErrObj
+			;Control     : DuplicateEntry 			: $$IsMstNameDuplicate:$$Value OR (NOT @@HasDupNameInErrObj AND @@HasDupMstName)
+			Storage     : ToDoName
+	[Line:DescribeTaskT]
+		Field	: LongPrompt
+		Local	: Field		: LongPrompt	: Info	: $$LocaleString:"Describe the task"
+		
+	[Line:DescribeTaskB]
+		Field	: DescribeTaskB
+		[Field:DescribeTaskB]
+			Use			: Name Field
+			Width		: 100% Page
+			Border      : Thin Box
+			Storage     : ToDoListDesc
+			Lines		: 4
+		
+[Part : TaskDate]
+	Line		: TaskDateT, TaskDateB
+	Space Top	: 1
+	[Line:TaskDateT]
+		Field	: LongPrompt
+		Local	: Field		: LongPrompt	: Info	: $$LocaleString:"Task Date"
+		
+	[Line:TaskDateB]
+		Field	: TaskDateB
+		[Field:TaskDateB]
+			Use			: Short Date Field
+			Width		: 100% Page
+			Border      : Thin Box
+			Storage     : TaskStartDate
+			
+			
+		
+[Part : TaskCycle]
+	Line		: TaskCycleT, TaskCycleB, TaskEndT, TaskEndB
+	Space Top	: 1
+	[Line:TaskCycleT]
+		Field	: LongPrompt
+		Local	: Field		: LongPrompt	: Info	: $$LocaleString:"Cycle this task in (Every)"
+		
+	[Line:TaskCycleB]
+		Field	: TaskCycleB
+		[Field:TaskCycleB]
+			Use			: Number Field
+			Width		: 100% Page
+			Border      : Thin Box
+			Storage     : TaskCycle
+			
+	[Line:TaskEndT]
+		Field	: Name Field
+		Local	: Field		: Name Field	: Info	: $$LocaleString:"day(s) from Task Date thru"
+		
+	[Line:TaskEndB]
+		Field	: TaskEndB
+		[Field:TaskEndB]
+			Use			: Short Date Field
+			Width		: 100% Page
+			Border      : Thin Box
+			Storage     : TaskEndDate
+			
+[Part : RemindDays]
+	Line		: RemindDaysT, RemindDaysB
+	Space Top	: 1
+	[Line:RemindDaysT]
+		Field	: LongPrompt
+		Local	: Field		: LongPrompt	: Info	: $$LocaleString:"Remind Me"
+		
+	[Line:RemindDaysB]
+		Field	: RemindDaysB
+		[Field:RemindDaysB]
+			Use			: Number Field
+			Width		: 100% Page
+			Border      : Thin Box
+			Storage     : RemindDays
+			
+			
+[Part : YourName]
+	Line		: YourNameT, YourNameB
+	Space Top	: 1
+	[Line:YourNameT]
+		Field	: LongPrompt
+		Local	: Field		: LongPrompt	: Info	: $$LocaleString:"Your Name"
+		
+	[Line:YourNameB]
+		Field	: YourNameB
+		[Field:YourNameB]
+			Use			: Name Field
+			Width		: 100% Page
+			Border      : Thin Box
+			Storage     : YourName
+			
+[Part : RemarksTodo]
+	Line		: RemarksTodoT, RemarksTodoB
+	Space Top	: 1
+	[Line:RemarksTodoT]
+		Field	: LongPrompt
+		Local	: Field		: LongPrompt	: Info	: $$LocaleString:"Remarks"
+		
+	[Line:RemarksTodoB]
+		Field	: RemarksTodoB
+		[Field:RemarksTodoB]
+			Use			: Name Field
+			Width		: 100% Page
+			Border      : Thin Box
+			Storage     : Remarks
+			Lines		: 4 
+		
+[Function: AddToDoList]
+	Variable 		: TName			: String
+	Variable 		: Desc			: String
+	Variable		: TaskDt		: Date 
+	Variable		: Cycle			: Number 
+	Variable		: EndDt			: Date 
+	Variable 		: Remind 		: Number 
+	Variable		: YourName		: String
+	Variable		: Remarks		: String
+	005		: Set	: TName		: $ToDoName
+	010		: SET	: Desc	 	: $ToDoListDesc
+	010a	: Set	: TaskDt 	: $$Date:TaskStartDate
+	015		: SET 	: Cycle 	: $TaskCycle 
+	020		: SET	: EndDt		: $$Date:$TaskEndDate 
+	030		: SET	: Remind	: $RemindDays 
+	040		: SET	: YourName	: $YourName
+	045		: SET	: Remarks	: $Remarks
+	100		: New Object	: ToDoList			: ##TName : TRUE
+	200		: Set Value		: ToDoListDesc		: ##Desc
+	250		: Set Value		: ToDoName			: ##TName
+    300		: Set Value		: TaskStartDate		: ##TaskDt
+    400		: Set Value		: TaskCycle			: ##Cycle
+    500		: Set Value		: TaskEndDate		: ##EndDt
+    600		: Set Value		: RemindDays		: ##Remind
+    700		: Set Value		: YourName			: ##YourName
+    800		: Set Value		: Remarks			: ##Remarks
+    900   	: LOG 			: ##Desc
+	1000	: Msg Box		:  ”Return Value” : "ToDo Created"
+    1100 	: SET TARGET 	: ..
+	1200 	: CREATE TARGET
+	1300 	: RETURN

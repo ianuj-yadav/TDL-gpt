@@ -1,0 +1,53 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This program illustrates the Border and Style Definition and Attributes
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Sample Border and Style]
+
+	Form 		: Sample Border and Style
+
+[Form: Sample Border and Style]
+
+	Parts		: Sample Border and Style
+	Background	: Yellow
+
+[Part: Sample Border and Style]
+
+	Lines 	: Sample Border and Style
+
+	[Line: Sample Border and Style]
+
+		Fields	: Sample Border and Style
+
+		[Field: Sample Border and Style]
+	
+			Set as	: "Welcome 2 Tally"
+			Width	: 60 mms
+			Style	: Sample Style
+			Border	: Sample Border
+
+;; Border Definition
+
+[Border: Sample Border]
+
+	Top 	: Thin, Double
+	Bottom 	: Thick
+	Left 	: Flush
+	Right 	: FullLength
+	Color 	: Red
+
+;; Style Definition
+
+[Style: Sample Style]
+
+	Font	: "Algerian"
+	Height	: 16
+	Bold	: Yes
+
+;; End-Of-File

@@ -1,0 +1,124 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the alteration of sales Voucher
+-	Additional columns have been added in Sales Invoice
+
+Last modification -
+-	Altered on 09-11-2009
+*/
+
+[#Line: EI ColumnOne] ;; Invoice Column Headings1 without class
+
+	Option 	: Global EI ColumnOne      : @@IsSales
+
+;; "Global" prefix is added for better readability of the code
+
+    [!Line: Global EI ColumnOne]
+
+		Add		: Right Fields  : At Beginning  : Global VCH Marks, Global VCH NumPack
+
+;;Need to mention Right Fields, since just Field means Left Field
+;;and we need “NumPack” Column to the right of the screen at beginning
+
+		Local   : Field : Default               : Align         : Center
+
+		Local   : Field : Global VCH Marks      : Info			: "Marks"
+		Local	: Field	: Global VCH NumPack	: Info			: "No. of Packages"
+						
+[#Line: EI ColumnTwo] ;; Invoice Column Headings1 without class
+
+	Option  : Global EI ColumnTwo   : @@IsSales
+
+    [!Line: Global EI ColumnTwo]
+
+		Add     : Right Fields : At Beginning	: Global VCH Marks, Global VCH NumPack
+		Local   : Field : Default               : Align         : Center
+
+		Local   : Field : Global VCH Marks      : Info          : ""
+		Local   : Field	: Global VCH NumPack	: Info      	: ""
+						
+[#Line: EI InvDetails]
+
+    Option  : Global EI InvDetails  : @@IsSales
+    
+    [!Line: Global EI InvDetails]
+
+        Delete  : Lines     : EI Marks, EI NumPackages
+
+[#Line: CI InvDetails]
+
+    Option  : Global CI InvDetails  : @@IsSales
+    
+    [!Line: Global CI InvDetails]
+
+        Delete  : Lines     : CI MarksPackages
+
+[#Line: EI InvInfo] ;; Invoice Inventory Entries without Class
+
+	Option  : Global EI InvInfo     : @@IsSales
+ 
+[#Line: CI InvInfo] ;; Invoice Inventory Entries with Class
+
+	Option  : Global EI InvInfo     : @@IsSales
+ 
+    [!Line: Global EI InvInfo]
+
+		Add     : Right Fields : At Beginning   : Global VCH Marks, Global VCH NumPack
+		Local   : Field : Global VCH Marks      : Storage       : BasicPackageMarks
+		Local   : Field : Global VCH NumPack    : Storage       : BasicNumPackages
+		
+        [Field: Global VCH Marks]
+
+            Use         : Short Name Field
+            Width       : 8
+			Align       : Right
+			Border      : Thin Left Right
+			Invisible   : NOT ##VrVarC1
+			Skip on		: $$IsEnd:$StockItemName
+;;			Inactive    : $$IsEnd:$StockItemName
+			
+        [Field: Global VCH NumPack]
+
+            Use         : Short Name Field
+            Width       : 12
+			Align       : Right
+			Border      : Thin Left Right
+			Invisible   : NOT ##VrVarC1
+			Skip on		: $$IsEnd:$StockItemName
+;;			Inactive    : $$IsEnd:$StockItemName
+						    			
+[#Form: Export Invoice]
+
+	Option  : Global Export Invoice NP  : @@IsSales
+ 
+    [!Form : Global Export Invoice NP]
+
+		Local   : Line  : VCH NarrPrompt: Add   : Right Fields  : At Beginning  : Global Total Marks, Global Total NumPack
+
+        [Field: Global Total Marks]
+        
+            Use         : Global VCH Marks
+            Border      : Totals
+            Set as      : $$String:@@NumPackMarksTotal
+            Set always  : Yes
+            Skip        : Yes
+                                    
+        [Field: Global Total NumPack]
+        
+            Use         : Global VCH NumPack
+            Border      : Totals
+            Set as      : $$String:@@NumNumPackTotal
+            Skip        : Yes
+            Set always  : Yes
+                        
+[System: Formula]
+
+    NumNumPack          : $$Number:$BasicNumPackages
+    NumNumPackTotal     : $$CollNumTotal:InventoryEntries:@@NumNumPack
+            		
+    NumPackMarks        : $$Number:$BasicPackageMarks
+    NumPackMarksTotal   : $$CollNumTotal:InventoryEntries:@@NumPackMarks
+   
+;; End-of-File

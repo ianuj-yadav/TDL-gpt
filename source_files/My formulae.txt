@@ -1,0 +1,4 @@
+<DefType: System: Formulae>
+
+[System:Formulae]
+	 ShowLogoTirlok	: $$LocaleString:"Show Logo Tirlok"

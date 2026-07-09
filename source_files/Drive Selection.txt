@@ -1,0 +1,87 @@
+
+
+;;===========================Enable Drive Backup Start
+
+[#Part: Company F11 Other Features]
+	
+	Local	: Part	: Cfg PartContent		:Add			: Lines	: Cmp EnableAutoBackup
+	[Line: Cmp EnableAutoBackup]
+
+		Use			: Cmp Ops More Config	
+		Fields		: Medium Prompt, Cmp EnableAutoBackup
+		Space Top	: 0.6
+		Local  		: Field : Medium Prompt : Info    		: $$LocaleString:"Enable Auto Backup On Drive Module : "
+		Local  		: Field : Medium Prompt : Background	: Yellow
+	
+		[Field:Cmp EnableAutoBackup]
+			Type		: Logical
+			Width		: 3
+			Modifies	: EnableAutoBackup
+			Max			: 3
+			Set as		: ##EnableAutoBackup
+			Table		: YesNoTable
+			Show Table	: On Error
+			Key			: LogicalToggle		
+			Style		: Normal Bold
+			Sub Form	: DriveAutoBackup	: $$Value=Yes  ;; This would be a name of report.
+							;; Sub Form attribute is always open in alter mode.
+							
+			Background	: Yellow
+	
+			
+	
+;;===========================Enable Drive Backup End
+
+
+
+;;=================================
+[Report:DriveAutoBackup]
+	Title	: "Auto Backup On Drive"
+	Form	: DriveAutoBackup
+	
+[Form:DriveAutoBackup]
+	Part	: DriveAutoBackup
+	
+[Part:DriveAutoBackup]
+	Lines		: DriveAutoBackup, DriveAutoBackupPath;, DriveAutoBackup, DriveAutoBackup
+		
+	[Line:DriveAutoBackup]
+		Use			: Cmp Ops All Config
+		Fields		: Medium Prompt, DriveAutoBackup
+	
+		Local 		: Field : Medium Prompt : Info  	: $$LocaleString:"Enable Auto Backup :"
+		Space Bottom	: 1
+
+		[Field:DriveAutoBackup]
+			Type		: Logical
+			Width		: 4
+			Modifies	: EnableAutoBackup
+			Max			: 4
+			Set as		: ##EnableAutoBackup
+			Table		: YesNoTable
+			Show Table	: On Error
+			Key			: LogicalToggle		
+			Style		: Normal Bold
+			
+
+	[Line:DriveAutoBackupPath]
+		Use			: Cmp Ops All Config
+		Fields		: Medium Prompt, DriveAutoBackupPath
+	
+		Local 		: Field : Medium Prompt : Info  	: $$LocaleString:"Backup Drive Path :"
+		Local 		: Field : Medium Prompt : Inactive	: Not #DriveAutoBackup
+		Space Bottom	: 1
+
+		[Field:DriveAutoBackupPath]
+			Use			: Backup Destination Template
+			Set as		: ##DestinationPath
+			Modifies	: DestinationPath		: Yes
+			Help		: @@HlpConfigureBackupPath
+			ASCII Only	: Yes
+			KBLanguage	: @@EnglishLanguageID
+			Width		: 80
+			Inactive	: Not #DriveAutoBackup
+			
+			
+
+;;===============================

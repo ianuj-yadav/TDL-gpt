@@ -1,0 +1,83 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	The objective of this program is to demonstrate the usage of System Formula, Platform 
+	Function and extraction of Field value
+-	This program accepts date from user and gives number of days remaining from today i.e., 
+	System Date
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Usage of Formula]
+
+	Form 	: Usage of Formula
+
+[Form: Usage of Formula]
+
+	Parts 	: Usage of Formula
+
+[Part: Usage of Formula]
+
+	Lines	: Input Date, No of Days
+
+	[Line: Input Date]
+
+		Fields: Input Date Prompt, Input Date
+
+		[Field: Input Date Prompt]
+
+			Use		: Long Prompt		
+;; 'Use' Keyword is used to inherit the properties from the previous definition of 
+;; similar type.
+;; 'Long Prompt' is a default Field/ template available for larger Prompts in DefTDL
+
+			Info	: "Please enter a Date :"
+;; Attribute 'Info' stands for Information which means that user is not required to
+;; enter any value in this field and the cursor should skip this field.  This is the
+;; only difference between 'Info' and 'Set As'.
+;; If both 'Info' and 'Set As' are specified in a Field, 'Info' takes higher precedence
+
+		[Field: Input Date]
+
+			Use 	: Uni Date Field
+;; Uni Date Field is a default Field/ template available for Fields of Type Date
+
+			Set As	: $$MachineDate		
+;; Internal Function 'MachineDate' returns the System Date.  Setting an initial value 
+;; as current date to the field
+
+	[Line: No of Days]
+
+		Fields: No of Days Prompt, No of Days
+
+		[Field: No of Days Prompt]
+
+			Use			: Long Prompt
+			Info 		: "Number of day(s) from today :"
+
+		[Field: No of Days]
+
+			Use			: Number Field
+
+			Set as		: If $$IsEmpty:#InputDate Then 0 Else @@NoofDays 
+;; 'IsEmpty' is a logical Function which returns true if the Parameter value is empty.
+;; 'UserDate' is a Field the value of which is passed to the Function 'IsEmpty'. 
+;; If 'UserDate' is empty, then the Field 'No of Days' will be set 0 else it will be
+;; set to the result of the System Formula 'NoofDays'
+
+			Set Always	: Yes
+;; Field Attribute 'Set Always' works in conjunction with 'Set as' wherein the current 
+;; field value is based on some other field value.  If 'Set Always' is set to 'Yes', then
+;; this Field value gets refreshed everytime the value of the other Field 'Input Date' 
+;; is altered.
+
+[System: Formula]
+
+	No of Days	: #InputDate - $$MachineDate
+;; User entered date is subtracted from System Date to arrive at the No. of Days figure
+;; which will be set in the Field 'No of Days'
+
+;; End-of-File

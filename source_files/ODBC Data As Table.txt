@@ -1,0 +1,37 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+-	The following code demonstrates the collection as Table from ODBC.
+-	This code demonstrates the process of data retrieval from an ODBC database & display 
+	it as a table.
+
+Last modification – 
+-	Altered on 09/11/2009
+
+Dependencies -
+-	Supporting File 'Simple Voucher as Table.txt' for the Report as well as variables
+-	Excel data File 'Sample Data.xls' must be available at local Tally Folder
+*/
+
+[Collection: ODBC Excel Collection]
+
+	ODBC    	: @@DriverInfo + ".\ScriptData\Sample Data.xls;"
+	SQL			: "Select * From [Ledgers$]"
+	Format		: $_1, 25
+	Format		: $_2, 20
+	Format		: $_3, 15
+	Format		: $_4, 25
+	Client Only	: Yes
+
+[Report: ODBCAsTable]
+
+	Form		: CollAsTable
+	Variable	: ODBCAsTable
+	Set			: ODBCAsTable	: Yes
+
+[System: Formula]
+	
+	Driver Info			: "Driver={Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)};DBQ="
+
+;; End-of-File

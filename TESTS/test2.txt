@@ -1,0 +1,35 @@
+[#Part: Sum Calculator]
+Line: Calculator Line
+
+[#Line: Calculator Line]
+Fields: FirstNumberField, SecondNumberField, SumField
+
+[Field: FirstNumberField]
+Use       : Number Field
+Storage   : Input1
+Title     : "First Number"
+Width     : 15
+Color     : Blue
+Background: Light Yellow
+Border    : Thin Box
+
+[Field: SecondNumberField]
+Use       : Number Field
+Storage   : Input2
+Title     : "Second Number"
+Width     : 15
+Color     : Blue
+Background: Light Yellow
+Border    : Thin Box
+
+[Field: SumField]
+Use       : Number Field
+Storage   : ResultSum
+Title     : "Sum"
+Width     : 15
+Color     : Red
+Background: Light Green
+Border    : Thin Box
+Style     : Normal Bold
+Set as    : ##Input1 + ##Input2
+Set Always: Yes

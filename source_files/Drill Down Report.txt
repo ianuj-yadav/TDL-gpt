@@ -1,0 +1,116 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+
+Drill down Report
+
+*/
+
+[Report: My Stock Summary]
+
+    Form        : My Stock Summary
+	Title       : "Stock Summary"
+	Variable    : MyStkGroupName
+
+[Variable: MyStkGroupName]
+
+    Type        : String
+    Volatile    : Yes
+    Default     : ""
+
+[Form: My Stock Summary]
+
+	Button      : F2ChangePeriod, ChangeCompany
+	Keys        : ChangePeriod
+	Parts       : My SM Part
+    Height      : 100% Page
+    Width       : 100% Page
+		
+[Part: My SM Part]
+
+    Lines       : My SS Title, My SS Details
+    BottomLines : My SS Total
+    Repeat      : My SS Details	: My SS StkGroupsItems
+    Total       : My SS OpQty Field,My SS ClQty Field
+    Scroll      : Vertical
+    CommonBorder: Yes
+		
+    [Line: My SS Title]
+        
+        Use     : My SS Details
+        Local   : Field : Default           	: Type  	: String
+        Local   : Field : Default           	: Align 	: Centre		
+        Local   : Field : My SS Item Field  	: Set as	: "Stock Group Name"
+        Local   : Field : My SS ParName Field	: Set as	: "Parent"
+        Local   : Field : My SS OpQty Field		: Set as	: "Op.Qty"
+        Local   : Field : My SS ClQty Field		: Set as	: "Cl.Qty"
+        Border  : Flush Totals
+
+    [Line: My SS Details]
+
+        Fields      : My SS Item Field, My SS ParName Field
+        Right Fields: My SS OpQty Field, My SS ClQty Field
+		
+        [Field: My SS Item Field]
+
+			Use         : Name Field
+			Set as      : $Name
+            
+            Option      : My SS Item Field Grp  : $$IsStockGroup
+            Option      : My SS Item Field Led  : $$IsStockItem
+            
+            [!Field: My SS Item Field Grp]
+
+				Variable    : MyStkGroupName
+				Display     : My Stock Summary
+
+            [!Field: My SS Item Field Led]
+
+				Variable    : Stock Item Name
+				Display     : Item Monthly Summary
+				Style       : Normal Italic
+
+        [Field: My SS ParName Field]
+
+			Use         : Name Field
+			Set as      : $Parent
+			Border      : Thin Left
+
+        [Field: My SS OpQty Field]
+
+            Use         : Qty Field
+		    Set as      : $OpeningBalance
+		    Border      : Thin Left
+
+        [Field: My SS ClQty Field]
+
+            Use         : Qty Field
+		    Set as      : $ClosingBalance
+		    Border      : Thin Left
+		    					
+    [Line: My SS Total]
+
+        Use     : My SS Details
+        Local   : Field : My SS Item Field  : Align : Centre
+        Local   : Field : My SS Item Field  : Set as: "TOTAL"
+        Local   : Field : My SS OpQty Field : Set as: $$Total:MySSOpQtyField
+        Local   : Field : My SS ClQty Field : Set as: $$Total:SSClQtyField
+        Border  : Thin Top Bottom
+
+[Collection: My SS StkGroupsItems]
+
+    Collection  : My SS Groups, My SS Items
+
+[Collection: My SS Groups]
+
+    Type        : StockGroup
+    Child Of    : ##MyStkGroupName
+    
+    
+[Collection: My SS Items]
+
+    Type        : StockItem
+    Child Of    : ##MyStkGroupName
+   
+  
+;; End-of-File

@@ -1,0 +1,171 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This program displays multiple colourful boxes using Dimensions
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Boxes]
+
+	Form 		: Boxes
+
+[Form: Boxes]
+
+	Parts 		: Box1
+	Space Top 	: @@MW2
+	Space Bottom: @@MW2
+	Space Left 	: @@MW
+	Space Right : @@MW
+
+;; Template Part
+
+[Part: Boxes]
+
+	Space Top 	: @@MW2
+	Space Bottom: @@MW2
+	Space Left 	: @@MW
+	Space Right : @@MW
+	Border 		: Thin Box
+	Background 	: White, Light Petal Pink
+
+[Part: Box1]
+
+	Use 		: Boxes
+	Part 		: Box2
+	Background 	: White, Very Light Orange 
+
+	[Part: Box 2]
+	
+		Use 		: Boxes
+		Part 		: Box 3
+		Background 	: White, Light Ochre Yellow 
+	
+	[Part: Box 3]
+	
+		Use 		: Boxes
+		Part 		: Box 4
+		Background 	: White, Light Grey
+
+	[Part: Box 4]
+
+		Use 		: Boxes
+		Part 		: Box 5
+		Background 	: White, Aquamarine 
+
+	[Part: Box 5]
+	
+		Use 		: Boxes
+		Part 		: Box 6
+		Background 	: White, Red 
+		
+	[Part: Box 6]
+	
+		Use 		: Boxes
+		Background 	: White, Pale Sea Green 
+		Part 		: Box 7
+		
+	[Part: Box7]
+	
+		Use 		: Boxes
+		Parts 		: Box 8
+		Background 	: White, Stone Wash 
+		
+	[Part: Box 8]
+	
+		Use 		: Boxes
+		Parts 		: Box 9
+		Background 	: White, Pale Orange
+	
+	[Part: Box 9]
+	
+		Use 		: Boxes
+		Part 		: Box 10
+		Background 	: White, Yellow 
+	
+	[Part: Box 10]
+	
+		Use 		: Boxes
+		Part 		: Box 11
+		Background 	: White, Satin Blue 
+	
+	[Part: Box 11]
+	
+		Use 		: Boxes
+		Part 		: Box12
+		Background 	: White, Geranium 
+	
+	[Part: Box 12]
+	
+		Use 		: Boxes
+		Parts		: Box 13
+		Background 	: White, Surf Green 
+	
+	[Part: Box 13]
+	
+		Use 		: Boxes
+		Parts 		: Box 14
+		Background 	: White, Very Light Sea Green 
+	
+	[Part: Box 14]
+	
+		Use 		: Boxes
+		Parts 		: Box 15
+		Background 	: White, Soft Violet 
+	
+	[Part: Box 15]
+	
+		Use 		: Boxes
+		Part 		: Box 16
+		Background 	: White, Black
+	
+	[Part: Box 16]
+	
+		Use 		: Boxes
+		Parts 		: Box 17
+		Background 	: White, Petal Pink 
+	
+	[Part: Box 17]
+	
+		Use 		: Boxes
+		Parts 		: Box 18
+		Background 	: White, Light Autumn Green 
+	
+	[Part: Box 18]
+	
+		Use 		: Boxes
+		Parts 		: Last
+		BackGround 	: White, Aquamarine
+
+	[Part: Last]
+
+		Lines 		: Box Line
+		Height		: 10% Page
+		Space Top 	: 0.5
+		Space Bottom: 0.5
+		Border 		: Thin Box
+		BackGround 	: White, White
+
+		[Line: Box Line]
+
+			Fields: Simple Field
+			Local : Field : Simple Field : Set as 	: "Tally.ERP 9"
+			Local : Field : Simple Field : Style	: Large Tally Font
+			Local : Field : Simple Field : Width 	: 12
+		
+;; System Formula Definition
+
+[System: Formula]
+
+	MW 		: 2
+	MW2 	: 1
+
+[Style: Large Tally Font]
+
+	Font	: "Algerian"
+	Height	: 20
+	Bold	: Yes
+
+;; End-of-File

@@ -1,0 +1,50 @@
+[Report:AgentNameCreation]
+	Title	: "Agent Name Creation"
+	Form	: AgentNameCreation
+	
+[Form:AgentNameCreation]
+	Part	: AgentNameCreation
+	
+[Part:AgentNameCreation]
+	Lines		: AgentNameTitle, AgentNameBody
+	Repeat		: AgentNameBody		: CmpAgentName
+	Scroll		: Vertical
+	Break On	: $$IsEmpty:$CmpAgentName  ;; If it is not given repetition never start because it has no end point
+	
+	[Line:AgentNameTitle]
+		Use	: AgentNameBody
+		Local	: Field	: Default	: Type	: String
+		Local	: Field	: Default	: Line	: 0
+		Local	: Field	: Default	: Align	: Center
+		Local	: Field	: Default	: Style	: Normal Bold
+		Local	: Field	: Default	: Delete: Storage
+		
+		Local	: Field	: CmpAgentName	: Info		: "Name of Agent"
+		Local	: Field	: CmpAgentName	: Border	: Thin Bottom
+		
+		Space Bottom	: 1
+
+	[Line:AgentNameBody]
+		Field	: CmpAgentName
+		[Field:CmpAgentName]
+			Type	: String
+			Width	: 30
+			Max		: 251
+			Storage	: CmpAgentName
+			Case	: First Upper Case
+			Unique	: Yes
+			
+			
+
+[System:UDF]
+	CmpAgentName : String	: 20001
+			
+
+[Collection:AgentNameCollection]
+	
+	Title		: "List Of Agents"
+	Type		: CmpAgentName	: Company
+	Child Of	: ##SVCurrentCompany
+	Format		: $CmpAgentName, 20
+	Sub Title	: "Name"
+	Unique		: $CmpAgentName, $AgentName

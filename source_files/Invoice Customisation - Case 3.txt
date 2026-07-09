@@ -1,0 +1,72 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demostrates the alteration of default Invoice Printing format with Terms
+	and Conditions
+
+Last modification -
+-	Altered on 09-11-2009
+*/
+
+[Collection: Global Terms]
+
+   List Name    : "Training : 9 hours"
+   List Name    : "Tally Support : 3 months without any additional charges"
+   
+[Variable: ShowWithTerms]
+
+	Type        : Logical
+	Persistent  : Yes
+
+[System: Variable]
+
+	ShowWithTerms : "Yes"	
+
+;;This has been removed in default code of TallyPrime
+;[#Part: IPCFG Right]
+;
+;	Option	: CustInv IPCFG Right	: ##InvVarC3 AND @@IsSales
+;
+;	[!Part: CustInv IPCFG Right]
+;
+;		Add		: Lines : GlobalWithTerms
+;
+;		[Line: GlobalWithTerms]
+;	
+;			Fields  : Medium Prompt, GlobalWithTerms
+;			Local   : Field : Medium Prompt : Set AS : "Print Terms & Conditions ? "
+;	
+;			[Field: GlobalWithTerms]
+;	
+;				Use         : Logical Field
+;				Modifies    : ShowWithTerms 
+	
+[#Part: EXPINV ExciseDetails]
+
+	Option	: Inv EXPINV ExciseDetails	: ##InvVarC3 AND @@IsSales
+
+	[!Part: Inv EXPINV ExciseDetails]
+
+		Delete      : Lines       : EXPINV ExciseRange, EXPINV ExciseRangeAddr, +
+	                                EXPINV ExciseDiv, EXPINV ExciseDivAddr, +
+	                                EXPINV ExciseSerial, EXPINV InvoiceTime, EXPINV RemovalTime
+	
+	    Add			: Lines       : EXPINV SubTitle, EXPINV ExciseDetails
+		Repeat      : EXPINV ExciseDetails : Global Terms
+		Local :Field: EXPINV SubTitle   : Info          : "Terms & Conditions :"
+		Local :Field: EXPINV SubTitle   : Border        : Thin Bottom
+		Local :Line : EXPINV SubTitle   : Space Bottom  : 1
+		Invisible   : NOT @@IsInvoice OR NOT ##ShowWithTerms
+	
+		[Line: EXPINV ExciseDetails]
+	
+	    	Option      : Small Size Line
+			Fields  	: Simple Field, NameField
+			Local       : Style : Default       : Bold   : No   
+			Local       : Field : Simple Field  : Set as : $$String:$$Line + "."
+			Local       : Field : NameField     : Set as : $Name
+			Local       : Field : NameField     : Lines  : 0
+			Local       : Field : NameField     : Width  : 45% Page
+
+;; End-of-File

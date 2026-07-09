@@ -1,0 +1,60 @@
+---
+title: Report by Collection
+type: sample_code
+objects: Report, Form, Part, Line, Field
+source: Report by Collection.txt
+---
+
+# Report by Collection
+
+## Source Code
+
+```tdl
+;-------------Field level associaltion ----------------
+/*
+[#Menu:Gateway of tally]
+	Item: LedgerDetail:Alter:LedgerDetail
+[Report:LedgerDetail]
+	Form:LedgerDetailForm
+	[Form:LedgerDetailForm]
+		Part:LedgerDetailPart
+		[Part:LedgerDetailPart]
+			Line:LedgerDetailLine
+			[Line:LedgerDetailLine]
+				Field:Long Prompt, LedgerName1, LedgerParent, LedgerCountry
+				Local:Field:Long Prompt:Set as : "Ledger Detail" 
+				[Field:LedgerName1]
+					Use:Name Field
+					Table:MyColl1 ; MyStock collection is defined in collectionPractice file
+				[Field:LedgerParent]
+					Use:Name Field
+					Set as:$Parent:Ledger:#LedgerName1
+				[Field:LedgerCountry]
+					Use:Name Field
+					Set as:$CountryOfResidence:Ledger:#LedgerName1
+					*/
+					
+[#Menu:Gateway of tally]
+	Item:LedgerDetail:Alter:LedgerDetail
+[Report:LedgerDetail]
+	Form:LedgerDetailForm
+	[Form:LedgerDetailForm]
+		Part:LedgerDetailPart
+		[Part:LedgerDetailPart]
+			Line:LedgerDetailLine
+			[Line:LedgerDetailLine]
+				Field:Long Prompt,LedgerName1,LedgerParent,LedgerCountry,LedgerAlteredOn
+				Local:Field:Long Prompt:Set as:"This the Ledger Details"
+				[Field:LedgerName1]
+					Use:Name Field
+					Table:MyColl1
+				[Field:LedgerParent]
+					Use:Name Field
+					Set as:$Parent:Ledger:#LedgerName1
+				[Field:LedgerCountry]
+					Use:Name Field
+					Set as:$CountryOfResidence:Ledger:#LedgerName
+				[Field:LedgerAlteredOn]
+					Use:Full Uni Date Field
+					Set as:$AlteredOn:Ledger:#LedgerName1
+```

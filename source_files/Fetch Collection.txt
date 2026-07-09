@@ -1,0 +1,48 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the usage of 'Fetch Collection' in a remote environment
+-	If multiple collections are needed to be used within a Report, 'Fetch Collection'
+	must be used in a remote environment to reduce number of requests.
+
+Syntax -
+-	Fetch Collection: <List of Collection Names separated by commas>
+
+Last modification -
+-	Altered on 09-11-2009
+*/
+
+[Report: Fetch Collection]
+
+	Form				: Fetch Collection
+	Fetch Collection	: All Debtors
+
+[Form: Fetch Collection]
+
+	Part	: Fetch Collection
+
+[Part: Fetch Collection]
+
+	Lines	: All Party Closing Balance, All party Opening Balance
+
+	[Line: All Party Closing Balance]
+
+		Fields	: Long Prompt, Amount Field
+		Local	: Field	: Long Prompt	: Set as	: "All Party Closing Balance"
+		Local	: Field	: Amount Field	: Set as	: $$CollAmtTotal:AllDebtors:$ClosingBalance
+
+	[Line: All party Opening Balance]
+
+		Use		: All Party Closing Balance
+		Local	: Field	: Long Prompt	: Set as	: "All Party Opening Balance"
+		Local	: Field	: Amount Field	: Set as	: $$CollAmtTotal:AllDebtors:$OpeningBalance
+
+[Collection: All Debtors]
+
+	Type		: Ledger
+	Child Of	: $$GroupSundryDebtors
+	Belongs To	: Yes
+	Fetch		: Opening Balance, Closing Balance
+
+;; End-of-File

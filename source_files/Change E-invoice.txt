@@ -1,0 +1,99 @@
+
+[#Part: EXPINV InvoiceCompGen]
+		
+	Add			: Line		: BarcodeEinvoice
+	Width			: 100% Page
+	Repeat			: BarcodeEinvoice	: GSTAnalysisPrintSummary1;Ledger Entries
+	
+	[Line:BarcodeEinvoice]
+		Field		: BarcodeEinvoice;,BarcodeEinvoice1
+		;Invisible	: Yes
+		Remove if	: NOT $$IsEmpty:$Irn Or NOT ##PrintBarcode ;Or $parent:Ledger:$LedgerName  != "Sales Accounts"
+		[Field:BarcodeEinvoice]
+			;Use				: VCHGSTInvPrint HSNCode
+			Set as			: "(" + ($GSTInvoice_ItemHSNCode) + ")"; "("+$ComputedHSNCode+")"
+			Width			: 100% Page
+			Style			: TSPL FFE BarCode
+			Align			: right
+		
+		
+			[Field:BarcodeEinvoice1]
+			Set as			: ##PrintBarcode;$ComputedHSNCode
+			Width			: 50% Page
+			
+
+[#Collection: Sales VoucherDetails]
+	;Color		: Red
+	Object		: PrintBarcode
+	
+[Object: PrintBarcode]
+	Use         : Vch Output Configuration
+	Name		: "Print Barcode"
+	Value		: ##PrintBarcode
+	Action		: ConfigAction :  Do If : @@IsSales	: Set   : PrintBarcode    : NOT ##PrintBarcode
+
+[Variable: PrintBarcode]
+    Type        : Logical
+    Persistent  : Yes
+	;Default		: Yes
+
+[System: Formulae]
+	PrintBarcode	: ##PrintBarcode
+		
+
+[System: Variable]
+ 	PrintBarcode    : Yes
+			
+[Style: TSPL FFE BarCode]
+	Font : IDAutomationHC39S
+	Height : 14
+
+
+
+;;;;;====================================
+
+[Collection: GSTAnalysisPrintSummary1]
+
+	Source Collection	: GST Invoice TaxAnalysisIESrc1, GST Invoice TaxAnalysisLESrc1
+
+    Compute Var	: GSTItemLedRate	: String		: $$Sprintf:"%s~%s~%s~%s~%s":$CGSTRate:$SGSTRate:$IGSTRate:$CessGSTRate:$CessGSTRatePerUnit
+ 
+    By           : GSTInvoice_ItemHSNCode			: $ComputedHSNCode
+    By           : GSTInvoice_ItemLedRate   		: ##GSTItemLedRate
+ 
+    Compute      : GSTInvoice_TransNature			: $GSTFinalNatureOfEntry
+ 	Compute      : GSTInvoice_VoucherTypeName    	: $GSTPLTVchIsNatureDeliveryNote
+    Compute      : GSTInvoice_GSTStockItemUOM    	: $StkItemUOM
+  
+    Compute      : GSTInvoice_CGSTClsfnRate      	: $CGSTRate
+    Compute      : GSTInvoice_SGSTClsfnRate      	: $SGSTRate
+    Compute      : GSTInvoice_IGSTClsfnRate      	: $IGSTRate
+    Compute      : GSTInvoice_CessGSTClsfnRate   	: $CessGSTRate
+	Compute		 : GSTInvoice_CessGSTClsfnRateQty	: $CessGSTRatePerUnit
+
+    Aggr Compute : GSTInvoice_GSTAssesableValue  	: Sum : $GSTPLTEntryFinalAsblValue
+
+    Aggr Compute : GSTInvoice_CGSTClsTaxAmt      	: Sum : If $IsReverseChargeApplicable Then $ComputedCGST Else $ApprCGST
+    Aggr Compute : GSTInvoice_SGSTClsTaxAmt      	: Sum : If $IsReverseChargeApplicable Then $ComputedSGST Else $ApprSGST
+    Aggr Compute : GSTInvoice_IGSTClsTaxAmt      	: Sum : If $IsReverseChargeApplicable Then $ComputedIGST Else +
+															If $GSTPLTVchIsNatTypeSalesSEZLUT OR $GSTPLTVchIsNatTypeExportLUT Then $$MulDivAmt:$GSTPLTEntryFinalAsblValue:$IGSTRate:100 Else $ApprIGST
+    Aggr Compute : GSTInvoice_CessGSTClsTaxAmt   	: Sum : If $IsReverseChargeApplicable Then $$NettAmount:$ComputedCess:$ComputedCessOnQty Else $$NettAmount:$ApprCess:$ApprCessOnQty
+    Aggr Compute : GSTInvoice_CessOnValAmt       	: Sum : If $IsReverseChargeApplicable Then $ComputedCess Else $ApprCess
+    Aggr Compute : GSTInvoice_CessOnQtyAmt       	: Sum : If $IsReverseChargeApplicable Then $ComputedCessOnQty Else $ApprCessOnQty
+		
+    Aggr Compute : GSTInvoice_CGSTClsValType     	: Sum : $CGSTValuationType
+    Aggr Compute : GSTInvoice_SGSTClsValType     	: Sum : $SGSTValuationType
+    Aggr Compute : GSTInvoice_IGSTClsTValType    	: Sum : $IGSTValuationType
+    Aggr Compute : GSTInvoice_CessGSTClsValType  	: Sum : $CessGSTValuationType
+
+[Collection: GST Invoice TaxAnalysisIESrc1]
+
+	Use			: GST Invoice TaxAnalysisTempSrc
+
+	Walk 		: AllInventoryEntries
+	
+[Collection: GST Invoice TaxAnalysisLESrc1]
+
+	Use			: GST Invoice TaxAnalysisTempSrc
+
+	Walk 		: LedgerEntries

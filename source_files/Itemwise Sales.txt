@@ -1,0 +1,143 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This program demonstrates the usage of Aggr Compute with Aggr Types i.e., Sum, Min 
+	and Max
+-	Sales and Credit Note vouchers are gathered and summary collection is defined to 
+	aggregate sum of BilledQty, min and max Rate
+
+Syntax -
+-	Grouping :-
+	By			 : Method-Name : Method-Formula
+-	Aggregation :-
+	Aggr Compute : Method-Name : Aggr-Type : Method-Formula
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: ProductwiseRpt]
+
+	Use		: DSP Template
+	Form	: ProductwiseRpt
+	Title	: "Product-wise Sales Report"
+	
+[Form: ProductwiseRpt]
+
+	Use		: DSP Template
+	Parts	: ProductwiseRptHdr, ProductwiseRpt
+	Height	: 100% Screen
+	Width	: 100% Screen
+	Delete	: Buttons			: ExplodeFlag
+	
+; 	To incorporate the changes in TallyPrime	
+;	Delete	: Bottom Buttons	: DSPAutoColumns, BudgetAnalysis, ReportConfig
+	Delete	: Button			: DSPAutoColumns
+	Delete	: Bottom Buttons	: BudgetAnalysis, ReportConfig
+
+
+[Part: ProductwiseRptHdr]
+
+	Lines	: ProductwiseRptHeader
+
+	[Line: ProductwiseRptHeader]
+
+        Field       : Name Field
+        Right Field : DSP MainDateTitle
+        Local       : Field : Name Field	: Set as   	: $$LocaleString:"Inventory Details"
+        Local       : Field : Name Field 	: Style    	: Normal Bold
+		Space Bottom: 1
+
+[Part: ProductwiseRpt]
+
+	Lines			: ProductwiseRptTitle, ProductwiseRptInfo
+
+	Repeat			: ProductwiseRptInfo	: SummaryColl
+
+	Scrolled		: Vertical
+	Common Borders	: Yes
+	Border			: Thin Bottom
+	Float			: No
+
+	[Line: ProductwiseRptTitle]
+	
+		Use		: ProductwiseRptInfo
+		Local	: Field	: Default			: Type		: String
+		Local	: Field	: Default			: Lines		: 0
+		Local	: Field	: Default			: Style		: Normal Bold
+
+		Local	: Field	: ProductTotalAmt	: Align		: Centre
+		Local	: Field	: ProductMaxRate	: Align		: Centre
+		Local	: Field	: ProductMinRate	: Align		: Centre
+
+		Local	: Field	: ProductName		: Set as	: "Particulars"
+		Local	: Field	: ProductTotalAmt	: Set as	: "Total Quantity"
+		Local	: Field	: ProductMaxRate	: Set as	: "Maximum Rate"
+		Local	: Field	: ProductMinRate	: Set as	: "Minimum Rate"
+		Border	: Thin Column Titles
+		
+	[Line: ProductwiseRptInfo]
+	
+		Fields			: ProductName
+		Right Fields	: ProductTotalAmt, ProductMaxRate, ProductMinRate
+
+		Local	: Field	: Default			: Style		: Normal
+
+		[Field: ProductName]
+		
+			Use			: Name Field
+			Set as		: $StockItemName
+			Display		: Stock Vouchers
+			Variable	: Stock Item Name
+	
+		[Field: ProductTotalAmt]
+		
+			Use			: Qty Primary Field
+			Set as		: $StkTotalQty
+			Border		: Thin Left Right
+			Width		: 10
+		
+		[Field: ProductMaxRate]
+		
+			Use			: Rate Field
+			Set as		: $StkMaxRate
+			Border		: Thin Right
+			Width		: 10
+
+		[Field: ProductMinRate]
+		
+			Use			: Rate Field
+			Set as      : $StkMinRate
+			Width		: 10
+
+;; Collection Definition begins
+
+[Collection: SalesVouchersColl]
+
+	Type		: Voucher
+	Filter		: OnlySalesCreditNote
+
+[Collection: SummaryColl]
+
+	Source Collection 	: SalesVouchersColl
+	
+	Walk				: Inventory Entries
+	By					: StockItemName	: $StockItemName
+	;; Aggr Compute is computed based on the By Attribute and the values are stored in the Methods
+	;; specified.  
+	;; StkTotalQty will store the Total on the Method BilledQty by Stock Item Name.
+	;; StkMinRate and StkMaxRate Methods store the Minimum and Maximum respectively on the 
+	;; Method Rate
+	Aggr Compute		: StkTotalQty	: Sum	: $BilledQty
+	Aggr Compute		: StkMinRate	: Min	: $Rate
+	Aggr Compute		: StkMaxRate	: Max	: $Rate
+
+	Keep Source         : No
+	Sort				: Default		: $StockItemName
+	
+[System: Formula]
+
+	OnlySalesCreditNote	: $$IsSales:$VoucherTypeName OR $$IsCreditNote:$VoucherTypeName
+	
+;; End-of-File

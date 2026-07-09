@@ -1,0 +1,165 @@
+;; Rectangle Area & Perimeter Calculator - Full Screen
+
+[#Menu: Gateway of Tally]
+    Add : Item : Rectangle Calculator : Alter : RECT_Calculator_Report
+
+;; ----------------------------------------
+;; Variables 
+;; ----------------------------------------
+[Variable: RECT_Length_Var]
+    Type : Number
+
+[Variable: RECT_Breadth_Var]
+    Type : Number
+
+[Variable: RECT_Wait_Var]
+    Type : String       
+
+;; ----------------------------------------
+;; Report Definition
+;; ----------------------------------------
+[Report: RECT_Calculator_Report]
+    Form     : RECT_Calculator_Form
+    Title    : "Rectangle Calculator"
+    Object   : Company
+    Variable : RECT_Length_Var, RECT_Breadth_Var, RECT_Wait_Var
+
+;; ----------------------------------------
+;; Form & Part Definition
+;; ----------------------------------------
+[Form: RECT_Calculator_Form]
+    Parts       : RECT_Calculator_Part
+    Background  : White
+    Full Width  : Yes
+    Full Height : Yes
+
+[Part: RECT_Calculator_Part]
+    Lines  : RECT_Title_Line, RECT_Input_Line, RECT_Result_Line, RECT_Wait_Line
+    Scroll : Vertical
+
+;; ----------------------------------------
+;; Line Definitions
+;; ----------------------------------------
+[Line: RECT_Title_Line]
+    Fields       : RECT_Title_Field
+    Space Bottom : 2
+
+[Line: RECT_Input_Line]
+    Fields       : RECT_Length_Label, RECT_Length_Field, RECT_Breadth_Label, RECT_Breadth_Field
+    Space Bottom : 1
+
+[Line: RECT_Result_Line]
+    Fields       : RECT_Area_Label, RECT_Area_Field, RECT_Perimeter_Label, RECT_Perimeter_Field
+    Space Bottom : 2
+
+[Line: RECT_Wait_Line]
+    Fields       : RECT_Wait_Label, RECT_Wait_Field
+
+;; ----------------------------------------
+;; Static Labels & Title
+;; ----------------------------------------
+[Field: RECT_Title_Field]
+    Use    : Name Field
+    Set As : "Rectangle Area & Perimeter Calculator"
+    Style  : Large Bold
+    Color  : Blue
+    Align  : Center
+    Width  : 60% Screen
+    Skip   : Yes
+
+[Field: RECT_Length_Label]
+    Use    : Name Field
+    Set As : "Length:"
+    Style  : Normal Bold
+    Width  : 15% Screen
+    Align  : Right
+    Skip   : Yes
+
+[Field: RECT_Breadth_Label]
+    Use    : Name Field
+    Set As : "Breadth:"
+    Style  : Normal Bold
+    Width  : 15% Screen
+    Align  : Right
+    Skip   : Yes
+
+[Field: RECT_Area_Label]
+    Use    : Name Field
+    Set As : "Area:"
+    Style  : Normal Bold
+    Width  : 15% Screen
+    Align  : Right
+    Color  : Dark Green
+    Skip   : Yes
+
+[Field: RECT_Perimeter_Label]
+    Use    : Name Field
+    Set As : "Perimeter:"
+    Style  : Normal Bold
+    Width  : 15% Screen
+    Align  : Right
+    Color  : Dark Blue
+    Skip   : Yes
+
+;; ----------------------------------------
+;; Input Fields 
+;; ----------------------------------------
+[Field: RECT_Length_Field]
+    Use       : Number Field
+    Variable  : RECT_Length_Var
+    Modifies  : RECT_Length_Var
+    Notify    : Yes                 
+    Width     : 15% Screen
+    Set Focus : Yes
+    Format    : "NoComma"
+
+[Field: RECT_Breadth_Field]
+    Use       : Number Field
+    Variable  : RECT_Breadth_Var
+    Modifies  : RECT_Breadth_Var
+    Notify    : Yes                 
+    Width     : 15% Screen
+    Format    : "NoComma"
+
+;; ----------------------------------------
+;; LIVE Calculations (Fixed with # References)
+;; ----------------------------------------
+[Field: RECT_Area_Field]
+    Use        : Number Field
+    Width      : 15% Screen
+    Style      : Normal Bold
+    Color      : Dark Green
+    ;; Calculates directly from the screen values
+    Set As     : #RECT_Length_Field * #RECT_Breadth_Field
+    Set Always : Yes                
+    Skip       : Yes
+    Format     : "NoComma"
+
+[Field: RECT_Perimeter_Field]
+    Use        : Number Field
+    Width      : 15% Screen
+    Style      : Normal Bold
+    Color      : Dark Blue
+    ;; Distributed math prevents bracket evaluation errors
+    Set As     : (#RECT_Length_Field * 2) + (#RECT_Breadth_Field * 2)
+    Set Always : Yes                
+    Skip       : Yes
+    Format     : "NoComma"
+
+;; ----------------------------------------
+;; The "Rest Stop" Fields
+;; ----------------------------------------
+[Field: RECT_Wait_Label]
+    Use    : Name Field
+    Set As : "Press Enter again to Exit ->"
+    Style  : Normal Italic
+    Width  : 30% Screen
+    Align  : Right
+    Color  : Dark Gray
+    Skip   : Yes
+
+[Field: RECT_Wait_Field]
+    Use       : Name Field
+    Variable  : RECT_Wait_Var
+    Modifies  : RECT_Wait_Var
+    Width     : 5% Screen

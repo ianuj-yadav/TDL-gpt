@@ -1,0 +1,56 @@
+{
+     "Stockitems": [
+          {
+               "StockItem": "Crackers - rocket", 
+               "Unit": "nos", 
+               "Pricelist": [
+                    {
+                         "Price Level Name": "Diwali offer 1", 
+                         "Price Date": "1-Apr-2017",
+						 "Pricelevellist":[
+						                  {
+										  "Disc":"25",
+										  "Ending" :"150",
+										  "Rates":"20",
+										  "Starting":"0"
+										  
+										  },
+										  {
+										  "Disc":"30",
+										  "Ending" :"300",
+										  "Rates":"15",
+										  "Starting":"150"
+										  }
+						 ]
+                    } 
+                    
+               ]
+          },  
+          {
+               "StockItem": "Crackers - Flower Pot", 
+               "Unit": "nos", 
+               "Pricelist": [
+                    {
+                         "Price Level Name": "Diwali offer 2", 
+                         "Price Date": "1-Apr-2017",
+						 "Pricelevellist":[
+						                  {
+										  "Disc":"20",
+										  "Ending" :"200",
+										  "Rates":"10",
+										  "Starting":"0"
+										  
+										  },
+										  {
+										  "Disc":"25",
+										  "Ending" :"300",
+										  "Rates":"7.5",
+										  "Starting":"200"
+										  }
+						 ]
+                    } 
+                    
+               ]
+          }       		  
+     ]
+}

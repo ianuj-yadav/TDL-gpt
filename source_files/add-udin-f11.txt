@@ -1,0 +1,36 @@
+[#Part: Company F11 Other Features]
+	
+	Local	: Part	: Cfg PartContent		:Add			: Lines	: Cmp EnableUDIN
+	[Line: Cmp EnableUDIN]
+
+		Use			: Cmp Ops More Config	
+		Fields		: Medium Prompt, Cmp EnableUDIN
+		Space Top	: 0.6
+		Local  		: Field : Medium Prompt : Info    		: $$LocaleString:"Enable UDIN Module :"
+		Local  		: Field : Medium Prompt : Background	: Yellow
+	
+		[Field:Cmp EnableUDIN]
+			Type		: Logical
+			Width		: 3
+			Modifies	: EnableUDIN
+			Max			: 3
+			Set as		: ##EnableUDIN
+			Table		: YesNoTable
+			Show Table	: On Error
+			Key			: LogicalToggle		
+			Style		: Normal Bold
+			Sub Form	: UDINReports	: $$Value=Yes  ;; This would be a name of report.
+							;; Sub Form attribute is always open in alter mode.
+							
+			Background	: Yellow
+	
+			
+
+	
+
+[Variable: EnableUDIN] 
+	Type		: Logical
+	Persistent	: Yes 
+
+[System: Variable]
+	EnableUDIN		: Yes

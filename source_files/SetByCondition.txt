@@ -1,0 +1,77 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This program demonstrates the usage of Field attribute 'SetbyCondition'
+-	'SetbyCondition' sets the value of a field if the given condition satisfies.
+-	The very first satisfied condition is evaluated; if no condition is available/ evaluated 
+	and Set as is available, it is considered.
+
+Syntax -
+-	Set by condition is Multiple Name / Value attribute with the following syntax:
+	Set by Condition : <Condition Formula> : <Value Formula>
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Sample SetbyCondition]
+
+    Form        : Sample SetbyCondition
+    ;; the following variables have been added to switch over between the options/conditions
+    Variable    : SampleSetbyCondition1, SampleSetbyCondition2  
+    Local       : Variable  : Default : Default : No
+        
+[Form: Sample SetbyCondition]
+
+    Part        : Sample SetbyCondition
+    ;; the below buttons have been added to switch over between the options/conditions
+    Button	    : SampleSetbyCondition1, SampleSetbyCondition2
+    
+[Part: Sample SetbyCondition]
+
+    Line        : Sample SetbyCondition
+    
+    [Line: Sample SetbyCondition]
+    
+        Field   : Sample SetbyCondition
+        
+;; field definitions
+
+[Field: Sample SetbyCondition]
+        
+	Use					: Name Field
+    Set as              : "Default Value"
+    ;; by writing the code using 'Set by Condition' we can avoid defining unwanted 
+    ;; optional fields and can avoid writing complex 'if else' conditions
+    SetbyCondition    	: ##SampleSetbyCondition1   : "Set by Condition 1"
+    SetbyCondition    	: ##SampleSetbyCondition2   : "Set by Condition 2"
+    SetbyCondition    	: ##SampleSetbyCondition1   : "Set by Condition 1 Again"
+  
+    Width               : 0
+
+;; Variable definitions
+
+[Variable: SampleSetbyCondition1]
+
+    Type        : Logical
+
+[Variable: SampleSetbyCondition2]
+
+    Type        : Logical
+
+;; Button definitions
+
+[Button: SampleSetbyCondition1]
+    
+    Key         : Alt + 1
+    Title       : If NOT ##SampleSetbyCondition1 then "Setby1-Active" else "Setby1-Deactive"
+    Action      : Set   : SampleSetbyCondition1 : NOT ##SampleSetbyCondition1
+
+[Button: SampleSetbyCondition2]
+
+    Key         : Alt + 2
+    Title       : If NOT ##SampleSetbyCondition2 then "Setby2-Active" else "Setby2-Deactive"
+    Action      : Set   : SampleSetbyCondition2 : NOT ##SampleSetbyCondition2
+
+;; End-of-code

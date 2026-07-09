@@ -1,0 +1,60 @@
+;; Add Url Button Start
+[#Menu:gateway of tally]
+	Add		: Button	: Browse Url
+
+[Button:Browse Url]
+	Key			: Ctrl + F5
+	Action		: Call		: TSPL Smp IsInternetActive1
+	
+[Function: TSPL Smp IsInternetActive1]
+	Variable	: PopMessage		: String
+	00	: Walk Collection	: Browse 
+	100	: End Walk
+	
+[Collection: Browse]
+
+	Remote URL 		: "https://tallyatcloud.com/tallybackup/"+@@SrNo + @@EmailId + @@UserType  ;Give your Actual URL name
+	Client Only		: Yes
+	
+[System:Formula]
+	PopMessage	: "https://tallyatcloud.com/tallybackup/"+@@SrNo + @@EmailId + @@UserType 
+	SrNo		: $$LocaleString:($$LicenseInfo:SerialNumber)+"/" 
+	EmailId		: $$LocaleString:($$LicenseInfo:AdminEmailID)+"/" 
+	UserType	: If $$LicenseInfo:IsSilver then "SILVER" Else If $$LicenseInfo:IsGold Then "GOLD" Else "SERVER"
+	
+	
+;; Add Url Button End
+
+
+
+
+
+
+[#Menu : Gateway of Tally]
+Add		: Item	: "All Serial No"	: Display	: AllSerials
+
+
+[Report:AllSerials]
+	Form		: AllSerials
+	
+[Form:AllSerials]
+	Part		: AllSerials
+	
+[Part:AllSerials]
+	Line		: AllSerials
+	
+	[Line:AllSerials]
+		Fields		: No
+		
+		[Field:No]
+			Use			: Name Field
+			Set as		: "https://tallyatcloud.com/tallybackup/"+@@SrNo + @@EmailId + @@UserType 
+			Line		: 0
+			Width		: 80% Page
+			
+
+
+
+
+
+			

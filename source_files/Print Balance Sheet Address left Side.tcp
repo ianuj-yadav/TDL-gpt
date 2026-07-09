@@ -1,0 +1,95 @@
+
+
+
+;===============Goodwill Learning world ===========================;
+;=============Balance Sheet Heading Left Alignment================;
+;=============Balance Sheet Heading Left Alignment================;
+;===============Goodwill Learning world ===========================;
+
+ [#Field: BSMainAmt]
+        
+        Style       : if $IsPLObject then @PLStyle else +
+                      if $$IsOdd:$$Column then "Normal Bold" else "Normal"
+        PLStyle     : if $$IsOdd:$$Column then "Normal Bold" else "Normal"
+		 
+		Border: thick left right :  $$ExplodeLevel =0
+
+   
+
+[#Field: BSSubAmt]
+
+        Style       : if ($IsInwardTrack OR $IsOutwardTrack) then "normal bold" else +
+                      if (@@IsWkgCapItem) then @@DSPAccSmallBoldStyle else +
+                      if $$IsOdd:$$Column then "normal" else "Small"
+	
+	
+[#Field: BSName]
+
+    Local		: Field : DSPDispName	: Style			: if ($IsInwardTrack OR $IsOutwardTrack) then "normal bold" else +
+                                            	  	   	  if ($IsWkgCapLine) then "normal Bold" else +
+                                             	  		  if (@@IsWkgCapItem) then @@DSPSmallBold else +
+                                              	  		  if (($$ExplodeLevel = 0) AND $IsLedgerProfit) then "normal bold" else +
+                                              	  		  if  $$ExplodeLevel = 0 then @@DSPSmallBold else "normal" 
+													  
+     
+                                              	  
+    Local		: Field : DSPDispName	: PrintStyle	: if ($IsInwardTrack OR $IsOutwardTrack) then "Normal bold" else +
+                                        	          	  if ($IsWkgCapLine) then "Normal Bold" else +
+                                            	      	  if (@@IsWkgCapItem) then @@DSPNrmlBold else +
+                                                	  	  if (($$ExplodeLevel = 0) AND $IsLedgerProfit) then "Normal Bold" else +
+                                                  		  if $$ExplodeLevel = 0 then @@DSPNrmlBold else "normal"
+	   
+	 [#Line:BSDetail]
+		 Local:Field:bsname:Border:thick left
+	
+[#Field: DSP VchNarr]
+
+   
+    Style   : small
+	
+ [#Field: DSP CompanyName]
+
+			
+			Align       : Left
+
+[#Field: DSP CompanyAddress]
+           
+            Align       : Left           
+			Delete: Border	
+
+[#Field: DSP ReportPeriod]
+
+            Invisible   : NOT $$IsCommon:SVFromDate OR NOT $$IsCommon:SVToDate OR NOT ##PrintReportPeriod
+            Set as      : @@DSPDateStr
+            Width       : 0
+            FullWidth   : Yes
+            Align       : Center
+            PrintStyle  : normal bold
+
+
+
+
+[#Menu     : Gateway of Tally]
+
+	Add : Top Button  : Goodwill
+
+	
+[key: Goodwill]
+    	
+      title : "Goodwill"
+	Key   : Alt + G
+	Action : Browse : @@Goodwill
+
+
+	
+[System : Formula]
+	
+
+	Goodwill  :  "https://www.youtube.com/channel/UClaMdjE5BiYWQ6E8G5MnMzQ"
+;===============Goodwill Learning world ===========================;
+;=============Balance Sheet Heading Left Alignment================;
+;=============Balance Sheet Heading Left Alignment================;
+;===============Goodwill Learning world ===========================;
+
+
+	

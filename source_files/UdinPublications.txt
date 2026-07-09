@@ -1,0 +1,58 @@
+[Report:UdinPublications]
+	Form			: UdinPublications
+	
+[Form:UdinPublications]
+	Height		: 100% Page
+	Width		: 100% Page
+	Part		: UdinPublications
+[Part:UdinPublications]
+	Line		: UdinPublicationsTitle, UdinPublications
+	Repeat		: UdinPublications		: UdinPublicationsColl
+	Border		: Thin Bottom
+	Scroll		: Vertical
+	Common Borders		: Yes
+	
+	[Line:UdinPublicationsTitle]
+		Use		: UdinPublications
+		Local	: Field	: Default	: Style		: Normal Bold
+		Local	: Field	: Default	: Type		: String
+		Local	: Field	: Default	: Color		: Black
+		Local	: Field	: UdinPublicationsLink		: Info	: $$LocaleString:"Link"
+		
+
+	[Line:UdinPublications]
+		
+		Field			: UdinPublicationsLink
+		Border			: Thin Bottom
+		Key   			: PublicationOpen
+			
+
+			[Field: UdinPublicationsLink]
+			Set as			: $url_name
+			Full Width		: Yes
+			Set Always		: Yes
+			Color 			: Blue
+			
+		
+			
+		
+		
+	[Key: PublicationOpen]
+		Key     	: Enter
+		Action Ex	: Set Var1	: Set			: UdinPublicationLink		: $link
+		ActionEx	: VchRpt	: Browse Url	: ##UdinPublicationLink
+
+
+[Collection:UdinPublicationsColl]
+	Data Source     	: HTTP JSON			: @@WorkingUrl+"udinpublications"
+	JSON Object Path	: publications		: 1				; Main object path
+	Client Only			: Yes	
+	
+
+[Variable:UdinPublicationLink]
+	Type			: String
+	Persistent		: Yes
+
+[System: Variable]
+	UdinPublicationLink		: ''
+	

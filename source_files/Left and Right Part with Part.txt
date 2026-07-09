@@ -1,0 +1,47 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This program demonstrates the impact of Dimensional Attribute 'Left Part' and 'Right Part' 
+	within Part
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Left and Right Part within Part]
+
+	Form		: Left and Right Part within Part
+
+[Form: Left and Right Part within Part]
+
+	Parts		: LRP within Part
+
+[Part: LRP within Part]
+
+	Left Part	: LRP Part1
+	Right Part 	: LRP Part2
+
+	[Part: LRP Part1]
+	
+		Lines	: LRP Part1 Line
+	
+		[Line: LRP Part1 Line]
+		
+			Fields	: LRP Part1 Field1, LRP Part1 Field2
+		
+			[Field: LRP Part1 Field1]
+			
+				Set as	: "This is Left Part - Field1"
+			
+			[Field: LRP Part1 Field2]
+			
+				Set as	: "This is Left Part - Field2"
+
+	[Part: LRP Part2]
+	
+		Lines	: LRP Part1 Line
+		Local	: Field	: LRP Part1 Field1	: Set As	: "This is Right Part - Field1"
+		Local	: Field	: LRP Part1 Field2	: Set As	: "This is Right Part - Field2"
+
+;; End-of-File

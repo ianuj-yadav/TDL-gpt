@@ -1,0 +1,153 @@
+---
+title: Final Digital Sign Configuration
+type: sample_code
+objects: Report, Form, Part, Line, Field
+source: Final Digital Sign Configuration.txt
+---
+
+# Final Digital Sign Configuration
+
+## Source Code
+
+```tdl
+
+[#Collection: Company Details]
+	;Color		: Red
+	Add			: Object		: Before		: Cfg ShowCompanyName		: ShowDigitalSign
+	;Object		: ShowDigitalSign
+	
+[Object: ShowDigitalSign]
+	Use         : Vch Output Configuration
+	Name		: "Show Digital Sign of Company"
+	Value		: ##DigitalSignEnable
+	;Action		: ConfigAction : /* Do If : @@IsSales Or @@IsPurchase	:*/ Set   : DigitalSignEnable    : NOT ##DigitalSignEnable
+	Action      : ConfigAction   : Modify Variables		: Cfg ShowDigitalSign
+	
+
+[Variable:DigitalSignEnable]
+	Type        : Logical
+    Persistent  : Yes
+	Default		: Yes
+	
+
+[System: Variable]
+	DigitalSignEnable	: No
+	
+
+;;-=========================Digital Sign Like Logo Path===========================
+
+[Report:Cfg ShowDigitalSign]
+	Use		: OutputConfig Form
+	Set		: SubFormTitle	: @@CompanyDetails
+	Set		: ShowMoreApplicable	: Yes
+	Set		: ShowMore				: No
+	Delete	: Form
+	Add		: Form	: Cfg ShowDigitalSign
+	Local	: Collection			: File Selection Table		: Add	: Advanced	: @@NonImgFiles
+	
+[Form: Cfg ShowDigitalSign]
+	
+	Use		: Company Logo path
+	Replace	: Part	: Form SubTitle		: MV Title
+	Replace	: Part	: Company Logo path	: Cfg ShowCompanyDigitalSign
+
+	Local	: Part	: MV Title	: Space Bottom	: 1
+
+[Part: Cfg ShowCompanyDigitalSign]	
+
+	Line	: Cfg ShowCmpDigitalSign, Cfg LocationOfDigitalSign, Cfg DigitalSignFileName, CompanyLogo NotesOne, CompanyLogo NotesTwo, +
+				CompanyLogoNotesThree
+	
+	Local	: Field	: Medium Prompt	: Width	: @@LongWidth
+	Local	: Line	: CompanyLogoNotesThree	: Local : Field : CompanyLogoNotes: Set as      : "- " + $$LocaleString:"Company Digital Sign can be printed only on specific reports and vouchers."
+
+	[Line: Cfg ShowCmpDigitalSign]
+
+		Field           : Medium Prompt, SACompDigitalSign
+		Local           : Field: Medium Prompt : Set as      : "Show Company Digital Sign"
+		[Field: SACompDigitalSign]
+    
+			Use					: Logical Field
+			Set as      		: ##DigitalSignEnable
+			;Skip        		: NOT ##DigitalSignEnable;(@@IsCmpLogoEnabled OR $$ParentIsMenu)
+			Set Always			: Yes
+			Modifies			: DigitalSignEnable
+			Variable			: DigitalSignEnable
+			;Validate    		: ($$RepLogoSpecific:##ReportNameVar:$$Value)
+
+	
+	[Line: Cfg LocationOfDigitalSign]
+	
+		Fields			: Medium Prompt, SADigitalSignPathPopUp
+		Local			: Field	: Medium Prompt	: Set as	: @@ImagePath
+		Local           : Field	: Medium Prompt : Inactive  : NOT #SACompDigitalSign
+		
+		[Field: SADigitalSignPathPopUp]
+	
+			Use			: Name Field
+			Width		: @@NarrWidth
+			Set as		: If @@IsCurrPathRoot Then "" Else ##vCurrentPath;
+			Inactive  	: NOT #SACompDigitalSign
+			Skip		: Yes
+			
+	[Line: Cfg DigitalSignFileName]
+
+		Field           : Medium Prompt, SADigitalSignPath, DigitalSignAbsolutePath
+		Local           : Field: Medium Prompt : Set as     : @@ImageFileName
+		Local           : Field: Medium Prompt : Inactive  	: NOT #SACompDigitalSign
+		Space Bottom	: 0.25
+		
+		[Field: SADigitalSignPath]
+    
+			Use			: File Selection Template 
+			Width		: @@NarrWidth
+			Inactive    : NOT #SACompDigitalSign
+			Set as		: ##SADigitalFileName
+			Modifies	: SADigitalFileName
+			Variable	: SADigitalFileName
+			Control 	: SADigitalSignPathExist : ($$IsEmpty:@@SADigitalSignPath OR Not $$IsFileExists:@@SADigitalSignPath OR ($$FileSize:@@CfgDigitalSignPath > 1048577))
+			Act on Table Element: (@ShowMore OR @ShowLess)	: Execute Obj Actions	: ShowMoreLess
+
+			ShowMore	: ($$IsSysNameEqual:ShowMore:($$CurrentTableObj:$Name))
+			ShowLess	: ($$IsSysNameEqual:ShowLess:($$CurrentTableObj:$Name))
+	
+		[Field: DigitalSignAbsolutePath]
+	
+			Use			: Name Field
+			Type		: String		: Forced
+			Set as		: @@SADigitalSignPath
+			Set Always	: Yes
+			Width		: 50
+			Skip		: Yes
+			Invisible	: Yes
+			
+[System:Formula]
+	SADigitalSignPathExist			: If $$IsEmpty:@@SADigitalSignPath then $$LocaleString:"Digital Sign path cannot be empty." +
+							  Else If NOT $$IsFileExists:@@SADigitalSignPath Then $$LocaleString:"Digital Sign path specified is invalid or file not found." +
+								   Else If $$FileSize:@@SADigitalSignPath > 1048577 Then "File size exceeds 1 MB." +
+									    Else $$LocaleString:"Format Not Supported"
+										
+[System: Formulae]
+	SADigitalSignPath				: $$GetFileFullPath:(#SADigitalSignPathPopUp + "\" + #SADigitalSignPath)
+	CfgDigitalSignPath				: $$GetFileFullPath:(#SADigitalSignPathPopUp + "\" + #SADigitalSignPath)
+	
+		
+	
+[Variable: SADigitalFileName]
+	Use			: Skip Save Variable
+	Type 		: String
+	Persistent  : Yes
+	
+
+[Variable: SADigitalSignPath]
+
+	Use			: Skip Save Variable
+	Type 		: String
+	Persistent  : Yes
+	
+[System:Variable]
+	SADigitalSignPath  	: #SADigitalSignPathPopUp + "\" + #SADigitalSignPath
+	SADigitalFileName	: ""
+	
+	
+```

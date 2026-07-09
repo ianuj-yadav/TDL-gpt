@@ -1,0 +1,67 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This code demonstrates the usage of Variable in System Scope and of Persistent nature.
+-	Variables must be of System Scope for its value to be Persistent
+-	The value of all the Persistent Variables are stored in a file named "Tallysav.TSF"
+	within the Local Tally Folder by default or the Config Path specified in Tally.INI
+- 	The Color is being altered based on the variable value. The variable value altered 
+	within the Report is retained eventhough Tally is restarted. This behavior can be 
+	observed by setting the Field to Green color, closing running copy of Tally and 
+	reentering the application. The modified color i.e., Green Background will be 
+	retained which shows that the Variable value saved within the Report is retained 
+	and the variable is of System scope with persistent nature hence, will be available 
+	across the sessions	of Tally i.e., even after we quit and restart Tally.
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: System Scope Persistent]
+
+	Form	: System Scope Persistent
+
+[Form: System Scope Persistent]
+
+	Part	: System Scope Persistent
+	Button	: System Scope Persistent Button
+
+[Part: System Scope Persistent]
+
+	Lines	: System Scope Persistent
+
+	[Line: System Scope Persistent]
+		
+		Fields	: System Scope Persistent
+	
+		[Field: System Scope Persistent]
+
+			Set AS		: $$CurrentDate
+			Option		: System Scope Persistent Red	: Not ##SystemVarPersistent
+			Option		: System Scope Persistent Green	: ##SystemVarPersistent
+
+			[!Field: System Scope Persistent Red]
+
+				Background	: Red
+				
+			[!Field: System Scope Persistent Green]
+
+				Background	: Green
+
+[Variable: SystemVarPersistent]
+
+	Type		: Logical
+	Persistent	: Yes
+
+[System: Variable]
+
+	SystemVarPersistent	: No
+
+[Button: System Scope Persistent Button]
+
+	Key		: Alt + R
+	Action	: Set	: SystemVarPersistent	: Not ##SystemVarPersistent
+	Title	: if ##SystemVarPersistent then "Red" else "Green"
+
+;; End-of-File

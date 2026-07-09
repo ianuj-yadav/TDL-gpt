@@ -1,0 +1,205 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the object fetched at Report Level to be used in 
+	Remote environment
+-	The details about of a single object if required, 'Fetch Object' Attribute
+	at the Report must be used to fetch the methods of the required Object at
+	once.
+
+Syntax -
+-	Fetch Object	: <Object Type>	: <Object Identifier> : <List of Required Methods separated by commas>
+
+Last modification -
+-	Altered on 09-11-2009
+*/
+
+[Collection: Remote My Ledger Coll]
+
+    Use         : Alias Collection      ;; Default Collection for including Alias
+    Type        : Ledger
+    Variable    : LedgerName            ;; Default Variable LedgerName is used
+    Trigger     : Remote Triggered Led Report
+    Report      : Remote Final Led Report
+
+;; Ledger method Name needs to be fetched from Server to show the Ledger collection as Table
+
+	Fetch		: Name
+	
+
+;; Trigger Report Definition begins here
+
+[Report: Remote Triggered Led Report]
+
+    Title		: "Select Ledger"
+    Form		: Remote Triggered Led Report
+ 	Variable	: SVFromDate, SVToDate
+    Variable	: DSPShowOpening, DSPShowClosing
+	
+[Form: Remote Triggered Led Report]
+
+    Parts 		: Remote Triggered Led Report
+
+[Part: Remote Triggered Led Report]
+
+    Lines   	: Remote Triggered Led Report
+    
+    [Line: Remote Triggered Led Report]
+    
+        Fields      : Medium Prompt, Remote Triggered Led Report
+        Local: Field: Medium Prompt : Set as    : "Ledger :"
+        
+        [Field: Remote Triggered Led Report]
+        
+            Use         : Name Field
+            Table       : Remote My Ledger Coll
+            Show Table  : Always
+            Modifies    : LedgerName
+
+;; Final Report Definition begins here
+   
+[Report: Remote Final Led Report]
+
+    Use             : DSP Template
+    Form            : Remote Final Led Report
+    Title           : "Display of Ledger Vouchers demonstrating Remoting Capability"
+	Fetch Object	: Ledger	: #LedgerName	: Name, LedgerContact, LedgerPhone, OpeningBalance, LedOpeningBalance, TBalOpening
+
+;; Particular Ledger Object is pre-fetched with required Methods for this Report
+	
+[Form: Remote Final Led Report]
+
+    Parts           : Remote Final Led Report Title, Remote Final Led Report Details
+    Bottom Parts    : Final LV Totals
+    Height          : 100% Page
+    Width           : 100% Page
+    Button			: Change Period
+
+[Part: Remote Final Led Report Title]
+
+    Lines           : Remote Final Led Report Title, Final Led Contact,  Final Led Phone
+    Space Bottom    : 1
+    
+    [Line: Remote Final Led Report Title]
+    
+        Fields      : Medium Prompt,Remote Final Led Report Title
+        Right Fields: DSP MainDateTitle
+		Local		: Field	: Medium Prompt	: Set as	: "Ledger"
+        
+        [Field: Remote Final Led Report Title]
+        
+            Use         : Name Field
+            Set as      : #LedgerName
+
+    [Line: Final Led Contact]
+    
+        Fields      : Medium Prompt, Ledger Contact
+    	Local		: Field	: Medium Prompt	: Set as	: "Contact Person"
+
+    [Line: Final Led Phone]
+    
+        Fields      : Medium Prompt, Ledger Phone
+    	Local		: Field	: Medium Prompt	: Set as	: "Phone"
+
+        [Field: Ledger Contact]
+        
+            Use         : Name Field
+            Set as      : $LedgerContact:Ledger:#LedgerName
+
+        [Field: Ledger Phone]
+        
+            Use         : Name Field
+            Set as      : $LedgerPhone:Ledger:#LedgerName
+
+[Part: Remote Final Led Report Details]
+
+    Lines       : Remote Final Led Report DetTitle, Remote Final Led Report Details
+    Repeat      : Remote Final Led Report Details  : SMP Ledger Vouchers Coll
+    Scroll      : Vertical
+    Total       : Remote Final Led Report AmtDr, Remote Final Led Report AmtCr
+           
+    [Line: Remote Final Led Report DetTitle]
+    
+        Fields      : Remote Final Led Report Date, Remote Final Led Report Particulars
+        Right Fields: Remote Final Led Report VrType, Remote Final Led Report VrNo, Remote Final Led Report AmtDr, Remote Final Led Report AmtCr
+        
+        Local: Field: Default                      			: Type      : String
+        Local: Field: Remote Final Led Report Date         	: Set as    : "Date"
+        Local: Field: Remote Final Led Report Particulars  	: Set as    : "Particulars"
+        Local: Field: Remote Final Led Report VrType       	: Set as    : "Voucher Type"
+        Local: Field: Remote Final Led Report VrNo         	: Set as    : "Voucher No."
+        Local: Field: Remote Final Led Report AmtDr        	: Set as    : "Debit"
+        Local: Field: Remote Final Led Report AmtCr        	: Set as    : "Credit"
+        
+        Border      : Thin Top Bottom
+
+    [Line: Remote Final Led Report Details]
+    
+        Fields      : Remote Final Led Report Date , Remote Final Led Report Particulars
+        Right Fields: Remote Final Led Report VrType, Remote Final Led Report VrNo, Remote Final Led Report AmtDr, Remote Final Led Report AmtCr
+
+        Local       : Field : Default	: Style     : Normal
+                
+        [Field: Remote Final Led Report Date]
+        
+            Use         : Uni Date Field
+            Set as      : $Date
+            Alter       : Voucher
+
+        [Field: Remote Final Led Report Particulars]
+        
+            Use         : Name Field
+            FullWidth   : Yes
+            Set as      : $FirstContraAcc  
+
+        [Field: Remote Final Led Report VrType]
+        
+            Use         : Name Field
+            Set as      : $VoucherTypeName
+
+        [Field: Remote Final Led Report VrNo]
+        
+            Use         : Name Field
+            Set as      : $VoucherNumber
+
+        [Field: Remote Final Led Report AmtDr]
+        
+            Use         : Amount Forex Field
+            Set as      : $OrigVchLedDrTotal 
+
+        [Field: Remote Final Led Report AmtCr]
+        
+            Use         : Amount Forex Field
+            Set as      : $OrigVchLedCrTotal  
+
+[Collection: SMP Ledger Vouchers Coll]
+    
+    Type        : Vouchers  		: Ledger
+    Child Of    : #LedgerName
+	Fetch		: Name
+
+;;Compute has been used to minimize the number of requests sent to the Server
+
+    Compute		: FirstContraAcc	: $$FirstContraAcc:$$IsDr:($$OrigVchLedTotal:#LedgerName)
+	Compute		: OrigVchLedDrTotal	: $$OrigVchLedDrTotal:#LedgerName  
+	Compute		: OrigVchLedCrTotal	: $$OrigVchLedCrTotal:#LedgerName  
+
+    Sort        : @@Default         : $Date
+
+[Part: Final LV Totals]
+
+    Lines       : DSP VchTotalAmt
+
+    Local: Field: DSP VchDrOpAmt	: Set as    : $$IfDr:$TBalOpening:Ledger:#LedgerName  
+    Local: Field: DSP VchCrOpAmt    : Set as    : $$IfCr:$TBalOpening:Ledger:#LedgerName  
+
+
+    Local: Field: DSP VchDrTotalAmt : Set as    : $$Total:RemoteFinalLedReportAmtDr
+    Local: Field: DSP VchCrTotalAmt : Set as    : $$Total:RemoteFinalLedReportAmtCr
+    
+    Local: Field: DSP VchDrClAmt    : Set as    : $$IfDr:@@VchClg  
+    Local: Field: DSP VchCrClAmt    : Set as    : $$IfCr:@@VchClg  
+	
+    
+;; End-of-File

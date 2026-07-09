@@ -1,0 +1,85 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the usage of User Defined Functions in an Object
+-	This code accepts two inputs New Group and a current Group and creates a new
+	Group within the existing Group entered by the user and creates 5 ledgers
+
+Last Modification -
+-	Altered on 09-11-2009
+
+Dependencies 
+*/
+
+[Report: Group and Ledger Creation]
+
+	Use		: Simple Interest Calculator
+
+	Local	: Field	: Default			: Case		: Title Case
+	Local	: Field	: Medium Prompt		: Width		: @@LongWidth
+
+	Local	: Form	: Interest Calc		: Local		: Field	: Form SubTitle	: Info		: "Ledger Creation Details"
+	Local	: Form	: Interest Calc		: Delete	: On
+	Local	: Form	: Interest Calc		: On		: Form Accept	: Yes	: Call		: CreateLedger:#InterestPrincipal:#InterestRate
+
+	Local	: Line	: Interest Principal: Local		: Field	: Medium Prompt	: Info		: "Please enter New Group (if any) :"
+	Local	: Field	: Interest Principal: Type		: String
+	Local	: Field	: Interest Principal: Width		: @@NameWidth
+
+	Local	: Line	: Interest Rate		: Local		: Field	: Medium Prompt	: Info		: "Falls under Existing Group :"
+	Local	: Field	: Interest Rate		: Type		: String
+	Local	: Field	: Interest Rate		: Table		: GroupDrsandCrs
+	Local	: Field	: Interest Rate		: Width		: @@NameWidth
+
+	Local	: Line	: Interest NoOfYrs	: Invisible	: Yes
+
+	Local	: Line	: Interest Result	: Invisible	: Yes
+
+[Collection: GroupDrsandCrs]
+
+	Collection	: GroupDrs, GroupCrs
+	Title		: "Debtors and Creditors"
+	
+[Collection: GroupDrs]
+
+	Type		: Group
+	Child Of	: $$GroupSundryDebtors
+	Belongs To	: Yes
+	Fetch		: Name, Parent
+
+[Collection: GroupCrs]
+
+	Type		: Group
+	Child Of	: $$GroupSundryCreditors
+	Belongs To	: Yes
+	Fetch		: Name, Parent
+
+[Function: Create Ledger]
+
+;; Definition Block
+
+	Parameter: NGroupName	: String
+	Parameter: EGroupName	: String
+
+	Variable : Counter 		: Number
+	
+;; Procedural Block
+
+	01	: NEW OBJECT	: Group
+	02	: SET VALUE		: Name			: ##NGroupName
+	03	: SET VALUE		: Parent		: ##EGroupName
+	04	: CREATE TARGET
+
+	05	: SET			: Counter 		: 1
+	06	: WHILE 		: ##Counter <= 5
+	07	: 	NEW OBJECT	: Ledger
+	08	: 	SET VALUE 	: Name 			: if $$IsEmpty:##NGroupName then ("Ledger - " + $$String:##Counter + " - " + ##EGroupName) else ("Ledger - " + $$String:##Counter + " - " + ##NGroupName)
+	09	: 	SET VALUE	: Parent 		: if $$IsEmpty:##NGroupName then ##EGroupName else ##NGroupName
+	10	: 	CREATE TARGET
+	11	: 	INCREMENT	: Counter
+	12	: END WHILE
+	13	: MSGBOX		: "Success !!"	: "Ledgers created successfully"
+	14	: RETURN
+
+;; End-of-File

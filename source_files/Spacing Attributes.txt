@@ -1,0 +1,41 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This program demonstrates the usage of Spacing Attributes
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Spacing Attributes]
+
+	Form 		: Spacing Attributes
+
+[Form: Spacing Attributes]
+
+	Parts		: SA Part
+
+[Part: SA Part]
+
+	Lines		: SA Line
+	Space Top	: 5
+	Space Bottom: 3
+;; Attribute 'Space Top' and 'Space Bottom' considers Number of lines as default
+;; unit of measure unless specified explicitly.  For e.g., 5 mms
+
+	[Line: SA Line]
+
+		Fields	: SA Field
+	
+		[Field: SA Field]
+
+			Set as		: "Hello TDL"
+			Width		: 9
+			Space Left 	: 5
+		    Space Right	: 3
+;; Attribute 'Width' is set to 9 which means width of 9 characters. Space Left and Right 
+;; are not included within the Width if specified in characters.  If Width is specified in
+;; any other unit like cms, mms, etc., Width will include the Spaces on either side
+
+;; End-of-File

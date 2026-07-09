@@ -1,0 +1,114 @@
+[#Menu:Gatewayoftally]
+Item:Input:Alter:Input
+Item:Output:Display:Output
+
+;; ===================== Input ======================= ;;
+
+[Report:Input]
+Form:Input
+Object:Company
+
+[Form:Input]
+Part:title, Input
+Height:100% screen
+Width:50% screen
+
+
+[Part:title] ;; ====================== Part
+Line:title
+[Line:title]
+
+Field:NameListTit
+Local:Field:NameListTit:Info:"List of All Names"
+Local:Field:NameListTit:Align:Center
+Border:column titles
+
+[Field:NameListTit]
+Use:Name Field
+Set as:""
+Full Width:Yes
+
+
+
+[Part:Input] ;; ====================== Part
+	
+Line:Input
+Repeat:Input:AggrUDF
+Scroll:Vertical
+BreakOn : $$IsEnd:$NameList
+
+[Line:Input]
+Field:NameList
+[Field:NameList]
+Use:Name Field
+Set as:" "
+Storage:NameList
+Full Width:Yes
+
+
+;; ===================== Output ======================= ;;
+
+
+[Report:Output]
+Form:Output
+[Form:Output]
+Part:title, Output, Conditions
+Height:100% screen
+Width:100% screen
+
+
+[Part:Output] ;; ====================== Part
+Line:Output
+Repeat: Output :Output Coll
+[Line:Output]
+Field:Output
+
+[Field:Output]
+Set as:$NameList
+Width	: 10
+
+[Part:Conditions]
+	Line			: NotificationVaara1
+	Repeat			: NotificationVaara1		: AllConditionsVaaraFinal
+	Scroll			: Vertical
+	
+	Space Bottom	: 0
+	
+	[Line:NotificationVaara1]
+		Fields			: NotificationVaara1
+		Right Fields	: YesNoNotification1
+		Space Top		: If $$Line=1 Then 1 Else 0
+		Remove if		: $VaaraYesNoCondition="No"
+		
+			
+		[Field:NotificationVaara1]
+			Set as		: $ConditionsVaara
+			Style		: ArialNormal10
+			Full Width	: Yes
+			Width		: 100
+			
+		
+		[Field:YesNoNotification1]
+			Set as		: $VaaraYesNoCondition
+			Style		: ArialNormal10
+			Full Width	: Yes
+		
+		
+			
+			
+
+
+
+[System:UDF]
+AggrUDF: Aggregate:20001
+NameList: String:20011
+
+
+;Now, For output create a collection for ouput
+
+[Collection: Output Coll]
+Type:AggrUDF:Company
+Child of: $$CurrentCompany
+Fetch:Name List
+
+

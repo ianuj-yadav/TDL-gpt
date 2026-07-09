@@ -1,0 +1,43 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Menu Items for Remote Compliant Reports
+*/
+
+[Menu: Remote Compliant Reports]
+
+	Key Item	: Accessing Methods				: M	: Display			: LedReportForRemote	: NOT $$IsEmpty:$$SelectedCmps
+	Item 		: Blank
+	Key Item	: Function Call					: F	: Display			: Remote Function Call	: NOT $$IsEmpty:$$SelectedCmps
+	Item 		: Blank
+	Key Item	: Function Call in Repeat		: R	: Display			: NewMethodForObj		: NOT $$IsEmpty:$$SelectedCmps
+	Item 		: Blank
+	Key Item  	: Repeat Over Simple Collection	: C : Display Collection: Simple Collection		: NOT $$IsEmpty:$$SelectedCmps
+	Item 		: Blank
+	Key Item  	: Object Fetch   				: O : Display Collection: Remote My Ledger Coll	: NOT $$IsEmpty:$$SelectedCmps
+	Item 		: Blank
+	Key Item  	: Object Pre-Fetch   			: P : Display Collection: Led Coll				: NOT $$IsEmpty:$$SelectedCmps
+	Item 		: Blank
+	Key Item	: Fetch Collection				: T : Display			: Fetch Collection		: NOT $$IsEmpty:$$SelectedCmps
+	Item 		: Blank
+	Key Item	: Modify Object					: D : Display			: Modify Remote Object	: NOT $$IsEmpty:$$SelectedCmps
+	Item 		: Blank
+	Key Item	: Monthly Sales Register		: S : Display			: Mth SR				: NOT $$IsEmpty:$$SelectedCmps
+	Item 		: Blank
+	Key Item	: Monthly Register				: M : Display			: Mth Reg				: NOT $$IsEmpty:$$SelectedCmps
+	Item 		: Blank
+	Key Item	: Aggregate Collection 			: A	: Display			: RemoteSTQuery			: NOT $$IsEmpty:$$SelectedCmps
+
+[Include: Accessing Methods.txt]
+[Include: Function Call.txt]
+[Include: Function Call in Repeat.txt]
+[Include: Repeat Over Simple Collection.txt]
+[Include: Object Fetch.txt]
+[Include: Object Pre-Fetch.txt]
+[Include: Fetch Collection.txt]
+[Include: Modify Object.txt]
+[Include: Monthly Sales Register.txt]
+[Include: Monthly Register.txt]
+[Include: Aggregate Collection.txt]
+
+;; End-of-File

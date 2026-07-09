@@ -1,0 +1,158 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This program demonstrates the usage of CollectionFieldByKey Function
+-	The following report generates the Itemwise Partywise Sales Report using the function
+	'CollectionFieldByKey' which requires the Objects in the Collection to be indexed based 
+	on the Search Key specified.  Search Key can be a combination of 2 methods which has 
+	been demonstrated with this Report.
+
+Syntax -
+-	Usage of Function 'CollectionFieldByKey'
+	$$ReportObject:$$CollectionFieldByKey:Method-Name:Search Key Formula:Collection-Name
+-	Usage of Search Key attribute in Collection Definition
+	Search Key : Method-Name [+ Method-Name ....]
+
+Last modification – 
+-	Altered on 07/11/2009
+*/ 
+
+[Report: CFBK Rep]
+	<InUse:Collection:CFBK Party>
+
+	Use			: DSP Template
+	Form		: CFBK Rep
+	Variable	: DoSetAutoColumn, PName
+	Repeat		: PName
+	Set 		: DoSetAutoColumn 		: Yes
+	Set			: DSPRepeatCollection	: "CFBK Party"
+	Set         : SVFromDate          	: $$MonthStart:##SVCurrentDate
+	Set         : SVToDate             	: $$MonthEnd:##SVCurrentDate
+
+[Form: CFBK Rep]
+
+	Use			: DSP Template
+	Parts		: CFBK Rep
+	Background 	: White, Light Orange
+	Option		: Set Auto Vch Option 	: ##DoSetAutoColumn AND $$SetAutoColumns:PName
+
+	[!Form: Set Auto Vch Option]
+
+[Part: CFBK Rep]
+
+	Lines		: CFBK Rep Title, CFBK Rep Details
+	BottomLines	: CFBK Rep Total
+	Repeat		: CFBK Rep Details		: Smp Stock Item
+	Scroll		: Vertical
+	CommonBorder: Yes
+	Total		: CFBK Rep Party, CFBK Rep Col Total
+
+	[Line: CFBK Rep Title]
+
+		Use		: CFBK Rep Details
+
+		Local	: Field	: Default			: Type		: String
+		Local	: Field	: Default			: Align		: Center
+
+		Local	: Field	: CFBK Rep Name		: Set as	: "Particulars"
+		Local	: Field	: CFBK Rep Name		: Widespaced: Yes
+		Local	: Field	: CFBK Rep Party	: Set as	: ##PName
+		Local	: Field	: CFBK Rep Party	: Lines		: 0
+		Local	: Field	: CFBK Rep ColTotal	: Set as	: "Total"
+		Border	: Flush Totals
+
+	[Line: CFBK Rep Details]
+
+		Fields	: CFBK Rep Name, CFBK Rep Party, CFBK Rep Col Total
+		Repeat	: CFBK Rep Party
+		Total	: CFBK Rep Party
+
+		[Field: CFBK Rep Name]
+
+			Use			: Name Field
+			Set as		: $IName
+			Display		: Stock Vouchers
+			Variable	: Stock Item Name
+
+		[Field: CFBK Rep Party]
+
+			Use			: Qty Primary Field
+			Set as		: $$ReportObject:$$CollectionFieldByKey:$BilledQty:@MyFormula:CFBKSummVoucher
+			MyFormula	: ##PName + #CFBKRepName
+			Format		: "NoZero"
+			Border		: Thin Left
+
+		[Field: CFBK Rep Col Total]
+
+			Use			: Qty Primary Field
+			Set as		: $$Total:CFBKRepParty
+			Border		: Thin Left
+
+	[Line: CFBK Rep Total]
+
+		Fields	: CFBK Rep Name, CFBK Rep Party, CFBK Rep Col Total
+		Repeat	: CFBK Rep Party
+
+		Local	: Field	: Default			: Type		: String
+		Local	: Field	: Default			: Align		: Center
+
+		Local	: Field	: CFBK Rep Name		: Set as	: "Total"
+		Local	: Field	: CFBK Rep Name		: Widespaced: Yes
+		Local	: Field	: CFBK Rep Party	: Set as	: $$Total:CFBKRepParty
+		Local	: Field	: CFBK Rep ColTotal	: Set as	: $$Total:CFBKRepColTotal
+		Border	: Thin Top
+		
+;; Collection Definition
+
+[Collection: CFBK Voucher]
+
+	Type		: Voucher
+	Filter		: IsSalesVT
+
+[Collection: CFBK Summ Voucher]
+
+	Source Collection	: CFBK Voucher
+
+	Walk				: Inventory Entries
+	By					: PName			: $PartyLedgerName
+	By					: IName			: $StockItemName
+	Aggr Compute		: BilledQty		: SUM	: $BilledQty
+
+	Search Key			: $PName + $IName
+
+[Collection: Smp Stock Item]
+
+	Source Collection	: CFBK Voucher
+
+	Walk				: Inventory Entries
+	By					: IName			: $StockItemName
+	Aggr Compute		: BilledQty		: SUM	: $BilledQty
+
+	Filter				: NonEmptyQty
+	
+[Collection: CFBK Party]
+
+	Source Collection	: CFBK Voucher
+
+	Walk				: Inventory Entries
+	By					: PName			: $PartyLedgerName
+	Aggr Compute		: BilledQty		: SUM	: $BilledQty
+
+	Filter				: NonEmptyQty
+
+;; Variable Definition
+
+[Variable: PName]
+
+	Type		: String
+	Repeat		: ##DSPRepeatCollection
+
+;; System Formula
+
+[System: Formula]
+
+	IsSalesVT	: $$IsSales:$VoucherTypeName
+	NonEmptyQty	: NOT $$IsEmpty:$BilledQty
+
+;; End-of-File

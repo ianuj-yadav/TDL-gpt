@@ -1,0 +1,36 @@
+[Function: SalesItemInvoiceFunction]
+
+	
+	010: NEW OBJECT	: Voucher
+	020: SET VALUE	: Date : $$Date:"17.3.24"
+	030: SET VALUE	: VoucherTypeName 	: "Sales"
+	080a: Log		: $VoucherTypeName
+	090: SET VALUE	: Narration			: "Inventory Entry"
+	100: Set Value	: Amount			: $$AsAmount:64000
+	5	: Log		: "Working"
+	110: INSERT COLLECTION OBJECT		: AllLedgerEntries
+	120: SET VALUE	: Ledger Name 		: "Aniket Electronics"
+	150: SET TARGET	: .
+	150a: LOG		: $$String:$LedgerName
+;	160: INSERT COLLECTION OBJECT	: AllLedgerEntries
+;	170: SET VALUE	: Ledger Name : "Sales A/c"
+;	190: LOG		: $LedgerName
+;	
+;	200: SET TARGET	: ..
+	210: INSERT COLLECTION OBJECT		: InventoryEntries
+	220: Set Value	: StockItemName		: "Shahi Paneer Masala 8gms Pouch"
+	230: Set Value	: BilledQty			: 8
+	240: Set Value	: Rate				: $$AsAmount:8000
+	241: Set Value	: Amount				: $$AsAmount:64000
+	250: Set Target	: .
+	260: CREATE TARGET
+	270: Return
+	
+	
+[#Menu:Gateway of tally]
+	Add		: Button		: SalesEntry
+	
+[Button:SalesEntry]
+	Title		: "Sales Entry"
+	Key			: Alt + B
+	Action		: Call		: SalesItemInvoiceFunction

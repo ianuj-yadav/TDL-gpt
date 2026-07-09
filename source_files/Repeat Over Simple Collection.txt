@@ -1,0 +1,52 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code has changes required for working in Remote environment
+-	This code shows the usage of repeating over a simple collection
+
+Last modification -
+-	Altered on 09-11-2009
+
+Dependencies -
+-	Supporting file	'Object Fetch.txt'
+*/
+
+[Collection: Simple Collection]
+	
+	Use		: Remote My Ledger Coll
+	Delete	: Report
+	Add		: Report	: Simple Collection
+
+[Report: Simple Collection]
+ 
+	Form	: Simple Collection
+	
+[Form: Simple Collection]
+
+    Parts	: Form Sub Title, Simple Collection
+	Local	: Field	: Form SubTitle	: Set as : "Mailing Address of " + ##LedgerName
+	Height	: 25% Screen
+	Width	: 25% Screen
+
+[Part: Simple Collection]
+
+    Lines	: Simple Collection
+    Repeat  : Simple Collection : Ledger Add
+    Scroll  : Vertical
+
+	[Line: Simple Collection]
+
+    	Fields	: Simple Collection
+    
+		[Field: Simple Collection]
+
+    		Use		: Name Field
+    		Set As	: $Address   
+
+[Collection: Ledger Add]
+
+	Type	: Address : Ledger
+	Childof	: ##LedgerName
+
+;; End-of-File

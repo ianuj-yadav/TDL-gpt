@@ -1,0 +1,64 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	The concepts learnt so far is applied in Reports starting with a Simple Trial Balance
+
+Last modification -
+-	Altered on 09-11-2009
+*/
+
+[Report: Simple Trial balance]
+
+    Form        : Simple Trial balance
+	Title       : "Trial Balance"
+
+[Form: Simple Trial Balance]
+
+    Parts       : Simple TB Part
+    Height      : 100% Page
+    Width       : 100% Page
+		
+[Part: Simple TB Part]
+
+    Lines       : Simple TB Title, Simple TB Details
+    Repeat      : Simple TB Details	: Simple TB Ledgers
+    Scroll      : Vertical
+    CommonBorder: Yes
+		
+    [Line: Simple TB Title]
+        
+        Use     : Simple TB Details
+        Local   : Field : Default           : Type  : String
+        Local   : Field : Default           : Align : Centre		
+        Local   : Field : Simple TB Name Field  : Set as: "Particulars"
+        Local   : Field : Simple TB Amount Field: Set as: "Amount"
+        Border  : Flush Totals
+
+    [Line: Simple TB Details]
+
+        Fields      : Simple TB Name Field
+        Right Fields: Simple TB Amount Field
+		
+        [Field: Simple TB Name Field]
+
+			Use         : Name Field
+			Set as      : $Name
+
+        [Field: Simple TB Amount Field]
+
+            Use         : Amount Field
+		    Set as      : $ClosingBalance
+		    Border      : Thin Left
+					
+[Collection: Simple TB Ledgers]
+
+    Type        : Ledger
+    Filter      : NoProfitsimple
+	Fetch		: Name, ClosingBalance
+    
+[System: Formula]
+
+    NoProfitSimple    : NOT $$IsLedgerProfit
+
+;; End-of-File

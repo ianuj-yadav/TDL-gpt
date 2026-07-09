@@ -1,0 +1,63 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This code demonstrates the usage of Variable in System Scope. 
+- 	The Color is being altered based on the variable value. The variable value altered 
+	within the Report is retained eventhough the Report is quit. This behavior can be 
+	observed by setting the Field to Green color and exitting the Report and reentering 
+	the Report. The modified color i.e., Green Background will be retained which shows 
+	that the Variable value saved within the Report is retained and the scope of the 
+	variable is Global which will be available till the current session of Tally i.e.,
+	till we exit Tally.
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: System Scope]
+
+	Form	: System Scope
+
+[Form: System Scope]
+
+	Part	: System Scope
+	Button	: System Scope Button
+
+[Part: System Scope]
+
+	Lines	: System Scope
+
+	[Line: System Scope]
+		
+		Fields	: System Scope
+	
+		[Field: System Scope]
+
+			Set AS		: $$CurrentDate
+			Option		: System Scope Red BG	: Not ##SystemVar
+			Option		: System Scope Green BG	: ##SystemVar
+
+			[!Field: System Scope Red BG]
+
+				Background	: Red
+				
+			[!Field: System Scope Green BG]
+
+				Background	: Green
+
+[Variable: SystemVar]
+
+	Type		: Logical
+
+[System: Variable]
+
+	SystemVar	: No
+
+[Button: System Scope Button]
+
+	Key		: Alt + R
+	Action	: Set	: SystemVar	: Not ##SystemVar
+	Title	: if ##SystemVar then "Red" else "Green"
+
+;; End-of-File

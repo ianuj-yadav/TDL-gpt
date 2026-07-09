@@ -1,0 +1,133 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This code demonstrates the usage of ChildOf Attribute within Collection
+- 	Collection Attribute 'Child Of' depends on the Type Attribute specification
+	-	For eg., if Type is Ledger, Child Of will require the Group identification. It means 
+		the Collection will contain all Ledgers falling under a particular Group. 
+	-	Similarly, if Type is Stock Item, Child Of will be Stock Group and so on.  
+	-	If Type is Type : Vouchers : Stock Item, then Child Of signifies the Stock Item Name 
+		for which the Vouchers are required.
+-	This code displays all the direct ledgers falling under the Group Sundry Debtors 
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: CAC Ledger List]
+
+	Form        : CAC Ledger Form
+	Title       : "Company Ledger List"
+
+[Form: CAC Ledger Form]
+
+	Use         : DSP Template
+	Parts       : CAC Ledger Part
+	Height      : 100% screen
+	Width       : 100% screen
+	Background  : Grey
+	
+[Part: CAC Ledger Part]
+
+	Lines       : CAC Ledger Title, CAC Ledger Line
+	Repeat      : CAC Ledger Line	: CAC My Ledgers
+	CommonBorder: Yes
+	Scroll      : Vertical
+
+    [Line: CAC Ledger Title]
+
+		Use     : CAC Ledger Line
+		Local	: Field	: Default			: Type		: String
+		Local	: Field	: Default 			: Align		: Centre
+		Local	: Field	: Default 			: Style		: Normal Bold
+		
+		Local	: Field	: CAC Led No        : Set as    : "Sl. No"
+		Local	: Field	: CAC Led Name	    : Set as    : "Ledger Name"
+		Local	: Field	: CAC Led address 	: Set as    : "Address"
+		Local	: Field	: CAC Led States  	: Set as 	: "State"
+		Local	: Field	: CAC Led Pin 		: Set as   	: "PinCode"
+		Local	: Field	: CAC Led Cont	    : Set as 	: "Contact Person"
+		Local	: Field	: CAC Led Tel 		: Set as 	: "Telephone"
+		Local	: Field	: CAC Led Faxno 	: Set as 	: "Fax"
+		Local	: Field	: CAC Led emailadd	: Set as 	: "Email"
+		Local	: Field	: CAC Led CB		: Set as 	: "Closing Balance"
+		Border  : Thin Top Bottom
+
+    [Line: CAC Ledger Line]
+
+		Fields      : CAC Led No, CAC Led Name,CAC Led Address,CAC Led States,CAC Led Pin, CAC Led Cont, CAC Led Tel, CAC Led Faxno, CAC Led emailadd, CAC Led CB
+		Repeat      : CAC Led CB
+		Option      : AlterOnEnter
+	
+        [Field: CAC Led No]
+
+			Set as      : $$Line
+			Width       : 3
+			Align       : Centre
+			Border      : Thin Right
+			Alter       : Ledger
+			    
+        [Field: CAC Led Name]
+
+			Use         : Name Field
+			Set as      : $Name
+			Border      : Thin Right
+						
+        [Field: CAC LedAddress]
+
+			Set as      : $STPartyFullAdd
+			Width       : 30
+			Border      : Thin Right
+
+        [Field: CAC Led States]
+
+			Set as      : $StateName
+			Width       : 10
+			Border      : Thin Right
+
+        [Field: CAC Led Pin]
+
+			Set as      : $PinCode
+			Width       : 10
+			Border      : Thin Right
+
+        [Field: CAC Led Cont]
+
+			Set as      : $LedgerContact
+			Width       : 10
+            Border      : Thin Right
+
+        [Field: CAC Led Tel]
+
+			Set as      : $LedgerPhone
+			Width 	    : 10
+            Border      : Thin Right
+
+        [Field: CAC Led FaxNo]
+
+			Set as      : $LedgerFax
+			Width       : 10
+			Border      : Thin Right
+
+        [Field: CAC Led EmailAdd]
+
+			Set as      : $Email
+			Width   	: 20
+			Border      : Thin Right
+
+        [Field: CAC Led CB]
+
+            Use         : Amount Forex Field
+			Set as      : $ClosingBalance
+
+[Collection: CAC My Ledgers]
+
+    Type	    : Ledger
+	Child of	: $$GroupSundryDebtors
+;; Attribute 'Child Of' is used to restrict the Objects satisfying the given Group
+;; Function 'GroupSundryDebtors' returns the reserved Group for Sundry Debtors
+	Fetch	: Name, STPartyFullAdd, StateName, Pincode, LedgerContact, LedgerPhone, LedgerFax, Email, ClosingBalance
+;; Fetch attribute required for remoting 2.0
+
+;; End-of-File

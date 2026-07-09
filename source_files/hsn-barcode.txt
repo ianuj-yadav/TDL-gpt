@@ -1,0 +1,8 @@
+[#Field:EXPINV AccHSNSACDetails]
+	Width			: 20% page
+	Style			: TSPL FFE BarCode
+
+[Style: TSPL FFE BarCode]
+	Font : IDAutomationHC39S
+	Height : 14
+	

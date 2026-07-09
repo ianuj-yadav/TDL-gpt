@@ -1,0 +1,112 @@
+;=================================================================
+;  YTM Calculator – Menu Integration
+;=================================================================
+[#Menu: Gateway of Tally]
+    Add: Key Item : Before : @@LocQuit : "YTM Calculator" : Y : Alter : YTMReport
+
+;=================================================================
+;  Report Definition
+;=================================================================
+[Report: YTMReport]
+    Form   : YTMForm
+    Title  : "YTM Calculator"
+
+;=================================================================
+;  Form Definition
+;=================================================================
+[Form: YTMForm]
+    Part   : YTMPart
+    Width  : 40% Screen
+    ;; Increased height slightly to fit the new line
+    Height : 35% Screen 
+
+;=================================================================
+;  Part Definition
+;=================================================================
+[Part: YTMPart]
+    ;; Added the new YTMHoldLine at the end of the list
+    Lines  : YTMAmtLine, YTMTimeLine, YTMRateLine, YTMResultLine, YTMHoldLine
+    Border : Thin Box
+
+;=================================================================
+;  Amount Input Line
+;=================================================================
+[Line: YTMAmtLine]
+    Fields : Medium Prompt, YTMAmtField
+    Space Top : 1
+    Local  : Field : Medium Prompt : Info : "Amount :"
+
+[Field: YTMAmtField]
+    Use    : Number Field
+    Width  : 15
+    Border : Thin
+
+;=================================================================
+;  Time Input Line
+;=================================================================
+[Line: YTMTimeLine]
+    Fields : Medium Prompt, YTMTimeField
+    Space Top : 1
+    Local  : Field : Medium Prompt : Info : "Time (Years) :"
+
+[Field: YTMTimeField]
+    Use    : Number Field
+    Width  : 15
+    Border : Thin
+
+;=================================================================
+;  Interest Rate Input Line
+;=================================================================
+[Line: YTMRateLine]
+    Fields : Medium Prompt, YTMRateField
+    Space Top : 1
+    Local  : Field : Medium Prompt : Info : "Interest Rate (%) :"
+
+[Field: YTMRateField]
+    Use    : Number Field
+    Width  : 15
+    Border : Thin
+
+;=================================================================
+;  Result Line – displays calculated YTM (read-only)
+;=================================================================
+[Line: YTMResultLine]
+    Fields : Medium Prompt, YTMResultValue
+    Space Top : 1
+    Border : Thin Top
+    Local  : Field : Medium Prompt : Info : "YTM Result :"
+
+[Field: YTMResultValue]
+    Use        : Number Field
+    Width      : 20
+    Style      : Normal Bold
+    Inactive   : Yes  
+    Set Always : Yes
+    Set As     : $$YTMCalc:#YTMAmtField:#YTMTimeField:#YTMRateField
+
+;=================================================================
+;  THE HOLD LINE - Stops the form from auto-closing!
+;=================================================================
+[Line: YTMHoldLine]
+    Fields : Medium Prompt, YTMHoldField
+    Space Top : 1
+    Local  : Field : Medium Prompt : Info : "Exit Calculator? :"
+
+[Field: YTMHoldField]
+    Use    : Logical Field
+    Width  : 10
+    ;; The cursor will rest here on "Yes/No". You can view your result safely.
+
+;=================================================================
+;  User Defined Function – YTM Calculation
+;=================================================================
+[Function: YTMCalc]
+    Parameter : Amt : Number
+    Parameter : Tim : Number
+    Parameter : Rat : Number
+    Returns   : Number
+
+    Variable  : Result : Number
+
+    01 : SET : Result : (##Amt * ##Tim * ##Rat) / 100
+    02 : RETURN : ##Result

@@ -1,0 +1,153 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	The concepts learnt so far is applied in Reports with a exploded Trial Balance
+	consisting of both accounting Groups and Ledgers along with Drill down capability
+-	Drill down capability involves using Volatile variables
+
+Last modification -
+-	Altered on 09-11-2009
+*/
+
+[Report: DD Trial Balance]
+
+    Form        	: DD Trial Balance
+	Title       	: "Trial Balance"
+	Variable    	: DDGroupName1
+	
+[Form: DD Trial Balance]
+
+	Button      : ExplodeFlag, F2ChangePeriod, ChangeCompany
+	Keys        : ChangePeriod
+	Parts       : DD TB Period, DD TB Part
+	Option   	: Small Size Form 
+    Height      : 100% Page
+    Width       : 100% Page
+	
+[Part: DD TB Period]
+	
+Line	: DD TB Period
+
+[Line: DD TB Period]
+ 
+	Right Field: DSP MainDateTitle
+
+[Part: DD TB Part]
+
+    Lines       : DD TB Title, DD TB Details
+    BottomLines : DD TB Total
+    Repeat      : DD TB Details	: DD TB GroupsLedgers
+    Total       : DD TB Dr Amt Field, DD TB Cr Amt Field
+    Scroll      : Vertical
+    CommonBorder: Yes
+		
+
+	
+
+	[Line: DD TB Title]
+        
+        Use     : DD TB Details
+		Local   : Field : Default           : Type  : String
+        Local   : Field : Default           : Align : Centre		
+        Local   : Field : DD TB Name Field  : Set as: "Name"
+        Local   : Field : DD TB ParNameField: Set as: "Parent"
+        Local   : Field : DD TB Dr Amt Field: Set as: "Debit"
+        Local   : Field : DD TB Cr Amt Field: Set as: "Credit"
+		Border  : Thin Top Bottom
+
+    [Line: DD TB Details]
+
+        Fields      : DD TB Name Field, DD TB ParName Field
+        Right Fields: DD TB Dr Amt Field, DD TB Cr Amt Field
+		
+		Explode		: DD TB Group Explosion		: ##ExplodeFlag OR $$KeyExplode
+ 
+        [Field: DD TB Name Field]
+
+			Use         : Name Field
+			Set as      : $$Name
+			Option      : DD TB Name Field Grp  : $$IsGroup
+			Option      : DD TB Name Field Led  : $$IsLedger
+			
+            [!Field: DD TB Name Field Grp]
+            
+				Variable    : DDGroupName1
+				Display     : DD Trial Balance
+			
+            [!Field: DD TB Name Field Led]
+            
+                Variable    : LedgerName
+                Display     : Ledger Monthly Summary
+                Style       : Normal Italic
+                            
+        [Field: DD TB ParName Field]
+
+			Use         : Name Field
+			Set as      : $Parent
+			Border      : Thin Left
+
+        [Field: DD TB Dr Amt Field]
+
+            Use         : Amount Field
+		    Set as      : if $$IsDr:$ClosingBalance then $ClosingBalance else 0
+		    Border      : Thin Left
+
+        [Field: DD TB Cr Amt Field]
+
+            Use         : Amount Field
+		    Set as      : if NOT $$IsDr:$ClosingBalance then $ClosingBalance else 0
+		    Border      : Thin Left
+		    					
+    [Line: DD TB Total]
+
+        Use     : DD TB Details
+        Local   : Field : DD TB Name Field  : Align : Centre
+        Local   : Field : DD TB Name Field  : Set as: "TOTAL"
+        Local   : Field : DD TB Dr Amt Field: Set as: $$Total:DDTBDrAmtField
+        Local   : Field : DD TB Cr Amt Field: Set as: $$Total:DDTBCrAmtField
+        Border  : Thin Top Bottom
+
+;; Explode Part
+
+[Part: DD TB Group Explosion]
+
+    Lines       : DD TB Details Explosion
+    Repeat      : DD TB Details Explosion   : DD TB GroupsLedgers
+    Scroll      : Vertical
+    
+    [Line: DD TB Details Explosion]
+    
+        Fields      : DD TB Name Field, DD TB ParName Field
+        Right Fields: DD TB Dr Amt Field, DD TB Cr Amt Field
+        Explode     : DD TB Group Explosion : $$IsGroup and ($$KeyExplode OR ##ExplodeFlag)
+        Indent      : 2  * $$ExplodeLevel
+        Local       : Field     : Default   : Delete: Border
+
+;; Explode Part Ends here
+
+[Collection: DD TB GroupsLedgers]
+
+    Collection  : DD TB Groups, DD TB Ledgers
+
+[Collection: DD TB Groups]
+
+    Type        : Group
+    Child Of    : #DDGroupName1
+    Filter      : Zero Filter
+	Fetch		: Name, ClosingBalance
+    
+[Collection: DD TB Ledgers]
+
+    Type        : Ledger
+    Child Of    : #DDGroupName1
+    Filter      : Zero Filter
+	Fetch		: Name, ClosingBalance
+
+[Variable: DDGroupName1]
+	
+	Type		: String
+	Default		: ""
+	
+
+;; End-of-File

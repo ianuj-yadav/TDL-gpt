@@ -1,0 +1,1010 @@
+{
+  "transactions": [
+    {
+      "date": "21.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Cash",
+      "amount": 500,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "22.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 1000,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "23.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Khanna Jeweller",
+      "cr_ledger": "Cash",
+      "amount": 750,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "24.03.2024",
+      "voucher_type": "Receipt",
+      "dr_ledger": "Cash",
+      "cr_ledger": "Sawaria General Store",
+      "amount": 200,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "25.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Hdfc Bank A/c",
+      "amount": 300,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 600,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 400,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 150,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "Cash",
+      "cr_ledger": "ICICI Bank",
+      "amount": 200,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },{
+      "date": "21.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Cash",
+      "amount": 500,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "22.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 1000,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "23.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Khanna Jeweller",
+      "cr_ledger": "Cash",
+      "amount": 750,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "24.03.2024",
+      "voucher_type": "Receipt",
+      "dr_ledger": "Cash",
+      "cr_ledger": "Sawaria General Store",
+      "amount": 200,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "25.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Hdfc Bank A/c",
+      "amount": 300,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 600,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 400,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 150,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "Cash",
+      "cr_ledger": "ICICI Bank",
+      "amount": 200,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },{
+      "date": "21.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Cash",
+      "amount": 500,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "22.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 1000,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "23.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Khanna Jeweller",
+      "cr_ledger": "Cash",
+      "amount": 750,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "24.03.2024",
+      "voucher_type": "Receipt",
+      "dr_ledger": "Cash",
+      "cr_ledger": "Sawaria General Store",
+      "amount": 200,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "25.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Hdfc Bank A/c",
+      "amount": 300,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 600,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 400,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 150,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "Cash",
+      "cr_ledger": "ICICI Bank",
+      "amount": 200,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },{
+      "date": "21.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Cash",
+      "amount": 500,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "22.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 1000,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "23.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Khanna Jeweller",
+      "cr_ledger": "Cash",
+      "amount": 750,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "24.03.2024",
+      "voucher_type": "Receipt",
+      "dr_ledger": "Cash",
+      "cr_ledger": "Sawaria General Store",
+      "amount": 200,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "25.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Hdfc Bank A/c",
+      "amount": 300,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 600,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 400,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 150,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "Cash",
+      "cr_ledger": "ICICI Bank",
+      "amount": 200,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },{
+      "date": "21.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Cash",
+      "amount": 500,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "22.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 1000,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "23.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Khanna Jeweller",
+      "cr_ledger": "Cash",
+      "amount": 750,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "24.03.2024",
+      "voucher_type": "Receipt",
+      "dr_ledger": "Cash",
+      "cr_ledger": "Sawaria General Store",
+      "amount": 200,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "25.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Hdfc Bank A/c",
+      "amount": 300,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 600,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 400,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 150,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "Cash",
+      "cr_ledger": "ICICI Bank",
+      "amount": 200,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },{
+      "date": "21.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Cash",
+      "amount": 500,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "22.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 1000,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "23.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Khanna Jeweller",
+      "cr_ledger": "Cash",
+      "amount": 750,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "24.03.2024",
+      "voucher_type": "Receipt",
+      "dr_ledger": "Cash",
+      "cr_ledger": "Sawaria General Store",
+      "amount": 200,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "25.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Hdfc Bank A/c",
+      "amount": 300,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 600,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 400,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 150,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "Cash",
+      "cr_ledger": "ICICI Bank",
+      "amount": 200,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },{
+      "date": "21.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Cash",
+      "amount": 500,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "22.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 1000,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "23.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Khanna Jeweller",
+      "cr_ledger": "Cash",
+      "amount": 750,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "24.03.2024",
+      "voucher_type": "Receipt",
+      "dr_ledger": "Cash",
+      "cr_ledger": "Sawaria General Store",
+      "amount": 200,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "25.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Hdfc Bank A/c",
+      "amount": 300,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 600,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 400,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 150,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "Cash",
+      "cr_ledger": "ICICI Bank",
+      "amount": 200,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },{
+      "date": "21.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Cash",
+      "amount": 500,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "22.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 1000,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "23.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Khanna Jeweller",
+      "cr_ledger": "Cash",
+      "amount": 750,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "24.03.2024",
+      "voucher_type": "Receipt",
+      "dr_ledger": "Cash",
+      "cr_ledger": "Sawaria General Store",
+      "amount": 200,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "25.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Hdfc Bank A/c",
+      "amount": 300,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 600,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 400,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 150,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "Cash",
+      "cr_ledger": "ICICI Bank",
+      "amount": 200,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },{
+      "date": "21.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Cash",
+      "amount": 500,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "22.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 1300,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "23.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Khanna Jeweller",
+      "cr_ledger": "Cash",
+      "amount": 750,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "24.03.2024",
+      "voucher_type": "Receipt",
+      "dr_ledger": "Cash",
+      "cr_ledger": "Sawaria General Store",
+      "amount": 200,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "25.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Hdfc Bank A/c",
+      "amount": 300,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 600,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 400,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 150,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "Cash",
+      "cr_ledger": "ICICI Bank",
+      "amount": 200,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },{
+      "date": "21.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Cash",
+      "amount": 500,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "22.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 1000,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "23.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Khanna Jeweller",
+      "cr_ledger": "Cash",
+      "amount": 750,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "24.03.2024",
+      "voucher_type": "Receipt",
+      "dr_ledger": "Cash",
+      "cr_ledger": "Sawaria General Store",
+      "amount": 200,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "25.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Hdfc Bank A/c",
+      "amount": 300,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 600,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 400,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 150,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "Cash",
+      "cr_ledger": "ICICI Bank",
+      "amount": 200,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },{
+      "date": "21.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Cash",
+      "amount": 500,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "22.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 1010,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "23.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Khanna Jeweller",
+      "cr_ledger": "Cash",
+      "amount": 750,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "24.03.2024",
+      "voucher_type": "Receipt",
+      "dr_ledger": "Cash",
+      "cr_ledger": "Sawaria General Store",
+      "amount": 200,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "25.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Hdfc Bank A/c",
+      "amount": 300,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 600,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 400,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 150,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "Cash",
+      "cr_ledger": "ICICI Bank",
+      "amount": 200,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },{
+      "date": "21.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Cash",
+      "amount": 500,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "22.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 1100,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "23.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Khanna Jeweller",
+      "cr_ledger": "Cash",
+      "amount": 750,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "24.03.2024",
+      "voucher_type": "Receipt",
+      "dr_ledger": "Cash",
+      "cr_ledger": "Sawaria General Store",
+      "amount": 200,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "25.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Hdfc Bank A/c",
+      "amount": 300,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 600,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 400,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 150,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "Cash",
+      "cr_ledger": "ICICI Bank",
+      "amount": 200,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },{
+      "date": "21.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Cash",
+      "amount": 500,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "22.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 1000,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "23.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Khanna Jeweller",
+      "cr_ledger": "Cash",
+      "amount": 750,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "24.03.2024",
+      "voucher_type": "Receipt",
+      "dr_ledger": "Cash",
+      "cr_ledger": "Sawaria General Store",
+      "amount": 200,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "25.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Hdfc Bank A/c",
+      "amount": 300,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 600,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 400,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 150,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "Cash",
+      "cr_ledger": "ICICI Bank",
+      "amount": 200,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },{
+      "date": "21.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Cash",
+      "amount": 500,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "22.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 1000,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "23.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Khanna Jeweller",
+      "cr_ledger": "Cash",
+      "amount": 750,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "24.03.2024",
+      "voucher_type": "Receipt",
+      "dr_ledger": "Cash",
+      "cr_ledger": "Sawaria General Store",
+      "amount": 200,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "25.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "ICICI Bank",
+      "cr_ledger": "Hdfc Bank A/c",
+      "amount": 300,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 600,
+      "narration": "Paid telephone bill in Cash"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Journal",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 400,
+      "narration": "Journal entry for Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Premium Electronics",
+      "cr_ledger": "Cash",
+      "amount": 150,
+      "narration": "Received Cash against telephone bill"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Contra",
+      "dr_ledger": "Cash",
+      "cr_ledger": "ICICI Bank",
+      "amount": 200,
+      "narration": "Transfer from Cash to Telephone Expense"
+    },
+    {
+      "date": "20.03.2024",
+      "voucher_type": "Payment",
+      "dr_ledger": "Telephone Expense",
+      "cr_ledger": "Cash",
+      "amount": 900,
+      "narration": "Paid telephone bill in Cash"
+    }
+  ]
+}
+
+
+

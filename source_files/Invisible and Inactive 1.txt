@@ -1,0 +1,55 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This program illustrates the usage of Field Attributes 'Inactive' and 'Invisible'
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Invisible and Inactive 1]
+
+	Form			: Invisible and Inactive 1
+
+[Form: Invisible and Inactive 1]
+
+	Parts			: Invisible and Inactive 1
+	Vertical Align	: Bottom
+
+[Part: Invisible and Inactive 1]
+
+	Lines	: Invisible and Inactive
+
+	[Line: Invisible and Inactive]
+	
+		Fields	: Invisible and Inactive Field1, Invisible and Inactive Field2, +
+				  Invisible and Inactive Field3
+	
+		[Field: Invisible and Inactive Field1]
+		
+			Set as		: "TDL is a"
+			Width		: 10
+			Background	: Yellow
+
+		[Field: Invisible and Inactive Field2]
+
+			Set as		: "Programmer friendly"
+			Width		: 15
+			Background	: Green
+			Invisible	: Yes
+;;			Inactive	: Yes
+
+;; Please observe the difference between Invisible and Inactive by commenting and 
+;; decommenting one of the above statements.  Inactive is commented in the above 
+;; code.  Please remove the comment and place it prior to Invisible to understand
+;; the difference clearly.  Then comment both the above Invisible and Inactive
+;; lines to note the difference.
+
+		[Field: Invisible and Inactive Field3]
+		
+			Set as		: "Language based on definitions"
+			Width		: 15
+			Background	: White
+
+;; End-of-File

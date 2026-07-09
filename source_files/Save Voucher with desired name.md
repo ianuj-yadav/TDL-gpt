@@ -1,0 +1,61 @@
+---
+title: Save Voucher with desired name
+type: sample_code
+objects: Function
+source: Save Voucher with desired name.txt
+---
+
+# Save Voucher with desired name
+
+## Source Code
+
+```tdl
+	[#Part: Print Buttons]
+	Background	: red
+	
+[#Button: PrintExp Preview]
+	Color:red
+	
+[#Button: SVPrintAction]
+	Delete			: ActionEx		: Set Var					: Set	: SVPreview	: No
+	Delete			: ActionEx		: AskBeforeSignPrnPdf		: Do If	: @@IsMSPrintToPDF			: Call	: QueryAskBeforeSignFunc
+	Delete			: ActionEx		: Form Accept 				: Do If	: NOT @@IsMSPrintToPDF OR ##SVProceedWithFormAccept	: Form Accept
+	Add				: ActionEx		: AskBeforeSignPrnPdf		: Do If	: @@IsMSPrintToPDF			: Call	: QueryAskBeforeSignFunc1
+	Background		: Red
+	Action			: Display		: Daybook
+	Color			: Red
+[Function: QueryAskBeforeSignFunc1]
+	
+	Variable    : DSCQueryString	: String
+	
+
+	10a	: Set	: SVProceedWithDigitalSign	: No
+	10b	: Set	: SVProceedWithFormAccept	: Yes
+
+	11a	: If	: (NOT $$IsEmpty:##SVDigitalSign AND NOT $$IsSysNameEqual:NotApplicable:##SVDigitalSign)
+
+	11b	: 	If	: NOT ##SVAskBeforeSigning
+	11c :		Set	: SVProceedWithDigitalSign	: Yes
+
+	11d	: 	Else
+	11e1:		Set				: DSCQueryString				: $$Sprintf:"hello";@@AskBeforeSignStr:##SVDigitalSign
+	11e2:		Query Report 	: SVUserQuery Tri Val Return	: ##DSCQueryString
+
+	11f	: 		If: $$LastResult = "Yes"
+	11g	: 			Set	: SVProceedWithDigitalSign	: Yes
+	11h	:		End If
+
+	11i	: 		If: $$LastResult = "No"
+	11j	:			Set	: SVProceedWithDigitalSign	: No
+	11k	: 		End If
+
+	;; handling Esc, back space and Ctrl + Q respectively
+	11l	: 		If: $$LastResult = "Esc" OR $$LastResult = "Last Field" OR $$LastResult = ""
+	11m	:			Set	: SVProceedWithDigitalSign	: No
+	11n :			Set : SVProceedWithFormAccept	: No
+	11o	: 		End If
+
+	11p	: 	End If
+	11q	: End If
+	11r	: Return
+```

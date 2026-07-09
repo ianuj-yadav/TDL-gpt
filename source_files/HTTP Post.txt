@@ -1,0 +1,257 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+-	This program demonstrates the capability of using the Action HTTP POST to post data
+	from Tally to a Predefined URL and retrieve the response XML in a predefined 
+	Collection 'Parameter Collection'.
+-	The XML response thus fetched from the XML File is displayed in a Report.
+
+Syntax -
+-	Action 'HTTP Post' Syntax
+	Action 	: HTTP Post : <URL Specification> : <Encoding> : <Request-Report-Name> : <Failure Response-Report-Name> : <Success Response-Report-Name>
+
+Last modification – 
+-	Altered on 07/11/2009
+
+Dependencies -
+-	PHP File 'CXMLResponse as per tally.php' which must be available at C:\INETPUB\WWWROOT 
+	in case if IIS is setup as the Web Server
+*/
+
+;; Report executing the Action HTTP Post 
+
+[Report: HTTP Post Welcome]
+
+	Form 	: HTTP Post Welcome
+	Title 	: "Action HTTP POST"
+
+[Form: HTTP Post Welcome]
+
+	Parts	: HTTP Post Welcome
+	Button	: PostButton
+
+[Part: HTTP Post Welcome]
+
+	Lines	: HTTP Post Welcome, HTTP Post Instruct
+
+	[Line: HTTP Post Welcome]
+
+		Fields	: HTTP Post Welcome
+
+		[Field: HTTP Post Welcome]
+
+			Set As 	: "Welcome"
+			Width 	: 70
+			Style 	: Normal Bold
+			Align 	: Centre
+
+	[Line: HTTP Post Instruct]
+
+		Fields	: HTTP Post Instruct
+
+		[Field: HTTP Post Instruct]
+
+			Set As 	: "Please Click on the Post Button or Press Ctrl + K key"
+			Width 	: 70
+			Align 	: Centre
+
+;; Report Displaying XML response fetched 
+
+[Report: HTTP Post Success Report]
+
+	Form 		: HTTP Post Success Report
+
+[Form: HTTP Post Success Report]
+
+	Part		: HTTP Post Success Report
+	Height		: 100% Screen
+	Width		: 100% Screen
+
+[Part: HTTP Post Success Report]
+
+	Lines	: HTTP Post Success Report
+	Repeat	: HTTP Post Success Report 	: Parameter Collection
+	Scroll	: Vertical
+
+	[Line: HTTP Post Success Report]
+
+		Fields  : HTTP Post Success Report BODY
+		Explode	: HTTP Post Success Report BODY
+
+		[Field: HTTP Post Success Report BODY]
+
+			Set As : "Body"
+
+[Part: HTTP Post Success Report BODY]
+
+	Lines 	: HTTP Post Success Report BODY
+	Repeat	: HTTP Post Success Report BODY : BODY
+
+	[Line: HTTP Post Success Report BODY]
+
+		Fields	: HTTP Post Success Report DATA
+		Explode : HTTP Post Success Report DATA
+
+		[Field: HTTP Post Success Report DATA]
+
+			Set As : "DATA"
+
+[Part: HTTP Post Success Report DATA]
+
+	Line  	: HTTP Post Success Report DATA
+	Repeat	: HTTP Post Success Report DATA : DATA
+
+	[Line: HTTP Post Success Report DATA]
+
+		Fields	: HTTP Post Success Report Customer
+		Explode : HTTP Post Success Report Customer
+
+		[Field: HTTP Post Success Report Customer]
+
+			Set As : "CUSTOMER"
+		
+[Part: HTTP Post Success Report Customer]
+
+	Lines	: HTTP Post Success Report Customer
+	Repeat	: HTTP Post Success Report Customer : CUSTOMER
+
+	[Line: HTTP Post Success Report Customer]
+
+		Fields	: HTTP Post Name, HTTP Post EmpID
+		Explode : HTTP Post Phone
+		Explode : HTTP Post Add
+
+		[Field: HTTP Post Name]
+
+			Set As 	: "Name : " +  $NAME
+							
+		[Field: HTTP Post EmpID]
+
+			Set As 	: "Employee ID :" +  $EMPID
+		
+;; Explode Part - HTTP Post Phone
+
+[Part: HTTP Post Phone]
+
+	Lines	: HTTP Post CollPhone
+	Repeat 	: HTTP Post CollPhone 	: Phone
+	Scroll	: Vertical
+
+	[Line: HTTP Post CollPhone]
+
+		Fields	: Name Field, HTTP Post Office, HTTP Post Home, HTTP Post Mobile
+		Local 	: Field	: Name Field: Set As 	: "Phone No"
+			
+		[Field: HTTP Post Office]
+
+			Set As 	: "Office:" + $OfficeNo
+					
+		[Field: HTTP Post Home]
+
+			Set As 	: "Home :"  + $HomeNo
+					
+		[Field: HTTP Post Mobile]
+
+			Set As 	: "Mobile :" + $Mobile
+
+;; Explode Part - HTTP Post Add
+			
+[Part: HTTP Post Add]
+
+	Lines	: HTTP Post CollAdd
+	Repeat 	: HTTP PostCollAdd 	: Address
+	Scroll	: Vertical
+
+	[Line: HTTP Post CollAdd]
+
+		Fields	: HTTP PostAdd1
+		Explode : HTTP Post Addr Line
+
+		[Field: HTTP Post Add1]
+
+			Use 	: Name Field
+			Set As 	: "Address"
+
+;; Explode Part - HTTP Post Addr Line
+
+[Part: HTTP Post Addr Line]
+
+	Lines	: HTTP Post Addrline
+	Repeat 	: HTTP Post Addrline 	: AddrLine
+	Scroll	: Vertical
+
+	[Line: HTTP Post Addrline]
+
+		Fields	: HTTP Post Add2
+
+		[Field: HTTP PostAdd2]
+
+			Set As : $AddrLine
+			Indent : 5
+
+;;POST Request Report 
+
+[Report: HTTP Post ReqRep]
+
+	Form  	: HTTP PostReqRep
+
+[Form: HTTP PostReqRep]
+
+    Parts 	: HTTP PostReqRep
+	
+[Part: HTTP PostReqRep]
+
+    Lines   : HTTP PostReqRep
+	XML Tag	: "REQUEST"
+	Scroll 	: Vertical
+
+	[Line: HTTP PostReqRep]
+
+		Fields 	: HTTP PostReqRepName, HTTP PostReqRepPwd
+
+      	[Field: HTTP PostReqRepName]
+
+           	Set As 	 	: "TALLY"
+  		 	XML Tag	 	: "NAME"
+
+		[Field: HTTP PostReqRepPwd]
+
+		 	Set As  	: "00000"
+            XML Tag 	: "EMPID"
+
+
+;;Button using Action HTTP Post 
+
+[Button: PostButton]
+
+	Key 	: Ctrl+K
+	Action 	: HTTP Post : @@MyURL	: ASCII: HTTP Post ReqRep : HTTP Post Failure Report  : HTTP Post Success Report
+
+[System: Formula]
+
+	MyURL	:  "http://Localhost/CXMLResponse as per tally.php"
+
+;; Report to be displayed in case of error
+
+[Report: HTTP Post Failure Report]
+
+	Form 	: HTTP Post Failure Report
+
+[Form: HTTP Post Failure Report]
+
+    Parts 	: HTTP Post Failure Report
+	
+[Part: HTTP Post Failure Report]
+
+    Lines   : HTTP Post Failure Report
+
+	[Line: HTTP Post Failure Report]
+
+		Fields 	: HTTP Post Failure Report
+
+      	[Field: HTTP Post Failure Report]
+
+           	Set As 	 	: "Unable to access data"
+
+;; End-of-File

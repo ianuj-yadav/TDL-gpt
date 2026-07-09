@@ -1,0 +1,47 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code demonstrates the usage of User Defined Functions in an Object
+-	This code accepts two inputs New Group name and a current Group name & alters
+	the current group name with the new group name
+
+Last Modification -
+-	Altered on 09-11-2009
+
+Dependencies -
+-	Supporting files 'Simple Interest.txt'
+*/
+
+[Report: Group Renaming]
+
+	Use		: Group and Ledger Creation
+
+	Local	: Form	: Interest Calc		: Local		: Field	: Form SubTitle	: Info		: "Ledger Alteration Details"
+	Local	: Form	: Interest Calc		: Delete	: On
+	Local	: Form	: Interest Calc		: On		: Form Accept	: Yes	: Call		: AlterGroup:#InterestPrincipal:#InterestRate
+	Local	: Line	: Interest Principal: Local		: Field	: Medium Prompt	: Info		: "New Group :"
+	Local	: Field	: Interest Principal: Validate	: NOT $$IsEmpty:$$Value
+
+	Local	: Line	: Interest Rate		: Local		: Field	: Medium Prompt	: Info		: "Current Group :"
+	Local	: Field	: Interest Rate		: Table		: Group
+	Local	: Field	: Interest Rate		: Width		: @@NameWidth
+
+[Function: Alter Group]
+
+;; Definition Block
+
+	Parameter: NGroupName	: String
+	Parameter: EGroupName	: String
+
+	Variable : Counter 		: Number
+
+;; Procedural Block
+	
+	01	: NEW OBJECT	: Group			: ##EGroupName
+	02	: SET VALUE		: Name			: ##NGroupName
+	03	: SAVE TARGET
+	04	: MSGBOX		: "Success !!"	: "Group Name altered successfully"
+	05	: RETURN
+
+;; End-of-File

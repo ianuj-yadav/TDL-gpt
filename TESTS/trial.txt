@@ -1,0 +1,49 @@
+[#Menu: Gateway of Tally]
+Add : Item : CUST_Voucher_Field_Demo : Alter : CUST_Voucher_Field_Report
+
+[Report: CUST_Voucher_Field_Report]
+Form : CUST_Voucher_Field_Form
+Title : "Voucher with Custom Batch Field"
+Object : Voucher
+
+[Form: CUST_Voucher_Field_Form]
+Parts : CUST_Voucher_Field_Part
+Background: White
+Full Width : Yes
+Full Height: Yes
+
+[Part: CUST_Voucher_Field_Part]
+Lines : EI ColumnOne
+Scroll : Vertical
+
+[Line: EI ColumnOne]
+Add : Right Field : After : VCH QtyField : CUST_Batch_Field
+
+[Field: CUST_BatchTitle_Field]
+Use : Name Field
+Set As : "Batch No"
+Style : Normal Bold
+Width : 12% Screen
+Align : Center
+Skip : Yes
+Background : Light Gray
+
+[Field: CUST_Batch_Field]
+Use : Name Field
+Storage : CUST_Batch_UDF
+Width : 12% Screen
+Align : Left
+Border : Thin Left
+Table : CUST_Batch_List
+
+[System: UDF]
+CUST_Batch_UDF : String : 1006 : Voucher : "Custom Batch Number"
+
+[Collection: CUST_Batch_List]
+Type : Simple
+Title : "Select Batch"
+Child Of : $$LocaleString:"Batch"
+Fetch : Name, Description
+Format : Name, Description
+Column : Name : 40% : $$LocaleString:"Name"
+Column : Description: 60% : $$LocaleString:"Description"

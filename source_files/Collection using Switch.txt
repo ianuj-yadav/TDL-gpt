@@ -1,0 +1,96 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This code demonstrates the usage of Switch within Collection
+-	Based on the variable value, Optional collection within Switch takes effect.
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Coll Switch Report]
+
+	Form	    : OptColl
+    ;; the following variable have been added to switch over between the options/conditions
+	Variable    : Smp ShowMaster
+	Set			: Smp ShowMaster	: "Ledgers"	
+	
+[Form: OptColl]
+
+	Part		: OptColl
+	Button		: Smp Show Group, Smp Show Ledger, Smp Show StockItem
+	Full Width	: Yes
+	Width		: 100% Screen
+    Option      : Small Size Form
+  
+[Part: OptColl]
+
+	Line		: OptCollTitle, OptColl
+	Repeat		: OptColl 		: My Coll
+	Scroll		: Vertical
+
+	[Line: OptCollTitle]
+	
+		Field	: Name Field, Short Name Field
+	
+		Local	: Field : Name Field 		: Set as 	: "List of " + ##SmpShowMaster
+		Local	: Field : Short Name Field 	: Set as 	: "(Click on the Buttons on the Top Right Corner 'Show Group, Show Ledger or Show Stock Item' to see the effect accordingly)"
+		Local	: Field : Short Name Field 	: Style		: Normal Italic
+		Local	: Field : Short Name Field 	: Width		: 0
+		Border	: Column Titles
+	
+	[Line: OptColl]
+	
+		Field	: Name Field
+
+		Local	: Field : Name Field 		: Set as 	: $Name
+		Local	: Field : Name Field 		: Width		: 0
+
+[Collection: My Coll]
+	
+	Use		: Alias Collection
+	
+    Switch  : OptCase   : MyLed Coll    	: ##SmpShowMaster  = "Ledgers"
+    Switch  : OptCase   : MyGrp Coll    	: ##SmpShowMaster  = "Groups"
+    Switch  : OptCase   : MyStk Coll    	: ##SmpShowMaster  = "Stock Items"
+
+	[!Collection: MyLed Coll]
+	
+	    Type    : Ledger
+	    
+	[!Collection: MyGrp Coll]
+	
+	    Type    : Group
+	    
+	[!Collection: MyStk Coll]
+	
+	    Type    : Stock Item
+ 
+[Variable: Smp Show Master]
+
+	Type	: String 
+
+[Button: Smp Show Group]
+
+
+;;The button Ctrl + G has been used in default code of TallyPrime
+;	Key 	: Ctrl + G
+
+	Key 	: Ctrl + R
+	Action	: Set 	: Smp ShowMaster	: "Groups"
+	Title	: "Show Groups"
+
+[Button: Smp Show Ledger]
+
+	Key 	: Ctrl + L
+	Action	: Set 	: Smp ShowMaster	: "Ledgers"
+	Title	: "Show Ledgers"
+
+[Button: Smp Show StockItem]
+
+	Key 	: Ctrl + S
+	Action	: Set 	: Smp ShowMaster    : "Stock Items"
+	Title	: "Show Items"
+
+;; End-of-File

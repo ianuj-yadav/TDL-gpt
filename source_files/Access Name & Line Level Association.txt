@@ -1,0 +1,97 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+- 	This code demonstrates the Object association at Line Level
+- 	Object Association at Line can be done through Part Attribute 'Repeat' which repeats over 
+	a Collection
+-	Line Attribute 'AccessName' is used to specify a name by which this Line can be accessed later.
+-	This code is written to display vouchers and corresponding Batches used in these vouchers is 
+	displayed on the right hand side when the cursor is on a Voucher
+
+Last modification – 
+-	Altered on 07/11/2009
+*/
+
+[Report: Line Object Association]
+
+	Use		: DSP Template
+	Form	: Line Object Association
+	Variable: VariableCurLineNumber		: Number	: 1
+	Set		: SV From Date				: $$MonthStart:##SVCurrentDate
+	Set		: SV To Date				: $$MonthEnd:##SVCurrentDate
+
+[Form: Line Object Association]
+
+	Use		: DSP Template
+	Parts	: Line Object Association
+
+[Part: Line Object Association]
+
+	Parts  	: LOA Left Part, LOA Right Part
+	Width 	: 80% Screen
+
+	[Part: LOA Left Part]
+
+		Lines	 	: LOA Left Line Title, LOA Left Line Info
+		Repeat	 	: LOA Left Line Info 	: VoucherColl
+		Scroll	 	: Vertical
+		Retain Focus: Yes
+
+		[Line: LOA Left Line Title]
+
+			Use			: LOA Left Line Info
+			Local: Field: LOA Left Field1	: Set as	: "Voucher Number"
+			Local: Field: LOA Left Field2	: Set as	: "Voucher Type Name"
+			Delete		: AccessName
+			Delete		: On
+
+		[Line: LOA Left Line Info]
+ 
+			Fields		: LOA Left Field1, LOA Left Field2
+			Access Name	: "Line" + $$String:$$Line
+			On	: Focus	: Yes	: SET	: VariableCurLineNumber	: $$Line
+
+			[Field: LOA Left Field1]
+
+				Use			: Name Field
+				Set As 		: $VoucherNumber
+				Set Always  : Yes
+
+			[Field: LOA Left Field2]
+
+				Use			: Name Field
+				Set As 		: $VoucherTypeName
+				Set Always  : Yes
+
+	[Part: LOA Right Part]
+
+		Lines	: LOA Right Line Title, LOA Right Line Info
+		Repeat	: LOA Right Line Info 	: (Line,("Line"+$$String:##VariableCurLineNumber)).InventoryEntries[1].BatchAllocations
+    	Scroll 	: Vertical
+	
+		[Line: LOA Right Line Title]
+		
+			Use		: LOA Right Line Info
+			Local	: Field	: LOA Right Line2 Field1: Set as	: "Batch Names"
+
+		[Line: LOA Right Line Info]
+
+	    	Fields : LOA Right Line2 Field1
+	
+			[Field: LOA Right Line2 Field1]
+	
+				Use		: Name Field
+		       	Set as	: $BatchName
+
+[Collection: VoucherColl]			;; Collection Definition
+
+	Type 	: Voucher
+	Fetch	: VoucherNumber, VoucherTypeName, InventoryEntries.*
+	Filter	: TSPL Smp IsPurcOrSales
+
+[System: Formula]
+	
+	TSPL Smp IsPurcOrSales	: $IsPurchase OR $IsSales
+
+;; End-of-File

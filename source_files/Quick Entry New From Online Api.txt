@@ -1,0 +1,95 @@
+[Collection:TransactionsMaster]
+	;Data Source 		: File JSON 	: "E:\tirlok\tdl files\Gold Rate\New Transaction Api 1000  2 to 28 march.json";"E:\tirlok\tdl files\Gold Rate\New Transactions Api 1000.json";
+	Data Source     	: HTTP JSON		: "http://localhost/MasterAuto/wp-content/uploads/2024/04/new-1.json";"http://localhost/MasterAuto/wp-content/uploads/2024/04/New-Transaction-Api-1000-2-to-28-march.json"
+	JSON Object Path	: transactions	: 1				; Main object path
+	Client Only			: Yes	
+	Sort				: Default : $$Date:$date,$voucher_type,$dr_ledger,$cr_ledger,$amount;
+	;Data Source			: ht
+	
+[#Menu:Gateway of tally]
+	Add			: Item		: Transactions		: Display		: Transactions
+	
+[Report:Transactions]
+	Form		: Transactions
+	
+[Form:Transactions]
+	Part		: Transactions
+	Add			: Key			: BottomToolBarBtn12
+	
+[Part:Transactions]
+	Lines		: TransactionsTitle, TransactionsBody
+	Repeat		: TransactionsBody		: TransactionsMaster
+	Scroll		: Vertical
+	Common Borders	: Yes
+	[Line:TransactionsTitle]
+		Use		: TransactionsBody
+		Border	: Thin Bottom
+		Space Bottom	: 1
+		Local	: Field	: Default		: Type		: String
+		Local	: Field	: Default		: Style		: Normal Bold
+		Local	: Field	: Default		: Align		: Center
+		
+		Local	: Field	: TransactionsSrNo		: Info	: "Sr No"
+		Local	: Field	: TransactionsDate		: Info	: "Date"
+		Local	: Field	: TransactionsVchType	: Info	: "Voucher Type"
+		Local	: Field	: TransactionsDr		: Info	: "Dr Ledger"
+		Local	: Field	: TransactionsCr		: Info	: "Cr Ledger"
+		Local	: Field	: TransactionsAmount	: Info	: "Amount"
+		Local	: Field	: TransactionsNarr		: Info	: "Narration"
+		
+	[Line:TransactionsBody]
+		Field		: TransactionsSrNo, TransactionsDate, TransactionsVchType, TransactionsDr, TransactionsCr, TransactionsAmount
+		Right Field	: TransactionsNarr
+		
+		[Field:TransactionsSrNo]
+			Use			: Number Field
+			Set as		: $$Line
+			Width		: 5
+			Style		: Normal
+			
+		[Field:TransactionsDate]
+			Use			: Name Field
+			Set as		: $date
+			Border		: Thin Left Right
+			Style		: Normal
+			Width		: 10
+			
+		[Field:TransactionsVchType]
+			Use			: Name Field
+			Set as		: $voucher_type
+			Border3D	: Thin Left Right
+			Style		: Normal
+			Width		: 8
+			Line		: 0
+			
+		[Field:TransactionsDr]
+			Use			: Name Field
+			Set as		: $dr_ledger
+			Style		: Normal
+			Border		: Thin Left Right
+			Width		: 18
+			
+			
+		[Field:TransactionsCr]
+			Use			: Name Field
+			Set as		: $cr_ledger
+			Style		: Normal
+			Width		: 18
+			
+		[Field:TransactionsAmount]
+			Use			: Amount Field
+			Set as		: $$AsAmount:$amount
+			;Width		: 10
+			Space Right	: 3
+			Border		: Thin Left Right
+			Style		: Normal
+			Width		: 8
+			
+		[Field:TransactionsNarr]
+			Use			: Name Field
+			Set as		: $narration +"  "+ @Date
+			Date		: $$String:$$MachineTime
+			Full Width	: Yes
+			Lines		: 0
+			Style		: Normal
+			

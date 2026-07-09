@@ -1,0 +1,48 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) -
+-	This code has changes required for working in Remote environment
+-	Compute at the collection definition helps to minimize the number of requests
+	sent to the server
+
+Last modification -
+-	Altered on 09-11-2009
+*/
+
+[Report: NewMethodForObj]
+
+	Use		: LedReportForRemote
+	Title	: "New Method addition to demonstrate Remoting Capability"
+	Local	: Form	: LedReportForRemote		: Add	: Buttons		: Change Period
+	Local	: Line 	: LedReportForRemoteTitle 	: Add	: Right Fields	: Before		: LedClosingBalance : LedSalesTotal
+	Local	: Line 	: LedReportForRemoteTitle 	: Local : Field			: LedSalesTotal	: Set as			: "Sales Total"
+	Local	: Line 	: LedReportForRemoteDetails : Add	: Right Fields	: Before 		: LedClosingBalance : LedSalesTotal
+
+;; Name and Closing Balnce needs to be fetched from Server
+	Local	: Collection	: Ledger			: Fetch	: Name, Closing Balance, LedgerSalesTotal
+
+	[Field: LedSalesTotal]
+
+		Use		: Amount Forex Field
+		Set as	: $LedgerSalesTotal
+		Border	: Thin Left
+
+[System: Formula]
+
+	TSPL Smp ForThisParty	: $PartyLedgerName = @@ReqObjName
+
+[Collection: TSPL Smp Sales Vouchers]
+
+	Type		: Vouchers	: Voucher Type
+	Child Of	: $$VchTypeSales
+	Fetch		: PartyLedgerName, LedgerEntries.Amount
+
+[#Collection: Ledger]
+
+	Compute		: LedgerSalesTotal	: $$FilterAmtTotal:TSPLSmpSalesVouchers:TSPLSmpForThisParty:$Amount
+	
+;; Compute is used to minimize the number of requests sent to the Server
+;; i.e., The Collection will be fetched at once with all Computed Values
+
+;; End-of-File

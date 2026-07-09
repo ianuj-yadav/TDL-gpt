@@ -1,0 +1,11 @@
+[#Field:DSPQ QTYTitle]
+	Add:Field:After:DSP DispTitle:TirlokHSNT
+[Field:TirlokHSNT]
+	Set as:"HSN"
+	
+[#Field:DSP CLQty]
+	Add:Field:After:DSP DispName:TirlokHSND, NormalHSnCode
+[Field:TirlokHSND]
+	Set as:$GSTHSNCode
+[Field:NormalHSnCode]
+	Set as: $$IsEmpty:$GSTItemHSNCodeEx

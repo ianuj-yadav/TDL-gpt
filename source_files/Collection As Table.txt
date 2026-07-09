@@ -1,0 +1,39 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Demo TDLs for Collection as Table
+*/
+
+[Menu: CollAsTable]
+
+	Key Item: Simple Voucher As Table       : S : Alter		: VchAsTableS
+	Item  	: Blank
+
+	Key Item: Inventory Entries As Table	: I : Alter		: VchAsTableW
+	Item	: Blank
+
+	Key Item: Aggregate Methods As Table	: A : Alter		: VchAsTableA
+	Item    : Blank
+
+	Key Item: ODBC Data As Table			: O : Alter		: ODBCAsTable
+	Item    : Blank
+
+	Key Item: XML Data As Table			    : X : Alter		: XMLAsTable
+	Item 	: Blank
+
+	Key Item: Column SubTitle		    	: S : Alter		: ColSubTitle
+	Item 	: Blank
+
+	Key Item: Format in Table Union		    : F : Alter		: Table Union
+	Item 	: Blank
+	Item 	: Blank
+
+[Include: Simple Voucher As Table.txt]
+[Include: Inventory Entries As Table.txt]
+[Include: Aggregate Methods As Table.txt]
+[Include: ODBC Data As Table.txt]
+[Include: XML Data As Table.txt]
+[Include: Table SubTitle.txt]
+[Include: Table Union.txt]
+
+;; End-of-File

@@ -1,0 +1,35 @@
+;; Sri Ganeshji : Sri Balaji : Sri Pitreshwarji : Sri Durgaji : Sri Venkateshwara
+
+/*
+Objective(s) – 
+-	The following code demonstrates the collection as Table with Aggr Compute.
+-	This code demonstrates the usage of Aggr Compute and the resultant objects in the 
+	Collection being displayed as Table in the Field.
+
+Last modification – 
+-	Altered on 09/11/2009
+
+Dependencies -
+-	Supporting File 'Simple Voucher as Table.txt' for the Report as well as variables
+*/
+
+[Collection: Summ CollectionA]
+
+	Title               : Table - Aggregate Methods
+	Source Collection	: Vch Collection
+	Walk				: Inventory Entries
+	By					: Name		: $StockItemName
+	Aggr Compute		: BilledQty	: Sum	: $BilledQty
+	Aggr Compute		: Amount	: Sum	: $Amount
+
+	Format				: $Name, 25
+	Format				: $BilledQty, 25
+	Format				: $Amount, 25
+
+[Report: VchAsTableA]
+
+	Form		: CollAsTable
+	Variable	: VchAsTableA
+	Set			: VchAsTableA	: Yes
+
+;; End-of-File

@@ -1,0 +1,66 @@
+---
+title: Add new report in gateway of tally
+type: sample_code
+objects: Report, Form, Part, Line, Field
+source: Add new report in gateway of tally.txt
+---
+
+# Add new report in gateway of tally
+
+## Source Code
+
+```tdl
+[#Menu:Gateway of Tally]
+	Add:Key Item    :Before: @@locRatioAnalysis :New Report    	: W : Display:New Report
+	
+[Report:New Report]
+	Title:"My New Report -Tirlok Chand"
+	Form:New Report Form
+[Form:New Report Form]
+	Part:New Report Part1,New Report Part2
+[Part:New Report Part1]
+	Line:New Report Line11,New Report Line12
+	[Line:New Report Line11]
+		Field:New Report Field111,New Report Field112
+		[Field:New Report Field111]
+			Set as:"New Report Field111"
+		[Field:New Report Field112]
+			Set as:"New Report Field112"
+	[Line:New Report Line12]
+		Field:New Report Field121,New Report Field122
+		[Field:New Report Field121]
+			Set as:"New Report Field121"
+		[Field:New Report Field122]
+			Use:New Report Field121	
+[Part:New Report Part2]
+	;;Hw:"New Local Formula"
+	/*
+	Line:New Report Line21,New Report Line22
+	[Line:New Report Line21]
+		Field:New Report Field211,New Report Field212
+		[Field:New Report Field211]
+			Set as:"New Report Field211"
+		[Field:New Report Field212]
+			Set as:"New Report Field212"
+		*/
+	Use:New Report Part1
+	Local:Line:New Report Line11:Local:Field:New Report Field111:Set as:"New Report Field211"
+	Local:Line:New Report Line12:Local:Field:New Report Field112:Set as:"New Report Field212"
+	Local:Line:New Report Line12:Add:Field:New Report Field113,New Report Local Formula Field 
+	[Field:New Report Field113]
+		Set as:"New Report Field113"
+		Color:Red
+		Background:Yellow
+	[Field:New Report Local Formula Field]
+		Set as:@Hw + @Hw1
+		Hw:"New Local Formula Hw"
+		Hw1:"New Local Formula Hw1"
+		Hw1:"New Local Formula Hw2"
+
+
+
+
+
+
+
+```

@@ -1,0 +1,98 @@
+
+
+[Collection:AgentDtlsColl]
+	Title		: "List of Active Agents"
+	Type		: AgentDtls		: Company
+	Child Of	: ##SVCurrentCompany
+	Format		: $AgentName, 30 ;;(30 shows the width of collection)
+
+
+[Collection:AgentNameCollection]
+	
+	Title		: "List Of Agents"
+	Type		: CmpAgentName	: Company
+	Child Of	: ##SVCurrentCompany
+	Format		: $CmpAgentName, 20
+	Sub Title	: "Name"
+	Unique		: $CmpAgentName, $AgentName
+
+[Collection:ColorNameCollection]
+	
+	Title		: "List Of Colors"
+	Type		: CmpColorName	: Company
+	Child Of	: ##SVCurrentCompany
+	Format		: $CmpColorName, 20
+	Sub Title	: "Name"
+	Unique		: $CmpColorName
+
+
+[Collection : My Src Coll]
+	Type : Vouchers : Voucher Type
+	Child of : $$VchTypeSales
+	belongs to : yes
+
+[Collection : My Repeat Coll]
+	Source Collection : My Src Coll
+	Walk : InventoryEntries
+
+	By	: GstPer	:$GstPercent
+	By	: VchNumber1:$VoucherNumber;:VoucherType:@@IsSales
+
+	AggrCompute : ValBilledQty : Sum : $BilledQty
+	AggrCompute : ValAmount : Sum : $Amount
+
+
+
+[Collection: ApperalPro Company Address]
+	
+    Type        : Address   : Company
+    Child of    : ##SVCurrentCompany
+	Compute		: IsNumber	  	: No
+	Compute		: FixedDirection: No 
+	
+    ;Object      : Company State
+	Object		: Company Multi Address PrnState
+	;Object  	: Company CINumber
+;	Object      : Company Contacts
+;	Object		: Company FaxNo
+;	Object      : Company Email
+;	Object		: Company Website
+    Filter      : IsNotBlankAddr
+	
+	;Option		: Company GSTINumber	: (##IsVoucher OR ##IsMultiVchReport) AND @@IsGSTOnAppl
+	;Option		: Company TINTRNNumber	: (##IsVoucher OR ##IsMultiVchReport) AND @@IsVChGVATApplicable
+
+[Collection: ApperalProCompanyGst]
+	
+    Type        : Address   : Company
+    Child of    : ##SVCurrentCompany
+	Compute		: IsNumber	  	: No
+	Compute		: FixedDirection: No 
+	
+    Object      : Company State
+	
+    Filter      : IsNotBlankAddr
+	
+	Option		: Company GSTINumber	: (##IsVoucher OR ##IsMultiVchReport) AND @@IsGSTOnAppl
+	
+[Collection:SaleVoucher]
+	Type        : Voucher Type
+    Child of    : $$VchTypeSales
+    Belongs To  : Yes
+
+
+;Now, For output create a collection for ouput
+
+[Collection: Output Coll]
+	Type		: AggrUDFProgulf:Company
+	Child of	: $$CurrentCompany
+	Fetch		: Name List
+
+
+	
+[Collection: AllConditionsVaaraFinal]
+	Type		: AggrUDFVaaraCondition					: Company
+	Child of	: ##SVCurrentCompany
+	Fetch		: ConditionsVaara, VaaraYesNoCondition
+	
+
