@@ -6,6 +6,7 @@ class ChatMessageCreate(BaseModel):
     session_id: str
     message: str
     model_name: Optional[str] = "z-ai/glm-5.2"
+    api_key: Optional[str] = None
 
 class ChatMessageResponse(BaseModel):
     id: int

@@ -1,4 +1,5 @@
 import uuid
+import time
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
@@ -28,8 +29,8 @@ def create_session(session_in: SessionCreate, db: Session = Depends(get_db)):
     session_id = str(uuid.uuid4())
     db_session = ChatSession(
         id=session_id,
-        title=session_in.title,
-        model_name=session_in.model_name
+        title=session_in.title or "New TDL Workspace Session",
+        model_name=session_in.model_name or "z-ai/glm-5.2"
     )
     db.add(db_session)
     db.commit()
@@ -59,7 +60,11 @@ def get_session_messages(session_id: str, db: Session = Depends(get_db)):
 def send_message(msg_in: ChatMessageCreate, db: Session = Depends(get_db)):
     session = db.query(ChatSession).filter(ChatSession.id == msg_in.session_id).first()
     if not session:
-        session = ChatSession(id=msg_in.session_id, title=msg_in.message[:35] + "...", model_name=msg_in.model_name)
+        session = ChatSession(
+            id=msg_in.session_id,
+            title=msg_in.message[:35] + "...",
+            model_name=msg_in.model_name or "z-ai/glm-5.2"
+        )
         db.add(session)
         db.commit()
 
@@ -74,14 +79,35 @@ def send_message(msg_in: ChatMessageCreate, db: Session = Depends(get_db)):
     # Fetch permanent rules
     rules = [r.rule_text for r in db.query(PermanentRule).all()]
 
-    # Generate response via RAG engine
-    rag_result = rag_engine.generate_response(
-        query=msg_in.message,
-        rules=rules,
-        model_name=msg_in.model_name
-    )
+    # Generate response via RAG engine with fallback recovery
+    target_model = msg_in.model_name or "z-ai/glm-5.2"
+    try:
+        rag_result = rag_engine.generate_response(
+            query=msg_in.message,
+            rules=rules,
+            model_name=target_model,
+            api_key=msg_in.api_key
+        )
+    except Exception as err_primary:
+        err_str = str(err_primary)
+        print(f"[RAG Engine Warning] Model {target_model} failed: {err_str}. Retrying with fallback model meta/llama-3.1-70b-instruct...")
+        try:
+            rag_result = rag_engine.generate_response(
+                query=msg_in.message,
+                rules=rules,
+                model_name="meta/llama-3.1-70b-instruct",
+                api_key=msg_in.api_key
+            )
+        except Exception as err_fallback:
+            print(f"[RAG Engine Error] Fallback failed: {err_fallback}")
+            rag_result = {
+                "content": f"⚠️ **AI Service Notice**: Unable to generate response from model `{target_model}`. Please check your NVIDIA API Key or select another model in the top-right menu.\n\n*Error details: {err_str}*",
+                "tdl_code": "",
+                "confidence": 0.0,
+                "context_count": 0
+            }
 
-    tdl_code = rag_result["tdl_code"]
+    tdl_code = rag_result.get("tdl_code", "")
     val_status = "PASS"
     if tdl_code:
         val_res = full_validate_and_refine(tdl_code)
@@ -93,12 +119,14 @@ def send_message(msg_in: ChatMessageCreate, db: Session = Depends(get_db)):
         role="assistant",
         content=rag_result["content"],
         tdl_code=tdl_code,
-        confidence_score=rag_result["confidence"],
+        confidence_score=rag_result.get("confidence", 0.0),
         validation_status=val_status,
     )
     db.add(assistant_msg)
 
-    session.title = msg_in.message[:40] if session.title == "New TDL Workspace Session" else session.title
+    if session.title == "New TDL Workspace Session" or not session.title:
+        session.title = msg_in.message[:35] + "..."
+    
     db.commit()
     db.refresh(assistant_msg)
 

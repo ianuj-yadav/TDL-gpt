@@ -40,10 +40,12 @@ export default function App() {
   const fetchSessions = async () => {
     try {
       const res = await fetch('/api/chat/sessions');
-      const data = await res.json();
-      setSessions(data);
-      if (data.length > 0 && !activeSessionId) {
-        setActiveSessionId(data[0].id);
+      if (res.ok) {
+        const data = await res.json();
+        setSessions(data);
+        if (data.length > 0 && !activeSessionId) {
+          setActiveSessionId(data[0].id);
+        }
       }
     } catch (e) {
       console.error('Failed to fetch sessions:', e);
@@ -53,8 +55,10 @@ export default function App() {
   const fetchKbStatus = async () => {
     try {
       const res = await fetch('/api/kb/status');
-      const data = await res.json();
-      setKbStatus(data);
+      if (res.ok) {
+        const data = await res.json();
+        setKbStatus(data);
+      }
     } catch (e) {
       console.error('Failed to fetch KB status:', e);
     }
@@ -63,8 +67,10 @@ export default function App() {
   const fetchRules = async () => {
     try {
       const res = await fetch('/api/rules');
-      const data = await res.json();
-      setPermanentRules(data);
+      if (res.ok) {
+        const data = await res.json();
+        setPermanentRules(data);
+      }
     } catch (e) {
       console.error('Failed to fetch rules:', e);
     }
@@ -74,8 +80,10 @@ export default function App() {
     if (!sessionId) return;
     try {
       const res = await fetch(`/api/chat/sessions/${sessionId}/messages`);
-      const data = await res.json();
-      setMessages(data);
+      if (res.ok) {
+        const data = await res.json();
+        setMessages(data);
+      }
     } catch (e) {
       console.error('Failed to fetch messages:', e);
     }
@@ -100,10 +108,12 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: 'New TDL Workspace Session', model_name: selectedModel }),
       });
-      const newSession = await res.json();
-      setSessions([newSession, ...sessions]);
-      setActiveSessionId(newSession.id);
-      setMessages([]);
+      if (res.ok) {
+        const newSession = await res.json();
+        setSessions([newSession, ...sessions]);
+        setActiveSessionId(newSession.id);
+        setMessages([]);
+      }
     } catch (e) {
       console.error('Failed to create session:', e);
     }
@@ -124,17 +134,26 @@ export default function App() {
   };
 
   const handleSendMessage = async (msgText) => {
+    if (!msgText.trim()) return;
+
     let currentSessionId = activeSessionId;
     if (!currentSessionId) {
-      const res = await fetch('/api/chat/sessions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: msgText.slice(0, 35) + '...', model_name: selectedModel }),
-      });
-      const newSession = await res.json();
-      currentSessionId = newSession.id;
-      setActiveSessionId(currentSessionId);
-      setSessions([newSession, ...sessions]);
+      try {
+        const res = await fetch('/api/chat/sessions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: msgText.slice(0, 35) + '...', model_name: selectedModel }),
+        });
+        if (res.ok) {
+          const newSession = await res.json();
+          currentSessionId = newSession.id;
+          setActiveSessionId(currentSessionId);
+          setSessions([newSession, ...sessions]);
+        }
+      } catch (e) {
+        console.error('Failed to create initial session:', e);
+        return;
+      }
     }
 
     const tempUserMsg = {
@@ -154,13 +173,28 @@ export default function App() {
           session_id: currentSessionId,
           message: msgText,
           model_name: selectedModel,
+          api_key: apiKey || undefined,
         }),
       });
+
+      if (!res.ok) {
+        throw new Error(`Server returned HTTP ${res.status}`);
+      }
+
       const botMsg = await res.json();
-      setMessages((prev) => [...prev, botMsg]);
-      fetchSessions();
+      await fetchMessages(currentSessionId);
+      await fetchSessions();
     } catch (e) {
       console.error('Failed to send message:', e);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now() + 1,
+          session_id: currentSessionId,
+          role: 'assistant',
+          content: `⚠️ Failed to get response from AI backend: ${e.message}`,
+        },
+      ]);
     } finally {
       setLoading(false);
     }
@@ -185,8 +219,10 @@ export default function App() {
   const handleRebuildKb = async () => {
     try {
       const res = await fetch('/api/kb/rebuild', { method: 'POST' });
-      await res.json();
-      fetchKbStatus();
+      if (res.ok) {
+        await res.json();
+        fetchKbStatus();
+      }
     } catch (e) {
       console.error('Failed to rebuild KB:', e);
     }
@@ -200,8 +236,10 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ rule_text: ruleText, rule_type: 'custom' }),
       });
-      const newRule = await res.json();
-      setPermanentRules([newRule, ...permanentRules]);
+      if (res.ok) {
+        const newRule = await res.json();
+        setPermanentRules([newRule, ...permanentRules]);
+      }
     } catch (e) {
       console.error('Failed to add rule:', e);
     }

@@ -12,13 +12,13 @@ class Settings(BaseSettings):
     # Database
     DATABASE_URL: str = os.getenv(
         "DATABASE_URL",
-        f"sqlite:///{os.path.join(BASE_DIR, 'tdl_gpt.db')}"  # Fallback to local SQLite if PostgreSQL URL is not set
+        f"sqlite:///{os.path.join(BASE_DIR, 'tdl_gpt.db')}"  # Fallback to local SQLite
     )
 
     # NVIDIA NIM LLM Configuration
     NVIDIA_API_KEY: str = os.getenv(
         "NVIDIA_API_KEY",
-        "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"
+        "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"
     )
     DEFAULT_MODEL: str = os.getenv("TDL_MODEL_NAME", "z-ai/glm-5.2")
 
