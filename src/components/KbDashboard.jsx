@@ -60,34 +60,35 @@ export default function KbDashboard() {
     <div style={{ flex: 1, padding: '28px 36px', overflowY: 'auto', background: 'transparent' }}>
       <div style={{ maxWidth: '1050px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
           <div>
-            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#ffffff', display: 'flex', alignItems: 'center', gap: '10px', fontFamily: 'var(--font-display)' }}>
-              <Database color="#38bdf8" size={28} /> Knowledge Base & RAG Index Manager
+            <h2 style={{ fontSize: '2rem', fontWeight: 900, color: '#1D281F', display: 'flex', alignItems: 'center', gap: '12px', fontFamily: 'var(--font-serif)' }}>
+              <Database color="#1D281F" size={32} /> Knowledge Base & RAG Index Manager
             </h2>
-            <p style={{ fontSize: '0.9rem', color: '#94a3b8', marginTop: '4px' }}>
+            <p style={{ fontSize: '0.94rem', color: '#6B7A6D', marginTop: '4px', fontWeight: 600 }}>
               Universal file indexing engine (FAISS dense vector + BM25 sparse search). Supports .tdl, .txt, .md, .pdf, .docx, .xlsx.
             </p>
           </div>
-          <button onClick={handleRebuild} className="btn-cta-primary" disabled={loading}>
+          <button onClick={handleRebuild} className="btn-cause-lime" disabled={loading}>
             <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
             {loading ? 'Rebuilding Index...' : 'Rebuild Index'}
           </button>
         </div>
 
         {message && (
-          <div style={{ background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.35)', padding: '12px 16px', borderRadius: 'var(--radius-md)', color: '#34d399', fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <CheckCircle size={16} /> {message}
+          <div style={{ background: '#BFEA4B', border: '2px solid #1D281F', borderRadius: '12px', padding: '12px 16px', color: '#1D281F', fontSize: '0.9rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '10px', boxShadow: '3px 3px 0px #1D281F' }}>
+            <CheckCircle size={18} /> {message}
           </div>
         )}
 
         {/* Upload Card */}
-        <div className="glass-panel-elevated" style={{ padding: '30px', borderStyle: 'dashed', borderWidth: '2px', borderColor: 'rgba(56,189,248,0.35)', textAlign: 'center' }}>
-          <Upload size={36} color="#38bdf8" style={{ margin: '0 auto 10px' }} />
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', marginBottom: '4px', fontFamily: 'var(--font-display)' }}>
+        <div className="cause-card" style={{ padding: '36px', borderStyle: 'dashed', borderWidth: '3px', borderColor: '#1D281F', textAlign: 'center', background: '#F3E8DD' }}>
+          <Upload size={40} color="#1D281F" style={{ margin: '0 auto 12px' }} />
+          <h3 style={{ fontSize: '1.3rem', fontWeight: 900, color: '#1D281F', marginBottom: '6px', fontFamily: 'var(--font-serif)' }}>
             Upload TDL Source File
           </h3>
-          <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginBottom: '16px' }}>
+          <p style={{ fontSize: '0.9rem', color: '#6B7A6D', marginBottom: '20px', fontWeight: 600 }}>
             Drag and drop or select files to add directly to the repository knowledge base
           </p>
           <input
@@ -96,42 +97,43 @@ export default function KbDashboard() {
             onChange={handleFileUpload}
             style={{ display: 'none' }}
           />
-          <label htmlFor="fileInput" className="btn-cta-secondary" style={{ display: 'inline-flex', cursor: 'pointer' }}>
+          <label htmlFor="fileInput" className="btn-cause-paper" style={{ display: 'inline-flex', cursor: 'pointer', padding: '10px 24px', fontSize: '0.88rem' }}>
             {uploading ? 'Uploading...' : 'Browse File'}
           </label>
         </div>
 
         {/* File Table */}
-        <div className="glass-panel-elevated" style={{ padding: '24px' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', marginBottom: '16px', fontFamily: 'var(--font-display)' }}>
+        <div className="cause-card" style={{ padding: '28px', background: '#F7F0E6' }}>
+          <h3 style={{ fontSize: '1.25rem', fontWeight: 900, color: '#1D281F', marginBottom: '18px', fontFamily: 'var(--font-serif)' }}>
             Indexed Repository Source Files ({status?.indexed_count || 0})
           </h3>
           {status?.indexed_files?.length === 0 ? (
-            <p style={{ fontSize: '0.88rem', color: '#94a3b8', textAlign: 'center', padding: '2.5rem 0' }}>
+            <p style={{ fontSize: '0.9rem', color: '#6B7A6D', textAlign: 'center', padding: '2.5rem 0', fontWeight: 600 }}>
               No files indexed yet. Click 'Rebuild Index' above to vectorize all files in the source_files/ folder.
             </p>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {status?.indexed_files?.map((f) => (
                 <div
                   key={f.id}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    justify: 'space-between',
-                    padding: '12px 16px',
-                    background: 'rgba(255,255,255,0.03)',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    borderRadius: 'var(--radius-md)',
+                    justifyContent: 'space-between',
+                    padding: '14px 18px',
+                    background: '#F3E8DD',
+                    border: '2px solid #1D281F',
+                    borderRadius: '12px',
+                    boxShadow: '2px 2px 0px #1D281F',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <FileText size={16} color="#38bdf8" />
-                    <span style={{ fontSize: '0.88rem', color: '#f8fafc', fontWeight: 600 }}>{f.filename}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <FileText size={18} color="#1D281F" />
+                    <span style={{ fontSize: '0.9rem', color: '#1D281F', fontWeight: 800 }}>{f.filename}</span>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px', fontSize: '0.8rem', color: '#94a3b8' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px', fontSize: '0.82rem', color: '#6B7A6D', fontWeight: 700 }}>
                     <span>Type: {f.file_type}</span>
-                    <span className="badge-status-pass">{f.total_chunks} Vector Chunks</span>
+                    <span className="badge-cause-pass">{f.total_chunks} Vector Chunks</span>
                   </div>
                 </div>
               ))}
