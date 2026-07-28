@@ -4,16 +4,29 @@ from pydantic_settings import BaseSettings
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DEFAULT_SOURCE_DIR = os.path.join(BASE_DIR, "source_files")
 
+def get_default_db_url():
+    env_url = os.getenv("DATABASE_URL")
+    if env_url:
+        return env_url
+    # In Vercel or read-only cloud environments, use /tmp for SQLite database
+    if os.environ.get("VERCEL") or os.environ.get("AWS_EXECUTION_ENV"):
+        return "sqlite:////tmp/tdl_gpt.db"
+    try:
+        test_file = os.path.join(BASE_DIR, ".write_test")
+        with open(test_file, "w") as f:
+            f.write("1")
+        os.remove(test_file)
+        return f"sqlite:///{os.path.join(BASE_DIR, 'tdl_gpt.db')}"
+    except Exception:
+        return "sqlite:////tmp/tdl_gpt.db"
+
 class Settings(BaseSettings):
     PROJECT_NAME: str = "TDL Enterprise Assistant API"
     VERSION: str = "2.0.0"
     API_V1_STR: str = "/api"
 
-    # Database
-    DATABASE_URL: str = os.getenv(
-        "DATABASE_URL",
-        f"sqlite:///{os.path.join(BASE_DIR, 'tdl_gpt.db')}"  # Fallback to local SQLite
-    )
+    # Database URL dynamically resolved for serverless compatibility
+    DATABASE_URL: str = get_default_db_url()
 
     # NVIDIA NIM LLM Configuration
     NVIDIA_API_KEY: str = os.getenv(
