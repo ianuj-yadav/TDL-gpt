@@ -50,27 +50,6 @@ Whether building complex Invoice Customizations, Voucher Event Handlers, Collect
 
 ---
 
-## 🏗️ Architecture & Flow
-
-```mermaid
-graph TD
-    UserQuery[User Query / Upload] --> AdaptiveEngine[Adaptive Hyperparameter Engine]
-    AdaptiveEngine --> RAGPipeline[Tier 3 Hybrid RAG Pipeline]
-    
-    subgraph RAG Pipeline
-        Dense[FAISS Semantic Vector Search]
-        Sparse[BM25 Exact Lexical Search]
-        Dense --> RRF[Reciprocal Rank Fusion RRF]
-        Sparse --> RRF
-    end
-    
-    RRF --> Memory[Inject Permanent Teaching Memory]
-    Memory --> NIM[NVIDIA NIM Endpoint <br/> z-ai/glm-5.2]
-    NIM --> Validator[Agent 3: TDL Hierarchy & AST Validator]
-    Validator --> Output[Ready-to-Paste TDL Code]
-```
-
----
 
 ## 📁 Repository Structure
 
