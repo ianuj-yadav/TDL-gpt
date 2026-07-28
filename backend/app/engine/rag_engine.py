@@ -2,18 +2,32 @@ import os
 import json
 import re
 import numpy as np
-import faiss
 from typing import List, Dict, Tuple, Any
-from sentence_transformers import SentenceTransformer
 from openai import OpenAI
 
 from app.core.config import settings, BASE_DIR
+
+try:
+    from sentence_transformers import SentenceTransformer
+    HAS_SENTENCE_TRANSFORMERS = True
+except ImportError:
+    HAS_SENTENCE_TRANSFORMERS = False
+    SentenceTransformer = None
+
+try:
+    import faiss
+    HAS_FAISS = True
+except ImportError:
+    HAS_FAISS = False
+    faiss = None
 
 EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
 _embedder = None
 
 def get_embedder():
     global _embedder
+    if not HAS_SENTENCE_TRANSFORMERS:
+        return None
     if _embedder is None:
         _embedder = SentenceTransformer(EMBEDDING_MODEL_NAME)
     return _embedder
@@ -72,6 +86,10 @@ class RagEngine:
         self.load_index()
 
     def load_index(self):
+        if not HAS_FAISS:
+            self.index = None
+            self.chunks = []
+            return
         if os.path.exists(self.index_file) and os.path.exists(self.meta_file):
             try:
                 self.index = faiss.read_index(self.index_file)
@@ -83,10 +101,13 @@ class RagEngine:
                 self.chunks = []
 
     def retrieve(self, query: str, top_k: int = 5) -> Tuple[List[Dict], float]:
-        if not self.index or not self.chunks:
+        if not HAS_FAISS or not HAS_SENTENCE_TRANSFORMERS or not self.index or not self.chunks:
             return [], 0.0
 
         embedder = get_embedder()
+        if not embedder:
+            return [], 0.0
+
         exp_q = expand_query(query)
         q_vec = embedder.encode([exp_q], convert_to_numpy=True)
         q_vec = q_vec / np.maximum(np.linalg.norm(q_vec, axis=1, keepdims=True), 1e-12)

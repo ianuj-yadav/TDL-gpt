@@ -4,16 +4,30 @@ import io
 import json
 import hashlib
 import numpy as np
-import faiss
 from datetime import datetime
-from sentence_transformers import SentenceTransformer
 from app.core.config import BASE_DIR
+
+try:
+    from sentence_transformers import SentenceTransformer
+    HAS_SENTENCE_TRANSFORMERS = True
+except ImportError:
+    HAS_SENTENCE_TRANSFORMERS = False
+    SentenceTransformer = None
+
+try:
+    import faiss
+    HAS_FAISS = True
+except ImportError:
+    HAS_FAISS = False
+    faiss = None
 
 EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
 _embedder_cache = None
 
 def get_embedder():
     global _embedder_cache
+    if not HAS_SENTENCE_TRANSFORMERS:
+        return None
     if _embedder_cache is None:
         _embedder_cache = SentenceTransformer(EMBEDDING_MODEL_NAME)
     return _embedder_cache
@@ -44,7 +58,6 @@ def extract_printable_strings(raw_bytes: bytes, min_len: int = 4) -> str:
     return "\n".join(result)
 
 def read_bytes_content(file_bytes: bytes, filename: str) -> str:
-    ext = os.path.splitext(filename)[1].lower()
     try:
         text = file_bytes.decode("utf-8")
         return text
@@ -169,7 +182,6 @@ def build_kb_index(
                 print(f"Error processing {fname}: {e}")
 
     if not all_chunks:
-        # Fallback dummy chunk if folder is empty
         all_chunks.append({
             "text": "[Report: StandardReport]\n Form: StandardForm\n",
             "def_type": "Report",
@@ -177,6 +189,16 @@ def build_kb_index(
             "file": "system_default.tdl"
         })
         files_indexed.append({"filename": "system_default.tdl", "chunks": 1, "path": "internal"})
+
+    if not HAS_SENTENCE_TRANSFORMERS or not HAS_FAISS:
+        with open(meta_file, "w", encoding="utf-8") as f:
+            json.dump(all_chunks, f, indent=2)
+        return {
+            "total_files": len(files_indexed),
+            "total_chunks": len(all_chunks),
+            "dim": 384,
+            "files": files_indexed
+        }
 
     texts = [c["text"] for c in all_chunks]
     embedder = get_embedder()
