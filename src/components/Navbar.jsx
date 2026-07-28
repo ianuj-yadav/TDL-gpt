@@ -1,5 +1,5 @@
 import React from 'react';
-import { Cpu, Terminal, ShieldCheck, Database, BookOpen, Menu, Sparkles } from 'lucide-react';
+import { Cpu, Terminal, ShieldCheck, Database, BookOpen, Menu } from 'lucide-react';
 
 export default function Navbar({
   activeTab,
@@ -11,15 +11,14 @@ export default function Navbar({
   return (
     <header
       style={{
-        background: 'rgba(11, 17, 31, 0.85)',
-        backdropFilter: 'blur(32px) saturate(200%)',
-        WebkitBackdropFilter: 'blur(32px) saturate(200%)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.14)',
-        padding: '14px 28px',
+        background: 'rgba(11, 17, 31, 0.90)',
+        backdropFilter: 'blur(24px)',
+        WebkitBackdropFilter: 'blur(24px)',
+        borderBottom: '1px solid var(--border-subtle)',
+        padding: '12px 28px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        boxShadow: '0 8px 40px rgba(0, 0, 0, 0.65)',
         position: 'relative',
         zIndex: 20,
       }}
@@ -38,11 +37,13 @@ export default function Navbar({
         )}
 
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div style={{ fontSize: '1.7rem', fontWeight: 900, letterSpacing: '1px', color: '#ffffff', display: 'flex', alignItems: 'center', fontFamily: 'var(--font-display)', lineHeight: 1.1 }}>
-            <span style={{ background: 'linear-gradient(135deg, #ffffff 0%, #38bdf8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>TDL QUANTUM</span>
-            <span style={{ color: '#c084fc', border: '3px solid #c084fc', borderRadius: '50%', display: 'inline-block', width: '22px', height: '22px', lineHeight: '16px', textAlign: 'center', fontSize: '1rem', margin: '0 6px', boxShadow: '0 0 16px rgba(192, 132, 252, 0.9)', fontWeight: 900 }}>AI</span>
+          <div style={{ fontSize: '1.4rem', fontWeight: 800, letterSpacing: '0.5px', color: '#ffffff', display: 'flex', alignItems: 'center', fontFamily: 'var(--font-display)', lineHeight: 1.1 }}>
+            <span>TDL QUANTUM</span>
+            <span style={{ color: '#38bdf8', fontSize: '0.85rem', fontWeight: 800, background: 'rgba(56, 189, 248, 0.12)', border: '1px solid rgba(56, 189, 248, 0.3)', padding: '2px 8px', borderRadius: 'var(--radius-sm)', marginLeft: '8px' }}>
+              AI
+            </span>
           </div>
-          <div style={{ fontSize: '0.66rem', color: '#38bdf8', letterSpacing: '4px', fontWeight: 800, textTransform: 'uppercase', marginTop: '2px' }}>
+          <div style={{ fontSize: '0.65rem', color: 'var(--color-text-muted)', letterSpacing: '2px', fontWeight: 700, textTransform: 'uppercase', marginTop: '2px' }}>
             ENTERPRISE TDL STUDIO
           </div>
         </div>
@@ -52,18 +53,18 @@ export default function Navbar({
       <nav
         style={{
           display: 'flex',
-          gap: '8px',
-          background: 'rgba(2, 4, 9, 0.75)',
-          padding: '6px',
+          gap: '6px',
+          background: 'rgba(2, 4, 9, 0.8)',
+          padding: '4px',
           borderRadius: 'var(--radius-full)',
-          border: '1px solid rgba(255, 255, 255, 0.10)',
+          border: '1px solid var(--border-subtle)',
         }}
       >
         <button
           onClick={() => setActiveTab('chat')}
           className={`nav-tab-pill ${activeTab === 'chat' ? 'active' : ''}`}
         >
-          <Terminal size={15} /> Chat Workbench
+          <Terminal size={15} /> Workbench
         </button>
         <button
           onClick={() => setActiveTab('ast')}
@@ -85,35 +86,33 @@ export default function Navbar({
         </button>
       </nav>
 
-      {/* Right: Quantum Status Pill + Model Select */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+      {/* Right: Engine Status Pill + Model Select */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
         <div
           style={{
             background: 'rgba(15, 23, 42, 0.9)',
-            color: '#38bdf8',
-            padding: '7px 20px',
+            color: 'var(--color-text-secondary)',
+            padding: '6px 14px',
             borderRadius: 'var(--radius-full)',
-            fontWeight: 800,
-            fontSize: '0.8rem',
-            boxShadow: 'inset 0 0 14px rgba(56, 189, 248, 0.2), 0 4px 18px rgba(0, 0, 0, 0.6)',
+            fontWeight: 600,
+            fontSize: '0.78rem',
             display: 'flex',
             alignItems: 'center',
-            gap: '10px',
-            border: '1px solid rgba(56, 189, 248, 0.45)',
-            letterSpacing: '0.6px',
-            fontFamily: 'var(--font-display)',
+            gap: '8px',
+            border: '1px solid var(--border-subtle)',
+            fontFamily: 'var(--font-sans)',
           }}
         >
           <span
             style={{
-              width: '9px',
-              height: '9px',
-              background: '#10b981',
+              width: '8px',
+              height: '8px',
+              background: '#34d399',
               borderRadius: '50%',
               animation: 'pulseDot 2s infinite',
             }}
           />
-          NEURAL AI STUDIO v4.1 ACTIVE
+          Engine v2.0 Active
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -124,15 +123,14 @@ export default function Navbar({
             style={{
               background: 'rgba(15, 23, 42, 0.95)',
               color: '#ffffff',
-              border: '1px solid rgba(56, 189, 248, 0.45)',
+              border: '1px solid var(--border-medium)',
               borderRadius: 'var(--radius-md)',
-              padding: '0.48rem 0.9rem',
+              padding: '0.45rem 0.85rem',
               fontSize: '0.82rem',
-              fontWeight: 700,
+              fontWeight: 600,
               fontFamily: 'var(--font-sans)',
               outline: 'none',
               cursor: 'pointer',
-              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.5)',
             }}
           >
             <option value="z-ai/glm-5.2">z-ai/glm-5.2 (NVIDIA NIM)</option>
