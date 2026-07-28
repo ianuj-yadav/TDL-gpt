@@ -32,14 +32,14 @@ export default function Navbar({
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '10px',
+            gap: '12px',
             cursor: 'pointer',
           }}
         >
-          {/* CauseHouse Doodle Logo Mark */}
+          {/* TDL-GPT Neobrutalist Logo Mark */}
           <div
             style={{
-              background: '#F3E8DD',
+              background: '#BFEA4B',
               border: '2px solid #1D281F',
               borderRadius: '50%',
               width: '42px',
@@ -49,16 +49,17 @@ export default function Navbar({
               justifyContent: 'center',
               fontSize: '1.3rem',
               boxShadow: '2px 2px 0px #1D281F',
+              fontWeight: 900,
             }}
           >
-            🏡
+            ⚡
           </div>
           <div>
-            <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.6rem', fontWeight: 900, color: '#1D281F', lineHeight: 1.0, letterSpacing: '-0.5px' }}>
-              CauseHouse
+            <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.65rem', fontWeight: 900, color: '#1D281F', lineHeight: 1.0, letterSpacing: '-0.5px' }}>
+              TDL-GPT
             </div>
             <div style={{ fontSize: '0.62rem', fontWeight: 800, color: '#6B7A6D', textTransform: 'uppercase', letterSpacing: '1.5px', marginTop: '2px' }}>
-              NONPROFIT DIGITAL STUDIO
+              QUANTUM TALLY AI STUDIO
             </div>
           </div>
         </div>
@@ -91,10 +92,10 @@ export default function Navbar({
             className="nav-tab-cause"
             style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
           >
-            Services {servicesOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+            Capabilities {servicesOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </button>
 
-          {/* CauseHouse Featured Services Dropdown Drawer */}
+          {/* Featured Capabilities Dropdown Drawer */}
           {servicesOpen && (
             <div
               className="animate-cause-pop"
@@ -116,21 +117,24 @@ export default function Navbar({
             >
               <div>
                 <div style={{ fontSize: '0.74rem', fontWeight: 900, uppercase: true, color: '#1D281F', letterSpacing: '1px', marginBottom: '8px' }}>
-                  SERVICES
+                  STUDIO MODULES
                 </div>
                 <h4 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.4rem', fontWeight: 900, marginBottom: '14px', lineHeight: 1.1 }}>
-                  View all services
+                  View All Modules
                 </h4>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   <button onClick={() => { setActiveTab('chat'); setServicesOpen(false); }} style={{ background: 'none', border: 'none', textAlign: 'left', fontFamily: 'var(--font-serif)', fontSize: '1.05rem', fontWeight: 900, color: '#1D281F', cursor: 'pointer' }}>
-                    Web development →
+                    TDL Code Generation →
                   </button>
                   <button onClick={() => { setActiveTab('ast'); setServicesOpen(false); }} style={{ background: 'none', border: 'none', textAlign: 'left', fontFamily: 'var(--font-serif)', fontSize: '1.05rem', fontWeight: 900, color: '#1D281F', cursor: 'pointer' }}>
-                    AST Validation →
+                    AST Syntax Validator →
                   </button>
                   <button onClick={() => { setActiveTab('rules'); setServicesOpen(false); }} style={{ background: 'none', border: 'none', textAlign: 'left', fontFamily: 'var(--font-serif)', fontSize: '1.05rem', fontWeight: 900, color: '#1D281F', cursor: 'pointer' }}>
-                    Rules Engine →
+                    Permanent Rules Engine →
+                  </button>
+                  <button onClick={() => { setActiveTab('kb'); setServicesOpen(false); }} style={{ background: 'none', border: 'none', textAlign: 'left', fontFamily: 'var(--font-serif)', fontSize: '1.05rem', fontWeight: 900, color: '#1D281F', cursor: 'pointer' }}>
+                    RAG Knowledge Base →
                   </button>
                 </div>
               </div>
@@ -142,15 +146,15 @@ export default function Navbar({
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
                   <div style={{ background: '#F7F0E6', border: '2px solid #1D281F', borderRadius: '12px', padding: '10px', boxShadow: '2px 2px 0px #1D281F', textAlign: 'center' }}>
                     <div style={{ fontSize: '1.5rem', marginBottom: '4px' }}>💻</div>
-                    <div style={{ fontSize: '0.78rem', fontWeight: 800 }}>TDL Web Design</div>
+                    <div style={{ fontSize: '0.78rem', fontWeight: 800 }}>Daily Sales</div>
+                  </div>
+                  <div style={{ background: '#F7F0E6', border: '2px solid #1D281F', borderRadius: '12px', padding: '10px', boxShadow: '2px 2px 0px #1D281F', textAlign: 'center' }}>
+                    <div style={{ fontSize: '1.5rem', marginBottom: '4px' }}>⚙️</div>
+                    <div style={{ fontSize: '0.78rem', fontWeight: 800 }}>Gateway Key</div>
                   </div>
                   <div style={{ background: '#F7F0E6', border: '2px solid #1D281F', borderRadius: '12px', padding: '10px', boxShadow: '2px 2px 0px #1D281F', textAlign: 'center' }}>
                     <div style={{ fontSize: '1.5rem', marginBottom: '4px' }}>📊</div>
-                    <div style={{ fontSize: '0.78rem', fontWeight: 800 }}>RAG Index</div>
-                  </div>
-                  <div style={{ background: '#F7F0E6', border: '2px solid #1D281F', borderRadius: '12px', padding: '10px', boxShadow: '2px 2px 0px #1D281F', textAlign: 'center' }}>
-                    <div style={{ fontSize: '1.5rem', marginBottom: '4px' }}>⚡</div>
-                    <div style={{ fontSize: '0.78rem', fontWeight: 800 }}>AST Check</div>
+                    <div style={{ fontSize: '0.78rem', fontWeight: 800 }}>GST UDF</div>
                   </div>
                 </div>
               </div>
@@ -178,7 +182,7 @@ export default function Navbar({
         </button>
       </nav>
 
-      {/* Right Controls: Model Select & Auth Button */}
+      {/* Right Controls: Model Select & Sign Up / Log In Button */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
         {/* Model Select */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -207,7 +211,7 @@ export default function Navbar({
           </select>
         </div>
 
-        {/* User Auth Pill or Work With Us Button */}
+        {/* User Profile Pill or Sign Up / Log In Button */}
         {user ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <div
@@ -243,7 +247,7 @@ export default function Navbar({
             onClick={onOpenAuth}
             className="btn-cause-lime"
           >
-            WORK WITH US
+            SIGN UP / LOG IN
           </button>
         )}
       </div>

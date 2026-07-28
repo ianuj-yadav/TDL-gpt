@@ -36,7 +36,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
       localStorage.setItem('causehouse_user', JSON.stringify(userObj));
       onAuthSuccess(userObj);
       onClose();
-    }, 600);
+    }, 500);
   };
 
   const handleSocialLogin = (provider) => {
@@ -97,20 +97,20 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
           {/* Logo Mark */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px' }}>
             <div style={{ background: '#BFEA4B', border: '2px solid #1D281F', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900 }}>
-              🏠
+              ⚡
             </div>
-            <span style={{ fontFamily: 'var(--font-serif)', fontSize: '1.25rem', fontWeight: 900 }}>
-              CauseHouse
+            <span style={{ fontFamily: 'var(--font-serif)', fontSize: '1.3rem', fontWeight: 900 }}>
+              TDL-GPT
             </span>
           </div>
 
           <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', fontWeight: 900, marginBottom: '6px', lineHeight: 1.1 }}>
-            {mode === 'login' ? 'Get started!' : 'Join CauseHouse!'}
+            {mode === 'login' ? 'Welcome Back!' : 'Join TDL-GPT!'}
           </h2>
           <p style={{ color: '#6B7A6D', fontSize: '0.9rem', marginBottom: '24px', fontWeight: 600 }}>
             {mode === 'login' ? (
               <>
-                New to CauseHouse?{' '}
+                New to TDL-GPT?{' '}
                 <button
                   onClick={() => setMode('register')}
                   style={{ background: 'none', border: 'none', color: '#1D281F', fontWeight: 800, cursor: 'pointer', textDecoration: 'underline' }}
@@ -160,7 +160,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
               <input
                 type="email"
                 className="cause-input"
-                placeholder="you@example.com"
+                placeholder="developer@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -240,20 +240,20 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
 
           <div>
             <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '2.4rem', fontWeight: 900, color: '#1D281F', lineHeight: 1.1, marginBottom: '14px' }}>
-              More Than Just A Creative Workbench.
+              More Than Just A Code Generator.
             </h3>
             <p style={{ color: '#1D281F', fontSize: '0.94rem', fontWeight: 600, lineHeight: 1.5, maxWidth: '340px' }}>
-              Build the house your mission grows in with TDL definition boundary retrieval and automated AST syntax checking.
+              Build TDL customizations that hold with Tier 3 RAG retrieval and automated AST syntax checking.
             </p>
           </div>
 
           <div style={{ background: '#F7F0E6', border: '2px solid #1D281F', borderRadius: '16px', padding: '14px', boxShadow: '4px 4px 0px #1D281F', display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ background: '#BFEA4B', border: '2px solid #1D281F', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900 }}>
-              🏡
+            <div style={{ background: '#BFEA4B', border: '2px solid #1D281F', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '1.2rem' }}>
+              ⚡
             </div>
             <div>
-              <div style={{ fontSize: '0.84rem', fontWeight: 800, color: '#1D281F' }}>Clarity beats volume.</div>
-              <div style={{ fontSize: '0.74rem', color: '#6B7A6D', fontWeight: 600 }}>Systems that hold. Work that shows.</div>
+              <div style={{ fontSize: '0.84rem', fontWeight: 800, color: '#1D281F' }}>TDL Object Hierarchy</div>
+              <div style={{ fontSize: '0.74rem', color: '#6B7A6D', fontWeight: 600 }}>Report -&gt; Form -&gt; Part -&gt; Line -&gt; Field</div>
             </div>
           </div>
         </div>
