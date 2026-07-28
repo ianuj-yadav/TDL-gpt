@@ -28,16 +28,13 @@ export default function Sidebar({
   onClearHistory,
   isOpenOnMobile
 }) {
-  const [sidebarTab, setSidebarTab] = useState('sessions'); // 'sessions' | 'controls'
+  const [sidebarTab, setSidebarTab] = useState('sessions');
 
-  // Form states
   const [tempApiKey, setTempApiKey] = useState(apiKey || '');
   const [newRuleText, setNewRuleText] = useState('');
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [persistUpload, setPersistUpload] = useState(false);
 
-  // Accordion open/close states
-  const [roadmapOpen, setRoadmapOpen] = useState(false);
   const [teachOpen, setTeachOpen] = useState(true);
   const [filesOpen, setFilesOpen] = useState(true);
   const [paramsOpen, setParamsOpen] = useState(true);
@@ -67,36 +64,36 @@ export default function Sidebar({
   return (
     <aside
       style={{
-        width: '310px',
-        background: 'rgba(11, 15, 25, 0.95)',
-        borderRight: '1px solid var(--border-subtle)',
-        height: 'calc(100vh - 65px)',
+        width: '320px',
+        background: '#F7F0E6',
+        borderRight: '3px solid #1D281F',
+        height: 'calc(100vh - 75px)',
         display: 'flex',
         flexDirection: 'column',
         zIndex: 15,
         transition: 'transform 0.3s ease',
       }}
     >
-      {/* Sidebar Top View Switcher */}
-      <div style={{ display: 'flex', borderBottom: '1px solid var(--border-subtle)', background: 'rgba(3, 7, 18, 0.6)' }}>
+      {/* View Switcher Tabs */}
+      <div style={{ display: 'flex', borderBottom: '3px solid #1D281F', background: '#F3E8DD' }}>
         <button
           onClick={() => setSidebarTab('sessions')}
           style={{
             flex: 1,
-            padding: '11px',
-            background: sidebarTab === 'sessions' ? 'rgba(255, 255, 255, 0.05)' : 'transparent',
+            padding: '12px',
+            background: sidebarTab === 'sessions' ? '#BFEA4B' : 'transparent',
             border: 'none',
-            borderBottom: sidebarTab === 'sessions' ? '2px solid #38bdf8' : '2px solid transparent',
-            color: sidebarTab === 'sessions' ? '#ffffff' : 'var(--color-text-secondary)',
+            borderRight: '2px solid #1D281F',
+            color: '#1D281F',
             fontSize: '0.82rem',
-            fontWeight: 600,
+            fontWeight: 900,
             fontFamily: 'var(--font-sans)',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             gap: '6px',
-            transition: 'all 0.2s ease',
+            textTransform: 'uppercase',
           }}
         >
           <MessageSquare size={14} /> Workspaces ({sessions.length})
@@ -105,48 +102,48 @@ export default function Sidebar({
           onClick={() => setSidebarTab('controls')}
           style={{
             flex: 1,
-            padding: '11px',
-            background: sidebarTab === 'controls' ? 'rgba(255, 255, 255, 0.05)' : 'transparent',
+            padding: '12px',
+            background: sidebarTab === 'controls' ? '#BFEA4B' : 'transparent',
             border: 'none',
-            borderBottom: sidebarTab === 'controls' ? '2px solid #38bdf8' : '2px solid transparent',
-            color: sidebarTab === 'controls' ? '#ffffff' : 'var(--color-text-secondary)',
+            color: '#1D281F',
             fontSize: '0.82rem',
-            fontWeight: 600,
+            fontWeight: 900,
             fontFamily: 'var(--font-sans)',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             gap: '6px',
-            transition: 'all 0.2s ease',
+            textTransform: 'uppercase',
           }}
         >
-          <SlidersHorizontal size={14} /> Studio Controls
+          <SlidersHorizontal size={14} /> Controls
         </button>
       </div>
 
-      {/* BODY CONTENT */}
+      {/* Body Content */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
 
         {/* WORKSPACES TAB */}
         {sidebarTab === 'sessions' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <button
               onClick={onCreateSession}
-              className="btn-cta-primary"
-              style={{ width: '100%', padding: '0.7rem' }}
+              className="btn-cause-lime"
+              style={{ width: '100%', padding: '12px', fontSize: '0.85rem' }}
             >
               <Plus size={16} /> New Workspace Session
             </button>
 
-            <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '6px' }}>
+            <div style={{ fontSize: '0.74rem', fontWeight: 900, color: '#6B7A6D', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '6px' }}>
               Active Sessions
             </div>
 
             {sessions.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '2rem 1rem', color: 'var(--color-text-muted)', background: 'rgba(255,255,255,0.02)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
-                <div style={{ fontSize: '0.84rem', fontWeight: 600, color: '#ffffff', marginBottom: '4px' }}>No Active Sessions</div>
-                <div style={{ fontSize: '0.78rem', color: 'var(--color-text-muted)' }}>Click above to start a session</div>
+              <div className="cause-card" style={{ textAlign: 'center', padding: '2rem 1rem', background: '#F3E8DD' }}>
+                <div style={{ fontSize: '1.5rem', marginBottom: '6px' }}>🏠</div>
+                <div style={{ fontSize: '0.88rem', fontWeight: 900, color: '#1D281F', marginBottom: '4px' }}>No Active Sessions</div>
+                <div style={{ fontSize: '0.78rem', color: '#6B7A6D', fontWeight: 600 }}>Click above to start your workspace</div>
               </div>
             ) : (
               sessions.map((sess) => {
@@ -155,21 +152,20 @@ export default function Sidebar({
                   <div
                     key={sess.id}
                     onClick={() => onSelectSession(sess.id)}
+                    className="cause-card cause-card-interactive"
                     style={{
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
-                      padding: '10px 12px',
-                      borderRadius: 'var(--radius-md)',
-                      background: isActive ? 'rgba(56, 189, 248, 0.12)' : 'rgba(255, 255, 255, 0.02)',
-                      border: isActive ? '1px solid rgba(56, 189, 248, 0.4)' : '1px solid var(--border-subtle)',
+                      padding: '11px 14px',
+                      background: isActive ? '#BFEA4B' : '#F3E8DD',
+                      boxShadow: isActive ? '4px 4px 0px #1D281F' : '2px 2px 0px #1D281F',
                       cursor: 'pointer',
-                      transition: 'all 0.2s ease',
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', overflow: 'hidden' }}>
-                      <MessageSquare size={14} color={isActive ? '#38bdf8' : 'var(--color-text-secondary)'} />
-                      <span style={{ fontSize: '0.82rem', color: isActive ? '#ffffff' : 'var(--color-text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontWeight: isActive ? 700 : 500 }}>
+                      <MessageSquare size={14} color="#1D281F" />
+                      <span style={{ fontSize: '0.84rem', color: '#1D281F', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontWeight: 800 }}>
                         {sess.title || 'Untitled Session'}
                       </span>
                     </div>
@@ -178,7 +174,7 @@ export default function Sidebar({
                         e.stopPropagation();
                         onDeleteSession(sess.id);
                       }}
-                      style={{ background: 'none', border: 'none', color: '#f87171', opacity: 0.7, cursor: 'pointer', padding: '2px' }}
+                      style={{ background: 'none', border: 'none', color: '#C53A20', cursor: 'pointer', padding: '2px' }}
                       title="Delete session"
                     >
                       <Trash2 size={14} />
@@ -190,29 +186,19 @@ export default function Sidebar({
           </div>
         )}
 
-        {/* STUDIO CONTROLS TAB */}
+        {/* CONTROLS TAB */}
         {sidebarTab === 'controls' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
 
             {/* 1. API Connection */}
-            <div className="glass-panel" style={{ padding: '14px' }}>
-              <div style={{ fontSize: '0.84rem', fontWeight: 700, color: '#ffffff', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px', fontFamily: 'var(--font-display)' }}>
-                <Key size={15} color="#38bdf8" /> API Connection
+            <div className="cause-card" style={{ padding: '16px', background: '#F3E8DD' }}>
+              <div style={{ fontSize: '0.9rem', fontWeight: 900, color: '#1D281F', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px', fontFamily: 'var(--font-serif)' }}>
+                <Key size={16} color="#1D281F" /> API Connection
               </div>
 
               {apiKeyValid === true && (
-                <div className="badge-status-pass" style={{ marginBottom: '10px', width: '100%', display: 'flex', justifyContent: 'center', gap: '6px' }}>
-                  <CheckCircle2 size={13} /> API Connected
-                </div>
-              )}
-              {apiKeyValid === false && (
-                <div className="badge-status-warn" style={{ color: '#f87171', borderColor: 'rgba(239, 68, 68, 0.3)', background: 'rgba(239, 68, 68, 0.1)', marginBottom: '10px', width: '100%', display: 'flex', justifyContent: 'center', gap: '6px' }}>
-                  <XCircle size={13} /> Key Invalid
-                </div>
-              )}
-              {apiKeyValid === null && (
-                <div className="badge-status-warn" style={{ marginBottom: '10px', width: '100%', display: 'flex', justifyContent: 'center', gap: '6px' }}>
-                  <AlertCircle size={13} /> Verifying Key...
+                <div className="badge-cause-pass" style={{ marginBottom: '10px', width: '100%', display: 'flex', justifyContent: 'center', gap: '6px' }}>
+                  <CheckCircle2 size={13} /> Connected
                 </div>
               )}
 
@@ -222,13 +208,14 @@ export default function Sidebar({
                   value={tempApiKey}
                   onChange={(e) => setTempApiKey(e.target.value)}
                   placeholder="nvapi-..."
-                  style={{ width: '100%', marginBottom: '10px', fontSize: '0.8rem', background: 'rgba(3, 7, 18, 0.8)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-sm)', padding: '6px 10px', color: '#ffffff' }}
+                  className="cause-input"
+                  style={{ marginBottom: '10px', fontSize: '0.8rem', padding: '8px 12px' }}
                 />
                 <div style={{ display: 'flex', gap: '8px' }}>
-                  <button type="submit" className="btn-cta-primary" style={{ flex: 1, padding: '7px', fontSize: '0.78rem' }}>
+                  <button type="submit" className="btn-cause-ink" style={{ flex: 1, padding: '8px', fontSize: '0.78rem' }}>
                     Connect Key
                   </button>
-                  <button type="button" onClick={() => { setTempApiKey(''); onClearApiKey(); }} className="btn-cta-secondary" style={{ flex: 1, padding: '7px', fontSize: '0.78rem' }}>
+                  <button type="button" onClick={() => { setTempApiKey(''); onClearApiKey(); }} className="btn-cause-paper" style={{ flex: 1, padding: '8px', fontSize: '0.78rem' }}>
                     Clear
                   </button>
                 </div>
@@ -236,123 +223,78 @@ export default function Sidebar({
             </div>
 
             {/* 2. System Status & KB Control */}
-            <div className="glass-panel" style={{ padding: '14px' }}>
-              <div style={{ fontSize: '0.84rem', fontWeight: 700, color: '#ffffff', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px', fontFamily: 'var(--font-display)' }}>
-                <HardDrive size={15} color="#34d399" /> System Status & KB
+            <div className="cause-card" style={{ padding: '16px', background: '#F3E8DD' }}>
+              <div style={{ fontSize: '0.9rem', fontWeight: 900, color: '#1D281F', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px', fontFamily: 'var(--font-serif)' }}>
+                <HardDrive size={16} color="#1D281F" /> System Status & KB
               </div>
 
-              <div className="badge-status-pass" style={{ marginBottom: '12px', width: '100%', display: 'flex', justifyContent: 'center' }}>
-                Vector KB Online
+              <div className="badge-cause-pass" style={{ marginBottom: '12px', width: '100%', display: 'flex', justifyContent: 'center' }}>
+                🟢 Vector KB Online
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '12px', textAlign: 'center' }}>
-                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
-                  <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#38bdf8', fontFamily: 'var(--font-display)' }}>{kbStatus?.indexed_count || 1420}</div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--color-text-muted)' }}>Indexed Chunks</div>
+                <div style={{ background: '#BFEA4B', padding: '8px', borderRadius: '10px', border: '2px solid #1D281F', boxShadow: '2px 2px 0px #1D281F' }}>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 900, color: '#1D281F', fontFamily: 'var(--font-serif)' }}>{kbStatus?.indexed_count || 1420}</div>
+                  <div style={{ fontSize: '0.7rem', color: '#1D281F', fontWeight: 800 }}>Indexed Chunks</div>
                 </div>
-                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
-                  <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#34d399', fontFamily: 'var(--font-display)' }}>{kbStatus?.source_folder_files || 699}</div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--color-text-muted)' }}>Source Files</div>
+                <div style={{ background: '#F7F0E6', padding: '8px', borderRadius: '10px', border: '2px solid #1D281F', boxShadow: '2px 2px 0px #1D281F' }}>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 900, color: '#1D281F', fontFamily: 'var(--font-serif)' }}>{kbStatus?.source_folder_files || 699}</div>
+                  <div style={{ fontSize: '0.7rem', color: '#1D281F', fontWeight: 800 }}>Source Files</div>
                 </div>
               </div>
 
               <div style={{ display: 'flex', gap: '8px' }}>
-                <button onClick={onReloadKb} className="btn-cta-secondary" style={{ flex: 1, padding: '7px', fontSize: '0.78rem' }}>
-                  <RefreshCw size={13} /> Reload KB
+                <button onClick={onReloadKb} className="btn-cause-paper" style={{ flex: 1, padding: '8px', fontSize: '0.78rem' }}>
+                  <RefreshCw size={13} /> Reload
                 </button>
-                <button onClick={onRebuildKb} className="btn-cta-primary" style={{ flex: 1, padding: '7px', fontSize: '0.78rem' }}>
-                  <Zap size={13} /> Rebuild KB
+                <button onClick={onRebuildKb} className="btn-cause-lime" style={{ flex: 1, padding: '8px', fontSize: '0.78rem' }}>
+                  <Zap size={13} /> Rebuild
                 </button>
               </div>
             </div>
 
-            {/* 3. Permanent Teaching Rules Memory */}
-            <div className="glass-panel" style={{ overflow: 'hidden' }}>
-              <div
-                style={{ padding: '10px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', fontWeight: 600, fontSize: '0.84rem', color: 'var(--color-text-secondary)' }}
-                onClick={() => setTeachOpen(!teachOpen)}
-              >
-                <span>Permanent Teaching Rules</span>
-                {teachOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+            {/* 3. Permanent Rules */}
+            <div className="cause-card" style={{ padding: '16px', background: '#F3E8DD' }}>
+              <div style={{ fontSize: '0.9rem', fontWeight: 900, color: '#1D281F', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px', fontFamily: 'var(--font-serif)' }}>
+                🧠 Permanent Rules
               </div>
-              {teachOpen && (
-                <div style={{ padding: '12px 14px', borderTop: '1px solid var(--border-subtle)' }}>
-                  <form onSubmit={handleSaveRule} style={{ marginBottom: '10px' }}>
-                    <input
-                      type="text"
-                      value={newRuleText}
-                      onChange={(e) => setNewRuleText(e.target.value)}
-                      placeholder="e.g. Always use CUST_ prefix"
-                      style={{ width: '100%', marginBottom: '8px', fontSize: '0.78rem', background: 'rgba(3, 7, 18, 0.8)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-sm)', padding: '6px 10px', color: '#ffffff' }}
-                    />
-                    <button type="submit" className="btn-cta-primary" style={{ width: '100%', padding: '6px', fontSize: '0.78rem' }}>
-                      Save Rule
-                    </button>
-                  </form>
+              <form onSubmit={handleSaveRule} style={{ marginBottom: '10px' }}>
+                <input
+                  type="text"
+                  value={newRuleText}
+                  onChange={(e) => setNewRuleText(e.target.value)}
+                  placeholder="e.g. Always use CUST_ prefix"
+                  className="cause-input"
+                  style={{ marginBottom: '8px', fontSize: '0.78rem', padding: '8px 12px' }}
+                />
+                <button type="submit" className="btn-cause-ink" style={{ width: '100%', padding: '8px', fontSize: '0.78rem' }}>
+                  Save Rule
+                </button>
+              </form>
 
-                  {permanentRules && permanentRules.length > 0 && (
-                    <div>
-                      <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--color-text-muted)', marginBottom: '6px' }}>Active Rules:</div>
-                      {permanentRules.map((r, i) => (
-                        <div key={r.id || i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.03)', padding: '5px 10px', borderRadius: 'var(--radius-sm)', marginBottom: '4px', fontSize: '0.76rem' }}>
-                          <span style={{ color: 'var(--color-text-secondary)' }}>• {r.rule_text}</span>
-                          {r.id && (
-                            <button onClick={() => onDeleteRule(r.id)} style={{ background: 'none', border: 'none', color: '#f87171', cursor: 'pointer' }}>
-                              <Trash2 size={13} />
-                            </button>
-                          )}
-                        </div>
-                      ))}
+              {permanentRules && permanentRules.length > 0 && (
+                <div>
+                  {permanentRules.map((r, i) => (
+                    <div key={r.id || i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#F7F0E6', border: '2px solid #1D281F', padding: '6px 10px', borderRadius: '8px', marginBottom: '6px', fontSize: '0.76rem', fontWeight: 700 }}>
+                      <span>• {r.rule_text}</span>
+                      {r.id && (
+                        <button onClick={() => onDeleteRule(r.id)} style={{ background: 'none', border: 'none', color: '#C53A20', cursor: 'pointer' }}>
+                          <Trash2 size={13} />
+                        </button>
+                      )}
                     </div>
-                  )}
+                  ))}
                 </div>
               )}
             </div>
 
-            {/* 4. Add Files to KB */}
-            <div className="glass-panel" style={{ overflow: 'hidden' }}>
-              <div
-                style={{ padding: '10px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', fontWeight: 600, fontSize: '0.84rem', color: 'var(--color-text-secondary)' }}
-                onClick={() => setFilesOpen(!filesOpen)}
-              >
-                <span>Add Files to KB</span>
-                {filesOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-              </div>
-              {filesOpen && (
-                <div style={{ padding: '12px 14px', borderTop: '1px solid var(--border-subtle)' }}>
-                  <input
-                    type="file"
-                    multiple
-                    onChange={(e) => setSelectedFiles(Array.from(e.target.files))}
-                    style={{ width: '100%', marginBottom: '10px', fontSize: '0.76rem' }}
-                  />
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.76rem', color: 'var(--color-text-muted)', marginBottom: '10px', cursor: 'pointer' }}>
-                    <input
-                      type="checkbox"
-                      checked={persistUpload}
-                      onChange={(e) => setPersistUpload(e.target.checked)}
-                    />
-                    Save permanently to KB
-                  </label>
-                  <button
-                    onClick={handleProcessFiles}
-                    disabled={selectedFiles.length === 0}
-                    className="btn-cta-primary"
-                    style={{ width: '100%', padding: '7px', fontSize: '0.78rem' }}
-                  >
-                    <Upload size={14} /> Embed {selectedFiles.length} File(s)
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* 5. Clear History */}
+            {/* 4. Clear History */}
             <button
               onClick={onClearHistory}
-              className="btn-cta-secondary"
-              style={{ width: '100%', padding: '10px', color: '#f87171', borderColor: 'rgba(239, 68, 68, 0.3)', background: 'rgba(239, 68, 68, 0.08)' }}
+              className="btn-cause-rust"
+              style={{ width: '100%', padding: '12px', fontSize: '0.82rem' }}
             >
-              Clear Conversation History
+              Clear History
             </button>
 
           </div>

@@ -5,12 +5,32 @@ import ChatWorkspace from './components/ChatWorkspace';
 import AstInspector from './components/AstInspector';
 import MemoryManager from './components/MemoryManager';
 import KbDashboard from './components/KbDashboard';
-import QuantumMeshBackground from './components/QuantumMeshBackground';
+import AuthModal from './components/AuthModal';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('chat');
   const [selectedModel, setSelectedModel] = useState('z-ai/glm-5.2');
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+
+  // User Auth State
+  const [user, setUser] = useState(null);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('causehouse_user');
+    if (savedUser) {
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch (e) {
+        console.error('Failed to parse saved user:', e);
+      }
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('causehouse_user');
+    setUser(null);
+  };
 
   // API & System state
   const [apiKey, setApiKey] = useState('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');
@@ -279,19 +299,18 @@ export default function App() {
 
   return (
     <div className="app-layout">
-      {/* Background Neural Canvas */}
-      <QuantumMeshBackground />
-
-      {/* Top Navbar Header */}
+      {/* Top CauseHouse Header */}
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         selectedModel={selectedModel}
         setSelectedModel={setSelectedModel}
-        onToggleMobileSidebar={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+        user={user}
+        onOpenAuth={() => setIsAuthOpen(true)}
+        onLogout={handleLogout}
       />
 
-      <div style={{ display: 'flex', flex: 1, overflow: 'hidden', position: 'relative', zIndex: 2 }}>
+      <div style={{ display: 'flex', flex: 1, overflow: 'hidden', position: 'relative' }}>
         {/* Sidebar */}
         <Sidebar
           sessions={sessions}
@@ -331,6 +350,7 @@ export default function App() {
               showContext={modelParams.showContext}
               autoValidate={modelParams.autoValidate}
               autoTune={modelParams.autoTune}
+              onOpenAuth={() => setIsAuthOpen(true)}
             />
           )}
           {activeTab === 'ast' && <AstInspector />}
@@ -338,6 +358,13 @@ export default function App() {
           {activeTab === 'kb' && <KbDashboard />}
         </div>
       </div>
+
+      {/* Auth Modal (Login / Register) */}
+      <AuthModal
+        isOpen={isAuthOpen}
+        onClose={() => setIsAuthOpen(false)}
+        onAuthSuccess={(u) => setUser(u)}
+      />
     </div>
   );
 }
