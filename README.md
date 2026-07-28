@@ -55,9 +55,10 @@ Whether building complex Invoice Customizations, Voucher Event Handlers, Collect
 
 ```text
 TDL-gpt/
+├── src/                  # React + Vite Frontend (Quantum UI Workbench)
+├── backend/              # FastAPI Backend API Server
 ├── chat_bot.py           # Core TDL Principal Engineer AI logic, RAG retrieval & NVIDIA NIM client
 ├── buildkb.py            # Universal KB indexer (FAISS + BM25 + string extraction for all files)
-├── streamlit_app.py      # Interactive multi-tab IDE, Chatbot & TDL Code Workbench UI
 ├── run_tests.py          # Enterprise 10-phase automated verification & regression suite
 ├── source_files/         # Repository of TDL add-ons, reference manuals & scripts (699+ files)
 ├── requirements.txt      # Python dependencies
@@ -71,6 +72,7 @@ TDL-gpt/
 ### Prerequisites
 - **OS**: Windows / Linux / macOS
 - **Python**: Python 3.9+
+- **Node.js**: Node.js v18+
 - **API Key**: NVIDIA NIM API Key (`nvapi-...`) configured for access to `z-ai/glm-5.2`.
 
 ### 1. Clone the Repository
@@ -86,6 +88,7 @@ python -m venv venv
 .\venv\Scripts\Activate.ps1
 
 pip install -r requirements.txt
+npm install
 ```
 
 ### 3. Build the RAG Knowledge Base
@@ -98,14 +101,18 @@ python buildkb.py
 
 ## 🚀 Usage
 
-### Launch Interactive Streamlit IDE
-Start the web UI workbench:
+### Launch Web Application (React + FastAPI)
+1. Start FastAPI Backend:
 ```bash
-streamlit run streamlit_app.py
+cd backend
+uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
-- Open **http://localhost:8501** in your web browser.
-- Select your AI model endpoint (`z-ai/glm-5.2` default).
-- Ask TDL coding questions, paste error logs, or upload `.tdl` files for instant refactoring.
+
+2. Start Vite React Frontend:
+```bash
+npm run dev
+```
+- Open **http://localhost:3000** in your web browser.
 
 ---
 
