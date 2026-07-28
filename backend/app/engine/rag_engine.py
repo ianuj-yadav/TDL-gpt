@@ -67,6 +67,41 @@ def expand_query(user_query: str) -> str:
         return user_query
     return user_query + " " + " ".join(extra)
 
+def lexical_bm25_retrieve(query: str, chunks: List[Dict], top_k: int = 5) -> Tuple[List[Dict], float]:
+    if not chunks:
+        return [], 0.0
+    query_terms = set(re.findall(r"\w+", query.lower()))
+    if not query_terms:
+        return [], 0.0
+
+    scored_chunks = []
+    max_score = 0.0
+
+    for chunk in chunks:
+        text = chunk.get("text", "").lower()
+        def_name = (chunk.get("def_name") or "").lower()
+        def_type = (chunk.get("def_type") or "").lower()
+        score = 0.0
+
+        for term in query_terms:
+            if term in text:
+                score += 1.0 + (text.count(term) * 0.2)
+            if term in def_name:
+                score += 3.0
+            if term in def_type:
+                score += 2.0
+
+        if score > max_score:
+            max_score = score
+
+        if score > 0:
+            scored_chunks.append((score, chunk))
+
+    scored_chunks.sort(key=lambda x: x[0], reverse=True)
+    results = [c[1] for c in scored_chunks[:top_k]]
+    norm_score = min(max_score / (len(query_terms) * 5.0), 1.0) if query_terms else 0.0
+    return results, norm_score
+
 def get_nvidia_client(api_key: str = None) -> OpenAI:
     key = api_key or settings.NVIDIA_API_KEY
     if not key:
@@ -86,27 +121,32 @@ class RagEngine:
         self.load_index()
 
     def load_index(self):
-        if not HAS_FAISS:
-            self.index = None
-            self.chunks = []
-            return
-        if os.path.exists(self.index_file) and os.path.exists(self.meta_file):
+        # Always try to load metadata chunks regardless of vector engine
+        if os.path.exists(self.meta_file):
             try:
-                self.index = faiss.read_index(self.index_file)
                 with open(self.meta_file, "r", encoding="utf-8") as f:
                     self.chunks = json.load(f)
             except Exception as e:
-                print(f"[RAG Engine Error] Failed loading index: {e}")
-                self.index = None
+                print(f"[RAG Engine Error] Failed loading chunks meta: {e}")
                 self.chunks = []
 
+        if HAS_FAISS and os.path.exists(self.index_file):
+            try:
+                self.index = faiss.read_index(self.index_file)
+            except Exception as e:
+                print(f"[RAG Engine Error] Failed loading FAISS index: {e}")
+                self.index = None
+
     def retrieve(self, query: str, top_k: int = 5) -> Tuple[List[Dict], float]:
-        if not HAS_FAISS or not HAS_SENTENCE_TRANSFORMERS or not self.index or not self.chunks:
+        if not self.chunks:
             return [], 0.0
+
+        if not HAS_FAISS or not HAS_SENTENCE_TRANSFORMERS or not self.index:
+            return lexical_bm25_retrieve(query, self.chunks, top_k)
 
         embedder = get_embedder()
         if not embedder:
-            return [], 0.0
+            return lexical_bm25_retrieve(query, self.chunks, top_k)
 
         exp_q = expand_query(query)
         q_vec = embedder.encode([exp_q], convert_to_numpy=True)

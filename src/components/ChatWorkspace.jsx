@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Copy, Check, Sparkles, AlertTriangle, CheckCircle, Code, ChevronDown, ChevronUp, Brain, FileText, User } from 'lucide-react';
+import { Send, Copy, Check, Download, Sparkles, AlertTriangle, CheckCircle, Code, ChevronDown, ChevronUp, Brain, FileText, User } from 'lucide-react';
 import HeroBanner from './HeroBanner';
 
 export default function ChatWorkspace({
@@ -12,19 +12,38 @@ export default function ChatWorkspace({
 }) {
   const [input, setInput] = useState('');
   const [copiedId, setCopiedId] = useState(null);
+  const [downloadedId, setDownloadedId] = useState(null);
   const [expandedThinking, setExpandedThinking] = useState({});
   const [expandedContext, setExpandedContext] = useState({});
   const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!input.trim() || loading) return;
     onSendMessage(input);
     setInput('');
+  };
+
+  const handleInputKeyDown = (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      handleSubmit(e);
+    }
   };
 
   const handleSelectPrompt = (promptText) => {
@@ -35,6 +54,20 @@ export default function ChatWorkspace({
     navigator.clipboard.writeText(text);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const downloadTdlFile = (text, id) => {
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `custom_report_${id}.tdl`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    setDownloadedId(id);
+    setTimeout(() => setDownloadedId(null), 2000);
   };
 
   const toggleThinking = (id) => {
@@ -63,7 +96,7 @@ export default function ChatWorkspace({
               TDL Quantum AI Workbench
             </h3>
             <p style={{ fontSize: '0.9rem', lineHeight: '1.65', color: '#94a3b8' }}>
-              Select a quick-prompt chip above or type your TDL customization request into the command bar below!
+              Select a quick-prompt chip above or press <kbd style={{ background: 'rgba(255,255,255,0.1)', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.2)', fontSize: '0.78rem', color: '#38bdf8' }}>Ctrl+K</kbd> to focus input and start coding!
             </p>
           </div>
         ) : (
@@ -196,14 +229,25 @@ export default function ChatWorkspace({
                           <span style={{ fontSize: '0.78rem', color: '#10b981', fontFamily: 'var(--font-mono)', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700 }}>
                             <Code size={14} /> TDL Output Code
                           </span>
-                          <button
-                            onClick={() => copyToClipboard(msg.tdl_code, msgId)}
-                            className="btn-cta-secondary"
-                            style={{ padding: '4px 10px', fontSize: '0.75rem' }}
-                          >
-                            {copiedId === msgId ? <Check size={13} color="#10b981" /> : <Copy size={13} />}
-                            {copiedId === msgId ? 'Copied!' : 'Copy Code'}
-                          </button>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <button
+                              onClick={() => downloadTdlFile(msg.tdl_code, msgId)}
+                              className="btn-cta-secondary"
+                              style={{ padding: '4px 10px', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '4px' }}
+                              title="Download TDL source file"
+                            >
+                              {downloadedId === msgId ? <Check size={13} color="#10b981" /> : <Download size={13} />}
+                              {downloadedId === msgId ? 'Downloaded!' : 'Download .tdl'}
+                            </button>
+                            <button
+                              onClick={() => copyToClipboard(msg.tdl_code, msgId)}
+                              className="btn-cta-secondary"
+                              style={{ padding: '4px 10px', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '4px' }}
+                            >
+                              {copiedId === msgId ? <Check size={13} color="#10b981" /> : <Copy size={13} />}
+                              {copiedId === msgId ? 'Copied!' : 'Copy Code'}
+                            </button>
+                          </div>
                         </div>
                         <pre className="quantum-code-block" style={{ borderRadius: '0 0 var(--radius-md) var(--radius-md)', margin: 0 }}>
                           {msg.tdl_code}
@@ -230,11 +274,13 @@ export default function ChatWorkspace({
       <form onSubmit={handleSubmit} style={{ padding: '16px 28px', background: 'rgba(11, 15, 25, 0.95)', borderTop: '1px solid rgba(255,255,255,0.10)' }}>
         <div style={{ display: 'flex', gap: '12px', maxWidth: '1150px', margin: '0 auto', alignItems: 'center' }}>
           <input
+            ref={inputRef}
             type="text"
             className="command-bar-input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask a TDL code question, e.g. 'Create a Daily Sales Report in TDL'..."
+            onKeyDown={handleInputKeyDown}
+            placeholder="Ask a TDL code question (Ctrl+Enter to send, Ctrl+K to focus)..."
             disabled={loading}
           />
           <button
